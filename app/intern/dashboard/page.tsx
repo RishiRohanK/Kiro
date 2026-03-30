@@ -134,14 +134,14 @@ function InternDashboardContent() {
          }
 
          setUser(userData);
-         fetchTasks(userData.id);
+         fetchTasks(userData.id, userData.batch);
          fetchStatus(userData.id);
          fetchAttendance(userData.id);
          fetchSchedules(userData.id, userData.batch);
          fetchAllInterns();
 
          const syncInterval = setInterval(() => {
-            fetchTasks(userData.id);
+            fetchTasks(userData.id, userData.batch);
             fetchStatus(userData.id);
             fetchAttendance(userData.id);
             fetchSchedules(userData.id, userData.batch);
@@ -206,9 +206,10 @@ function InternDashboardContent() {
       }
    };
 
-   const fetchTasks = async (id: string) => {
+   const fetchTasks = async (id: string, batch?: string) => {
       try {
-         const res = await fetch(`/api/intern/tasks?internId=${id}`);
+         const query = batch ? `?internId=${id}&batch=${encodeURIComponent(batch)}` : `?internId=${id}`;
+         const res = await fetch(`/api/intern/tasks${query}`);
          const data = await res.json();
          setTasks(data);
       } catch (error) {

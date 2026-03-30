@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { 
     LayoutDashboard, 
     LogOut, 
@@ -24,6 +24,8 @@ export default function InternDashboardLayout({
 }) {
     const router = useRouter();
     const pathname = usePathname();
+    const searchParams = useSearchParams();
+    const currentView = searchParams.get("view");
     const [user, setUser] = useState<any>(null);
     const [mounted, setMounted] = useState(false);
     const [handRaised, setHandRaised] = useState(false);
@@ -113,7 +115,12 @@ export default function InternDashboardLayout({
 
                 <nav className="flex-1 px-4 space-y-1">
                     {navItems.map((item) => {
-                        const isActive = pathname === item.slug || (item.name === "Overview" && pathname === "/intern/dashboard");
+                        const itemUrl = new URL(item.slug, "http://localhost");
+                        const itemPath = itemUrl.pathname;
+                        const itemView = itemUrl.searchParams.get("view");
+                        
+                        const isActive = pathname === itemPath && (itemView === currentView || (!itemView && !currentView));
+                        
                         return (
                             <Link 
                                 key={item.name}
@@ -170,7 +177,12 @@ export default function InternDashboardLayout({
                         <span className="text-[11px] font-medium text-blue-100/80">Portal Node</span>
                         <ChevronRight size={12} className="text-blue-100/40" />
                         <span className="text-[12px] font-bold">
-                           {pathname.includes("tasks") ? "Assignments" : "Overview"}
+                           {navItems.find(item => {
+                               const itemUrl = new URL(item.slug, "http://localhost");
+                               const itemPath = itemUrl.pathname;
+                               const itemView = itemUrl.searchParams.get("view");
+                               return pathname === itemPath && (itemView === currentView || (!itemView && !currentView));
+                           })?.name || "Portal"}
                         </span>
                     </div>
 

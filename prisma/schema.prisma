@@ -120,6 +120,7 @@ model Attendance {
 
 model Task {
   id              String   @id @default(cuid())
+  batch           String?  @default("Batch 1")
   title           String
   description     String
   attachmentUrl   String?  // PDF Link or other resource

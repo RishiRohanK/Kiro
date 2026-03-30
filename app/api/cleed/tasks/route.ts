@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   try {
-    const { internId, title, description, attachmentUrl } = await req.json();
+    const { internId, batch, title, description, attachmentUrl } = await req.json();
 
     if (!internId || !title || !description) {
       return NextResponse.json({ error: "All fields are required" }, { status: 400 });
@@ -13,6 +13,7 @@ export async function POST(req: Request) {
       data: {
         title,
         description,
+        batch: batch || "Batch 1",
         attachmentUrl: attachmentUrl || null,
         assignedRole: "INTERN",
         assignedToId: internId,

@@ -5,6 +5,7 @@ export async function GET(req: Request) {
   try {
      const { searchParams } = new URL(req.url);
      const internId = searchParams.get("internId");
+     const batch = searchParams.get("batch") || "Batch 1"; 
 
      if (!internId) {
         return NextResponse.json({ error: "Intern ID required" }, { status: 400 });
@@ -12,7 +13,10 @@ export async function GET(req: Request) {
 
      const tasks = await prisma.task.findMany({
         where: {
-           assignedToId: internId,
+           OR: [
+              { assignedToId: internId },
+              { batch: batch }
+           ]
         },
         orderBy: {
            createdAt: "desc",

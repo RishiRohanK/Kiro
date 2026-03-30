@@ -98,7 +98,7 @@ export default function CleedDashboard() {
   const [markingId, setMarkingId] = useState<string | null>(null);
   
   // Forms
-  const [taskData, setTaskData] = useState({ title: "", description: "", attachmentUrl: "" });
+  const [taskData, setTaskData] = useState({ title: "", description: "", attachmentUrl: "", batch: "Batch 2" });
   const [letterUrl, setLetterUrl] = useState("");
   const [sendingTask, setSendingTask] = useState(false);
   const [sendingLetter, setSendingLetter] = useState(false);
@@ -112,7 +112,8 @@ export default function CleedDashboard() {
     requirements: "", 
     description: "", 
     outcomes: "", 
-    deadline: "" 
+    deadline: "",
+    batch: "Batch 2" 
   });
   const [sendingSchedule, setSendingSchedule] = useState(false);
   const [scheduleSuccess, setScheduleSuccess] = useState(false);
@@ -258,6 +259,7 @@ export default function CleedDashboard() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
            internId: selectedIntern.id, 
+           batch: taskData.batch,
            title: taskData.title, 
            description: taskData.description,
            attachmentUrl: taskData.attachmentUrl
@@ -266,7 +268,7 @@ export default function CleedDashboard() {
 
       if (res.ok) {
         setFormSuccess(true);
-        setTaskData({ title: "", description: "", attachmentUrl: "" });
+        setTaskData({ title: "", description: "", attachmentUrl: "", batch: "Batch 2" });
         setTimeout(() => setFormSuccess(false), 3000);
         fetchData();
       }
@@ -391,7 +393,8 @@ export default function CleedDashboard() {
           requirements: "", 
           description: "", 
           outcomes: "", 
-          deadline: "" 
+          deadline: "",
+          batch: "Batch 2" 
         });
         setTimeout(() => setScheduleSuccess(false), 3000);
       }
@@ -846,9 +849,24 @@ export default function CleedDashboard() {
                          </div>
                       </div>
 
-                      <div className="space-y-4 text-left">
-                         <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 ml-1 block">Task Objective Header</label>
-                         <input required value={taskData.title} onChange={(e) => setTaskData({...taskData, title: e.target.value})} placeholder="Project title..." className="w-full h-14 bg-zinc-50 border border-zinc-100 px-6 text-base md:text-sm outline-none focus:border-[#0055FF] transition-all font-bold rounded-none" />
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div className="space-y-4 text-left">
+                            <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 ml-1 block">Target Batch</label>
+                            <select 
+                              required
+                              value={taskData.batch}
+                              onChange={(e) => setTaskData({...taskData, batch: e.target.value})}
+                              className="w-full h-14 bg-zinc-50 border border-zinc-100 px-6 text-base md:text-sm outline-none focus:border-[#0055FF] transition-all font-bold rounded-none appearance-none"
+                            >
+                               <option value="Batch 1">Batch 1</option>
+                               <option value="Batch 2">Batch 2</option>
+                               <option value="Batch 3">Batch 3</option>
+                            </select>
+                         </div>
+                         <div className="space-y-4 text-left">
+                            <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 ml-1 block">Task Objective Header</label>
+                            <input required value={taskData.title} onChange={(e) => setTaskData({...taskData, title: e.target.value})} placeholder="Project title..." className="w-full h-14 bg-zinc-50 border border-zinc-100 px-6 text-base md:text-sm outline-none focus:border-[#0055FF] transition-all font-bold rounded-none" />
+                         </div>
                       </div>
 
                       <div className="space-y-4 text-left">
@@ -1164,15 +1182,30 @@ export default function CleedDashboard() {
                         </div>
                       </div>
 
-                      <div className="space-y-4 text-left">
-                         <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 ml-1 block">Type of Operation</label>
-                         <input 
-                           required 
-                           value={scheduleData.typeOfWork}
-                           onChange={(e) => setScheduleData({...scheduleData, typeOfWork: e.target.value})}
-                           placeholder="e.g. Full Stack Integration"
-                           className="w-full h-14 bg-zinc-50 border border-zinc-100 px-6 text-base md:text-sm outline-none focus:border-[#0055FF] transition-all font-bold rounded-none" 
-                         />
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div className="space-y-4 text-left">
+                            <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 ml-1 block">Mission Batch</label>
+                            <select 
+                              required
+                              value={scheduleData.batch}
+                              onChange={(e) => setScheduleData({...scheduleData, batch: e.target.value})}
+                              className="w-full h-14 bg-zinc-50 border border-zinc-100 px-6 text-base md:text-sm outline-none focus:border-[#0055FF] transition-all font-bold rounded-none appearance-none"
+                            >
+                               <option value="Batch 1">Batch 1</option>
+                               <option value="Batch 2">Batch 2</option>
+                               <option value="Batch 3">Batch 3</option>
+                            </select>
+                         </div>
+                         <div className="space-y-4 text-left">
+                            <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 ml-1 block">Type of Operation</label>
+                            <input 
+                              required 
+                              value={scheduleData.typeOfWork}
+                              onChange={(e) => setScheduleData({...scheduleData, typeOfWork: e.target.value})}
+                              placeholder="e.g. Full Stack Integration"
+                              className="w-full h-14 bg-zinc-50 border border-zinc-100 px-6 text-base md:text-sm outline-none focus:border-[#0055FF] transition-all font-bold rounded-none" 
+                            />
+                         </div>
                       </div>
 
                       <div className="space-y-4 text-left">
