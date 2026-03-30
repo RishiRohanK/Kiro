@@ -42,6 +42,7 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { io } from "socket.io-client";
+import { supabase } from "@/lib/supabase";
 
 interface Task {
    id: string;
@@ -99,49 +100,81 @@ function InternDashboardContent() {
    const chatEndRef = useRef<HTMLDivElement>(null);
 
    useEffect(() => {
-      const storedUser = localStorage.getItem("intern_user");
-      if (!storedUser) {
-         router.push("/intern/signin");
-         return;
-      }
-      const userData = JSON.parse(storedUser);
-      setUser(userData);
-      fetchTasks(userData.id);
-      fetchStatus(userData.id);
-      fetchAttendance(userData.id);
-      fetchSchedules(userData.id, userData.batch);
-      fetchAllInterns();
+      const syncSession = async () => {
+         let storedUser = localStorage.getItem("intern_user");
+         let userData = storedUser ? JSON.parse(storedUser) : null;
+         
+         // If no local user, check for Supabase session (Google OAuth case)
+         if (!userData) {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (session?.user) {
+               try {
+                  // Fetch updated profile from our DB (which our callback just synced)
+                  const res = await fetch(`/api/intern/status?id=${session.user.id}`);
+                  if (res.ok) {
+                     const profile = await res.json();
+                     userData = profile;
+                     localStorage.setItem("intern_user", JSON.stringify(profile));
+                  } else {
+                     // If status fetch fails, use minimal session data
+                     userData = { id: session.user.id, name: session.user.user_metadata.full_name || session.user.email, email: session.user.email };
+                     localStorage.setItem("intern_user", JSON.stringify(userData));
+                  }
+               } catch (e) {
+                  // Fallback to session info
+                  userData = { id: session.user.id, name: session.user.user_metadata.full_name || session.user.email, email: session.user.email };
+                  localStorage.setItem("intern_user", JSON.stringify(userData));
+               }
+            }
+         }
 
-      const syncInterval = setInterval(() => {
+         if (!userData) {
+            router.push("/intern/signin");
+            return;
+         }
+
+         setUser(userData);
          fetchTasks(userData.id);
          fetchStatus(userData.id);
          fetchAttendance(userData.id);
          fetchSchedules(userData.id, userData.batch);
-      }, 20000);
+         fetchAllInterns();
 
-      const newSocket = io({ reconnectionDelayMax: 10000 });
-      setSocket(newSocket);
+         const syncInterval = setInterval(() => {
+            fetchTasks(userData.id);
+            fetchStatus(userData.id);
+            fetchAttendance(userData.id);
+            fetchSchedules(userData.id, userData.batch);
+         }, 20000);
 
-      newSocket.on("connect", () => {
-         setMyId(newSocket.id || null);
-         newSocket.emit("join-community", { 
-           id: userData.id, 
-           name: userData.name, 
-           colorIndex: userData.id.length % 4 
+         const newSocket = io({ reconnectionDelayMax: 10000 });
+         setSocket(newSocket);
+
+         newSocket.on("connect", () => {
+            setMyId(newSocket.id || null);
+            newSocket.emit("join-community", { 
+               id: userData.id, 
+               name: userData.name, 
+               colorIndex: userData.id.length % 4 
+            });
          });
-      });
 
-      newSocket.on("receive-message", (msg: ChatMessage) => {
-         setMessages(prev => [...prev, msg]);
-      });
+         newSocket.on("receive-message", (msg: ChatMessage) => {
+            setMessages(prev => [...prev, msg]);
+         });
 
-      newSocket.on("active-users", (users: any[]) => {
-         setActiveUsersList(users);
-      });
+         newSocket.on("active-users", (users: any[]) => {
+            setActiveUsersList(users);
+         });
 
+         return syncInterval;
+      };
+
+      const init = syncSession();
+      
       return () => {
-         clearInterval(syncInterval);
-         newSocket.disconnect();
+         init.then(interval => interval && typeof interval !== 'function' && clearInterval(interval));
+         if (socket) socket.disconnect();
       };
    }, [router]);
 
