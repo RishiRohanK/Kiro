@@ -48,7 +48,8 @@ export default function SchedulePage() {
 
     const fetchSchedules = async () => {
         try {
-            const res = await fetch(`/api/intern/schedule?internId=${user.id}`);
+            const query = user?.batch ? `?internId=${user.id}&batch=${encodeURIComponent(user.batch)}` : `?internId=${user.id}`;
+            const res = await fetch(`/api/intern/schedule${query}`);
             const data = await res.json();
             if (data.success) {
                 setSchedules(data.schedules);
