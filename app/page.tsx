@@ -44,7 +44,7 @@ export default function Home() {
       <div />
 
       <div className="w-full flex flex-col items-center justify-center p-6">
-        {/* Brand Logo - Increased Size */}
+        {/* Brand Logo - Reduced Size */}
         <motion.div 
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -54,22 +54,22 @@ export default function Home() {
           <img 
             src="https://res.cloudinary.com/dsqqrpzfl/image/upload/v1773390835/Screenshot_2026-03-13_at_14.02.11-removebg-preview_lryxoy.png" 
             alt="Forge Logo" 
-            className="h-16 md:h-24 w-auto object-contain mx-auto"
+            className="h-12 md:h-16 w-auto object-contain mx-auto"
           />
         </motion.div>
 
-        {/* Sharp-Edged Red Content Container */}
+        {/* Sharp-Edged Red Content Container - Compact */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="max-w-3xl w-full bg-[#E11D48] text-white rounded-none p-12 md:p-24 text-center shadow-2xl shadow-red-500/10"
+          className="max-w-2xl w-full bg-[#E11D48] text-white rounded-none p-10 md:p-16 text-center shadow-2xl shadow-red-500/10"
         >
-          <div className="space-y-8">
-            <h1 className="text-4xl md:text-6xl font-semibold tracking-tight">
+          <div className="space-y-6">
+            <h1 className="text-3xl md:text-5xl font-semibold tracking-tight leading-tight">
               Platform is currently <br className="hidden md:block" /> closed for maintenance
             </h1>
-            <p className="text-red-100 text-lg md:text-xl font-normal leading-relaxed max-w-xl mx-auto">
+            <p className="text-red-100 text-base md:text-lg font-normal leading-relaxed max-w-lg mx-auto">
               We are enhancing our learning platform to provide a world-class experience. 
               We will be back online shortly with new features.
             </p>
