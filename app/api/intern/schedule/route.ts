@@ -5,12 +5,9 @@ export async function GET(req: Request) {
     try {
         const { searchParams } = new URL(req.url);
         const internId = searchParams.get('internId');
-        const batch = searchParams.get('batch');
+        const batch = searchParams.get('batch') || "Batch 1"; // Default to Batch 1 if not specified
 
-        const where: any = {};
-        if (batch) {
-            where.batch = batch;
-        }
+        const where: any = { batch };
 
         const schedules = await prisma.schedule.findMany({
             where,
