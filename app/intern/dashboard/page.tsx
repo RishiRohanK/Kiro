@@ -500,6 +500,7 @@ function InternDashboardContent() {
 
          {activeTab === "kanban" && (
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6 text-left">
+               {/* Header */}
                <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
                   <div>
                      <h2 className="text-xl font-bold text-zinc-900">Agile Workspace</h2>
@@ -507,84 +508,148 @@ function InternDashboardContent() {
                   </div>
                   <button
                      onClick={() => setIsAddingPersonalTask(true)}
-                     className="h-10 px-6 bg-black text-white text-[11px] font-bold flex items-center gap-2 hover:bg-[#0055FF] transition-all"
+                     className="h-10 px-6 bg-zinc-900 text-white text-[11px] font-bold flex items-center gap-2 hover:bg-[#0055FF] transition-all rounded-lg"
                   >
                      <Plus size={14} /> New Task
                   </button>
                </div>
 
-               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                  {(["TODO", "IN_PROGRESS", "DONE"] as const).map((status) => (
-                     <div key={status} className="flex flex-col gap-4">
-                        <div className="flex items-center justify-between pb-2 border-b border-zinc-100">
-                           <h3 className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 flex items-center gap-2">
-                              <Circle size={8} fill="currentColor" className={status === "TODO" ? "text-zinc-300" : status === "IN_PROGRESS" ? "text-amber-400" : "text-emerald-500"} />
-                              {status.replace("_", " ")}
-                           </h3>
-                           <span className="text-[10px] font-bold text-zinc-400 bg-zinc-50 px-2 py-0.5 border border-zinc-100">
-                              {personalTasks.filter(t => t.status === status).length}
-                           </span>
-                        </div>
-                        <div className="space-y-3 min-h-[200px]">
-                           {personalTasks.filter(t => t.status === status).map((task) => (
-                              <div key={task.id} className="p-5 bg-white border border-zinc-100 shadow-sm hover:border-zinc-200 transition-all group">
-                                 <div className="flex items-start justify-between gap-2 mb-2">
-                                    <h4 className="text-sm font-bold text-zinc-900 leading-tight">{task.title}</h4>
-                                    <button onClick={() => deletePersonalTask(task.id)} className="text-zinc-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all shrink-0">
-                                       <Trash2 size={13} />
-                                    </button>
-                                 </div>
-                                 {task.description && (
-                                    <p className="text-xs text-zinc-500 line-clamp-2 leading-relaxed mb-4">{task.description}</p>
-                                 )}
-                                 <div className="flex items-center gap-1.5 pt-4 border-t border-zinc-50">
-                                    {status !== "TODO" && (
+               {/* Columns */}
+               <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+                  {(["TODO", "IN_PROGRESS", "DONE"] as const).map((status) => {
+                     const col = {
+                        TODO: {
+                           bg: "bg-blue-50/60",
+                           border: "border-blue-100",
+                           headerText: "text-blue-600",
+                           headerBg: "bg-blue-100/70",
+                           dot: "text-blue-400",
+                           cardBg: "bg-white",
+                           cardBorder: "border-blue-100",
+                           cardHover: "hover:border-blue-300 hover:shadow-blue-50",
+                           divider: "border-blue-50",
+                           actionColor: "text-blue-500 hover:text-blue-700",
+                           emptyBorder: "border-blue-100",
+                           emptyText: "text-blue-200",
+                           label: "Todo",
+                        },
+                        IN_PROGRESS: {
+                           bg: "bg-amber-50/60",
+                           border: "border-amber-100",
+                           headerText: "text-amber-700",
+                           headerBg: "bg-amber-100/70",
+                           dot: "text-amber-400",
+                           cardBg: "bg-white",
+                           cardBorder: "border-amber-100",
+                           cardHover: "hover:border-amber-300 hover:shadow-amber-50",
+                           divider: "border-amber-50",
+                           actionColor: "text-amber-500 hover:text-amber-700",
+                           emptyBorder: "border-amber-100",
+                           emptyText: "text-amber-200",
+                           label: "In Progress",
+                        },
+                        DONE: {
+                           bg: "bg-emerald-50/60",
+                           border: "border-emerald-100",
+                           headerText: "text-emerald-700",
+                           headerBg: "bg-emerald-100/70",
+                           dot: "text-emerald-500",
+                           cardBg: "bg-white",
+                           cardBorder: "border-emerald-100",
+                           cardHover: "hover:border-emerald-300 hover:shadow-emerald-50",
+                           divider: "border-emerald-50",
+                           actionColor: "text-emerald-500 hover:text-emerald-700",
+                           emptyBorder: "border-emerald-100",
+                           emptyText: "text-emerald-200",
+                           label: "Done",
+                        },
+                     }[status];
+
+                     const columnTasks = personalTasks.filter(t => t.status === status);
+
+                     return (
+                        <div key={status} className={`flex flex-col gap-3 rounded-2xl p-4 border ${col.bg} ${col.border}`}>
+                           {/* Column Header */}
+                           <div className={`flex items-center justify-between px-3 py-2 rounded-xl ${col.headerBg}`}>
+                              <h3 className={`text-[11px] font-bold uppercase tracking-widest flex items-center gap-2 ${col.headerText}`}>
+                                 <Circle size={8} fill="currentColor" className={col.dot} />
+                                 {col.label}
+                              </h3>
+                              <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/70 ${col.headerText}`}>
+                                 {columnTasks.length}
+                              </span>
+                           </div>
+
+                           {/* Cards */}
+                           <div className="space-y-2.5 min-h-[180px]">
+                              {columnTasks.map((task) => (
+                                 <div
+                                    key={task.id}
+                                    className={`p-4 rounded-xl border shadow-sm transition-all group ${col.cardBg} ${col.cardBorder} ${col.cardHover}`}
+                                 >
+                                    <div className="flex items-start justify-between gap-2 mb-1">
+                                       <h4 className="text-sm font-bold text-zinc-800 leading-snug">{task.title}</h4>
                                        <button
-                                          onClick={() => updatePersonalTaskStatus(task.id, status === "IN_PROGRESS" ? "TODO" : "IN_PROGRESS")}
-                                          className="text-[9px] font-bold text-zinc-400 hover:text-[#0055FF] uppercase"
+                                          onClick={() => deletePersonalTask(task.id)}
+                                          className="text-zinc-300 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-all shrink-0"
                                        >
-                                          ← {status === "IN_PROGRESS" ? "Back" : "Reopen"}
+                                          <Trash2 size={13} />
                                        </button>
+                                    </div>
+                                    {task.description && (
+                                       <p className="text-xs text-zinc-400 line-clamp-2 leading-relaxed mb-3">{task.description}</p>
                                     )}
-                                    {status !== "DONE" && (
-                                       <button
-                                          onClick={() => updatePersonalTaskStatus(task.id, status === "TODO" ? "IN_PROGRESS" : "DONE")}
-                                          className="ml-auto text-[9px] font-bold text-[#0055FF] hover:underline uppercase"
-                                       >
-                                          {status === "TODO" ? "Start" : "Complete"} →
-                                       </button>
-                                    )}
+                                    <div className={`flex items-center gap-1.5 pt-3 border-t ${col.divider}`}>
+                                       {status !== "TODO" && (
+                                          <button
+                                             onClick={() => updatePersonalTaskStatus(task.id, status === "IN_PROGRESS" ? "TODO" : "IN_PROGRESS")}
+                                             className="text-[9px] font-bold text-zinc-400 hover:text-zinc-600 uppercase"
+                                          >
+                                             ← {status === "IN_PROGRESS" ? "Back" : "Reopen"}
+                                          </button>
+                                       )}
+                                       {status !== "DONE" && (
+                                          <button
+                                             onClick={() => updatePersonalTaskStatus(task.id, status === "TODO" ? "IN_PROGRESS" : "DONE")}
+                                             className={`ml-auto text-[9px] font-bold uppercase ${col.actionColor}`}
+                                          >
+                                             {status === "TODO" ? "Start →" : "Complete →"}
+                                          </button>
+                                       )}
+                                    </div>
                                  </div>
-                              </div>
-                           ))}
-                           {personalTasks.filter(t => t.status === status).length === 0 && (
-                              <div className="py-12 border-2 border-dashed border-zinc-50 flex flex-col items-center justify-center text-zinc-300">
-                                 <Activity size={20} className="mb-2 opacity-50" />
-                                 <p className="text-[10px] font-bold uppercase tracking-widest opacity-50">Empty column</p>
-                              </div>
-                           )}
+                              ))}
+
+                              {columnTasks.length === 0 && (
+                                 <div className={`py-10 border-2 border-dashed rounded-xl flex flex-col items-center justify-center ${col.emptyBorder}`}>
+                                    <Activity size={18} className={`mb-1.5 ${col.emptyText}`} />
+                                    <p className={`text-[9px] font-bold uppercase tracking-widest ${col.emptyText}`}>No tasks</p>
+                                 </div>
+                              )}
+                           </div>
                         </div>
-                     </div>
-                  ))}
+                     );
+                  })}
                </div>
 
+               {/* Add Task Modal */}
                <AnimatePresence>
                   {isAddingPersonalTask && (
-                     <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/60 backdrop-blur-sm">
+                     <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/50 backdrop-blur-sm">
                         <motion.div
                            initial={{ opacity: 0, y: 20 }}
                            animate={{ opacity: 1, y: 0 }}
                            exit={{ opacity: 0, scale: 0.95 }}
-                           className="bg-white w-full max-w-md p-8 border border-zinc-200 shadow-2xl relative"
+                           className="bg-white w-full max-w-md p-8 rounded-2xl border border-zinc-100 shadow-2xl relative"
                         >
                            <button onClick={() => setIsAddingPersonalTask(false)} className="absolute top-4 right-4 text-zinc-400 hover:text-black">
                               <X size={20} />
                            </button>
-                           <div className="mb-8">
-                              <h3 className="text-sm font-bold text-zinc-900 border-l-4 border-black pl-3 uppercase tracking-tighter">Create Task</h3>
-                              <p className="text-[11px] text-zinc-400 font-medium mt-1">Add a new task to your segregation workspace.</p>
+                           <div className="mb-7">
+                              <h3 className="text-sm font-bold text-zinc-900 border-l-4 border-blue-400 pl-3 uppercase tracking-tight">Create Task</h3>
+                              <p className="text-[11px] text-zinc-400 font-medium mt-1.5">Add a new task to your Agile workspace.</p>
                            </div>
-                           <form onSubmit={handleAddPersonalTask} className="space-y-5">
+                           <form onSubmit={handleAddPersonalTask} className="space-y-4">
                               <div className="space-y-1.5">
                                  <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Task Title</label>
                                  <input
@@ -592,7 +657,7 @@ function InternDashboardContent() {
                                     type="text"
                                     value={newPersonalTask.title}
                                     onChange={(e) => setNewPersonalTask({ ...newPersonalTask, title: e.target.value })}
-                                    className="w-full h-11 bg-zinc-50 border border-zinc-100 px-4 text-sm font-bold outline-none focus:bg-white focus:border-black transition-all"
+                                    className="w-full h-11 bg-blue-50/50 border border-blue-100 rounded-lg px-4 text-sm font-semibold outline-none focus:bg-white focus:border-blue-300 transition-all"
                                     placeholder="e.g., Implement sidebar logic..."
                                  />
                               </div>
@@ -601,15 +666,15 @@ function InternDashboardContent() {
                                  <textarea
                                     value={newPersonalTask.description}
                                     onChange={(e) => setNewPersonalTask({ ...newPersonalTask, description: e.target.value })}
-                                    className="w-full h-24 bg-zinc-50 border border-zinc-100 p-4 text-sm font-medium outline-none focus:bg-white focus:border-black transition-all resize-none"
+                                    className="w-full h-24 bg-blue-50/50 border border-blue-100 rounded-lg p-4 text-sm font-medium outline-none focus:bg-white focus:border-blue-300 transition-all resize-none"
                                     placeholder="Add notes about this task..."
                                  />
                               </div>
-                              <div className="pt-4 flex gap-3">
-                                 <button type="button" onClick={() => setIsAddingPersonalTask(false)} className="flex-1 h-11 border border-zinc-100 text-[11px] font-bold uppercase tracking-widest hover:bg-zinc-50">
+                              <div className="pt-3 flex gap-3">
+                                 <button type="button" onClick={() => setIsAddingPersonalTask(false)} className="flex-1 h-11 rounded-lg border border-zinc-200 text-[11px] font-bold uppercase tracking-widest hover:bg-zinc-50 text-zinc-600">
                                     Cancel
                                  </button>
-                                 <button type="submit" disabled={isSavingPersonalTask} className="flex-1 h-11 bg-black text-white text-[11px] font-bold uppercase tracking-widest hover:bg-[#0055FF] disabled:opacity-50">
+                                 <button type="submit" disabled={isSavingPersonalTask} className="flex-1 h-11 rounded-lg bg-blue-500 text-white text-[11px] font-bold uppercase tracking-widest hover:bg-blue-600 disabled:opacity-50 transition-all">
                                     {isSavingPersonalTask ? "Saving..." : "Create Task"}
                                  </button>
                               </div>
@@ -620,6 +685,7 @@ function InternDashboardContent() {
                </AnimatePresence>
             </motion.div>
          )}
+
 
          {activeTab === "community" && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="h-full flex flex-col bg-white border border-zinc-100 overflow-hidden text-left">
