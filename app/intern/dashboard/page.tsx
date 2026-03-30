@@ -157,14 +157,21 @@ function InternDashboardContent() {
          fetchAttendance(userData.id);
          fetchSchedules(userData.id, userData.batch);
          fetchAllInterns();
-         fetchPersonalTasks(userData.id);
+         // Inline fetch to avoid temporal dead zone with const declaration
+         fetch(`/api/intern/personal-tasks?userId=${userData.id}`)
+            .then(r => r.json())
+            .then(d => { if (d.success) setPersonalTasks(d.tasks); })
+            .catch(() => {});
 
          const syncInterval = setInterval(() => {
             fetchTasks(userData.id, userData.batch);
             fetchStatus(userData.id);
             fetchAttendance(userData.id);
             fetchSchedules(userData.id, userData.batch);
-            fetchPersonalTasks(userData.id);
+            fetch(`/api/intern/personal-tasks?userId=${userData.id}`)
+               .then(r => r.json())
+               .then(d => { if (d.success) setPersonalTasks(d.tasks); })
+               .catch(() => {});
          }, 20000);
 
          const newSocket = io({ reconnectionDelayMax: 10000 });
