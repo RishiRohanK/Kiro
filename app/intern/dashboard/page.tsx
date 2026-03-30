@@ -335,7 +335,7 @@ function InternDashboardContent() {
             setPersonalTasks(data.tasks);
          }
       } catch (err) {
-         console.error("Failed to fetch personal tasks");
+         console.error("Failed to fetch personal tasks:", err);
       }
    };
 
@@ -355,13 +355,16 @@ function InternDashboardContent() {
             })
          });
          const data = await res.json();
+         console.log("Add task response:", data); // DEBUG
          if (data.success) {
             setPersonalTasks([data.task, ...personalTasks]);
             setNewPersonalTask({ title: "", description: "" });
             setIsAddingPersonalTask(false);
+         } else {
+            console.error("Server error adding task:", data.error, data.detail);
          }
       } catch (err) {
-         console.error("Failed to add task");
+         console.error("Network error adding task:", err);
       } finally {
          setIsSavingPersonalTask(false);
       }

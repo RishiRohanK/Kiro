@@ -1,13 +1,15 @@
 import { NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
+import { createClient } from "@supabase/supabase-js";
 
-const prisma = new PrismaClient();
+const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
 
 function cuid(): string {
     return "c" + Math.random().toString(36).slice(2, 12) + Date.now().toString(36);
 }
 
-// GET all personal tasks for an intern
 export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const userId = searchParams.get("userId");
@@ -16,20 +18,20 @@ export async function GET(request: Request) {
         return NextResponse.json({ error: "User ID required" }, { status: 400 });
     }
 
-    try {
-        const tasks = await prisma.$queryRaw`
-            SELECT * FROM "PersonalTask"
-            WHERE "userId" = ${userId}
-            ORDER BY "createdAt" DESC
-        `;
-        return NextResponse.json({ success: true, tasks });
-    } catch (error) {
+    const { data, error } = await supabase
+        .from("PersonalTask")
+        .select("*")
+        .eq("userId", userId)
+        .order("createdAt", { ascending: false });
+
+    if (error) {
         console.error("GET personal tasks error:", error);
-        return NextResponse.json({ error: "Failed to fetch tasks" }, { status: 500 });
+        return NextResponse.json({ error: error.message }, { status: 500 });
     }
+
+    return NextResponse.json({ success: true, tasks: data });
 }
 
-// POST create a new personal task
 export async function POST(request: Request) {
     try {
         const body = await request.json();
@@ -39,24 +41,30 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
         }
 
-        const id = cuid();
-        const taskStatus = status || "TODO";
-        const now = new Date();
+        const now = new Date().toISOString();
+        const task = {
+            id: cuid(),
+            userId,
+            title,
+            description: description || null,
+            status: status || "TODO",
+            createdAt: now,
+            updatedAt: now,
+        };
 
-        await prisma.$executeRaw`
-            INSERT INTO "PersonalTask" ("id", "userId", "title", "description", "status", "createdAt", "updatedAt")
-            VALUES (${id}, ${userId}, ${title}, ${description ?? null}, ${taskStatus}, ${now}, ${now})
-        `;
+        const { data, error } = await supabase.from("PersonalTask").insert([task]).select().single();
 
-        const task = { id, userId, title, description: description ?? null, status: taskStatus, createdAt: now.toISOString(), updatedAt: now.toISOString() };
-        return NextResponse.json({ success: true, task });
-    } catch (error) {
-        console.error("POST personal task error:", error);
-        return NextResponse.json({ error: "Failed to create task" }, { status: 500 });
+        if (error) {
+            console.error("POST personal task error:", error);
+            return NextResponse.json({ error: error.message }, { status: 500 });
+        }
+
+        return NextResponse.json({ success: true, task: data });
+    } catch (err: any) {
+        return NextResponse.json({ error: err.message }, { status: 500 });
     }
 }
 
-// PATCH update task status
 export async function PATCH(request: Request) {
     try {
         const body = await request.json();
@@ -66,32 +74,24 @@ export async function PATCH(request: Request) {
             return NextResponse.json({ error: "Task ID required" }, { status: 400 });
         }
 
-        const now = new Date();
+        const updates: any = { updatedAt: new Date().toISOString() };
+        if (status !== undefined) updates.status = status;
+        if (title !== undefined) updates.title = title;
+        if (description !== undefined) updates.description = description;
 
-        if (status !== undefined) {
-            await prisma.$executeRaw`
-                UPDATE "PersonalTask" SET "status" = ${status}, "updatedAt" = ${now} WHERE "id" = ${taskId}
-            `;
-        }
-        if (title !== undefined) {
-            await prisma.$executeRaw`
-                UPDATE "PersonalTask" SET "title" = ${title}, "updatedAt" = ${now} WHERE "id" = ${taskId}
-            `;
-        }
-        if (description !== undefined) {
-            await prisma.$executeRaw`
-                UPDATE "PersonalTask" SET "description" = ${description}, "updatedAt" = ${now} WHERE "id" = ${taskId}
-            `;
+        const { error } = await supabase.from("PersonalTask").update(updates).eq("id", taskId);
+
+        if (error) {
+            console.error("PATCH personal task error:", error);
+            return NextResponse.json({ error: error.message }, { status: 500 });
         }
 
         return NextResponse.json({ success: true });
-    } catch (error) {
-        console.error("PATCH personal task error:", error);
-        return NextResponse.json({ error: "Failed to update task" }, { status: 500 });
+    } catch (err: any) {
+        return NextResponse.json({ error: err.message }, { status: 500 });
     }
 }
 
-// DELETE a personal task
 export async function DELETE(request: Request) {
     const { searchParams } = new URL(request.url);
     const taskId = searchParams.get("taskId");
@@ -100,11 +100,12 @@ export async function DELETE(request: Request) {
         return NextResponse.json({ error: "Task ID required" }, { status: 400 });
     }
 
-    try {
-        await prisma.$executeRaw`DELETE FROM "PersonalTask" WHERE "id" = ${taskId}`;
-        return NextResponse.json({ success: true });
-    } catch (error) {
+    const { error } = await supabase.from("PersonalTask").delete().eq("id", taskId);
+
+    if (error) {
         console.error("DELETE personal task error:", error);
-        return NextResponse.json({ error: "Failed to delete task" }, { status: 500 });
+        return NextResponse.json({ error: error.message }, { status: 500 });
     }
+
+    return NextResponse.json({ success: true });
 }
