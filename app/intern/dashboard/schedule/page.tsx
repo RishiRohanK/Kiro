@@ -123,7 +123,7 @@ export default function SchedulePage() {
                                     key={item.id}
                                     className={`p-5 border rounded-lg transition-colors ${
                                         isClosed
-                                        ? "bg-zinc-50 border-zinc-200 opacity-80"
+                                        ? "bg-red-50 border-red-200"
                                         : selectedSchedule?.id === item.id
                                             ? "bg-white border-blue-500 shadow-sm"
                                             : "bg-white border-zinc-200"
@@ -227,21 +227,47 @@ export default function SchedulePage() {
                                                 </div>
                                             </div>
 
-                                            <div className={`p-6 rounded-lg ${isClosed ? "bg-zinc-100 border border-zinc-200" : "bg-zinc-50"}`}>
+                                            <div className={`p-6 rounded-lg ${isClosed ? "bg-red-50 border border-red-200" : "bg-zinc-50"}`}>
                                                 {isClosed ? (
-                                                    <div className="flex flex-col items-center justify-center h-full py-8 text-center gap-3">
-                                                        <div className="text-4xl">🔒</div>
-                                                        <h4 className="text-sm font-bold text-zinc-500">Submission Window Closed</h4>
-                                                        <p className="text-xs text-zinc-400 max-w-xs">
-                                                            The deadline for this module has passed. Submissions are no longer accepted for this week.
-                                                        </p>
-                                                        {item.githubLink && (
-                                                            <div className="mt-4 pt-4 border-t border-zinc-200 w-full space-y-2 text-left">
-                                                                <p className="text-[10px] text-zinc-400">Previously submitted:</p>
-                                                                <a href={item.githubLink} target="_blank" className="block text-xs text-blue-600 hover:underline">GitHub Link</a>
-                                                                <a href={item.submissionLink} target="_blank" className="block text-xs text-blue-600 hover:underline">Submission Link</a>
+                                                    <div className="space-y-4">
+                                                        <div className="flex items-center gap-2 p-3 bg-red-100 border border-red-300 rounded-lg">
+                                                            <span className="text-red-600 text-lg">🔒</span>
+                                                            <div>
+                                                                <p className="text-xs font-bold text-red-700">Submission Closed</p>
+                                                                <p className="text-[10px] text-red-500">Deadline has passed. This form is frozen.</p>
                                                             </div>
-                                                        )}
+                                                        </div>
+                                                        {/* Frozen form - visible but disabled */}
+                                                        <div className="space-y-4 pointer-events-none select-none opacity-50 grayscale">
+                                                            <div>
+                                                                <label className="block text-[11px] text-zinc-500 mb-1">GitHub repository link</label>
+                                                                <input
+                                                                    type="url"
+                                                                    disabled
+                                                                    value={item.githubLink || ""}
+                                                                    readOnly
+                                                                    className="w-full p-2 text-sm border border-zinc-300 rounded bg-zinc-100 cursor-not-allowed"
+                                                                    placeholder="https://github.com/..."
+                                                                />
+                                                            </div>
+                                                            <div>
+                                                                <label className="block text-[11px] text-zinc-500 mb-1">Submit link (Deployment/Drive)</label>
+                                                                <input
+                                                                    type="url"
+                                                                    disabled
+                                                                    value={item.submissionLink || ""}
+                                                                    readOnly
+                                                                    className="w-full p-2 text-sm border border-zinc-300 rounded bg-zinc-100 cursor-not-allowed"
+                                                                    placeholder="https://..."
+                                                                />
+                                                            </div>
+                                                            <button
+                                                                disabled
+                                                                className="w-full py-2 bg-red-300 text-white text-sm rounded cursor-not-allowed"
+                                                            >
+                                                                Submission Closed
+                                                            </button>
+                                                        </div>
                                                     </div>
                                                 ) : (
                                                     <>
