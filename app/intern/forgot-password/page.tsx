@@ -41,7 +41,6 @@ export default function InternForgotPasswordPage() {
 
             {/* Background Decorative Images */}
             <div className="absolute inset-0 pointer-events-none">
-                <img src="https://ik.imagekit.io/dypkhqxip/Rocket-rafiki%20(1).svg" alt="" className="absolute left-[2%] top-[10%] w-[480px] hidden lg:block" />
                 <img src="https://ik.imagekit.io/dypkhqxip/Forgot%20password-bro.svg" alt="" className="absolute right-[5%] bottom-[5%] w-[420px] hidden lg:block" />
             </div>
 
