@@ -82,6 +82,8 @@ model User {
   handRaised Boolean  @default(false)
   letterUrl  String?
   lastActive DateTime @default(now())
+  college    String?
+  batch      String?   @default("Batch 1")
   tasks      Task[]   @relation("UserTasks")
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
@@ -301,6 +303,7 @@ model Mentorship {
 
 model Schedule {
   id              String   @id @default(cuid())
+  batch           String   @default("Batch 1") // e.g., "Batch 1", "Batch 2"
   week            String   // e.g., "Week 1"
   typeOfWork      String   // e.g., "Frontend Development"
   toolsUsed       String[] // Array of strings

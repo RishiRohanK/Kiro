@@ -3,14 +3,21 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ShieldAlert, Loader2, Eye, EyeOff, User, Mail } from "lucide-react";
+import { ShieldAlert, Loader2, Eye, EyeOff, User, Mail, School } from "lucide-react";
 import { supabase } from "@/lib/supabase";
+
+const COLLEGES = [
+    "CMR Institute of Technology (CMRIT Hyderabad)",
+    "Kamala Institute of Technology and Science (KITS Karimnagar)",
+    "Vignan's Institute of Management and Technology for Women (Vignan Women’s)"
+];
 
 export default function InternSignupPage() {
     const router = useRouter();
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [college, setCollege] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
@@ -27,13 +34,17 @@ export default function InternSignupPage() {
 
     const handleSignup = async (e: React.FormEvent) => {
         e.preventDefault();
+        if (!college) {
+            setError("Please select your college.");
+            return;
+        }
         setLoading(true);
         setError("");
 
         try {
             const res = await fetch("/api/intern/signup", {
                 method: "POST",
-                body: JSON.stringify({ name, email, password }),
+                body: JSON.stringify({ name, email, password, college }),
                 headers: { "Content-Type": "application/json" },
             });
 
@@ -55,16 +66,16 @@ export default function InternSignupPage() {
         <div className="min-h-screen bg-[#FAFAFA] text-zinc-900 font-sans flex items-center justify-center p-6 relative overflow-hidden">
 
             {/* Background Decorative Images */}
-            <div className="absolute inset-0 pointer-events-none">
-                <img src="https://ik.imagekit.io/dypkhqxip/Rocket-rafiki%20(1).svg" alt="" className="absolute left-[2%] top-[10%] w-[480px] hidden lg:block !shadow-none !drop-shadow-none filter-none" />
-                <img src="https://ik.imagekit.io/dypkhqxip/Happy%20student-bro.svg" alt="" className="absolute right-[5%] bottom-[5%] w-[420px] hidden lg:block !shadow-none !drop-shadow-none filter-none" />
+            <div className="absolute inset-0 pointer-events-none opacity-20">
+                <img src="https://ik.imagekit.io/dypkhqxip/Rocket-rafiki%20(1).svg" alt="" className="absolute left-[2%] top-[10%] w-[480px] hidden lg:block !shadow-none !drop-shadow-none filter-none grayscale" />
+                <img src="https://ik.imagekit.io/dypkhqxip/Happy%20student-bro.svg" alt="" className="absolute right-[5%] bottom-[5%] w-[420px] hidden lg:block !shadow-none !drop-shadow-none filter-none grayscale" />
             </div>
 
             {/* Signup Card - Sharp Edges */}
-            <div className="w-full max-w-[400px] bg-white border border-zinc-100 p-7 md:p-9 relative z-10 shadow-[0_4px_20px_-2px_rgba(0,0,0,0.05)]">
+            <div className="w-full max-w-[420px] bg-white border border-zinc-100 p-7 md:p-10 relative z-10 shadow-[0_4px_30px_-5px_rgba(0,0,0,0.03)]">
 
                 {/* Logo Section */}
-                <div className="flex flex-col items-center mb-6">
+                <div className="flex flex-col items-center mb-8">
                     <img
                         src="https://res.cloudinary.com/dsqqrpzfl/image/upload/v1774885412/Screenshot_2026-03-30_at_21.13.11-removebg-preview_gaqcdz.png"
                         alt="Company Logo"
@@ -72,19 +83,19 @@ export default function InternSignupPage() {
                     />
 
                     <div className="text-center space-y-1">
-                        <h2 className="text-[13px] font-bold text-zinc-800 tracking-tight">
+                        <h2 className="text-[14px] font-bold text-zinc-800 tracking-tight">
                             Create Intern Account
                         </h2>
-                        <p className="text-[12px] text-zinc-400 font-medium">
-                            Student Forge Initiative for Students
+                        <p className="text-[11px] text-zinc-400 font-medium">
+                            Join Batch 2 of the Student Forge Initiative
                         </p>
                     </div>
                 </div>
 
                 {/* Form Section */}
-                <form onSubmit={handleSignup} className="space-y-4">
+                <form onSubmit={handleSignup} className="space-y-5">
                     <div className="space-y-1.5">
-                        <label className="text-[12px] font-bold text-zinc-700 ml-1">
+                        <label className="text-[11px] font-bold text-zinc-400 ml-1 uppercase tracking-wider">
                             Full Name
                         </label>
                         <input
@@ -92,13 +103,13 @@ export default function InternSignupPage() {
                             type="text"
                             value={name}
                             onChange={(e) => setName(e.target.value)}
-                            className="w-full h-[44px] bg-[#F4F4F5] px-4 text-[13px] font-medium outline-none transition-all focus:bg-white border-none placeholder:text-zinc-400"
+                            className="w-full h-[46px] bg-[#F9F9F9] px-4 text-[13px] font-medium outline-none transition-all focus:bg-white border border-zinc-100 focus:border-zinc-300 placeholder:text-zinc-300"
                             placeholder="John Doe"
                         />
                     </div>
 
                     <div className="space-y-1.5">
-                        <label className="text-[12px] font-bold text-zinc-700 ml-1">
+                        <label className="text-[11px] font-bold text-zinc-400 ml-1 uppercase tracking-wider">
                             Email Address
                         </label>
                         <input
@@ -106,13 +117,32 @@ export default function InternSignupPage() {
                             type="email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            className="w-full h-[44px] bg-[#F4F4F5] px-4 text-[13px] font-medium outline-none transition-all focus:bg-white border-none placeholder:text-zinc-400"
+                            className="w-full h-[46px] bg-[#F9F9F9] px-4 text-[13px] font-medium outline-none transition-all focus:bg-white border border-zinc-100 focus:border-zinc-300 placeholder:text-zinc-300"
                             placeholder="name@example.com"
                         />
                     </div>
 
                     <div className="space-y-1.5">
-                        <label className="text-[12px] font-bold text-zinc-700 ml-1">
+                        <label className="text-[11px] font-bold text-zinc-400 ml-1 uppercase tracking-wider">
+                            Select College
+                        </label>
+                        <select
+                            required
+                            value={college}
+                            onChange={(e) => setCollege(e.target.value)}
+                            className="w-full h-[46px] bg-[#F9F9F9] px-4 text-[13px] font-medium outline-none transition-all focus:bg-white border border-zinc-100 focus:border-zinc-300 appearance-none cursor-pointer"
+                        >
+                            <option value="" disabled className="text-zinc-300">Choose your institution</option>
+                            {COLLEGES.map((c, idx) => (
+                                <option key={idx} value={c} className="text-zinc-800 py-2">
+                                    {c}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+
+                    <div className="space-y-1.5">
+                        <label className="text-[11px] font-bold text-zinc-400 ml-1 uppercase tracking-wider">
                             Password
                         </label>
                         <div className="relative">
@@ -121,13 +151,13 @@ export default function InternSignupPage() {
                                 type={showPassword ? "text" : "password"}
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                className="w-full h-[44px] bg-[#F4F4F5] px-4 pr-10 text-[13px] font-medium outline-none transition-all focus:bg-white border-none placeholder:text-zinc-400"
+                                className="w-full h-[46px] bg-[#F9F9F9] px-4 pr-10 text-[13px] font-medium outline-none transition-all focus:bg-white border border-zinc-100 focus:border-zinc-300 placeholder:text-zinc-300"
                                 placeholder="Min. 8 characters"
                             />
                             <button
                                 type="button"
                                 onClick={() => setShowPassword(!showPassword)}
-                                className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600"
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-300 hover:text-zinc-600 transition-colors"
                             >
                                 {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                             </button>
@@ -135,7 +165,7 @@ export default function InternSignupPage() {
                     </div>
 
                     {error && (
-                        <div className="p-2.5 bg-red-50 text-red-500 text-[11px] font-bold flex items-center gap-2 border border-red-100">
+                        <div className="p-3 bg-red-50 text-red-500 text-[11px] font-bold flex items-center gap-2 border border-red-100">
                             <ShieldAlert size={14} />
                             <span>{error}</span>
                         </div>
@@ -144,16 +174,16 @@ export default function InternSignupPage() {
                     <button
                         disabled={loading}
                         type="submit"
-                        className="w-full h-[44px] bg-zinc-900 text-white text-[14px] font-bold transition-all hover:bg-black active:scale-[0.99] flex items-center justify-center gap-2 disabled:opacity-50 mt-2"
+                        className="w-full h-[48px] bg-zinc-900 text-white text-[13px] font-bold transition-all hover:bg-black active:scale-[0.99] flex items-center justify-center gap-2 disabled:opacity-50"
                     >
-                        {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Create Account"}
+                        {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Create Intern Account"}
                     </button>
                 </form>
 
                 {/* Divider */}
-                <div className="relative flex items-center my-6">
+                <div className="relative flex items-center my-8">
                     <div className="flex-grow border-t border-zinc-100"></div>
-                    <span className="flex-shrink mx-3 text-[10px] font-bold text-zinc-300 uppercase tracking-widest">Continue with</span>
+                    <span className="flex-shrink mx-4 text-[10px] font-bold text-zinc-300 uppercase tracking-widest">or</span>
                     <div className="flex-grow border-t border-zinc-100"></div>
                 </div>
 
@@ -162,7 +192,7 @@ export default function InternSignupPage() {
                     <button
                         onClick={signInWithGoogle}
                         type="button"
-                        className="h-[44px] flex items-center justify-center gap-3 bg-white border border-zinc-200 text-[13px] font-bold text-zinc-700 hover:bg-zinc-50 transition-all active:scale-[0.99]"
+                        className="h-[46px] flex items-center justify-center gap-3 bg-white border border-zinc-200 text-[12px] font-bold text-zinc-600 hover:bg-zinc-50 transition-all active:scale-[0.99]"
                     >
                         <svg className="w-4 h-4" viewBox="0 0 24 24">
                             <path
@@ -182,12 +212,12 @@ export default function InternSignupPage() {
                                 fill="#EA4335"
                             />
                         </svg>
-                        <span>Sign up with Google</span>
+                        <span>Join with Google</span>
                     </button>
                 </div>
 
-                <div className="mt-8 text-center border-t border-zinc-100 pt-6">
-                    <p className="text-[12px] text-zinc-500 font-medium tracking-tight">
+                <div className="mt-10 text-center border-t border-zinc-100 pt-6">
+                    <p className="text-[12px] text-zinc-400 font-medium tracking-tight">
                         Already registered? <Link href="/intern/signin" className="text-zinc-900 font-bold hover:underline ml-1">Login here</Link>
                     </p>
                 </div>

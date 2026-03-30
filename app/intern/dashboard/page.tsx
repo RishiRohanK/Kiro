@@ -36,7 +36,9 @@ import {
    Hash,
    Circle,
    Map,
-   Hand
+   Hand,
+   School,
+   Layers
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { io } from "socket.io-client";
@@ -59,6 +61,7 @@ interface ScheduleItem {
    description: string;
    deadline: string;
    isCompleted: boolean;
+   batch: string;
 }
 
 interface ChatMessage {
@@ -106,17 +109,16 @@ function InternDashboardContent() {
       fetchTasks(userData.id);
       fetchStatus(userData.id);
       fetchAttendance(userData.id);
-      fetchSchedules(userData.id);
+      fetchSchedules(userData.id, userData.batch);
       fetchAllInterns();
 
       const syncInterval = setInterval(() => {
          fetchTasks(userData.id);
          fetchStatus(userData.id);
          fetchAttendance(userData.id);
-         fetchSchedules(userData.id);
+         fetchSchedules(userData.id, userData.batch);
       }, 20000);
 
-      // Socket init
       const newSocket = io({ reconnectionDelayMax: 10000 });
       setSocket(newSocket);
 
@@ -183,9 +185,10 @@ function InternDashboardContent() {
       }
    };
 
-   const fetchSchedules = async (id: string) => {
+   const fetchSchedules = async (id: string, batch?: string) => {
       try {
-         const res = await fetch(`/api/intern/schedule?internId=${id}`);
+         const query = batch ? `?internId=${id}&batch=${encodeURIComponent(batch)}` : `?internId=${id}`;
+         const res = await fetch(`/api/intern/schedule${query}`);
          const data = await res.json();
          if (data.success) {
             setSchedules(data.schedules);
@@ -287,7 +290,21 @@ function InternDashboardContent() {
       <div className={`p-4 lg:p-6 max-w-[1600px] w-full mx-auto bg-white ${activeTab === "community" ? "h-[calc(100vh-3.5rem)] overflow-hidden" : "min-h-screen"}`}>
          {activeTab === "overview" && (
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6 text-left">
-               <div className="mb-8 font-sans"><h1 className="text-xl font-bold text-zinc-900">Welcome back, {user.name.split(' ')[0]}</h1><p className="text-zinc-400 text-xs mt-0.5">Your account is active.</p></div>
+               <div className="mb-8 font-sans flex flex-col md:flex-row md:items-end justify-between gap-4">
+                  <div>
+                     <h1 className="text-xl font-bold text-zinc-900">Welcome back, {user.name.split(' ')[0]}</h1>
+                     <div className="flex items-center gap-2 mt-1.5">
+                        <span className="px-2 py-0.5 bg-blue-50 text-blue-600 border border-blue-100 text-[10px] font-bold rounded-sm uppercase tracking-tight flex items-center gap-1.5">
+                           <Layers size={10} /> {user.batch || "Batch 1"}
+                        </span>
+                        <span className="px-2 py-0.5 bg-zinc-50 text-zinc-500 border border-zinc-100 text-[10px] font-bold rounded-sm flex items-center gap-1.5">
+                           <School size={10} /> {user.college || "Forge Academy Intern"}
+                        </span>
+                     </div>
+                  </div>
+                  <p className="text-zinc-400 text-xs font-semibold">Your intern session is active.</p>
+               </div>
+
                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                   <div className="p-5 border border-zinc-100 bg-white shadow-sm flex flex-col justify-between h-32"><div className="flex items-center justify-between"><span className="text-xs font-medium text-zinc-400">Assignments</span><Briefcase size={16} className="text-[#0055FF]" /></div><div className="mt-auto"><p className="text-2xl font-bold">{tasks.filter(t => t.status === 'pending').length}</p><p className="text-[10px] text-zinc-500 mt-1">Pending tasks</p></div></div>
                   <div className="p-5 border border-zinc-100 bg-white shadow-sm flex flex-col justify-between h-32"><div className="flex items-center justify-between"><span className="text-xs font-medium text-zinc-400">Attendance</span><Check size={16} className="text-emerald-500" /></div><div className="mt-auto"><div className="flex items-baseline gap-2"><p className="text-2xl font-bold text-zinc-900">{attendancePercentage}%</p><span className="text-[10px] text-zinc-400">({attendanceCount} Days)</span></div><p className="text-[10px] text-zinc-500 mt-1">Present percentage</p></div></div>
@@ -311,9 +328,9 @@ function InternDashboardContent() {
 
                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start pt-4 border-t border-zinc-100">
                   <div className="lg:col-span-8 space-y-6">
-                     <div className="flex items-center justify-between mb-4"><h2 className="text-xs font-bold text-zinc-400">Active roadmap progression</h2><Link href="/intern/dashboard/schedule" className="text-xs font-bold text-[#0055FF] hover:underline flex items-center gap-1">Full roadmap <ChevronRight size={12} /></Link></div>
+                     <div className="flex items-center justify-between mb-4"><h2 className="text-xs font-bold text-zinc-400">Active roadmap progression ({user.batch || "Batch 1"})</h2><Link href="/intern/dashboard/schedule" className="text-xs font-bold text-[#0055FF] hover:underline flex items-center gap-1">Full roadmap <ChevronRight size={12} /></Link></div>
                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {schedules.slice(0, 2).map((item) => (
+                        {schedules.length > 0 ? schedules.slice(0, 2).map((item) => (
                            <div key={item.id} className="p-6 border border-zinc-100 bg-white hover:border-[#0055FF]/30 transition-all flex flex-col h-full text-left">
                               <div className="flex items-center justify-between mb-4"><span className="text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 border border-blue-100">{item.week}</span>{item.isCompleted && <CheckCircle2 size={14} className="text-emerald-500" />}</div>
                               <h3 className="text-sm font-bold text-zinc-900 mb-2">{item.typeOfWork}</h3>
@@ -323,14 +340,19 @@ function InternDashboardContent() {
                                  <span className="text-[10px] text-zinc-400 font-bold">Ongoing</span>
                               </div>
                            </div>
-                        ))}
+                        )) : (
+                           <div className="col-span-2 p-12 border border-dashed border-zinc-100 bg-zinc-50/30 text-center flex flex-col items-center justify-center">
+                              <Map size={24} className="text-zinc-200 mb-2" />
+                              <p className="text-xs font-bold text-zinc-400">Roadmap processing for {user.batch || "Batch 1"}</p>
+                           </div>
+                        )}
                      </div>
                   </div>
 
                   <aside className="lg:col-span-4 space-y-6">
                      <div className="p-6 border border-zinc-100 bg-[#FAFAFA] flex flex-col gap-4 text-left">
                         <div className="flex items-center gap-2 text-xs font-bold text-zinc-900"><Map size={16} className="text-[#0055FF]" /> Program overview</div>
-                        <p className="text-xs text-zinc-500 leading-relaxed">Your professional growth is mapped across your entire internship duration. Ensure all milestones are met on time.</p>
+                        <p className="text-xs text-zinc-500 leading-relaxed">Your professional growth is mapped across your {user.batch || "Batch 1"} internship duration. Ensure all milestones are met on time.</p>
                         <div className="space-y-3">
                            <div className="flex items-center justify-between p-3 bg-white border border-zinc-100"><span className="text-[10px] font-bold text-zinc-400">Weeks completed</span><span className="text-sm font-bold text-zinc-900">{schedules.filter(s => s.isCompleted).length}</span></div>
                            <div className="flex items-center justify-between p-3 bg-white border border-zinc-100"><span className="text-[10px] font-bold text-zinc-400">Total milestones</span><span className="text-sm font-bold text-zinc-900">{schedules.length}</span></div>
@@ -516,7 +538,7 @@ function InternDashboardContent() {
                   <div className="md:col-span-8 space-y-6">
                      <section className="p-8 border border-zinc-100 bg-white shadow-sm space-y-6"><div className="flex items-center gap-3 pb-4 border-b border-zinc-50"><User size={18} className="text-[#0055FF]" /><h3 className="text-sm font-bold text-zinc-900">Personal information</h3></div><div className="grid grid-cols-1 md:grid-cols-2 gap-6"><div className="space-y-1.5"><p className="text-[10px] font-bold text-zinc-400">Full name</p><div className="p-3 bg-zinc-50 border border-zinc-100 text-sm font-medium text-zinc-900">{user.name}</div></div><div className="space-y-1.5"><p className="text-[10px] font-bold text-zinc-400">Email address</p><div className="p-3 bg-zinc-50 border border-zinc-100 text-sm font-medium text-zinc-900 flex items-center gap-2"><Mail size={12} className="text-zinc-400" />{user.email}</div></div></div></section>
                   </div>
-                  <div className="md:col-span-4 space-y-6"><div className="p-8 border border-zinc-100 bg-white shadow-sm text-center"><div className="h-20 w-20 bg-[#0055FF]/10 text-[#0055FF] flex items-center justify-center mx-auto mb-4"><User size={36} /></div><h4 className="text-sm font-bold text-zinc-900">{user.name}</h4><p className="text-[10px] text-zinc-400 mb-8 font-medium">Authenticated account</p><button onClick={handleSignOut} className="w-full h-10 bg-black text-white text-[10px] font-bold flex items-center justify-center gap-2">Log out <LogOut size={14} /></button></div></div>
+                  <div className="md:col-span-4 space-y-6"><div className="p-8 border border-zinc-100 bg-white shadow-sm text-center"><div className="h-20 w-20 bg-[#0055FF]/10 text-[#0055FF] flex items-center justify-center mx-auto mb-4"><User size={36} /></div><h4 className="text-sm font-bold text-zinc-900">{user.name}</h4><p className="text-[10px] text-zinc-400 mb-8 font-medium">{user.college || "Forge Academy Intern"} • {user.batch || "Batch 1"}</p><button onClick={handleSignOut} className="w-full h-10 bg-black text-white text-[10px] font-bold flex items-center justify-center gap-2">Log out <LogOut size={14} /></button></div></div>
                </div>
             </motion.div>
          )}

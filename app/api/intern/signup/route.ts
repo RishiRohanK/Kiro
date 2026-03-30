@@ -5,14 +5,9 @@ import { Role } from "@prisma/client";
 
 export async function POST(req: Request) {
     try {
-        // Block new registrations
-        return NextResponse.json({ 
-            error: "The registration period for internships has ended. We are no longer accepting new signups." 
-        }, { status: 403 });
+        const { name, email, password, college } = await req.json();
 
-        const { name, email, password } = await req.json();
-
-        if (!name || !email || !password) {
+        if (!name || !email || !password || !college) {
             return NextResponse.json({ error: "Missing fields" }, { status: 400 });
         }
 
@@ -36,6 +31,8 @@ export async function POST(req: Request) {
                 password: hashedPassword,
                 role: Role.INTERN,
                 isApproved: false, // Manual approval required
+                college,
+                batch: "Batch 2"
             },
         });
 

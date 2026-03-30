@@ -5,8 +5,15 @@ export async function GET(req: Request) {
     try {
         const { searchParams } = new URL(req.url);
         const internId = searchParams.get('internId');
+        const batch = searchParams.get('batch');
+
+        const where: any = {};
+        if (batch) {
+            where.batch = batch;
+        }
 
         const schedules = await prisma.schedule.findMany({
+            where,
             include: {
                 submissions: internId ? {
                     where: { internId }
@@ -41,18 +48,20 @@ export async function POST(req: Request) {
             requirements, 
             description, 
             outcomes, 
-            deadline 
+            deadline,
+            batch = "Batch 1"
         } = body;
 
         const schedule = await prisma.schedule.create({
             data: {
+                batch,
                 week,
                 typeOfWork,
-                toolsUsed, // Array
-                deploymentTools: deploymentTools || [], // New field
-                requirements: requirements || [], // New field
+                toolsUsed, 
+                deploymentTools: deploymentTools || [], 
+                requirements: requirements || [], 
                 description,
-                outcomes, // Array
+                outcomes, 
                 deadline: new Date(deadline)
             }
         });
