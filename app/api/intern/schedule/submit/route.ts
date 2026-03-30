@@ -6,7 +6,15 @@ export async function POST(req: Request) {
         const body = await req.json();
         const { scheduleId, internId, githubLink, submissionLink } = body;
 
-        // Create or update the submission for this particular intern
+        // Server-side deadline enforcement
+        const schedule = await prisma.schedule.findUnique({ where: { id: scheduleId } });
+        if (!schedule) {
+            return NextResponse.json({ success: false, error: "Schedule not found" }, { status: 404 });
+        }
+        if (new Date(schedule.deadline) < new Date()) {
+            return NextResponse.json({ success: false, error: "Submission window is closed. The deadline has passed." }, { status: 403 });
+        }
+
         const submission = await prisma.scheduleSubmission.upsert({
             where: {
                 scheduleId_internId: {

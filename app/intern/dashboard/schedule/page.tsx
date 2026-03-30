@@ -64,6 +64,13 @@ export default function SchedulePage() {
     const handleSubmission = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!selectedSchedule || !user) return;
+
+        // Hard block: prevent submission if deadline has passed
+        if (new Date(selectedSchedule.deadline) < new Date()) {
+            alert("Submission window is closed. The deadline for this module has passed.");
+            return;
+        }
+
         setIsSubmitting(true);
         try {
             const res = await fetch(`/api/intern/schedule/submit`, {
