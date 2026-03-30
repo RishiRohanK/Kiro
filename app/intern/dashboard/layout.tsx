@@ -12,7 +12,9 @@ import {
     Briefcase,
     Calendar,
     ShieldCheck,
-    Hand
+    Hand,
+    MessageSquare,
+    FileBadge
 } from "lucide-react";
 
 export default function InternDashboardLayout({
@@ -90,93 +92,95 @@ export default function InternDashboardLayout({
 
     const navItems = [
         { name: "Overview", icon: LayoutDashboard, slug: "/intern/dashboard" },
+        { name: "Community", icon: MessageSquare, slug: "/intern/dashboard?view=community" },
         { name: "Assignments", icon: Briefcase, slug: "/intern/dashboard?view=tasks" },
-        { name: "Schedule", icon: Calendar, slug: "/intern/dashboard/schedule" },
-        { name: "Attendance Hist.", icon: Calendar, slug: "/intern/dashboard?view=attendance" },
+        { name: "Roadmap", icon: Calendar, slug: "/intern/dashboard/schedule" },
+        { name: "Attendance", icon: FileBadge, slug: "/intern/dashboard?view=attendance" },
         { name: "Settings", icon: Settings, slug: "/intern/dashboard/settings" },
     ];
 
     return (
         <div className="min-h-screen bg-white text-zinc-900 flex font-sans">
-            {/* Sharp Blue Sidebar */}
-            <aside className="w-20 lg:w-64 flex flex-col bg-[#0055FF] h-screen sticky top-0 z-50 text-white shadow-2xl rounded-none">
-                <div className="p-8 pb-10 flex items-center gap-3">
+            {/* Modern Gray Sidebar */}
+            <aside className="w-20 lg:w-64 flex flex-col bg-[#F4F4F5] h-screen sticky top-0 z-50 border-r border-zinc-200 rounded-none">
+                <div className="p-8 pb-10 flex flex-col items-center lg:items-start gap-4">
                     <img 
-                        src="/sf-next-logo.png" 
-                        alt="Student Forge Logo" 
-                        className="h-8 w-8 object-contain"
+                        src="https://res.cloudinary.com/dsqqrpzfl/image/upload/v1774885412/Screenshot_2026-03-30_at_21.13.11-removebg-preview_gaqcdz.png" 
+                        alt="Company Logo" 
+                        className="h-9 w-auto object-contain"
                     />
-                    <span className="hidden lg:block text-lg font-bold tracking-tight">Intern Portal</span>
                 </div>
 
-                <nav className="flex-1 px-4 space-y-2">
+                <nav className="flex-1 px-4 space-y-1">
                     {navItems.map((item) => {
                         const isActive = pathname === item.slug || (item.name === "Overview" && pathname === "/intern/dashboard");
                         return (
                             <Link 
                                 key={item.name}
                                 href={item.slug} 
-                                className={`flex items-center justify-center lg:justify-start h-12 px-4 gap-4 rounded-none transition-all ${
+                                className={`flex items-center justify-center lg:justify-start h-11 px-4 gap-4 transition-all duration-200 group ${
                                     isActive 
-                                    ? "bg-white text-[#0055FF] font-bold shadow-lg shadow-black/10" 
-                                    : "text-white/70 hover:text-white hover:bg-white/10"
+                                    ? "bg-white text-black shadow-sm border border-zinc-200 font-bold" 
+                                    : "text-zinc-500 hover:text-black hover:bg-white/50"
                                 }`}
                             >
-                                <item.icon size={20} />
-                                <span className="hidden lg:block text-[14px]">{item.name}</span>
+                                <item.icon size={18} strokeWidth={isActive ? 2.5 : 2} className={isActive ? "text-[#0055FF]" : ""} />
+                                <span className="hidden lg:block text-[14px]">
+                                    {item.name}
+                                </span>
                             </Link>
                         );
                     })}
                 </nav>
 
-                <div className="p-6 mt-auto border-t border-white/10 space-y-3">
+                <div className="p-6 mt-auto border-t border-zinc-200 space-y-2">
                     <button 
                         onClick={toggleHand}
                         disabled={isTogglingHand}
-                        className={`w-full h-12 flex items-center justify-center lg:justify-start px-4 gap-4 rounded-none font-bold transition-all shadow-lg ${
+                        className={`w-full h-11 flex items-center justify-center lg:justify-start px-4 gap-4 font-bold transition-all ${
                             handRaised 
-                            ? "bg-amber-500 text-black hover:bg-amber-600" 
-                            : "bg-white/10 text-white hover:bg-white/20"
+                            ? "bg-amber-500 text-white shadow-lg shadow-amber-500/20" 
+                            : "bg-white border border-zinc-200 text-zinc-600 hover:bg-zinc-50"
                         }`}
                     >
                         {isTogglingHand ? (
-                            <div className="h-5 w-5 border-2 border-white/30 border-t-white animate-spin rounded-full mx-auto lg:mx-0" />
+                            <div className="h-4 w-4 border-2 border-zinc-400 border-t-zinc-900 animate-spin mx-auto lg:mx-0" />
                         ) : (
-                            <Hand size={20} className={handRaised ? "animate-bounce" : ""} />
+                            <Hand size={18} className={handRaised ? "animate-bounce" : ""} />
                         )}
-                        <span className="hidden lg:block text-[14px]">
-                            {handRaised ? "Lower Hand" : "Raise Hand"}
+                        <span className="hidden lg:block text-[12px] font-bold">
+                            {handRaised ? "Help Active" : "Raise Hand"}
                         </span>
                     </button>
 
                     <button 
                         onClick={handleLogout}
-                        className="w-full h-12 flex items-center justify-center lg:justify-start px-4 gap-4 bg-red-600 text-white rounded-none font-bold hover:bg-red-700 transition-all shadow-lg shadow-black/10"
+                        className="w-full h-11 flex items-center justify-center lg:justify-start px-4 gap-4 bg-red-600 text-white hover:bg-red-700 transition-all font-bold shadow-lg shadow-red-500/20"
                     >
-                        <LogOut size={20} />
-                        <span className="hidden lg:block text-[14px]">Terminate Session</span>
+                        <LogOut size={18} className="text-white" />
+                        <span className="hidden lg:block text-[12px] font-bold">Log out</span>
                     </button>
                 </div>
             </aside>
 
-            {/* Main Content Area */}
+            {/* Compact Minimal Top Navbar */}
             <div className="flex-1 flex flex-col">
-                <header className="h-16 border-b border-zinc-100 flex items-center justify-between px-8 bg-white/80 backdrop-blur-md sticky top-0 z-40">
-                    <div className="flex items-center gap-2">
-                        <span className="text-[12px] font-medium text-zinc-400">Portal</span>
-                        <ChevronRight size={14} className="text-zinc-300" />
-                        <span className="text-[12px] font-bold text-zinc-900 capitalize">
+                <header className="h-12 flex items-center justify-between px-8 bg-[#0055FF] sticky top-0 z-40 text-white shadow-lg shadow-blue-500/10">
+                    <div className="flex items-center gap-3">
+                        <span className="text-[11px] font-medium text-blue-100/80">Portal Node</span>
+                        <ChevronRight size={12} className="text-blue-100/40" />
+                        <span className="text-[12px] font-bold">
                            {pathname.includes("tasks") ? "Assignments" : "Overview"}
                         </span>
                     </div>
 
                     <div className="flex items-center gap-4">
-                        <div className="hidden md:flex items-center gap-3 pr-4 border-r border-zinc-100">
+                        <div className="hidden md:flex items-center gap-3 pr-3 border-r border-white/10">
                             <div className="text-right">
-                               <p className="text-sm font-bold text-black leading-none">{user.name}</p>
-                               <p className="text-[10px] text-zinc-400 font-medium mt-1 uppercase">Global session</p>
+                               <p className="text-[12px] font-bold text-white leading-none">{user.name}</p>
+                               <p className="text-[9px] text-blue-100/60 font-medium mt-0.5 leading-none">Authentication: Global</p>
                             </div>
-                            <div className="h-9 w-9 bg-[#0055FF] rounded-none flex items-center justify-center text-white text-xs font-bold">
+                            <div className="h-8 w-8 bg-white text-[#0055FF] rounded-none flex items-center justify-center text-[12px] font-bold">
                                 {user.name[0]}
                             </div>
                         </div>

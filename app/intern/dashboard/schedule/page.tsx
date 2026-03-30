@@ -96,10 +96,14 @@ export default function SchedulePage() {
     );
 
     return (
-        <div className="p-6 md:p-10 max-w-5xl mx-auto font-sans text-zinc-800">
-            <header className="mb-10 pb-6 border-b border-zinc-100">
-                <h1 className="text-2xl font-medium text-zinc-900">Internship Schedule</h1>
-                <p className="mt-1 text-sm text-zinc-500">View your weekly updates and submit your work.</p>
+        <div className="p-4 lg:p-6 max-w-7xl w-full mx-auto bg-white min-h-screen">
+            <header className="mb-10 pt-4">
+                <h1 className="text-xl font-bold tracking-tight text-zinc-900 font-sans">
+                   Internship Roadmap <span className="text-[#0055FF] font-medium">Session Update.</span>
+                </h1>
+                <p className="text-zinc-400 text-[12px] font-medium mt-1">
+                   Monitor progress objectives and synchronize submission protocols.
+                </p>
             </header>
 
             <div className="space-y-6">
