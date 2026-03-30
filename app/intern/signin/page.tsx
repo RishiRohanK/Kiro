@@ -3,13 +3,10 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ShieldAlert, Loader2, Eye, EyeOff, Lock, AlertCircle } from "lucide-react";
+import { ShieldAlert, Loader2, Eye, EyeOff } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 
 export default function InternSigninPage() {
-    // FREEZE SETTINGS
-    const isFrozen = true; // Set to true to disable all logins
-
     const router = useRouter();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -18,7 +15,6 @@ export default function InternSigninPage() {
     const [error, setError] = useState("");
 
     const signInWithGoogle = async () => {
-        if (isFrozen) return;
         const { error } = await supabase.auth.signInWithOAuth({
             provider: 'google',
             options: {
@@ -30,8 +26,6 @@ export default function InternSigninPage() {
 
     const handleSignin = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (isFrozen) return;
-        
         setLoading(true);
         setError("");
 
@@ -61,8 +55,8 @@ export default function InternSigninPage() {
 
             {/* Background Decorative Images */}
             <div className="absolute inset-0 pointer-events-none">
-                <img src="https://ik.imagekit.io/dypkhqxip/Rocket-rafiki%20(1).svg" alt="" className="absolute left-[2%] top-[10%] w-[480px] hidden lg:block opacity-20 filter grayscale" />
-                <img src="https://ik.imagekit.io/dypkhqxip/Happy%20student-bro.svg" alt="" className="absolute right-[5%] bottom-[5%] w-[420px] hidden lg:block opacity-20 filter grayscale" />
+                <img src="https://ik.imagekit.io/dypkhqxip/Rocket-rafiki%20(1).svg" alt="" className="absolute left-[2%] top-[10%] w-[480px] hidden lg:block !shadow-none !drop-shadow-none filter-none" />
+                <img src="https://ik.imagekit.io/dypkhqxip/Happy%20student-bro.svg" alt="" className="absolute right-[5%] bottom-[5%] w-[420px] hidden lg:block !shadow-none !drop-shadow-none filter-none" />
             </div>
 
             {/* Login Card - Sharp Edges */}
@@ -86,28 +80,14 @@ export default function InternSigninPage() {
                     </div>
                 </div>
 
-                {/* FROZEN MESSAGE */}
-                {isFrozen && (
-                    <div className="mb-6 p-4 bg-red-50 border-l-4 border-red-500 space-y-2">
-                        <div className="flex items-center gap-2 text-red-600">
-                            <Lock size={16} className="shrink-0" />
-                            <span className="text-[12px] font-bold uppercase tracking-tight">Access temporarily frozen</span>
-                        </div>
-                        <p className="text-[11px] text-red-600/80 font-medium leading-relaxed">
-                            The intern portal is currently undergoing scheduled maintenance or administrative review. Login functionality is temporarily disabled for all users.
-                        </p>
-                    </div>
-                )}
-
                 {/* Form Section */}
-                <form onSubmit={handleSignin} className={`space-y-4 ${isFrozen ? 'opacity-40 pointer-events-none' : ''}`}>
+                <form onSubmit={handleSignin} className="space-y-4">
                     <div className="space-y-1.5">
                         <label className="text-[12px] font-bold text-zinc-700 ml-1">
                             Email Address
                         </label>
                         <input
                             required
-                            disabled={isFrozen}
                             type="email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
@@ -125,7 +105,6 @@ export default function InternSigninPage() {
                         <div className="relative">
                             <input
                                 required
-                                disabled={isFrozen}
                                 type={showPassword ? "text" : "password"}
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
@@ -134,7 +113,6 @@ export default function InternSigninPage() {
                             />
                             <button
                                 type="button"
-                                disabled={isFrozen}
                                 onClick={() => setShowPassword(!showPassword)}
                                 className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600"
                             >
@@ -145,8 +123,8 @@ export default function InternSigninPage() {
 
                     <div className="flex justify-end">
                         <Link
-                            href={isFrozen ? "#" : "/intern/forgot-password"}
-                            className={`text-[11px] font-bold text-zinc-500 ${isFrozen ? 'cursor-not-allowed' : 'hover:text-black'} transition-colors`}
+                            href="/intern/forgot-password"
+                            className="text-[11px] font-bold text-zinc-500 hover:text-black transition-colors"
                         >
                             Forgot Password?
                         </Link>
@@ -160,7 +138,7 @@ export default function InternSigninPage() {
                     )}
 
                     <button
-                        disabled={loading || isFrozen}
+                        disabled={loading}
                         type="submit"
                         className="w-full h-[44px] bg-zinc-900 text-white text-[14px] font-bold transition-all hover:bg-black active:scale-[0.99] flex items-center justify-center gap-2 disabled:opacity-50 mt-2"
                     >
@@ -169,18 +147,17 @@ export default function InternSigninPage() {
                 </form>
 
                 {/* Divider */}
-                <div className={`relative flex items-center my-6 ${isFrozen ? 'opacity-20' : ''}`}>
+                <div className="relative flex items-center my-6">
                     <div className="flex-grow border-t border-zinc-100"></div>
                     <span className="flex-shrink mx-3 text-[10px] font-bold text-zinc-300 uppercase tracking-widest">Continue with</span>
                     <div className="flex-grow border-t border-zinc-100"></div>
                 </div>
 
                 {/* Social Login */}
-                <div className={`flex flex-col gap-3 ${isFrozen ? 'opacity-40 pointer-events-none' : ''}`}>
+                <div className="flex flex-col gap-3">
                     <button
                         onClick={signInWithGoogle}
                         type="button"
-                        disabled={isFrozen}
                         className="h-[44px] flex items-center justify-center gap-3 bg-white border border-zinc-200 text-[13px] font-bold text-zinc-700 hover:bg-zinc-50 transition-all active:scale-[0.99]"
                     >
                         <svg className="w-4 h-4" viewBox="0 0 24 24">
@@ -205,7 +182,7 @@ export default function InternSigninPage() {
                     </button>
                 </div>
 
-                <div className={`mt-8 text-center border-t border-zinc-100 pt-6 ${isFrozen ? 'opacity-20 pointer-events-none' : ''}`}>
+                <div className="mt-8 text-center border-t border-zinc-100 pt-6">
                     <p className="text-[12px] text-zinc-500 font-medium tracking-tight">
                         New here? <Link href="/intern/signup" className="text-zinc-900 font-bold hover:underline ml-1">Create account</Link>
                     </p>
