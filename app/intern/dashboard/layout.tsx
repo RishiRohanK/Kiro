@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { 
@@ -17,7 +17,7 @@ import {
     FileBadge
 } from "lucide-react";
 
-export default function InternDashboardLayout({
+function InternDashboardLayoutContent({
   children,
 }: {
   children: React.ReactNode;
@@ -205,4 +205,18 @@ export default function InternDashboardLayout({
             </div>
         </div>
     );
+}
+
+export default function InternDashboardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-white" />}>
+      <InternDashboardLayoutContent>
+        {children}
+      </InternDashboardLayoutContent>
+    </Suspense>
+  );
 }
