@@ -66,9 +66,9 @@ export default function InternSignupPage() {
         <div className="min-h-screen bg-[#FAFAFA] text-zinc-900 font-sans flex items-center justify-center p-6 relative overflow-hidden">
 
             {/* Background Decorative Images */}
-            <div className="absolute inset-0 pointer-events-none opacity-20">
-                <img src="https://ik.imagekit.io/dypkhqxip/Rocket-rafiki%20(1).svg" alt="" className="absolute left-[2%] top-[10%] w-[480px] hidden lg:block !shadow-none !drop-shadow-none filter-none grayscale" />
-                <img src="https://ik.imagekit.io/dypkhqxip/Happy%20student-bro.svg" alt="" className="absolute right-[5%] bottom-[5%] w-[420px] hidden lg:block !shadow-none !drop-shadow-none filter-none grayscale" />
+            <div className="absolute inset-0 pointer-events-none">
+                <img src="https://ik.imagekit.io/dypkhqxip/Rocket-rafiki%20(1).svg" alt="" className="absolute left-[2%] top-[10%] w-[480px] hidden lg:block" />
+                <img src="https://ik.imagekit.io/dypkhqxip/Happy%20student-bro.svg" alt="" className="absolute right-[5%] bottom-[5%] w-[420px] hidden lg:block" />
             </div>
 
             {/* Signup Card - Sharp Edges */}
