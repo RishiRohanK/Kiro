@@ -38,7 +38,11 @@ import {
    Map,
    Hand,
    School,
-   Layers
+   Layers,
+   Plus,
+   Trash2,
+   Kanban as KanbanIcon,
+   MoreVertical
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { io } from "socket.io-client";
@@ -50,6 +54,14 @@ interface Task {
    description: string;
    attachmentUrl?: string;
    status: string;
+   createdAt: string;
+}
+
+interface PersonalTask {
+   id: string;
+   title: string;
+   description: string | null;
+   status: string; // TODO, IN_PROGRESS, DONE
    createdAt: string;
 }
 
@@ -88,6 +100,12 @@ function InternDashboardContent() {
    const [isUpdating, setIsUpdating] = useState<string | null>(null);
    const [userStatus, setUserStatus] = useState<any>(null);
    const [showLetterModal, setShowLetterModal] = useState(false);
+
+   // Kanban State
+   const [personalTasks, setPersonalTasks] = useState<PersonalTask[]>([]);
+   const [isAddingPersonalTask, setIsAddingPersonalTask] = useState(false);
+   const [newPersonalTask, setNewPersonalTask] = useState({ title: "", description: "" });
+   const [isSavingPersonalTask, setIsSavingPersonalTask] = useState(false);
 
    // Chat State
    const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -139,12 +157,14 @@ function InternDashboardContent() {
          fetchAttendance(userData.id);
          fetchSchedules(userData.id, userData.batch);
          fetchAllInterns();
+         fetchPersonalTasks(userData.id);
 
          const syncInterval = setInterval(() => {
             fetchTasks(userData.id, userData.batch);
             fetchStatus(userData.id);
             fetchAttendance(userData.id);
             fetchSchedules(userData.id, userData.batch);
+            fetchPersonalTasks(userData.id);
          }, 20000);
 
          const newSocket = io({ reconnectionDelayMax: 10000 });
@@ -300,6 +320,76 @@ function InternDashboardContent() {
       );
    }
 
+   const fetchPersonalTasks = async (userId: string) => {
+      try {
+         const res = await fetch(`/api/intern/personal-tasks?userId=${userId}`);
+         const data = await res.json();
+         if (data.success) {
+            setPersonalTasks(data.tasks);
+         }
+      } catch (err) {
+         console.error("Failed to fetch personal tasks");
+      }
+   };
+
+   const handleAddPersonalTask = async (e: React.FormEvent) => {
+      e.preventDefault();
+      if (!newPersonalTask.title || isSavingPersonalTask) return;
+      setIsSavingPersonalTask(true);
+      try {
+         const res = await fetch("/api/intern/personal-tasks", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+               userId: user.id,
+               title: newPersonalTask.title,
+               description: newPersonalTask.description,
+               status: "TODO"
+            })
+         });
+         const data = await res.json();
+         if (data.success) {
+            setPersonalTasks([data.task, ...personalTasks]);
+            setNewPersonalTask({ title: "", description: "" });
+            setIsAddingPersonalTask(false);
+         }
+      } catch (err) {
+         console.error("Failed to add task");
+      } finally {
+         setIsSavingPersonalTask(false);
+      }
+   };
+
+   const updatePersonalTaskStatus = async (taskId: string, newStatus: string) => {
+      try {
+         const res = await fetch("/api/intern/personal-tasks", {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ taskId, status: newStatus })
+         });
+         const data = await res.json();
+         if (data.success) {
+            setPersonalTasks(personalTasks.map(t => t.id === taskId ? { ...t, status: newStatus } : t));
+         }
+      } catch (err) {
+         console.error("Failed to update status");
+      }
+   };
+
+   const deletePersonalTask = async (taskId: string) => {
+      try {
+         const res = await fetch(`/api/intern/personal-tasks?taskId=${taskId}`, {
+            method: "DELETE"
+         });
+         const data = await res.json();
+         if (data.success) {
+            setPersonalTasks(personalTasks.filter(t => t.id !== taskId));
+         }
+      } catch (err) {
+         console.error("Failed to delete task");
+      }
+   };
+
    const attendanceCount = attendanceHistory.filter(a => a.status === 'PRESENT').length;
    const attendancePercentage = attendanceHistory.length > 0 ? Math.round((attendanceCount / attendanceHistory.length) * 100) : 0;
 
@@ -395,6 +485,129 @@ function InternDashboardContent() {
                      </div>
                   </aside>
                </div>
+            </motion.div>
+         )}
+
+         {activeTab === "kanban" && (
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6 text-left">
+               <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+                  <div>
+                     <h2 className="text-xl font-bold text-zinc-900">Agile Workspace</h2>
+                     <p className="text-xs text-zinc-400 mt-0.5">Segregate your internal tasks and manage your daily workflow.</p>
+                  </div>
+                  <button
+                     onClick={() => setIsAddingPersonalTask(true)}
+                     className="h-10 px-6 bg-black text-white text-[11px] font-bold flex items-center gap-2 hover:bg-[#0055FF] transition-all"
+                  >
+                     <Plus size={14} /> New Task
+                  </button>
+               </div>
+
+               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                  {(["TODO", "IN_PROGRESS", "DONE"] as const).map((status) => (
+                     <div key={status} className="flex flex-col gap-4">
+                        <div className="flex items-center justify-between pb-2 border-b border-zinc-100">
+                           <h3 className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 flex items-center gap-2">
+                              <Circle size={8} fill="currentColor" className={status === "TODO" ? "text-zinc-300" : status === "IN_PROGRESS" ? "text-amber-400" : "text-emerald-500"} />
+                              {status.replace("_", " ")}
+                           </h3>
+                           <span className="text-[10px] font-bold text-zinc-400 bg-zinc-50 px-2 py-0.5 border border-zinc-100">
+                              {personalTasks.filter(t => t.status === status).length}
+                           </span>
+                        </div>
+                        <div className="space-y-3 min-h-[200px]">
+                           {personalTasks.filter(t => t.status === status).map((task) => (
+                              <div key={task.id} className="p-5 bg-white border border-zinc-100 shadow-sm hover:border-zinc-200 transition-all group">
+                                 <div className="flex items-start justify-between gap-2 mb-2">
+                                    <h4 className="text-sm font-bold text-zinc-900 leading-tight">{task.title}</h4>
+                                    <button onClick={() => deletePersonalTask(task.id)} className="text-zinc-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all shrink-0">
+                                       <Trash2 size={13} />
+                                    </button>
+                                 </div>
+                                 {task.description && (
+                                    <p className="text-xs text-zinc-500 line-clamp-2 leading-relaxed mb-4">{task.description}</p>
+                                 )}
+                                 <div className="flex items-center gap-1.5 pt-4 border-t border-zinc-50">
+                                    {status !== "TODO" && (
+                                       <button
+                                          onClick={() => updatePersonalTaskStatus(task.id, status === "IN_PROGRESS" ? "TODO" : "IN_PROGRESS")}
+                                          className="text-[9px] font-bold text-zinc-400 hover:text-[#0055FF] uppercase"
+                                       >
+                                          ← {status === "IN_PROGRESS" ? "Back" : "Reopen"}
+                                       </button>
+                                    )}
+                                    {status !== "DONE" && (
+                                       <button
+                                          onClick={() => updatePersonalTaskStatus(task.id, status === "TODO" ? "IN_PROGRESS" : "DONE")}
+                                          className="ml-auto text-[9px] font-bold text-[#0055FF] hover:underline uppercase"
+                                       >
+                                          {status === "TODO" ? "Start" : "Complete"} →
+                                       </button>
+                                    )}
+                                 </div>
+                              </div>
+                           ))}
+                           {personalTasks.filter(t => t.status === status).length === 0 && (
+                              <div className="py-12 border-2 border-dashed border-zinc-50 flex flex-col items-center justify-center text-zinc-300">
+                                 <Activity size={20} className="mb-2 opacity-50" />
+                                 <p className="text-[10px] font-bold uppercase tracking-widest opacity-50">Empty column</p>
+                              </div>
+                           )}
+                        </div>
+                     </div>
+                  ))}
+               </div>
+
+               <AnimatePresence>
+                  {isAddingPersonalTask && (
+                     <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/60 backdrop-blur-sm">
+                        <motion.div
+                           initial={{ opacity: 0, y: 20 }}
+                           animate={{ opacity: 1, y: 0 }}
+                           exit={{ opacity: 0, scale: 0.95 }}
+                           className="bg-white w-full max-w-md p-8 border border-zinc-200 shadow-2xl relative"
+                        >
+                           <button onClick={() => setIsAddingPersonalTask(false)} className="absolute top-4 right-4 text-zinc-400 hover:text-black">
+                              <X size={20} />
+                           </button>
+                           <div className="mb-8">
+                              <h3 className="text-sm font-bold text-zinc-900 border-l-4 border-black pl-3 uppercase tracking-tighter">Create Task</h3>
+                              <p className="text-[11px] text-zinc-400 font-medium mt-1">Add a new task to your segregation workspace.</p>
+                           </div>
+                           <form onSubmit={handleAddPersonalTask} className="space-y-5">
+                              <div className="space-y-1.5">
+                                 <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Task Title</label>
+                                 <input
+                                    required
+                                    type="text"
+                                    value={newPersonalTask.title}
+                                    onChange={(e) => setNewPersonalTask({ ...newPersonalTask, title: e.target.value })}
+                                    className="w-full h-11 bg-zinc-50 border border-zinc-100 px-4 text-sm font-bold outline-none focus:bg-white focus:border-black transition-all"
+                                    placeholder="e.g., Implement sidebar logic..."
+                                 />
+                              </div>
+                              <div className="space-y-1.5">
+                                 <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Description</label>
+                                 <textarea
+                                    value={newPersonalTask.description}
+                                    onChange={(e) => setNewPersonalTask({ ...newPersonalTask, description: e.target.value })}
+                                    className="w-full h-24 bg-zinc-50 border border-zinc-100 p-4 text-sm font-medium outline-none focus:bg-white focus:border-black transition-all resize-none"
+                                    placeholder="Add notes about this task..."
+                                 />
+                              </div>
+                              <div className="pt-4 flex gap-3">
+                                 <button type="button" onClick={() => setIsAddingPersonalTask(false)} className="flex-1 h-11 border border-zinc-100 text-[11px] font-bold uppercase tracking-widest hover:bg-zinc-50">
+                                    Cancel
+                                 </button>
+                                 <button type="submit" disabled={isSavingPersonalTask} className="flex-1 h-11 bg-black text-white text-[11px] font-bold uppercase tracking-widest hover:bg-[#0055FF] disabled:opacity-50">
+                                    {isSavingPersonalTask ? "Saving..." : "Create Task"}
+                                 </button>
+                              </div>
+                           </form>
+                        </motion.div>
+                     </div>
+                  )}
+               </AnimatePresence>
             </motion.div>
          )}
 

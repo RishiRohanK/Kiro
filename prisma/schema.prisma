@@ -89,6 +89,7 @@ model User {
   updatedAt  DateTime @updatedAt
   attendances Attendance[] @relation("UserAttendances")
   scheduleSubmissions ScheduleSubmission[] @relation("InternSubmissions")
+  personalTasks PersonalTask[] @relation("UserPersonalTasks")
 }
 
 enum Role {
@@ -332,6 +333,17 @@ model ScheduleSubmission {
   createdAt       DateTime @default(now())
 
   @@unique([scheduleId, internId])
+}
+
+model PersonalTask {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation("UserPersonalTasks", fields: [userId], references: [id], onDelete: Cascade)
+  title       String
+  description String?
+  status      String   @default("TODO") // TODO, IN_PROGRESS, DONE
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 

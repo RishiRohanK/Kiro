@@ -14,7 +14,8 @@ import {
     ShieldCheck,
     Hand,
     MessageSquare,
-    FileBadge
+    FileBadge,
+    Kanban
 } from "lucide-react";
 
 function InternDashboardLayoutContent({
@@ -94,6 +95,7 @@ function InternDashboardLayoutContent({
 
     const navItems = [
         { name: "Overview", icon: LayoutDashboard, slug: "/intern/dashboard" },
+        { name: "Kanban", icon: Kanban, slug: "/intern/dashboard?view=kanban" },
         { name: "Community", icon: MessageSquare, slug: "/intern/dashboard?view=community" },
         { name: "Assignments", icon: Briefcase, slug: "/intern/dashboard?view=tasks" },
         { name: "Roadmap", icon: Calendar, slug: "/intern/dashboard/schedule" },
