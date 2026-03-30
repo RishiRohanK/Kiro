@@ -38,23 +38,28 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen w-full flex flex-col items-center justify-center bg-[#FAFAFA] p-6 font-sans relative">
+    <div className="min-h-screen w-full flex flex-col items-center justify-center bg-[#FAFAFA] p-6 font-sans">
       
-      {/* Brand Logo in Top Left */}
-      <div className="absolute top-8 left-8 md:top-12 md:left-12">
+      {/* Brand Logo - Centered above container */}
+      <motion.div 
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2 }}
+        className="mb-8"
+      >
         <img 
           src="https://res.cloudinary.com/dsqqrpzfl/image/upload/v1773390835/Screenshot_2026-03-13_at_14.02.11-removebg-preview_lryxoy.png" 
           alt="Forge Logo" 
-          className="h-10 md:h-12 w-auto object-contain"
+          className="h-10 md:h-12 w-auto object-contain mx-auto"
         />
-      </div>
+      </motion.div>
 
-      {/* Bold Red Content Container */}
+      {/* Sharp-Edged Red Content Container */}
       <motion.div 
-        initial={{ opacity: 0, scale: 0.95 }}
+        initial={{ opacity: 0, scale: 0.98 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.4 }}
-        className="max-w-2xl w-full bg-[#E11D48] text-white rounded-[40px] p-12 md:p-20 text-center shadow-2xl shadow-red-500/20"
+        className="max-w-2xl w-full bg-[#E11D48] text-white rounded-none p-12 md:p-20 text-center shadow-2xl shadow-red-500/10"
       >
         {/* Simple Grammar and Copy */}
         <div className="space-y-6">
@@ -68,15 +73,15 @@ export default function Home() {
 
         {/* Minimalist Status */}
         <div className="pt-10">
-          <div className="inline-block px-6 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-white text-xs font-medium tracking-[0.05em]">
+          <div className="inline-block px-8 py-2 rounded-none bg-white text-[#E11D48] text-xs font-bold tracking-[0.05em]">
             System Upgrade in Progress
           </div>
         </div>
       </motion.div>
 
       {/* Footer Credit */}
-      <div className="mt-12 text-center">
-        <p className="text-zinc-400 text-[10px] font-medium tracking-widest">
+      <div className="mt-12 text-center text-zinc-400">
+        <p className="text-[10px] font-medium tracking-widest">
           &copy; {new Date().getFullYear()} Forge Digital Technologies.
         </p>
       </div>
