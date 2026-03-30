@@ -137,7 +137,7 @@ function InternDashboardLayoutContent({
                                 <span className="hidden lg:flex lg:flex-1 items-center justify-between text-[14px]">
                                     {item.name}
                                     {item.isNew && (
-                                        <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-blue-100 text-blue-600 uppercase tracking-wider leading-none">
+                                        <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-red-100 text-red-600 uppercase tracking-wider leading-none">
                                             New
                                         </span>
                                     )}
