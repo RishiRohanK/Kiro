@@ -94,13 +94,13 @@ function InternDashboardLayoutContent({
     if (!mounted || !user) return null;
 
     const navItems = [
-        { name: "Overview", icon: LayoutDashboard, slug: "/intern/dashboard" },
-        { name: "Kanban", icon: Kanban, slug: "/intern/dashboard?view=kanban" },
-        { name: "Community", icon: MessageSquare, slug: "/intern/dashboard?view=community" },
-        { name: "Assignments", icon: Briefcase, slug: "/intern/dashboard?view=tasks" },
-        { name: "Roadmap", icon: Calendar, slug: "/intern/dashboard/schedule" },
-        { name: "Attendance", icon: FileBadge, slug: "/intern/dashboard?view=attendance" },
-        { name: "Settings", icon: Settings, slug: "/intern/dashboard/settings" },
+        { name: "Overview", icon: LayoutDashboard, slug: "/intern/dashboard", isNew: false },
+        { name: "Kanban", icon: Kanban, slug: "/intern/dashboard?view=kanban", isNew: true },
+        { name: "Community", icon: MessageSquare, slug: "/intern/dashboard?view=community", isNew: false },
+        { name: "Assignments", icon: Briefcase, slug: "/intern/dashboard?view=tasks", isNew: false },
+        { name: "Roadmap", icon: Calendar, slug: "/intern/dashboard/schedule", isNew: false },
+        { name: "Attendance", icon: FileBadge, slug: "/intern/dashboard?view=attendance", isNew: false },
+        { name: "Settings", icon: Settings, slug: "/intern/dashboard/settings", isNew: false },
     ];
 
     return (
@@ -134,8 +134,13 @@ function InternDashboardLayoutContent({
                                 }`}
                             >
                                 <item.icon size={18} strokeWidth={isActive ? 2.5 : 2} className={isActive ? "text-[#0055FF]" : ""} />
-                                <span className="hidden lg:block text-[14px]">
+                                <span className="hidden lg:flex lg:flex-1 items-center justify-between text-[14px]">
                                     {item.name}
+                                    {item.isNew && (
+                                        <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-blue-100 text-blue-600 uppercase tracking-wider leading-none">
+                                            New
+                                        </span>
+                                    )}
                                 </span>
                             </Link>
                         );
