@@ -7,6 +7,14 @@ const withPWA = require("next-pwa")({
 
 module.exports = withWorkflow(withPWA({
   reactStrictMode: true,
+  images: {
+    remotePatterns: [
+      { protocol: 'https', hostname: 'images.unsplash.com' },
+      { protocol: 'https', hostname: 'ik.imagekit.io' },
+      { protocol: 'https', hostname: 'thumbs.dreamstime.com' },
+      { protocol: 'https', hostname: 'www.usnews.com' },
+    ],
+  },
   turbopack: {},
 }));
 

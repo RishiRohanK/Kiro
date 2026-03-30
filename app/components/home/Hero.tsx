@@ -1,73 +1,85 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
 
 export default function Hero() {
   return (
-    <section className="relative overflow-hidden bg-white py-12 lg:py-16">
-      {/* Increased 90-Degree Corner Alignment Decorative Circle - Bottom Left - Updated to Blue and solid */}
-      <div className="absolute bottom-0 left-0 h-[250px] w-[250px] rounded-tr-full bg-[#0055FF] pointer-events-none" />
+    <section className="relative w-full border-b border-zinc-100 bg-white">
+      <div className="mx-auto flex flex-col lg:flex-row min-h-[450px] lg:h-[60vh]">
 
-      <div className="mx-auto max-w-7xl px-6 lg:px-10 relative z-10">
-        <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-20">
+        {/* 1. Left Content Section - Reduced Sizes & Compact Alignment */}
+        <div className="flex flex-[0.8] flex-col justify-center px-6 py-8 sm:px-10 lg:pl-20 lg:pr-10 xl:pl-32">
 
-          <div className="text-center lg:text-left relative z-20">
-            {/* Minimal Badge */}
-            <div className="mb-4">
-              <span className="border border-zinc-200 bg-white/80 backdrop-blur-sm px-3 py-1 text-[12px] text-zinc-500">
-                Welcome to
-              </span>
-            </div>
-
-            {/* Main Heading - Clean & Normal Weight */}
-            <h1 className="mb-2 text-4xl tracking-tight text-zinc-900 md:text-5xl lg:text-6xl">
-              Student Forge
-              <span className="mx-4 hidden text-zinc-200 lg:inline-block"></span>
-              <span className="block text-zinc-400 lg:inline-block">Academy</span>
-            </h1>
-
-            {/* Description */}
-            <p className="mx-auto mb-6 max-w-lg text-[15px] leading-relaxed text-zinc-600 lg:mx-0">
-              A simple platform for student engineers.
-              Build projects, learn new skills, and get your certificate with easy tools made for the next generation of students.
-            </p>
-
-            {/* Sharp Edged Action Buttons */}
-            <div className="flex flex-col gap-4 sm:flex-row sm:justify-center lg:justify-start">
-              <Link
-                href="/courses"
-                className="flex h-12 items-center justify-center bg-black px-10 text-[15px] text-white transition-opacity hover:opacity-90 active:scale-[0.98] font-medium"
-              >
-                View Courses
-              </Link>
-
-              <Link
-                href="/projects"
-                className="flex h-12 items-center justify-center border border-black px-10 text-[14px] text-black transition-colors hover:bg-zinc-50 active:scale-[0.98]"
-              >
-                Explore Opportunities
-              </Link>
-            </div>
+          {/* Subtle Indicator */}
+          <div className="mb-4 flex items-center gap-3">
+            <span className="h-[1px] w-5 bg-blue-600" />
+            <span className="text-[13px] font-medium text-blue-600 tracking-tight">
+              Academic portal
+            </span>
           </div>
 
-          {/* Animation Section - Improved Mobile Alignment */}
-          <div className="relative flex justify-center opacity-90 lg:justify-end z-20 mt-10 lg:mt-0">
-            <div className="relative w-full max-w-[320px] sm:max-w-[420px] lg:max-w-[450px] aspect-square flex items-center justify-center">
+          {/* Reduced Heading - Medium Weight, Sentence Case */}
+          <h1 className="max-w-md text-4xl md:text-5xl lg:text-6xl font-medium tracking-tight text-zinc-900 leading-[1.15]">
+            Engineering education, <br />
+            simplified.
+          </h1>
 
+          {/* Reduced Description - Normal Weight, Compact */}
+          <p className="mt-4 max-w-sm text-[15px] md:text-[16px] leading-relaxed text-zinc-500 font-normal">
+            Master industrial skills through guided projects and earn
+            professional certifications in one streamlined environment.
+          </p>
 
+          {/* Compact Buttons - Sharp Edges */}
+          <div className="mt-6 flex flex-col sm:flex-row gap-3">
+            <Link
+              href="/courses"
+              className="flex h-11 items-center justify-center bg-black px-8 text-[14px] text-white transition-all hover:bg-zinc-800 active:scale-[0.98] font-normal"
+            >
+              Start learning
+            </Link>
 
-              {/* @ts-expect-error - dotlottie-wc is a custom web component */}
-              <dotlottie-wc
-                src="https://lottie.host/e8e91eee-73f3-4713-8da0-90515e71ca53/ksbz9RrOE3.lottie"
-                style={{ width: '100%', height: '100%' }}
-                autoplay
-                loop
-              />
-            </div>
+            <Link
+              href="/projects"
+              className="flex h-11 items-center justify-center border border-zinc-200 px-8 text-[14px] text-zinc-900 transition-all hover:bg-zinc-50 active:scale-[0.98] font-normal"
+            >
+              View projects
+            </Link>
           </div>
 
+          {/* Mini Learning Steps - Reduced Sizes */}
+          <div className="mt-8 grid grid-cols-3 gap-4 border-t border-zinc-100 pt-6 max-w-md">
+            <div>
+              <p className="text-[11px] font-medium text-zinc-400 mb-1">01. Learn</p>
+              <p className="text-[13px] text-zinc-900 font-medium">Curriculum</p>
+            </div>
+            <div>
+              <p className="text-[11px] font-medium text-zinc-400 mb-1">02. Build</p>
+              <p className="text-[13px] text-zinc-900 font-medium">Projects</p>
+            </div>
+            <div>
+              <p className="text-[11px] font-medium text-zinc-400 mb-1">03. Certify</p>
+              <p className="text-[13px] text-zinc-900 font-medium">Certification</p>
+            </div>
+          </div>
         </div>
+
+        {/* 2. Right Image Section - Full Fit with Frame Overlay */}
+        <div className="relative flex-1 bg-zinc-50 overflow-hidden group">
+          <img
+            src="https://www.usnews.com/object/image/00000189-da73-d234-afff-ff772a960000/gettyimages-1414982113.jpg?update-time=1691587242372&size=responsive640"
+            alt="Engineering Workspace"
+            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+          />
+          {/* Decorative Corner Overlays (Frame Effect) */}
+          <div className="absolute inset-x-8 inset-y-8 pointer-events-none ring-1 ring-white/20 border-white/10" />
+          <div className="absolute top-10 right-10 h-12 w-12 border-t-2 border-r-2 border-white/40 pointer-events-none" />
+          <div className="absolute bottom-10 left-10 h-12 w-12 border-b-2 border-l-2 border-white/40 pointer-events-none" />
+
+          {/* Subtle Color Fade Overlay */}
+          <div className="absolute inset-0 bg-black/5 pointer-events-none" />
+        </div>
+
       </div>
     </section>
   );
