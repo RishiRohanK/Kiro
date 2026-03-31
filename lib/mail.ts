@@ -79,9 +79,9 @@ export const sendPasswordResetEmail = async (email: string, token: string) => {
 
     try {
         await transporter.sendMail({
-            from: '"Forge Security" <studentforgetechnologies@gmail.com>',
+            from: '"Student Forge" <studentforgetechnologies@gmail.com>',
             to: email,
-            subject: "Security Protocol: Reset Access Request",
+            subject: "Reset Your Skill Grid Password",
             html: html,
         });
         return true;
