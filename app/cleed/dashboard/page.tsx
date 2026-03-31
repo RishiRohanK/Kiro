@@ -1249,7 +1249,7 @@ export default function CleedDashboard() {
                                           <td className="px-6 py-5">
                                              <div className="flex flex-col">
                                                 <p className="text-[12px] font-bold text-zinc-600">{intern.email}</p>
-                                                <p className="text-[11px] text-zinc-400">{intern.phone || "N/A"}</p>
+                                                <p className="text-[11px] text-zinc-400">{intern.college || "N/A"}</p>
                                              </div>
                                           </td>
                                           <td className="px-8 py-5 text-right">
