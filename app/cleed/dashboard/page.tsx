@@ -645,8 +645,7 @@ export default function CleedDashboard() {
          {/* Mobile Nav Top Bar - Clean Sync */}
          <div className="md:hidden fixed top-0 left-0 right-0 h-16 bg-white z-[60] flex items-center justify-between px-6 pt-[env(safe-area-inset-top)] box-content border-b border-zinc-100 shadow-sm group">
             <div className="flex items-center gap-3">
-               <div className="h-4 w-4 bg-blue-600 shadow-sm" />
-               <span className="text-zinc-900 font-bold text-sm tracking-tight pt-[1px]">Cleed hub</span>
+               <img src="/sf-next-logo.png" alt="Student Forge" className="h-6 object-contain" />
             </div>
             <button
                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -699,21 +698,21 @@ export default function CleedDashboard() {
             )}
          </AnimatePresence>
 
-         {/* Desktop Sidebar - Black Dropdown Sync */}
-         <aside className="hidden md:flex fixed left-0 top-0 h-full w-20 lg:w-[260px] bg-black border-r border-zinc-900 z-50 flex-col pt-[env(safe-area-inset-top)]">
-            <div className="p-8 flex items-center gap-3">
-               <div className="h-4 w-4 bg-white shadow-sm" />
-               <span className="hidden lg:block text-white font-bold text-[16px] tracking-tight">CLEED HUB</span>
+         {/* Desktop Sidebar - Grey Sync */}
+         <aside className="hidden md:flex fixed left-0 top-0 h-full w-20 lg:w-[260px] bg-zinc-50 border-r border-zinc-200 z-50 flex-col pt-[env(safe-area-inset-top)]">
+            <div className="p-8 pb-4 flex items-center justify-center lg:justify-start">
+               <img src="/sf-next-logo.png" alt="Student Forge" className="h-8 object-contain hidden lg:block drop-shadow-sm" />
+               <img src="/sf-next-logo.png" alt="Student Forge" className="h-6 w-6 object-cover lg:hidden rounded-sm" />
             </div>
 
             <nav className="flex-1 mt-6 px-3 overflow-y-auto space-y-4 custom-scrollbar pb-8">
                
                <details open className="group">
-                  <summary className="hidden lg:flex items-center justify-between text-[11px] font-bold text-zinc-500 uppercase tracking-widest px-3 py-2 cursor-pointer hover:text-zinc-300 transition-colors select-none list-none [&::-webkit-details-marker]:hidden">
+                  <summary className="hidden lg:flex items-center justify-between text-[11px] font-bold text-zinc-400 uppercase tracking-widest px-3 py-2 cursor-pointer hover:text-zinc-600 transition-colors select-none list-none [&::-webkit-details-marker]:hidden">
                      Operations
-                     <ChevronDown size={14} className="group-open:rotate-180 transition-transform text-zinc-600" />
+                     <ChevronDown size={14} className="group-open:rotate-180 transition-transform text-zinc-400" />
                   </summary>
-                  <div className="mt-1 space-y-0.5 ml-2 border-l border-zinc-900 pl-2">
+                  <div className="mt-1 space-y-0.5 ml-2 border-l border-zinc-200 pl-2">
                      {[
                        { id: "overview", icon: LayoutDashboard, label: "Overview" },
                        { id: "events", icon: LayoutDashboard, label: "Events" },
@@ -724,8 +723,8 @@ export default function CleedDashboard() {
                           key={item.id}
                           onClick={() => setActiveTab(item.id)}
                           className={`w-full h-9 flex items-center px-3 gap-3 transition-all rounded-md ${activeTab === item.id
-                                ? "bg-white/10 text-white"
-                                : "text-zinc-400 hover:text-white hover:bg-white/5"
+                                ? "bg-white border border-zinc-200 shadow-sm text-blue-600"
+                                : "text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100/80"
                              }`}
                        >
                           <item.icon size={15} strokeWidth={activeTab === item.id ? 2.5 : 2} />
@@ -736,11 +735,11 @@ export default function CleedDashboard() {
                </details>
 
                <details open className="group">
-                  <summary className="hidden lg:flex items-center justify-between text-[11px] font-bold text-zinc-500 uppercase tracking-widest px-3 py-2 cursor-pointer hover:text-zinc-300 transition-colors select-none list-none [&::-webkit-details-marker]:hidden">
+                  <summary className="hidden lg:flex items-center justify-between text-[11px] font-bold text-zinc-400 uppercase tracking-widest px-3 py-2 cursor-pointer hover:text-zinc-600 transition-colors select-none list-none [&::-webkit-details-marker]:hidden">
                      Interns & Approvals
-                     <ChevronDown size={14} className="group-open:rotate-180 transition-transform text-zinc-600" />
+                     <ChevronDown size={14} className="group-open:rotate-180 transition-transform text-zinc-400" />
                   </summary>
-                  <div className="mt-1 space-y-0.5 ml-2 border-l border-zinc-900 pl-2">
+                  <div className="mt-1 space-y-0.5 ml-2 border-l border-zinc-200 pl-2">
                      {[
                        { id: "interns", icon: Users, label: "Interns" },
                        { id: "authorizations", icon: ShieldCheck, label: "Approvals" },
@@ -752,8 +751,8 @@ export default function CleedDashboard() {
                           key={item.id}
                           onClick={() => setActiveTab(item.id)}
                           className={`w-full h-9 flex items-center px-3 gap-3 transition-all rounded-md ${activeTab === item.id
-                                ? "bg-white/10 text-white"
-                                : "text-zinc-400 hover:text-white hover:bg-white/5"
+                                ? "bg-white border border-zinc-200 shadow-sm text-blue-600"
+                                : "text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100/80"
                              }`}
                        >
                           <item.icon size={15} strokeWidth={activeTab === item.id ? 2.5 : 2} />
@@ -764,11 +763,11 @@ export default function CleedDashboard() {
                </details>
 
                <details open className="group">
-                  <summary className="hidden lg:flex items-center justify-between text-[11px] font-bold text-zinc-500 uppercase tracking-widest px-3 py-2 cursor-pointer hover:text-zinc-300 transition-colors select-none list-none [&::-webkit-details-marker]:hidden">
+                  <summary className="hidden lg:flex items-center justify-between text-[11px] font-bold text-zinc-400 uppercase tracking-widest px-3 py-2 cursor-pointer hover:text-zinc-600 transition-colors select-none list-none [&::-webkit-details-marker]:hidden">
                      Tasks & Status
-                     <ChevronDown size={14} className="group-open:rotate-180 transition-transform text-zinc-600" />
+                     <ChevronDown size={14} className="group-open:rotate-180 transition-transform text-zinc-400" />
                   </summary>
-                  <div className="mt-1 space-y-0.5 ml-2 border-l border-zinc-900 pl-2">
+                  <div className="mt-1 space-y-0.5 ml-2 border-l border-zinc-200 pl-2">
                      {[
                        { id: "schedule", icon: Calendar, label: "Schedule" },
                        { id: "assign", icon: Send, label: "Assign Task" },
@@ -780,8 +779,8 @@ export default function CleedDashboard() {
                           key={item.id}
                           onClick={() => setActiveTab(item.id)}
                           className={`w-full h-9 flex items-center px-3 gap-3 transition-all rounded-md ${activeTab === item.id
-                                ? "bg-white/10 text-white"
-                                : "text-zinc-400 hover:text-white hover:bg-white/5"
+                                ? "bg-white border border-zinc-200 shadow-sm text-blue-600"
+                                : "text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100/80"
                              }`}
                        >
                           <item.icon size={15} strokeWidth={activeTab === item.id ? 2.5 : 2} />
@@ -794,8 +793,8 @@ export default function CleedDashboard() {
             </nav>
 
             {raisedHandsCount > 0 && (
-               <div className="p-4 mx-4 mb-6 bg-amber-500/10 border border-amber-500/20 rounded-md animate-pulse lg:block hidden cursor-pointer" onClick={() => setActiveTab("interns")}>
-                  <div className="flex items-center gap-2 text-amber-500">
+               <div className="p-4 mx-4 mb-6 bg-amber-100 border border-amber-200 rounded-md animate-pulse lg:block hidden cursor-pointer shadow-sm" onClick={() => setActiveTab("interns")}>
+                  <div className="flex items-center gap-2 text-amber-600">
                      <Hand size={16} />
                      <span className="text-[12px] font-bold leading-none">
                         {raisedHandsCount} Raised Hands
@@ -804,14 +803,14 @@ export default function CleedDashboard() {
                </div>
             )}
 
-            <div className="p-5 border-t border-zinc-900 bg-[#0a0a0a]">
+            <div className="p-5 border-t border-zinc-200">
                <div className="flex items-center gap-3">
-                  <div className="h-8 w-8 bg-zinc-900 flex items-center justify-center text-zinc-500 rounded-md">
+                  <div className="h-8 w-8 bg-zinc-200 flex items-center justify-center text-zinc-600 rounded-md">
                      <Users size={16} />
                   </div>
                   <div className="hidden lg:block text-left overflow-hidden">
-                     <p className="text-[12px] text-zinc-100 font-bold truncate">Dashboard Admin</p>
-                     <p className="text-[10px] text-zinc-600 truncate uppercase tracking-widest">Operator</p>
+                     <p className="text-[12px] text-zinc-900 font-bold truncate">Dashboard Admin</p>
+                     <p className="text-[10px] text-zinc-500 truncate uppercase tracking-widest">Operator</p>
                   </div>
                </div>
             </div>
@@ -951,80 +950,93 @@ export default function CleedDashboard() {
                {/* Overview Tab UI Continues... */}
                {activeTab === "overview" && (
                   <div className="space-y-10">
-                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {/* Row 1 */}
-                        <div className="bg-white border border-zinc-100 p-8 shadow-sm group hover:border-[#0055FF] transition-all text-left">
-                           <div className="flex items-center justify-between mb-4">
-                              <p className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest leading-none">Intern registry</p>
-                              <Users size={16} className="text-zinc-300 group-hover:text-[#0055FF] transition-all" />
+                     <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                        {/* Soft Color Cards */}
+                        <div className="bg-blue-50/50 border border-blue-100 p-5 rounded-lg shadow-sm group text-left transition-all hover:bg-blue-50">
+                           <div className="flex items-center justify-between mb-3">
+                              <p className="text-[10px] font-bold text-blue-600 uppercase tracking-widest leading-none">Interns</p>
+                              <Users size={14} className="text-blue-400" />
                            </div>
                            <div className="flex items-baseline gap-2">
-                              <h3 className="text-4xl font-bold tracking-tight text-zinc-900">{interns.length}</h3>
-                              <p className="text-[10px] text-zinc-400 font-bold uppercase tracking-tighter">Authorized ids</p>
+                              <h3 className="text-3xl font-bold tracking-tight text-blue-900">{interns.length}</h3>
                            </div>
                         </div>
 
-                        <div className="bg-white border border-zinc-100 p-8 shadow-sm group hover:border-[#0055FF] transition-all text-left">
-                           <div className="flex items-center justify-between mb-4">
-                              <p className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest leading-none">Live presence</p>
+                        <div className="bg-emerald-50/50 border border-emerald-100 p-5 rounded-lg shadow-sm group text-left transition-all hover:bg-emerald-50">
+                           <div className="flex items-center justify-between mb-3">
+                              <p className="text-[10px] font-bold text-emerald-600 uppercase tracking-widest leading-none">Live presence</p>
                               <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
                            </div>
                            <div className="flex items-baseline gap-2">
-                              <h3 className="text-4xl font-bold tracking-tight text-emerald-600">{onlineInternsCount}</h3>
-                              <p className="text-[10px] text-zinc-400 font-bold uppercase tracking-tighter">Active protocol</p>
+                              <h3 className="text-3xl font-bold tracking-tight text-emerald-900">{onlineInternsCount}</h3>
                            </div>
                         </div>
 
-                        <div className="bg-white border border-zinc-100 p-8 shadow-sm group hover:border-[#0055FF] transition-all text-left">
-                           <div className="flex items-center justify-between mb-4">
-                              <p className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest leading-none">Ideation control</p>
-                              <Globe size={16} className="text-zinc-300 group-hover:text-[#0055FF] transition-all" />
+                        <div className="bg-amber-50/50 border border-amber-100 p-5 rounded-lg shadow-sm group text-left transition-all hover:bg-amber-50">
+                           <div className="flex items-center justify-between mb-3">
+                              <p className="text-[10px] font-bold text-amber-600 uppercase tracking-widest leading-none">Pending Auth</p>
+                              <ShieldCheck size={14} className="text-amber-400" />
                            </div>
                            <div className="flex items-baseline gap-2">
-                              <h3 className="text-4xl font-bold tracking-tight text-zinc-900">{ideas.length}</h3>
-                              <p className="text-[10px] text-zinc-400 font-bold uppercase tracking-tighter">Assets logged</p>
+                              <h3 className="text-3xl font-bold tracking-tight text-amber-900">{interns.filter(i => !i.isApproved).length}</h3>
                            </div>
                         </div>
 
-                        {/* Row 2 */}
-                        <div className="bg-white border border-zinc-100 p-8 shadow-sm group hover:border-[#0055FF] transition-all text-left">
-                           <div className="flex items-center justify-between mb-4">
-                              <p className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest leading-none">Mentorship cycles</p>
-                              <Users size={16} className="text-zinc-300 group-hover:text-[#0055FF] transition-all" />
+                        <div className="bg-indigo-50/50 border border-indigo-100 p-5 rounded-lg shadow-sm group text-left transition-all hover:bg-indigo-50">
+                           <div className="flex items-center justify-between mb-3">
+                              <p className="text-[10px] font-bold text-indigo-600 uppercase tracking-widest leading-none">Submissions</p>
+                              <CheckCircle2 size={14} className="text-indigo-400" />
                            </div>
                            <div className="flex items-baseline gap-2">
-                              <h3 className="text-4xl font-bold tracking-tight text-zinc-900">{mentorshipSessions.length}</h3>
-                              <p className="text-[10px] text-zinc-400 font-bold uppercase tracking-tighter">Sessions logged</p>
+                              <h3 className="text-3xl font-bold tracking-tight text-indigo-900">{submissions.length}</h3>
                            </div>
                         </div>
 
-                        <div className="bg-white border border-zinc-100 p-8 shadow-sm group hover:border-[#0055FF] transition-all text-left">
-                           <div className="flex items-center justify-between mb-4">
-                              <p className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest leading-none">Submissions audit</p>
-                              <CheckCircle2 size={16} className="text-zinc-300 group-hover:text-[#0055FF] transition-all" />
+                        <div className="bg-purple-50/50 border border-purple-100 p-5 rounded-lg shadow-sm group text-left transition-all hover:bg-purple-50">
+                           <div className="flex items-center justify-between mb-3">
+                              <p className="text-[10px] font-bold text-purple-600 uppercase tracking-widest leading-none">Workshops</p>
+                              <FileText size={14} className="text-purple-400" />
                            </div>
                            <div className="flex items-baseline gap-2">
-                              <h3 className="text-4xl font-bold tracking-tight text-zinc-900">{submissions.length}</h3>
-                              <p className="text-[10px] text-zinc-400 font-bold uppercase tracking-tighter">Pending review</p>
+                              <h3 className="text-3xl font-bold tracking-tight text-purple-900">{workshopEntries.length}</h3>
                            </div>
                         </div>
 
-                        <div className="bg-white border border-zinc-100 p-8 shadow-sm group hover:border-[#0055FF] transition-all text-left">
-                           <div className="flex items-center justify-between mb-4">
-                              <p className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest leading-none">Workshop registry</p>
-                              <FileText size={16} className="text-zinc-300 group-hover:text-[#0055FF] transition-all" />
+                        <div className="bg-rose-50/50 border border-rose-100 p-5 rounded-lg shadow-sm group text-left transition-all hover:bg-rose-50">
+                           <div className="flex items-center justify-between mb-3">
+                              <p className="text-[10px] font-bold text-rose-600 uppercase tracking-widest leading-none">Mentorships</p>
+                              <Users size={14} className="text-rose-400" />
                            </div>
                            <div className="flex items-baseline gap-2">
-                              <h3 className="text-4xl font-bold tracking-tight text-zinc-900">{workshopEntries.length}</h3>
-                              <p className="text-[10px] text-zinc-400 font-bold uppercase tracking-tighter">Enrollments</p>
+                              <h3 className="text-3xl font-bold tracking-tight text-rose-900">{mentorshipSessions.length}</h3>
+                           </div>
+                        </div>
+
+                        <div className="bg-sky-50/50 border border-sky-100 p-5 rounded-lg shadow-sm group text-left transition-all hover:bg-sky-50">
+                           <div className="flex items-center justify-between mb-3">
+                              <p className="text-[10px] font-bold text-sky-600 uppercase tracking-widest leading-none">Internships</p>
+                              <Briefcase size={14} className="text-sky-400" />
+                           </div>
+                           <div className="flex items-baseline gap-2">
+                              <h3 className="text-3xl font-bold tracking-tight text-sky-900">{internships.length}</h3>
+                           </div>
+                        </div>
+
+                        <div className="bg-teal-50/50 border border-teal-100 p-5 rounded-lg shadow-sm group text-left transition-all hover:bg-teal-50">
+                           <div className="flex items-center justify-between mb-3">
+                              <p className="text-[10px] font-bold text-teal-600 uppercase tracking-widest leading-none">Ideas Logged</p>
+                              <Globe size={14} className="text-teal-400" />
+                           </div>
+                           <div className="flex items-baseline gap-2">
+                              <h3 className="text-3xl font-bold tracking-tight text-teal-900">{ideas.length}</h3>
                            </div>
                         </div>
                      </div>
 
                      <div className="grid md:grid-cols-2 gap-12 text-left">
-                        <div className="space-y-6">
-                           <h2 className="text-xl font-bold border-l-4 border-zinc-900 pl-4 uppercase tracking-tighter">Command central</h2>
-                           <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                        <div className="space-y-4">
+                           <h2 className="text-sm font-bold border-l-2 border-zinc-900 pl-3 uppercase tracking-tighter">Command central</h2>
+                           <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
                               {[
                                  { id: "interns", label: "Registry" },
                                  { id: "internships", label: "Oversight" },
@@ -1036,22 +1048,22 @@ export default function CleedDashboard() {
                                  <button 
                                    key={action.id}
                                    onClick={() => setActiveTab(action.id)} 
-                                   className="h-24 border border-zinc-100 hover:border-[#0055FF] p-6 text-left transition-all bg-white group shadow-sm bg-gradient-to-br from-white to-zinc-50/30"
+                                   className="h-16 border border-zinc-200 hover:border-[#0055FF] p-3 rounded-md text-left transition-all bg-white group shadow-sm"
                                  >
-                                    <p className="text-[10px] font-bold text-zinc-400 uppercase mb-1">Terminal</p>
-                                    <span className="text-sm font-bold group-hover:text-[#0055FF]">{action.label}</span>
+                                    <p className="text-[9px] font-bold text-zinc-400 uppercase mb-0.5">Terminal</p>
+                                    <span className="text-xs font-bold group-hover:text-[#0055FF]">{action.label}</span>
                                  </button>
                               ))}
                            </div>
                         </div>
-                        <div className="space-y-6">
-                           <h2 className="text-xl font-bold border-l-4 border-zinc-900 pl-4 uppercase tracking-tighter">Telemetry pulse</h2>
-                           <div className="p-6 bg-white border border-zinc-100 font-mono text-[10px] space-y-2 uppercase tracking-widest shadow-sm">
-                              <div className="flex items-center justify-between py-1 border-b border-zinc-50"><span className="text-zinc-400">Database node</span> <span className="text-emerald-500 font-bold">Stable</span></div>
-                              <div className="flex items-center justify-between py-1 border-b border-zinc-50"><span className="text-zinc-400">Intern sync</span> <span className="text-emerald-500 font-bold">{interns.length} Units</span></div>
-                              <div className="flex items-center justify-between py-1 border-b border-zinc-50"><span className="text-zinc-400">Opportunity index</span> <span className="text-[#0055FF] font-bold">{internships.length} Missions</span></div>
-                              <div className="flex items-center justify-between py-1 border-b border-zinc-50"><span className="text-zinc-400">Pending audits</span> <span className="text-amber-500 font-bold">{submissions.length} Nodes</span></div>
-                              <div className="flex items-center justify-between py-1"><span className="text-zinc-400">Ideation assets</span> <span className="text-zinc-900 font-bold">{ideas.length} Assets</span></div>
+                        <div className="space-y-4">
+                           <h2 className="text-sm font-bold border-l-2 border-zinc-900 pl-3 uppercase tracking-tighter">Telemetry pulse</h2>
+                           <div className="p-4 bg-white border border-zinc-200 rounded-md font-mono text-[9px] space-y-1.5 uppercase tracking-widest shadow-sm">
+                              <div className="flex items-center justify-between py-1 border-b border-zinc-50"><span className="text-zinc-500">Database node</span> <span className="text-emerald-500 font-bold">Stable</span></div>
+                              <div className="flex items-center justify-between py-1 border-b border-zinc-50"><span className="text-zinc-500">Intern sync</span> <span className="text-emerald-500 font-bold">{interns.length} Units</span></div>
+                              <div className="flex items-center justify-between py-1 border-b border-zinc-50"><span className="text-zinc-500">Opportunity index</span> <span className="text-[#0055FF] font-bold">{internships.length} Missions</span></div>
+                              <div className="flex items-center justify-between py-1 border-b border-zinc-50"><span className="text-zinc-500">Pending audits</span> <span className="text-amber-500 font-bold">{submissions.length} Nodes</span></div>
+                              <div className="flex items-center justify-between py-1"><span className="text-zinc-500">Ideation assets</span> <span className="text-zinc-900 font-bold">{ideas.length} Assets</span></div>
                            </div>
                         </div>
                      </div>
