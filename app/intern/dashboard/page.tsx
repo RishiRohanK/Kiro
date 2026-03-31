@@ -868,10 +868,29 @@ function InternDashboardContent() {
 
          <AnimatePresence>
             {showLetterModal && userStatus?.letterUrl && (
-               <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/60 backdrop-blur-sm">
-                  <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, scale: 0.98 }} className="bg-white max-md w-full p-10 border border-zinc-200 rounded-none shadow-2xl relative">
-                     <button onClick={() => { setShowLetterModal(false); localStorage.setItem(`letter_ack_${user.id}`, userStatus.letterUrl); }} className="absolute top-4 right-4 text-zinc-400 hover:text-black transition-none"><X size={20} /></button>
-                     <div className="space-y-6 text-left"><div className="space-y-2"><h2 className="text-xs font-bold text-[#0055FF]">Confirmation letter</h2><p className="text-sm font-medium text-zinc-900 leading-relaxed">Your official internship letter has been issued. You can now download it and view your credentials.</p></div><div className="pt-4 flex flex-col gap-3"><a href={userStatus.letterUrl} target="_blank" rel="noopener noreferrer" onClick={() => { setShowLetterModal(false); localStorage.setItem(`letter_ack_${user.id}`, userStatus.letterUrl); }} className="h-10 bg-[#0055FF] text-white text-xs font-semibold flex items-center justify-center gap-2 hover:bg-black transition-none">Download letter <Download size={14} /></a><button onClick={() => { setShowLetterModal(false); localStorage.setItem(`letter_ack_${user.id}`, userStatus.letterUrl); }} className="text-[10px] font-bold text-zinc-400 hover:text-zinc-900 transition-none py-2">Close notice</button></div></div>
+               <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/40 backdrop-blur-sm">
+                  <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} className="bg-white max-w-[300px] w-full p-6 border border-zinc-100 rounded-xl shadow-xl relative text-center">
+                     <button onClick={() => { setShowLetterModal(false); localStorage.setItem(`letter_ack_${user.id}`, userStatus.letterUrl); }} className="absolute top-3 right-3 text-zinc-300 hover:text-zinc-600 transition-colors"><X size={16} /></button>
+                     
+                     <div className="mx-auto h-10 w-10 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mb-4">
+                        <FileBadge size={20} />
+                     </div>
+
+                     <div className="space-y-1 mb-6">
+                        <h2 className="text-[15px] font-bold text-zinc-900">Letter Ready</h2>
+                        <p className="text-[12px] font-medium text-zinc-500 leading-snug">
+                           Your internship letter is ready. Download it now to verify your role.
+                        </p>
+                     </div>
+
+                     <div className="flex flex-col gap-2">
+                        <a href={userStatus.letterUrl} target="_blank" rel="noopener noreferrer" onClick={() => { setShowLetterModal(false); localStorage.setItem(`letter_ack_${user.id}`, userStatus.letterUrl); }} className="h-10 w-full bg-[#0055FF] text-white text-[12px] font-bold rounded-lg flex items-center justify-center gap-2 hover:bg-black transition-colors shadow-md shadow-blue-500/20">
+                           Download File <Download size={14} />
+                        </a>
+                        <button onClick={() => { setShowLetterModal(false); localStorage.setItem(`letter_ack_${user.id}`, userStatus.letterUrl); }} className="h-10 w-full text-[12px] font-bold text-zinc-400 hover:text-zinc-900 transition-colors">
+                           Close
+                        </button>
+                     </div>
                   </motion.div>
                </div>
             )}
