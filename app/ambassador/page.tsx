@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Award, Gift, GraduationCap, Briefcase, Zap, CheckCircle, ArrowRight, User, Mail, GraduationCap as Cap, Building2, Linkedin } from "lucide-react";
+import { Award, Gift, GraduationCap, Briefcase, Zap, CheckCircle, ArrowRight, User, Mail, GraduationCap as Cap, Building2, Linkedin, Star, Shield, Target } from "lucide-react";
 import Navbar from "../components/home/Navbar";
 import SubNavbar from "../components/home/SubNavbar";
 import Footer from "../components/home/Footer";
@@ -9,33 +9,33 @@ import { useState } from "react";
 
 const benefits = [
     {
-        title: "Exclusive Perks & Swag",
-        description: "Get limited edition Student Forge hoodies, stickers, and tech accessories to represent us on campus.",
-        icon: <Gift className="w-6 h-6 text-[#0055FF]" />
+        title: "Definitive Swag Kit",
+        description: "Receive high-performance Student Forge apparel, technical accessories, and campus-ready assets.",
+        icon: <Gift className="w-5 h-5" />
     },
     {
-        title: "Internship & Placement",
-        description: "Top performing ambassadors get direct priority for internships and full-time engineering roles.",
-        icon: <Briefcase className="w-6 h-6 text-[#0055FF]" />
+        title: "Tier-1 Internships",
+        description: "Vanguard ambassadors receive direct priority for high-speed technical internships and roles.",
+        icon: <Briefcase className="w-5 h-5" />
     },
     {
-        title: "Expert Mentorship",
-        description: "Get 1-on-1 sessions with senior engineers and industry leaders to guide your career path.",
-        icon: <Award className="w-6 h-6 text-[#0055FF]" />
+        title: "Architect Mentorship",
+        description: "Engage in zero-friction 1-on-1 sessions with senior technical leaders and platform architects.",
+        icon: <Award className="w-5 h-5" />
     },
     {
-        title: "Leadership Experience",
-        description: "Lead your own tech community, organize events, and build your resume with real leadership skills.",
-        icon: <Zap className="w-6 h-6 text-[#0055FF]" />
+        title: "Command Experience",
+        description: "Establish and lead your own technical hub, gaining real-world leadership and community metrics.",
+        icon: <Zap className="w-5 h-5" />
     }
 ];
 
 const responsibilities = [
-    "Build and lead a local Student Forge community on your campus.",
-    "Organize workshops, hackathons, and technical webinars.",
-    "Act as the primary bridge between Student Forge and your college faculty.",
-    "Promote our courses and initiatives through social media and on-ground activities.",
-    "Collect feedback from students to help us build better tools for learners."
+    "Establish and command a technical Student Forge hub on your primary campus.",
+    "Execute high-speed technical workshops, hackathons, and community sprints.",
+    "Formally synchronize communications between Student Forge and college technical faculty.",
+    "Accelerate brand awareness through strategic social integration and on-ground missions.",
+    "Consolidate student feedback to optimize our technical accelerator and tools suite."
 ];
 
 export default function AmbassadorPage() {
@@ -53,171 +53,184 @@ export default function AmbassadorPage() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setSubmitting(true);
-        // Simulate API call
+        // Simulate high-speed API synchronization
         await new Promise(resolve => setTimeout(resolve, 1500));
         setSubmitting(false);
         setSubmitted(true);
     };
 
     return (
-        <div className="min-h-screen bg-white text-zinc-900 font-sans">
+        <div className="min-h-screen bg-white text-zinc-900 font-sans selection:bg-orange-100">
             <Navbar />
             <SubNavbar />
 
             <main>
-                {/* Hero Section */}
-                <section className="bg-[#0055FF] relative overflow-hidden h-[450px] lg:h-[500px] flex items-center">
-                    <div className="mx-auto max-w-7xl px-6 lg:px-10 w-full relative z-10">
-                        <div className="max-w-xl">
+                {/* Hero Section - High-Speed Architecture */}
+                <section className="bg-zinc-900 py-12 md:py-16 border-b border-white/5 overflow-hidden relative text-left">
+                    <div className="absolute top-0 right-0 w-[50%] h-full bg-orange-600/5 blur-[100px] pointer-events-none" />
+                    <div className="mx-auto max-w-7xl px-6 relative z-10">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                             <motion.div
                                 initial={{ y: 20, opacity: 0 }}
                                 animate={{ y: 0, opacity: 1 }}
+                                className="max-w-2xl space-y-4"
                             >
-                                <div className="flex items-center gap-2 mb-6 text-white/60">
-                                    <div className="h-1.5 w-1.5 bg-white rounded-none" />
-                                    <span className="text-[11px] font-semibold uppercase tracking-[0.2em]">Join the Movement</span>
+                                <div className="inline-flex h-4 items-center px-1.5 border border-white/10 bg-white/5 text-orange-400 text-[9px] font-bold leading-none">
+                                    Strategic lead program
                                 </div>
-                                <h1 className="text-3xl font-semibold leading-tight tracking-tight text-white md:text-4xl lg:text-5xl lg:leading-[1.1]">
-                                    Campus Ambassador <br />
-                                    <span className="text-white/40">Program</span>
+                                <h1 className="text-4xl md:text-5xl lg:text-6xl font-normal tracking-tighter text-white leading-tight">
+                                    Campus <span className="text-orange-500">Ambassadors</span>.
                                 </h1>
-                                <p className="mt-6 text-base leading-relaxed text-white/80 font-medium max-w-md">
-                                    Be the face of Student Forge on your campus. Help fellow students master
-                                    industry tools and build a thriving tech community.
+                                <p className="text-zinc-400 text-[15px] md:text-[16px] font-normal max-w-xl leading-relaxed">
+                                    Command the technical evolution of your campus. 50+ students are already leading the movement to synchronize education with industry standards.
                                 </p>
-
-                                <div className="mt-10 flex gap-4">
+                                <div className="pt-6">
                                     <button
                                         onClick={() => document.getElementById('apply-form')?.scrollIntoView({ behavior: 'smooth' })}
-                                        className="h-14 px-10 bg-white text-[#0055FF] text-[14px] font-semibold hover:bg-zinc-100 transition-colors rounded-none"
+                                        className="h-12 px-8 bg-orange-600 text-white text-[12px] font-bold transition-all rounded-none"
                                     >
-                                        Apply Now
+                                        Initiate application
                                     </button>
                                 </div>
                             </motion.div>
+
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.95 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                transition={{ delay: 0.2 }}
+                                className="hidden lg:block relative"
+                            >
+                                <img
+                                    src="https://www.keg.com/hubfs/iStock-1461631542.jpg"
+                                    alt="Student Ambassador"
+                                    className="w-full h-[400px] object-cover grayscale brightness-50 border border-white/10"
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-t from-zinc-900 via-transparent to-transparent" />
+                            </motion.div>
                         </div>
                     </div>
-
-                    {/* RIGHT SIDE: Full-height Student Image */}
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 0.2, duration: 0.8 }}
-                        className="absolute top-0 right-0 h-full w-full lg:w-1/2 z-0 overflow-hidden"
-                    >
-                        <div className="relative h-full w-full">
-                            <img
-                                src="https://www.keg.com/hubfs/iStock-1461631542.jpg"
-                                alt="Student Ambassador"
-                                className="w-full h-full object-cover grayscale brightness-90 contrast-125"
-                            />
-                            {/* Subtle gradient overlay to blend into the blue background on mobile or transition */}
-                            <div className="absolute inset-0 bg-gradient-to-r from-[#0055FF] via-[#0055FF]/20 to-transparent lg:from-transparent" />
-                        </div>
-                    </motion.div>
                 </section>
 
-                {/* Benefits Grid */}
-                <section className="py-12 lg:py-16 bg-white border-b border-zinc-100">
+                {/* Benefits Grid - High-Density */}
+                <section className="py-10 md:py-12 bg-zinc-50 border-b border-zinc-100">
                     <div className="mx-auto max-w-7xl px-6 lg:px-10">
-                        <div className="mb-16">
-                            <h2 className="text-3xl font-medium tracking-tight text-zinc-900 md:text-4xl">Why Join Us?</h2>
-                            <p className="mt-4 text-zinc-500 font-medium text-lg">The perks of being a Student Forge Ambassador.</p>
+                        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+                            <div className="space-y-3">
+                                <div className="inline-flex h-6 items-center border border-zinc-200 bg-zinc-50 px-3 text-[10px] font-bold text-zinc-500 tracking-[0.1em]">
+                                    Vanguard perks
+                                </div>
+                                <h2 className="text-3xl md:text-4xl font-normal tracking-tight text-zinc-900 leading-tight">
+                                    Mission <span className="text-orange-600">Accelerators.</span>
+                                </h2>
+                            </div>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                             {benefits.map((benefit, index) => (
                                 <motion.div
                                     key={benefit.title}
                                     initial={{ opacity: 0, y: 10 }}
                                     whileInView={{ opacity: 1, y: 0 }}
                                     transition={{ delay: index * 0.1 }}
-                                    className="p-8 border border-zinc-100 bg-zinc-50/50 hover:bg-white hover:border-black transition-all group"
+                                    className="group flex flex-col bg-white border border-zinc-200 hover:border-orange-600 transition-all duration-200 p-8 rounded-none"
                                 >
-                                    <div className="mb-8 w-12 h-12 bg-[#0055FF]/5 flex items-center justify-center transition-all group-hover:bg-[#0055FF] group-hover:text-white">
+                                    <div className="h-10 w-10 mb-8 flex items-center justify-center bg-zinc-50 text-zinc-400 transition-all group-hover:bg-orange-600 group-hover:text-white">
                                         {benefit.icon}
                                     </div>
-                                    <h3 className="text-[18px] font-bold tracking-tight text-zinc-900 mb-3">{benefit.title}</h3>
-                                    <p className="text-[14px] leading-relaxed text-zinc-500 font-medium">{benefit.description}</p>
+                                    <h3 className="text-[15px] font-bold text-zinc-900 mb-3 leading-snug group-hover:text-orange-600 transition-colors">
+                                        {benefit.title}
+                                    </h3>
+                                    <p className="text-zinc-400 text-[13px] font-normal leading-relaxed">
+                                        {benefit.description}
+                                    </p>
                                 </motion.div>
                             ))}
                         </div>
                     </div>
                 </section>
 
-                {/* Responsibilities */}
-                <section className="py-12 lg:py-16 bg-zinc-50">
-                    <div className="mx-auto max-w-7xl px-6 lg:px-10 grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
-                        <div>
-                            <div className="flex items-center gap-2 mb-6">
-                                <div className="h-1.5 w-1.5 bg-[#0055FF] rounded-none" />
-                                <span className="text-[12px] font-bold text-zinc-400 uppercase tracking-widest">Your Role</span>
+                {/* Responsibilities Architecture */}
+                <section className="py-12 md:py-16 bg-white">
+                    <div className="mx-auto max-w-7xl px-6 lg:px-10 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                        <div className="space-y-8">
+                            <div className="space-y-3">
+                                <div className="inline-flex h-6 items-center border border-zinc-200 bg-zinc-50 px-3 text-[10px] font-bold text-zinc-500 tracking-[0.1em]">
+                                    Program protocol
+                                </div>
+                                <h2 className="text-3xl md:text-5xl font-normal tracking-tight text-zinc-900">Program <span className="text-orange-600">Protocol</span>.</h2>
+                                <p className="text-zinc-500 text-[15px] md:text-[16px] leading-relaxed max-w-lg">
+                                    As a Strategic Lead, you take absolute ownership of your campus technical growth and community synchronization.
+                                </p>
                             </div>
-                            <h2 className="text-3xl font-medium tracking-tight text-zinc-900 md:text-4xl lg:text-5xl">Roles & Responsibilities</h2>
-                            <p className="mt-6 text-zinc-500 text-lg leading-relaxed font-medium">As a Lead Ambassador, you take ownership of your campus technical growth.</p>
 
-                            <div className="mt-10 space-y-4">
+                            <div className="space-y-4 pt-4">
                                 {responsibilities.map((item, i) => (
-                                    <div key={i} className="flex gap-4 items-start">
-                                        <div className="mt-1">
-                                            <CheckCircle className="w-5 h-5 text-[#0055FF]" />
+                                    <div key={i} className="flex gap-4 items-start group">
+                                        <div className="mt-1 flex h-5 w-5 items-center justify-center border border-zinc-200 text-zinc-400 group-hover:border-orange-600 group-hover:text-orange-600 transition-all">
+                                            <CheckCircle className="w-3 h-3" />
                                         </div>
-                                        <span className="text-zinc-700 font-medium">{item}</span>
+                                        <span className="text-[14px] text-zinc-600 font-medium leading-relaxed">{item}</span>
                                     </div>
                                 ))}
                             </div>
                         </div>
 
-                        <div className="relative">
+                        <div className="relative group">
                             <img
-                                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQODzV-SrG7nrCKJPdVJblaFbziy34CVCUgJQ&s"
+                                src="https://www.fastweb.com/uploads/article_photo/photo/2036641/10-ways-to-be-a-better-student.jpeg"
                                 alt="Student community"
-                                className="w-full h-[350px] object-cover border border-black shadow-[15px_15px_0px_0px_#0055FF] grayscale hover:grayscale-0 transition-all duration-500"
+                                className="w-full h-[400px] object-cover border border-zinc-200 grayscale contrast-125 group-hover:grayscale-0 transition-all duration-700"
                             />
+                            <div className="absolute -bottom-4 -right-4 h-full w-full border border-orange-600/20 -z-10 group-hover:translate-x-2 group-hover:translate-y-2 transition-transform duration-500" />
                         </div>
                     </div>
                 </section>
 
-                {/* Application Form */}
-                <section id="apply-form" className="py-12 lg:py-20 bg-white">
-                    <div className="mx-auto max-w-4xl px-6 lg:px-10">
-                        <div className="text-center mb-16">
-                            <h2 className="text-3xl font-medium tracking-tight text-zinc-900 md:text-5xl">Ready to Lead?</h2>
-                            <p className="mt-4 text-zinc-500 text-lg font-medium">Fill out your application below and we'll be in touch.</p>
+                {/* Application Architecture */}
+                <section id="apply-form" className="py-16 lg:py-20 bg-zinc-900 text-white border-t border-white/5 relative overflow-hidden">
+                    <div className="absolute bottom-0 left-0 w-full h-full bg-orange-600/5 blur-[120px] pointer-events-none" />
+                    <div className="mx-auto max-w-3xl px-6 relative z-10">
+                        <div className="text-center mb-16 space-y-3">
+                            <div className="inline-flex h-4 items-center px-1.5 border border-white/10 bg-white/5 text-orange-400 text-[9px] font-bold leading-none">
+                                Application terminal
+                            </div>
+                            <h2 className="text-3xl md:text-5xl font-normal tracking-tighter text-white">Initiate <span className="text-orange-500">Command</span>.</h2>
+                            <p className="text-zinc-400 text-[14px] font-normal">Complete the technical alignment form below to begin your mission.</p>
                         </div>
 
                         {submitted ? (
                             <motion.div
-                                initial={{ scale: 0.9, opacity: 0 }}
+                                initial={{ scale: 0.98, opacity: 0 }}
                                 animate={{ scale: 1, opacity: 1 }}
-                                className="p-16 border-2 border-dashed border-[#0055FF] text-center"
+                                className="p-16 border border-orange-600/30 bg-orange-600/5 text-center space-y-6"
                             >
-                                <div className="flex justify-center mb-6">
-                                    <div className="h-16 w-16 bg-[#0055FF] rounded-none flex items-center justify-center">
-                                        <CheckCircle className="text-white w-8 h-8" />
+                                <div className="flex justify-center">
+                                    <div className="h-12 w-12 bg-orange-600 flex items-center justify-center">
+                                        <Shield className="text-white w-6 h-6" />
                                     </div>
                                 </div>
-                                <h3 className="text-2xl font-bold tracking-tight text-zinc-900">Application Received!</h3>
-                                <p className="mt-2 text-zinc-500 font-medium">Our team will review your profile and reach out to you within 3-5 business days.</p>
+                                <div>
+                                    <h3 className="text-2xl font-bold tracking-tight text-white mb-2">Protocol Synchronized.</h3>
+                                    <p className="text-zinc-400 text-[14px]">Our HQ will review your profile. Expect technical clearance within 72 hours.</p>
+                                </div>
                                 <button
                                     onClick={() => setSubmitted(false)}
-                                    className="mt-8 text-[12px] font-bold text-[#0055FF] uppercase tracking-widest border-b border-[#0055FF]"
+                                    className="text-[10px] font-bold text-orange-500 border-b border-orange-500/30 hover:border-orange-500 transition-all pb-1"
                                 >
-                                    Submit another application
+                                    Re-initiate protocol
                                 </button>
                             </motion.div>
                         ) : (
-                            <form onSubmit={handleSubmit} className="space-y-6 bg-zinc-50/50 p-6 md:p-10 border border-zinc-100">
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <form onSubmit={handleSubmit} className="space-y-6">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     {/* Full Name */}
-                                    <div className="space-y-2">
-                                        <label className="text-[11px] font-bold uppercase tracking-widest text-zinc-400">Full Name</label>
+                                    <div className="space-y-1.5">
+                                        <label className="text-[10px] font-bold text-zinc-500">Full name</label>
                                         <div className="relative">
-                                            <User className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-300" />
                                             <input
                                                 type="text" required
-                                                className="h-14 w-full border border-zinc-200 bg-white px-12 text-[14px] outline-none focus:border-black transition-all"
-                                                placeholder="Jane Doe"
+                                                className="h-12 w-full border border-white/10 bg-white/5 px-4 text-[13px] text-white outline-none focus:border-orange-600 transition-all placeholder:text-zinc-700"
+                                                placeholder="Identity..."
                                                 value={formData.fullName}
                                                 onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
                                             />
@@ -225,14 +238,13 @@ export default function AmbassadorPage() {
                                     </div>
 
                                     {/* Email */}
-                                    <div className="space-y-2">
-                                        <label className="text-[11px] font-bold uppercase tracking-widest text-zinc-400">Email Address</label>
+                                    <div className="space-y-1.5">
+                                        <label className="text-[10px] font-bold text-zinc-500">Communication node</label>
                                         <div className="relative">
-                                            <Mail className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-300" />
                                             <input
                                                 type="email" required
-                                                className="h-14 w-full border border-zinc-200 bg-white px-12 text-[14px] outline-none focus:border-black transition-all"
-                                                placeholder="jane@university.edu"
+                                                className="h-12 w-full border border-white/10 bg-white/5 px-4 text-[13px] text-white outline-none focus:border-orange-600 transition-all placeholder:text-zinc-700"
+                                                placeholder="Email..."
                                                 value={formData.email}
                                                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                                             />
@@ -240,14 +252,13 @@ export default function AmbassadorPage() {
                                     </div>
 
                                     {/* College */}
-                                    <div className="space-y-2">
-                                        <label className="text-[11px] font-bold uppercase tracking-widest text-zinc-400">College / University</label>
+                                    <div className="space-y-1.5">
+                                        <label className="text-[10px] font-bold text-zinc-500">Academic institution</label>
                                         <div className="relative">
-                                            <Building2 className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-300" />
                                             <input
                                                 type="text" required
-                                                className="h-14 w-full border border-zinc-200 bg-white px-12 text-[14px] outline-none focus:border-black transition-all"
-                                                placeholder="Institute of Technology"
+                                                className="h-12 w-full border border-white/10 bg-white/5 px-4 text-[13px] text-white outline-none focus:border-orange-600 transition-all placeholder:text-zinc-700"
+                                                placeholder="University..."
                                                 value={formData.college}
                                                 onChange={(e) => setFormData({ ...formData, college: e.target.value })}
                                             />
@@ -255,47 +266,43 @@ export default function AmbassadorPage() {
                                     </div>
 
                                     {/* Year of Study */}
-                                    <div className="space-y-2">
-                                        <label className="text-[11px] font-bold uppercase tracking-widest text-zinc-400">Year of Study</label>
+                                    <div className="space-y-1.5">
+                                        <label className="text-[10px] font-bold text-zinc-500">Strategic tier</label>
                                         <div className="relative">
-                                            <Cap className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-300" />
                                             <select
-                                                className="h-14 w-full border border-zinc-200 bg-white px-12 text-[14px] outline-none focus:border-black transition-all appearance-none"
+                                                className="h-12 w-full border border-white/10 bg-white/5 px-4 text-[13px] text-white outline-none focus:border-orange-600 transition-all appearance-none cursor-pointer"
                                                 value={formData.year}
                                                 onChange={(e) => setFormData({ ...formData, year: e.target.value })}
                                             >
-                                                <option>1st Year</option>
-                                                <option>2nd Year</option>
-                                                <option>3rd Year</option>
-                                                <option>4th Year</option>
-                                                <option>Graduate</option>
+                                                <option className="bg-zinc-900">1st Year</option>
+                                                <option className="bg-zinc-900">2nd Year</option>
+                                                <option className="bg-zinc-900">3rd Year</option>
+                                                <option className="bg-zinc-900">4th Year</option>
+                                                <option className="bg-zinc-900">Graduate</option>
                                             </select>
                                         </div>
                                     </div>
                                 </div>
 
                                 {/* LinkedIn */}
-                                <div className="space-y-2">
-                                    <label className="text-[11px] font-bold uppercase tracking-widest text-zinc-400">LinkedIn Profile (Optional)</label>
-                                    <div className="relative">
-                                        <Linkedin className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-300" />
-                                        <input
-                                            type="url"
-                                            className="h-14 w-full border border-zinc-200 bg-white px-12 text-[14px] outline-none focus:border-black transition-all"
-                                            placeholder="https://linkedin.com/in/username"
-                                            value={formData.linkedin}
-                                            onChange={(e) => setFormData({ ...formData, linkedin: e.target.value })}
-                                        />
-                                    </div>
+                                <div className="space-y-1.5">
+                                    <label className="text-[10px] font-bold text-zinc-500">Professional identity link</label>
+                                    <input
+                                        type="url"
+                                        className="h-12 w-full border border-white/10 bg-white/5 px-4 text-[13px] text-white outline-none focus:border-orange-600 transition-all placeholder:text-zinc-700"
+                                        placeholder="LinkedIn URL..."
+                                        value={formData.linkedin}
+                                        onChange={(e) => setFormData({ ...formData, linkedin: e.target.value })}
+                                    />
                                 </div>
 
                                 {/* Motivation */}
-                                <div className="space-y-2">
-                                    <label className="text-[11px] font-bold uppercase tracking-widest text-zinc-400">Why do you want to join? (Brief)</label>
+                                <div className="space-y-1.5">
+                                    <label className="text-[10px] font-bold text-zinc-500">Mission statement</label>
                                     <textarea
                                         required
-                                        className="w-full min-h-[120px] border border-zinc-200 bg-white p-6 text-[14px] outline-none focus:border-black transition-all resize-none"
-                                        placeholder="Tell us about your interest and any previous community experience..."
+                                        className="w-full min-h-[100px] border border-white/10 bg-white/5 p-4 text-[13px] text-white outline-none focus:border-orange-600 transition-all resize-none placeholder:text-zinc-700"
+                                        placeholder="Why lead the engineering evolution? (Brief)..."
                                         value={formData.motivation}
                                         onChange={(e) => setFormData({ ...formData, motivation: e.target.value })}
                                     ></textarea>
@@ -305,11 +312,11 @@ export default function AmbassadorPage() {
                                 <button
                                     type="submit"
                                     disabled={submitting}
-                                    className="w-full h-16 bg-[#0055FF] text-white text-[15px] font-bold uppercase tracking-widest hover:bg-black transition-colors flex items-center justify-center gap-3 disabled:bg-zinc-300"
+                                    className="w-full h-14 bg-orange-600 text-white text-[12px] font-bold transition-all flex items-center justify-center gap-3 disabled:bg-zinc-800"
                                 >
-                                    {submitting ? "Submitting..." : (
+                                    {submitting ? "Synchronizing..." : (
                                         <>
-                                            Submit Application
+                                            Initiate mission
                                             <ArrowRight className="w-4 h-4" />
                                         </>
                                     )}

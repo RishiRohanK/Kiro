@@ -283,13 +283,28 @@ model FailedTransaction {
 
 model Idea {
   id          String   @id @default(cuid())
-  name        String
-  subline     String
   title       String
   description String
+  stack       String?
+  usp         String?
+  outcomes    String?
+  developer   String?
+  name        String?  // Submitter Name
+  subline     String?  // Short Tagline
   likes       Int      @default(0)
   shares      Int      @default(0)
+  isApproved  Boolean  @default(false)
   createdAt   DateTime @default(now())
+  joins       IdeaJoin[]
+}
+
+model IdeaJoin {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  ideaId    String
+  idea      Idea     @relation(fields: [ideaId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
 }
 
 model Mentorship {
@@ -347,3 +362,30 @@ model PersonalTask {
 }
 
 
+
+model Internship {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  role        String?
+  company     String
+  location    String?
+  duration    String?
+  stipend     String?
+  applyLink   String
+  isApproved  Boolean  @default(false)
+  
+  // Submitter Context
+  submitterName    String?
+  submitterCompany String?
+  submitterMobile  String?
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// Submitter Context for Internships
+/**
+ * Internship table already added. Appending new fields via 'alter' logic isn't prisma ways,
+ * so we update the model directly in schema.prisma.
+ */

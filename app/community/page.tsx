@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Users, MessageSquare, Globe, Heart, Shield, Sparkles, Zap, ArrowRight, Github, Twitter, Linkedin, Plus, MessageCircle, X, Search, Lightbulb, Share2 } from "lucide-react";
+import { useState, useEffect, useMemo } from "react";
+import { Users, MessageSquare, Globe, Heart, Shield, Sparkles, Zap, ArrowRight, Github, Twitter, Linkedin, Plus, MessageCircle, X, Search, Lightbulb, Share2, Star, TrendingUp } from "lucide-react";
 import Link from "next/link";
 import Navbar from "../components/home/Navbar";
 import SubNavbar from "../components/home/SubNavbar";
@@ -24,6 +24,7 @@ export default function CommunityPage() {
   const [ideas, setIdeas] = useState<Idea[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const [formData, setFormData] = useState({
     name: "",
     subline: "",
@@ -39,11 +40,19 @@ export default function CommunityPage() {
     try {
       const res = await fetch("/api/community/ideas");
       const data = await res.json();
-      setIdeas(data);
+      setIdeas(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error("Error fetching ideas:", error);
     }
   };
+
+  const filteredIdeas = useMemo(() => {
+    return ideas.filter(idea => 
+      idea.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      idea.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      idea.description.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [ideas, searchQuery]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -67,7 +76,6 @@ export default function CommunityPage() {
   };
 
   const handleShare = async (idea: Idea) => {
-    // 1. Social Sharing logic
     if (typeof navigator !== "undefined" && navigator.share) {
       try {
         await navigator.share({
@@ -83,13 +91,10 @@ export default function CommunityPage() {
       const shareText = `Check out this idea from ${idea.name} on Student Forge:\n\n${idea.title}\n\n${shareUrl}`;
       window.open(`https://wa.me/?text=${encodeURIComponent(shareText)}`, "_blank");
     }
-
-    // 2. Increment in DB
     handleEngage(idea.id, "share");
   };
 
   const handleEngage = async (id: string, type: "like" | "share") => {
-    // Optimistic Update
     setIdeas((prev) =>
       prev.map((idea) => {
         if (idea.id === id) {
@@ -115,102 +120,113 @@ export default function CommunityPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white text-zinc-900 font-sans selection:bg-[#0055FF]/10">
+    <div className="min-h-screen bg-white text-zinc-900 font-sans selection:bg-indigo-100">
       <Navbar />
       <SubNavbar />
       
       <main className="w-full">
-        {/* Hero Section */}
-        <section className="bg-black py-6 lg:py-8 overflow-hidden relative border-b border-zinc-900">
-          <div className="absolute top-0 right-0 w-1/3 h-full bg-[#0055FF]/10 blur-[120px] rounded-full -translate-y-1/2 translate-x-1/2" />
-          <div className="mx-auto max-w-7xl px-6 lg:px-10 relative z-10">
-            <Breadcrumbs items={[{ label: "Global", href: "/" }, { label: "Community" }]} />
-            <div className="mt-4 max-w-3xl">
-              <div className="flex items-center gap-2 mb-2">
-                <div className="h-1 w-1 bg-[#0055FF] rotate-45" />
-                <span className="text-[10px] font-medium text-zinc-400 uppercase tracking-widest">Collective Intelligence</span>
+        {/* Unified Hero Section */}
+        <section className="bg-zinc-900 py-12 md:py-16 border-b border-white/5 overflow-hidden relative text-left">
+          <div className="absolute top-0 right-0 w-[50%] h-full bg-indigo-600/5 blur-[120px] pointer-events-none" />
+          <div className="mx-auto max-w-7xl px-6 relative z-10">
+            <div className="max-w-3xl space-y-3">
+              <div className="inline-flex h-4 items-center px-1.5 border border-white/10 bg-white/5 text-indigo-400 text-[9px] font-bold leading-none">
+                Collective intelligence
               </div>
-              <h1 className="text-3xl md:text-4xl lg:text-5xl font-medium tracking-tight text-white leading-[1.1]">
-                Built by students, <span className="text-[#0055FF]">for the future.</span>
+              <h1 className="text-3xl md:text-5xl font-normal tracking-tighter text-white leading-tight">
+                Community <span className="text-indigo-500">Board</span>.
               </h1>
+              <p className="text-zinc-400 text-[14px] md:text-[15px] font-normal max-w-xl leading-relaxed">
+                A high-speed registry for student innovation. Forge connections, exchange ideas, and synchronize with the next generation of technical leaders.
+              </p>
             </div>
           </div>
         </section>
 
-        {/* Idea Board Toolbar */}
-        <section className="sticky top-[104px] z-40 bg-zinc-50 border-y border-zinc-100 py-4 shadow-sm backdrop-blur-md">
-           <div className="mx-auto max-w-7xl px-6 lg:px-10 flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                 <h2 className="text-[13px] font-medium uppercase tracking-widest text-[#0055FF]">The Idea Board</h2>
-                 <div className="h-4 w-[1px] bg-zinc-200" />
-                 <span className="text-[12px] text-zinc-500 font-medium">{ideas.length} Shared Ideas</span>
+        {/* High-Density Toolbar */}
+        <section className="sticky top-[56px] z-40 bg-white/95 backdrop-blur-md border-b border-zinc-100 py-3 shadow-sm">
+           <div className="mx-auto max-w-7xl px-6 lg:px-10 flex flex-col md:flex-row gap-4 items-center justify-between">
+              <div className="relative w-full md:w-80">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400" size={14} />
+                <input
+                  type="text"
+                  placeholder="Scan ideas..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full h-9 pl-10 pr-4 bg-zinc-50 border border-zinc-200 text-[12px] focus:outline-none focus:border-indigo-600 focus:bg-white"
+                />
               </div>
-              <button 
-                onClick={() => setIsModalOpen(true)}
-                className="h-10 px-6 bg-black text-white text-[11px] font-medium uppercase tracking-[0.2em] flex items-center gap-2 hover:bg-[#0055FF] transition-all"
-              >
-                <Plus size={14} /> Share Idea
-              </button>
+
+              <div className="flex items-center gap-4 w-full md:w-auto">
+                 <div className="hidden lg:flex items-center gap-2 text-[11px] font-bold text-zinc-400 px-4">
+                    <TrendingUp size={12} className="text-indigo-500" />
+                    <span>{filteredIdeas.length} active missions</span>
+                 </div>
+                 <button 
+                  onClick={() => setIsModalOpen(true)}
+                  className="h-9 px-6 bg-zinc-900 text-white text-[10px] font-bold flex items-center gap-2 hover:bg-indigo-600 transition-all rounded-none w-full md:w-auto justify-center"
+                >
+                  <Plus size={14} /> Initiate idea
+                </button>
+              </div>
            </div>
         </section>
 
-        {/* Bento Grid - Ideas */}
-        <section className="py-20 bg-white">
+        {/* Idea Grid - Higher Density */}
+        <section className="py-12 md:py-16 bg-zinc-50 min-h-[600px]">
           <div className="mx-auto max-w-7xl px-6 lg:px-10">
-            {ideas.length === 0 ? (
-               <div className="py-20 text-center border-2 border-dashed border-zinc-100">
+            {filteredIdeas.length === 0 ? (
+               <div className="py-24 text-center bg-white border border-dashed border-zinc-200">
                   <Lightbulb className="mx-auto h-12 w-12 text-zinc-200 mb-4" />
-                  <p className="text-zinc-400 font-medium">No ideas shared yet. Be the first to forge a path.</p>
+                  <p className="text-zinc-400 text-[13px] font-bold uppercase tracking-widest">No active missions forged yet.</p>
                </div>
             ) : (
-              <div className="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6">
-                {ideas.map((idea, index) => (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredIdeas.map((idea, index) => (
                   <motion.div 
                     key={idea.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
+                    initial={{ opacity: 0, scale: 0.98 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
                     transition={{ delay: index * 0.05 }}
-                    className="break-inside-avoid relative group p-8 border border-zinc-100 bg-white hover:border-[#0055FF]/30 transition-all hover:shadow-2xl hover:shadow-[#0055FF]/5"
+                    className="flex flex-col bg-white border border-zinc-200 hover:border-indigo-600 transition-all duration-200 p-8 rounded-none group"
                   >
                     <div className="flex justify-between items-start mb-6">
-                       <div className="px-3 py-1 bg-zinc-50 text-[10px] font-medium uppercase tracking-[0.1em] text-zinc-500 border border-zinc-100">
+                       <div className="inline-flex h-5 items-center px-2 bg-zinc-50 text-[9px] font-bold text-zinc-500 border border-zinc-100 group-hover:border-indigo-100 group-hover:text-indigo-600 transition-colors">
                          {idea.subline}
                        </div>
-                       <span className="text-[10px] text-zinc-300 font-medium">
+                       <span className="text-[9px] text-zinc-300 font-bold tracking-tighter">
                          {new Date(idea.createdAt).toLocaleDateString()}
                        </span>
                     </div>
                     
-                    <h3 className="text-2xl font-medium tracking-tight mb-4 group-hover:text-[#0055FF] transition-colors">{idea.title}</h3>
-                    <p className="text-zinc-500 text-[14px] leading-relaxed mb-8">
+                    <h3 className="text-[18px] font-bold tracking-tight text-zinc-900 mb-3 group-hover:text-indigo-600 transition-colors line-clamp-1">{idea.title}</h3>
+                    <p className="text-zinc-400 text-[13px] leading-relaxed mb-8 line-clamp-3 h-[60px]">
                        {idea.description}
                     </p>
                     
-                    <div className="pt-6 border-t border-zinc-50 flex flex-col gap-6">
-                       <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-3">
-                             <div className="h-8 w-8 rounded-full bg-zinc-900 flex items-center justify-center text-white text-[10px] font-medium">
-                               {idea.name[0]?.toUpperCase()}
-                             </div>
-                             <span className="text-[12px] font-medium text-zinc-900">{idea.name}</span>
-                          </div>
-                          <div className="flex items-center gap-4">
-                              <button 
-                                onClick={() => handleEngage(idea.id, "like")}
-                                className="flex items-center gap-1.5 text-zinc-400 hover:text-red-500 transition-colors group/btn"
-                              >
-                                 <Heart size={14} className={(idea.likes || 0) > 0 ? "fill-red-500 text-red-500" : ""} />
-                                 <span className="text-[11px] font-medium">{idea.likes || 0}</span>
-                              </button>
-                              <button 
-                                onClick={() => handleShare(idea)}
-                                className="flex items-center gap-1.5 text-zinc-400 hover:text-[#0055FF] transition-colors"
-                              >
-                                 <Share2 size={14} />
-                                 <span className="text-[11px] font-medium">{idea.shares || 0}</span>
-                              </button>
-                          </div>
-                       </div>
+                    <div className="mt-auto pt-6 border-t border-zinc-100 flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                           <div className="h-8 w-8 rounded-none bg-zinc-900 flex items-center justify-center text-white text-[10px] font-bold border border-white/10 group-hover:bg-indigo-600 transition-colors">
+                             {idea.name[0]?.toUpperCase()}
+                           </div>
+                           <span className="text-[11px] font-bold text-zinc-900 tracking-wide">{idea.name}</span>
+                        </div>
+                        <div className="flex items-center gap-3">
+                            <button 
+                              onClick={() => handleEngage(idea.id, "like")}
+                              className="flex items-center gap-1.5 text-zinc-300 hover:text-red-500 transition-colors"
+                            >
+                               <Heart size={14} className={(idea.likes || 0) > 0 ? "fill-red-500 text-red-500" : ""} />
+                               <span className="text-[10px] font-bold">{idea.likes || 0}</span>
+                            </button>
+                            <button 
+                              onClick={() => handleShare(idea)}
+                              className="flex items-center gap-1.5 text-zinc-300 hover:text-indigo-600 transition-colors"
+                            >
+                               <Share2 size={14} />
+                               <span className="text-[10px] font-bold">{idea.shares || 0}</span>
+                            </button>
+                        </div>
                     </div>
                   </motion.div>
                 ))}
@@ -218,10 +234,9 @@ export default function CommunityPage() {
             )}
           </div>
         </section>
-
       </main>
 
-      {/* Share Idea Modal */}
+      {/* Share Idea Modal - Terminal Inspired */}
       <AnimatePresence>
         {isModalOpen && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">
@@ -230,73 +245,71 @@ export default function CommunityPage() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsModalOpen(false)}
-              className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+              className="absolute inset-0 bg-black/80 backdrop-blur-md"
             />
             <motion.div 
-              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              initial={{ opacity: 0, scale: 0.98, y: 10 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="relative w-full max-w-2xl bg-white p-10 lg:p-12 shadow-2xl"
+              exit={{ opacity: 0, scale: 0.98, y: 10 }}
+              className="relative w-full max-w-2xl bg-zinc-900 p-10 shadow-2xl border border-white/10"
             >
               <button 
                 onClick={() => setIsModalOpen(false)}
-                className="absolute top-6 right-6 text-zinc-400 hover:text-black transition-colors"
+                className="absolute top-6 right-6 text-zinc-500 hover:text-white transition-colors"
               >
                 <X size={20} />
               </button>
               
-              <div className="mb-10">
-                 <div className="flex items-center gap-2 mb-3">
-                    <Lightbulb className="w-5 h-5 text-[#0055FF]" />
-                    <span className="text-[11px] font-medium text-[#0055FF] uppercase tracking-widest">Innovation Lab</span>
+              <div className="mb-10 space-y-3">
+                 <div className="inline-flex h-4 items-center px-1.5 border border-indigo-500/30 bg-indigo-500/10 text-indigo-400 text-[9px] font-bold leading-none">
+                    Innovation lab
                  </div>
-                 <h2 className="text-3xl font-medium tracking-tight">Post your idea</h2>
+                 <h2 className="text-3xl font-normal tracking-tighter text-white">Share <span className="text-indigo-500">Mission</span>.</h2>
               </div>
 
-              <form onSubmit={handleSubmit} className="space-y-8">
-                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div className="space-y-3">
-                       <label className="text-[11px] font-medium uppercase tracking-widest text-zinc-400">Your Name</label>
+              <form onSubmit={handleSubmit} className="space-y-6">
+                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-1.5">
+                       <label className="text-[10px] font-bold text-zinc-500">Identity</label>
                        <input 
                          required
                          type="text" 
-                         className="w-full h-12 bg-zinc-50 border border-zinc-100 px-4 text-[14px] outline-none focus:border-[#0055FF] transition-colors" 
-                         placeholder="Enter your name"
+                         className="w-full h-11 bg-white/5 border border-white/10 px-4 text-[13px] text-white outline-none focus:border-indigo-600 transition-all placeholder:text-zinc-700" 
+                         placeholder="Your name..."
                          value={formData.name}
                          onChange={(e) => setFormData({...formData, name: e.target.value})}
                        />
                     </div>
-                    <div className="space-y-3">
-                       <label className="text-[11px] font-medium uppercase tracking-widest text-zinc-400">Sub Headline</label>
+                    <div className="space-y-1.5">
+                       <label className="text-[10px] font-bold text-zinc-500">Classification</label>
                        <input 
                          required
                          type="text" 
-                         className="w-full h-12 bg-zinc-50 border border-zinc-100 px-4 text-[14px] outline-none focus:border-[#0055FF] transition-colors" 
-                         placeholder="e.g., Tech Strategy"
+                         className="w-full h-11 bg-white/5 border border-white/10 px-4 text-[13px] text-white outline-none focus:border-indigo-600 transition-all placeholder:text-zinc-700" 
+                         placeholder="e.g. Tech Strategy..."
                          value={formData.subline}
                          onChange={(e) => setFormData({...formData, subline: e.target.value})}
                        />
                     </div>
                  </div>
 
-                 <div className="space-y-3">
-                    <label className="text-[11px] font-medium uppercase tracking-widest text-zinc-400">Idea Title</label>
+                 <div className="space-y-1.5">
+                    <label className="text-[10px] font-bold text-zinc-500">Mission title</label>
                     <input 
                       required
                       type="text" 
-                      className="w-full h-12 bg-zinc-50 border border-zinc-100 px-4 text-[14px] font-medium outline-none focus:border-[#0055FF] transition-colors" 
-                      placeholder="What are you building?"
+                      className="w-full h-11 bg-white/5 border border-white/10 px-4 text-[13px] text-white outline-none focus:border-indigo-600 transition-all placeholder:text-zinc-700" 
+                      placeholder="What are you forgoing?"
                       value={formData.title}
                       onChange={(e) => setFormData({...formData, title: e.target.value})}
                     />
                  </div>
 
-                 <div className="space-y-3">
-                    <label className="text-[11px] font-medium uppercase tracking-widest text-zinc-400">Description</label>
+                 <div className="space-y-1.5">
+                    <label className="text-[10px] font-bold text-zinc-500">Mission brief</label>
                     <textarea 
                       required
-                      rows={5}
-                      className="w-full bg-zinc-50 border border-zinc-100 p-4 text-[14px] outline-none focus:border-[#0055FF] transition-colors resize-none" 
+                      className="w-full bg-white/5 border border-white/10 p-4 text-[13px] text-white outline-none focus:border-indigo-600 transition-all resize-none min-h-[100px] placeholder:text-zinc-700" 
                       placeholder="Describe your vision..."
                       value={formData.description}
                       onChange={(e) => setFormData({...formData, description: e.target.value})}
@@ -306,9 +319,9 @@ export default function CommunityPage() {
                  <button 
                    disabled={loading}
                    type="submit"
-                   className="w-full h-14 bg-black text-white text-[12px] font-medium uppercase tracking-widest hover:bg-[#0055FF] transition-all disabled:opacity-50"
+                   className="w-full h-14 bg-indigo-600 text-white text-[12px] font-bold transition-all disabled:opacity-50 rounded-none"
                  >
-                   {loading ? "Submitting..." : "Submit to Board"}
+                   {loading ? "Synchronizing..." : "Post to collective"}
                  </button>
               </form>
             </motion.div>

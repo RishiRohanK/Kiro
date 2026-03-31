@@ -1,199 +1,203 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import Link from "next/link";
-import { 
-    Search, 
-    Filter, 
-    Github, 
-    ExternalLink, 
-    Terminal, 
-    Users, 
-    Clock, 
-    CheckCircle2, 
-    AlertCircle, 
-    ArrowUpRight,
-    Home,
-    ArrowRight,
-    UserCircle,
-    BookOpen
-} from "lucide-react";
-import Breadcrumbs from "../components/Breadcrumbs";
+import Navbar from "../components/home/Navbar";
+import SubNavbar from "../components/home/SubNavbar";
 import Footer from "../components/home/Footer";
+import CTA from "../components/home/CTA";
+import { FolderKanban, ArrowRight, Star, Clock, User, Bookmark, ExternalLink, Code2, Layers, Search, Filter, Cpu, Database, Layout, Smartphone } from "lucide-react";
+import { useState } from "react";
+
+const blueprints = [
+    {
+      title: "Real-time SaaS Dashboard",
+      difficulty: "Advanced",
+      duration: "4-6 Weeks",
+      stars: 4.9,
+      category: "Fullstack",
+      description: "Build a high-performance analytics dashboard with real-time charting, multi-tenant auth, and automated reporting.",
+      techStack: ["Next.js", "Recoil", "Prism", "Chart.js"],
+      icon: <Layers size={24} className="text-blue-500" />,
+      color: "border-blue-500/20 bg-blue-500/5 hover:border-blue-500",
+      textColor: "text-blue-600"
+    },
+    {
+      title: "Decentralized Voting System",
+      difficulty: "Expert",
+      duration: "6-8 Weeks",
+      stars: 4.8,
+      category: "Blockchain",
+      description: "Create a tamper-proof voting engine with Ethereum smart contracts and a clean, responsive admin interface.",
+      techStack: ["Solidity", "Hardhat", "React", "Ethers.js"],
+      icon: <Cpu size={24} className="text-emerald-500" />,
+      color: "border-emerald-500/20 bg-emerald-500/5 hover:border-emerald-500",
+      textColor: "text-emerald-600"
+    },
+    {
+      title: "E-Commerce Mobile Engine",
+      difficulty: "Intermediate",
+      duration: "3-5 Weeks",
+      stars: 4.7,
+      category: "Mobile",
+      description: "Develop a high-conversion mobile shop with cross-platform support, Stripe payments, and offline caching.",
+      techStack: ["React Native", "Firebase", "Stripe API", "Redux"],
+      icon: <Smartphone size={24} className="text-orange-500" />,
+      color: "border-orange-500/20 bg-orange-500/5 hover:border-orange-500",
+      textColor: "text-orange-600"
+    },
+    {
+      title: "AI Chat Application",
+      difficulty: "Advanced",
+      duration: "5-7 Weeks",
+      stars: 4.9,
+      category: "AI / ML",
+      description: "Build a persistent chat bot that integrates OpenAI API, captures user context, and provides intelligent technical support.",
+      techStack: ["OpenAI", "Node.js", "MongoDB", "Tailwind"],
+      icon: <Database size={24} className="text-violet-500" />,
+      color: "border-violet-500/20 bg-violet-500/5 hover:border-violet-500",
+      textColor: "text-violet-600"
+    },
+    {
+      title: "Low-Latency Video Streamer",
+      difficulty: "Expert",
+      duration: "8-10 Weeks",
+      stars: 4.8,
+      category: "Systems",
+      description: "Implement a video streaming engine using WebRTC with real-time peer-to-peer data coordination and cloud recording.",
+      techStack: ["WebRTC", "Go", "Redis", "Amazon S3"],
+      icon: <Code2 size={24} className="text-rose-500" />,
+      color: "border-rose-500/20 bg-rose-500/5 hover:border-rose-500",
+      textColor: "text-rose-600"
+    }
+];
 
 export default function ProjectsPage() {
-    const [projects, setProjects] = useState<any[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [search, setSearch] = useState("");
-    const [filter, setFilter] = useState("all");
+  const [filter, setFilter] = useState("All");
 
-    useEffect(() => {
-        const fetchProjects = async () => {
-            try {
-                const res = await fetch("/api/projects");
-                const data = await res.json();
-                if (data.success) setProjects(data.projects);
-            } catch (error) {
-                console.error(error);
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchProjects();
-    }, []);
+  return (
+    <div className="min-h-screen bg-white font-sans selection:bg-blue-100">
+      <Navbar />
+      <SubNavbar />
+      
+      <main>
+        {/* Hero Section */}
+        <section className="bg-zinc-900 py-16 md:py-20 lg:py-24 overflow-hidden relative border-b border-white/5">
+          <div className="absolute top-0 right-0 w-[50%] h-full bg-orange-600/10 blur-[100px] pointer-events-none" />
+          <div className="mx-auto max-w-7xl px-6 lg:px-10 relative z-10">
+            <div className="max-w-3xl space-y-4">
+              <div className="inline-flex h-6 items-center px-3 border border-white/10 bg-white/5 text-orange-400 text-[10px] font-bold uppercase tracking-widest leading-none">
+                Portfolio Engineering
+              </div>
+              <h1 className="text-4xl md:text-6xl font-normal tracking-tighter text-white leading-[1.1]">
+                Build robust <span className="text-orange-500">portfolio-worthy</span> <br /> 
+                <span className="text-blue-500">projects</span> <span className="text-emerald-500">quickly</span>.
+              </h1>
+              <p className="text-[16px] md:text-[18px] text-zinc-400 leading-relaxed font-normal max-w-xl">
+                Skill Grid Projects provide architectural blueprints for high-impact software. 
+                Move from ideation to production with curated stacks and real-world logic.
+              </p>
+              <div className="pt-6">
+                <button className="h-12 px-8 bg-zinc-800 text-white text-[12px] font-bold uppercase tracking-widest hover:bg-zinc-700 transition-colors flex items-center gap-2 border border-white/10">
+                    <FolderKanban size={18} /> Manage My Blueprints
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
 
-    const filteredProjects = projects.filter(p => {
-        const title = p.teamName || "";
-        const description = p.hackathonName || "";
-        const status = p.status || "live";
-        
-        const matchesSearch = title.toLowerCase().includes(search.toLowerCase()) || 
-                             description.toLowerCase().includes(search.toLowerCase());
-        const matchesFilter = filter === "all" || status.toLowerCase() === filter.toLowerCase() || (filter === "ongoing" && status === "live");
-        return matchesSearch && matchesFilter;
-    });
-
-    return (
-        <div className="min-h-screen bg-white text-zinc-900 font-sans selection:bg-zinc-100">
-            {/* Minimal Navbar - Sharp Edges */}
-            <nav className="sticky top-0 z-50 w-full border-b border-zinc-100 bg-white/95 backdrop-blur-sm">
-                <div className="mx-auto flex h-14 w-full max-w-7xl items-center justify-between px-6 lg:px-10">
-                    <Link href="/" className="flex items-center gap-3 transition-opacity hover:opacity-70">
-                        <Home size={14} />
-                        <span className="text-[14px] tracking-tight">Home</span>
-                    </Link>
-                    <div className="flex items-center gap-8 px-6 h-10 bg-zinc-50 border border-zinc-100">
-                         <Search className="w-3.5 h-3.5 text-zinc-300" />
-                         <input 
+        {/* Board Search - Clean White Board */}
+        <section className="py-20 bg-white min-h-[600px]">
+            <div className="mx-auto max-w-7xl px-6 lg:px-10">
+                <div className="mb-16 flex flex-col md:flex-row items-center justify-between gap-8 py-8 border-b border-zinc-100">
+                    <div className="relative group w-full md:w-96">
+                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 group-focus-within:text-orange-600 transition-colors" size={18} />
+                        <input 
                             type="text" 
-                            placeholder="Find a project..." 
-                            className="bg-transparent text-[12px] outline-none w-48 text-zinc-600"
-                            value={search}
-                            onChange={(e) => setSearch(e.target.value)}
-                         />
+                            placeholder="Find a blueprint for your next build..."
+                            className="w-full h-12 pl-12 pr-4 bg-zinc-50 border border-zinc-200 text-[14px] focus:outline-none focus:border-orange-600 transition-all font-medium"
+                        />
                     </div>
-                    <div className="flex items-center gap-4">
-                        <span className="text-[11px] font-bold text-zinc-300 uppercase tracking-widest">Active Students</span>
-                        <div className="h-2 w-2 bg-[#92E3A9] rounded-full animate-pulse" />
+                    <div className="flex gap-4 scroll-x overflow-x-auto w-full md:w-auto pb-4 md:pb-0 no-scrollbar">
+                        {["All", "Fullstack", "Web3 Core", "Systems"].map((f) => (
+                            <button
+                                key={f}
+                                onClick={() => setFilter(f)}
+                                className={`whitespace-nowrap px-5 h-10 text-[11px] font-bold uppercase tracking-widest transition-all ${
+                                    filter === f ? "bg-zinc-900 text-white shadow-xl shadow-zinc-200" : "bg-zinc-50 text-zinc-400 hover:bg-zinc-100"
+                                }`}
+                            >
+                                {f}
+                            </button>
+                        ))}
                     </div>
                 </div>
-            </nav>
 
-            <main className="w-full">
-                {/* Header Section - Sharp Black */}
-                <div className="bg-black py-10 lg:py-12">
-                    <div className="mx-auto max-w-7xl px-6 lg:px-10">
-                        <Breadcrumbs items={[{ label: "Academy", href: "/" }, { label: "Projects" }]} />
-                        <div className="mt-8 flex flex-col md:flex-row md:items-end justify-between gap-8">
-                            <div className="max-w-xl">
-                                <h1 className="text-4xl md:text-5xl tracking-tight text-white mb-6">
-                                    Student Projects
-                                </h1>
-                                <p className="text-zinc-400 text-[15px] leading-relaxed">
-                                    See what our students are building. These are real-time projects built during our internship programs.
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+                    {blueprints.map((project, index) => (
+                        <div 
+                            key={index}
+                            className={`group flex flex-col border p-12 transition-all duration-300 relative overflow-hidden ${project.color}`}
+                        >
+                            <div className="flex justify-between items-start mb-10">
+                                <div className="p-5 bg-white border border-zinc-100 shadow-sm transition-transform group-hover:scale-110 duration-500">
+                                    {project.icon}
+                                </div>
+                                <div className="flex items-center gap-1.5 text-zinc-400">
+                                    <Star size={12} className="text-orange-400 fill-orange-400" />
+                                    <span className="text-[12px] font-bold">{project.stars}</span>
+                                </div>
+                            </div>
+
+                            <div className="mb-8">
+                                <p className={`text-[11px] font-bold uppercase tracking-widest mb-1 ${project.textColor}`}>{project.difficulty}</p>
+                                <h3 className="text-2xl font-bold text-zinc-900 leading-tight mb-4 group-hover:text-zinc-900 transition-colors">
+                                    {project.title}
+                                </h3>
+                                <p className="text-zinc-500 text-[14px] font-medium leading-relaxed">
+                                    {project.description}
                                 </p>
                             </div>
-                            
-                            <div className="flex bg-zinc-900 border border-zinc-800 p-1">
-                                {["all", "completed", "ongoing"].map((f) => (
-                                    <button 
-                                        key={f}
-                                        onClick={() => setFilter(f)}
-                                        className={`px-6 py-2 text-[11px] font-bold uppercase tracking-widest transition-all ${
-                                            filter === f ? "bg-white text-black" : "text-zinc-500 hover:text-white"
-                                        }`}
-                                    >
-                                        {f}
-                                    </button>
+
+                            <div className="flex flex-wrap gap-2 mb-10">
+                                {project.techStack.map(tech => (
+                                    <span key={tech} className="text-[10px] font-bold text-zinc-400 bg-zinc-100 px-2 py-0.5 uppercase tracking-widest">
+                                        {tech}
+                                    </span>
                                 ))}
                             </div>
+
+                            <div className="flex items-center justify-between mt-auto pt-10 border-t border-zinc-100">
+                                <div className="space-y-1">
+                                    <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest flex items-center gap-1.5 leading-none">
+                                        <Clock size={12} /> Timeframe
+                                    </p>
+                                    <p className="text-[14px] font-bold text-zinc-900">{project.duration}</p>
+                                </div>
+                                <button className={`flex items-center gap-2 text-[12px] font-bold uppercase tracking-widest ${project.textColor} hover:translate-x-1 transition-transform`}>
+                                    View Logic <ArrowRight size={16} />
+                                </button>
+                            </div>
+
+                            {/* Corner Ribbon Detail */}
+                            <div className="absolute top-0 right-0 w-12 h-12 bg-zinc-100 transform rotate-45 translate-x-6 -translate-y-6 group-hover:bg-zinc-900 transition-colors" />
                         </div>
+                    ))}
+                    
+                    {/* Submission Board Card */}
+                    <div className="border border-dashed border-zinc-200 p-12 text-center group cursor-pointer hover:bg-zinc-50 transition-colors flex flex-col justify-center min-h-[450px]">
+                        <div className="mx-auto w-16 h-16 bg-zinc-50 border border-zinc-200 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-white transition-all text-zinc-300 group-hover:text-orange-500 border-dashed">
+                            <Bookmark size={24} />
+                        </div>
+                        <h3 className="text-[14px] font-bold text-zinc-400 uppercase tracking-widest group-hover:text-zinc-900 transition-colors">Submit a Blueprint?</h3>
+                        <p className="text-[11px] text-zinc-400 mt-2 font-medium italic group-hover:text-zinc-500">Share your production logic with the global community.</p>
                     </div>
                 </div>
+            </div>
+        </section>
 
-                <div className="mx-auto max-w-7xl px-6 lg:px-10 py-16">
-                    {loading ? (
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                            {[1, 2, 3].map(i => <div key={i} className="h-[400px] bg-zinc-50 border border-zinc-100 animate-pulse" />)}
-                        </div>
-                    ) : filteredProjects.length > 0 ? (
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10">
-                            {filteredProjects.map((project) => (
-                                <div key={project.id} className="group border border-zinc-100 bg-white hover:border-black transition-all flex flex-col h-full active:scale-[0.99]">
-                                    <div className="p-8 space-y-6 flex-1">
-                                        <div className="flex items-center justify-between">
-                                            <div className="flex items-center gap-2 px-2.5 py-1 bg-zinc-50 border border-zinc-100 uppercase tracking-widest text-[10px] font-bold text-zinc-500">
-                                                {project.status === "completed" ? <CheckCircle2 size={10} className="text-[#92E3A9]" /> : <Clock size={10} />}
-                                                {project.status}
-                                            </div>
-                                            <Link href={project.githubRepo || "#"} className="text-zinc-300 hover:text-black transition-colors">
-                                                <Github size={18} />
-                                            </Link>
-                                        </div>
+        <CTA />
+      </main>
 
-                                        <div className="space-y-4">
-                                            <h3 className="text-[20px] font-bold tracking-tight text-zinc-900 group-hover:text-black leading-tight">
-                                                {project.teamName}
-                                            </h3>
-                                            <p className="text-[14px] text-zinc-500 line-clamp-3 leading-relaxed">
-                                                {project.hackathonName}
-                                            </p>
-                                        </div>
-
-                                        <div className="flex flex-wrap gap-2 pt-4">
-                                            {project.githubRepo && (
-                                                <span className="text-[10px] font-medium text-zinc-400 border border-zinc-100 px-3 py-1">
-                                                    Github Project
-                                                </span>
-                                            )}
-                                        </div>
-                                    </div>
-
-                                    <div className="border-t border-zinc-50 p-6 space-y-4 bg-zinc-50/10">
-                                        <div className="flex flex-col gap-4 text-[12px]">
-                                            <div className="flex items-center justify-between">
-                                                <div className="flex items-center gap-2">
-                                                    <UserCircle size={14} className="text-red-500" />
-                                                    <span className="text-zinc-600 font-bold">{project.teamLeader}</span>
-                                                </div>
-                                                <div className="flex items-center gap-2 text-zinc-400">
-                                                    <Users size={14} />
-                                                    <span>{project.teamMembers?.length || 0} Members</span>
-                                                </div>
-                                            </div>
-                                            {project.teamMembers && project.teamMembers.length > 0 && (
-                                                <div className="border-t border-zinc-100 pt-3">
-                                                    <p className="text-[11px] text-zinc-400 uppercase tracking-widest mb-1.5 font-bold">The Team</p>
-                                                    <p className="text-[13px] text-zinc-500 leading-relaxed font-medium">
-                                                        {project.teamMembers.join(", ")}
-                                                    </p>
-                                                </div>
-                                            )}
-                                        </div>
-                                        
-                                        <Link 
-                                            href={project.githubRepo || `/projects/${project.id}`}
-                                            target={project.githubRepo ? "_blank" : "_self"}
-                                            rel={project.githubRepo ? "noopener noreferrer" : ""}
-                                            className="w-full h-11 border border-zinc-200 flex items-center justify-center gap-2 text-[12px] font-bold uppercase tracking-widest hover:bg-black hover:text-white transition-all group/btn"
-                                        >
-                                            {project.githubRepo ? "Open Github" : "View Story"}
-                                            <ArrowRight size={14} className="group-hover/btn:translate-x-1 transition-transform" />
-                                        </Link>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    ) : (
-                        <div className="py-24 text-center border border-zinc-100 border-dashed">
-                            <AlertCircle className="w-8 h-8 text-zinc-200 mx-auto mb-4" />
-                            <p className="text-[14px] text-zinc-500">No projects found. Try a different search.</p>
-                        </div>
-                    )}
-                </div>
-            </main>
-
-            <Footer />
-        </div>
-    );
+      <Footer />
+    </div>
+  );
 }

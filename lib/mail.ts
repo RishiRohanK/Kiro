@@ -8,145 +8,80 @@ const transporter = nodemailer.createTransport({
     },
 });
 
-export const sendApprovalEmail = async (email: string, name: string) => {
-    const html = `
-    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-    <html xmlns="http://www.w3.org/1999/xhtml">
-    <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <title>Forge Media - Welcome</title>
-        <style type="text/css">
-            @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;800&display=swap');
-            body { font-family: 'Outfit', 'Helvetica Neue', Helvetica, Arial, sans-serif; margin: 0; padding: 0; background-color: #050505; color: #ffffff; width: 100% !important; }
-            .container { max-width: 600px; margin: 40px auto; background-color: #0a0a0a; border: 1px solid #1a1a1a; border-radius: 32px; overflow: hidden; }
-            .content { padding: 48px; }
-            .logo-wrap { text-align: center; margin-bottom: 30px; }
-            .logo-img { width: 120px; height: auto; display: block; margin: 0 auto; }
-            .status-badge { display: inline-block; padding: 6px 14px; background-color: #92E3A9; color: #000000; border-radius: 100px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 24px; }
-            h1 { font-size: 32px; font-weight: 400; color: #ffffff; margin: 0 0 20px 0; letter-spacing: -1px; line-height: 1.1; }
-            p { font-size: 16px; line-height: 1.6; color: #a1a1aa; margin: 0 0 24px 0; font-weight: 400; }
-            .cta-wrap { margin: 40px 0; text-align: center; }
-            .button { display: inline-block; background-color: #92E3A9; color: #000000 !important; padding: 18px 40px; border-radius: 16px; text-decoration: none; font-weight: 700; font-size: 14px; text-align: center; transition: all 0.2s ease; box-shadow: 0 10px 20px rgba(146, 227, 169, 0.2); }
-            .footer { padding: 40px; background-color: #0f0f0f; border-top: 1px solid #1a1a1a; text-align: center; }
-            .footer-text { font-size: 12px; color: #52525b; line-height: 1.5; font-weight: 400; }
-        </style>
-    </head>
-    <body style="background-color: #050505;">
+const BASE_URL = "https://platform.studentforge.in";
+
+/**
+ * Simplified Minimalist Email Template
+ */
+const getSimpleTemplate = (title: string, content: string, ctaText: string, ctaUrl: string, team: string) => `
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #1a1a1a; margin: 0; padding: 0; background-color: #f9f9f9; }
+        .wrapper { padding: 40px 20px; }
+        .container { max-width: 500px; margin: 0 auto; background: #ffffff; border: 1px solid #eeeeee; padding: 40px; }
+        .logo { margin-bottom: 30px; }
+        h1 { font-size: 20px; font-weight: 600; margin: 0 0 16px; color: #000; letter-spacing: -0.01em; }
+        p { font-size: 14px; margin: 0 0 24px; color: #666; }
+        .button { display: inline-block; background: #000; color: #fff !important; padding: 12px 24px; text-decoration: none; font-size: 13px; font-weight: 600; border-radius: 0; transition: background 0.2s; }
+        .footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; font-size: 12px; color: #999; }
+        .team { font-weight: 600; color: #000; margin-bottom: 4px; }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
         <div class="container">
-            <div class="content">
-                <div class="logo-wrap">
-                    <img src="https://ik.imagekit.io/dypkhqxip/sf-next-logo?updatedAt=1772993490660" alt="Student Forge Logo" class="logo-img" />
-                </div>
-                
-                <div style="text-align: center;">
-                    <div class="status-badge">Approved</div>
-                    <h1>Welcome To The Team, ${name}.</h1>
-                    <p>Good news! Your account has been approved by the admin. You now have full access to the Media dashboard and all our internal tools.</p>
-                </div>
-
-                <div class="cta-wrap">
-                    <a href="https://server.studentforge.in/media/signin" class="button" style="color: #000000 !important;">Go To Dashboard</a>
-                </div>
-
-                <div style="margin-top: 40px; border-top: 1px solid #1a1a1a; padding-top: 24px; text-align: center;">
-                    <p style="margin-bottom: 4px; color: #ffffff; font-weight: 400;">Forge Admin Team</p>
-                    <p style="font-size: 12px; color: #92E3A9; margin: 0; font-weight: 400;">Student Forge Technologies</p>
-                </div>
+            <div class="logo">
+                <img src="https://ik.imagekit.io/dypkhqxip/sflogo" alt="Student Forge" height="24" />
             </div>
-            
+            <h1>${title}</h1>
+            <p>${content}</p>
+            <a href="${ctaUrl}" class="button">${ctaText}</a>
             <div class="footer">
-                <div class="footer-text">
-                    This is an automated message to let you know your account is ready.<br/>
-                    Please keep your login details safe.<br/><br/>
-                    &copy; 2026 Student Forge Technologies
-                </div>
+                <div class="team">${team}</div>
+                <div>Student Forge Technologies</div>
+                <div style="margin-top: 10px;">&copy; 2026 Student Forge. Definitive Engineering Accelerator.</div>
             </div>
         </div>
-    </body>
-    </html>
-    `;
+    </div>
+</body>
+</html>
+`;
+
+export const sendApprovalEmail = async (email: string, name: string) => {
+    const title = `Account Approved: ${name}`;
+    const content = "Your account has been cleared for access by the administration. You can now access the internal technical modules and mission-critical tools.";
+    const ctaUrl = `${BASE_URL}/cleed/dashboard`;
+    const html = getSimpleTemplate(title, content, "Access Dashboard", ctaUrl, "Forge Admin Team");
 
     try {
         await transporter.sendMail({
             from: '"Forge Admin" <studentforgetechnologies@gmail.com>',
             to: email,
-            subject: "Your account is approved, " + name + "!",
+            subject: `Access Synchronized: Welcome, ${name}`,
             html: html,
         });
-        console.log(`Simplified approval email sent to ${email}`);
         return true;
     } catch (error) {
-        console.error("Simple Mail Error:", error);
+        console.error("Approval Mail Error:", error);
         return false;
     }
 };
 
 export const sendPasswordResetEmail = async (email: string, token: string) => {
-    const resetLink = `https://academy.studentforge.in/intern/reset-password?token=${token}`;
-    const html = `
-    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-    <html xmlns="http://www.w3.org/1999/xhtml">
-    <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <title>Forge Academy - Password Reset</title>
-        <style type="text/css">
-            @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;800&display=swap');
-            body { font-family: 'Outfit', 'Helvetica Neue', Helvetica, Arial, sans-serif; margin: 0; padding: 0; background-color: #050505; color: #ffffff; width: 100% !important; }
-            .container { max-width: 600px; margin: 40px auto; background-color: #0a0a0a; border: 1px solid #1a1a1a; border-radius: 32px; overflow: hidden; }
-            .content { padding: 48px; }
-            .logo-wrap { text-align: center; margin-bottom: 30px; }
-            .logo-img { width: 120px; height: auto; display: block; margin: 0 auto; }
-            .status-badge { display: inline-block; padding: 6px 14px; background-color: #ffffff; color: #000000; border-radius: 100px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 24px; }
-            h1 { font-size: 32px; font-weight: 400; color: #ffffff; margin: 0 0 20px 0; letter-spacing: -1px; line-height: 1.1; }
-            p { font-size: 16px; line-height: 1.6; color: #a1a1aa; margin: 0 0 24px 0; font-weight: 400; }
-            .cta-wrap { margin: 40px 0; text-align: center; }
-            .button { display: inline-block; background-color: #92E3A9; color: #000000 !important; padding: 18px 40px; border-radius: 16px; text-decoration: none; font-weight: 700; font-size: 14px; text-align: center; transition: all 0.2s ease; box-shadow: 0 10px 20px rgba(146, 227, 169, 0.2); }
-            .footer { padding: 40px; background-color: #0f0f0f; border-top: 1px solid #1a1a1a; text-align: center; }
-            .footer-text { font-size: 12px; color: #52525b; line-height: 1.5; font-weight: 400; }
-        </style>
-    </head>
-    <body style="background-color: #050505;">
-        <div class="container">
-            <div class="content">
-                <div class="logo-wrap">
-                    <img src="https://ik.imagekit.io/dypkhqxip/sf-next-logo?updatedAt=1772993490660" alt="Student Forge Logo" class="logo-img" />
-                </div>
-                
-                <div style="text-align: center;">
-                    <div class="status-badge">Reset Request</div>
-                    <h1>Reset Your Access, Intern.</h1>
-                    <p>We received a request to reset your Forge Academy intern password. Click the button below to secure your account.</p>
-                </div>
- 
-                <div class="cta-wrap">
-                    <a href="${resetLink}" class="button" style="color: #000000 !important;">Reset Password</a>
-                </div>
- 
-                <div style="margin-top: 40px; border-top: 1px solid #1a1a1a; padding-top: 24px; text-align: center;">
-                    <p style="margin-bottom: 4px; color: #ffffff; font-weight: 400;">Forge Security Team</p>
-                    <p style="font-size: 12px; color: #92E3A9; margin: 0; font-weight: 400;">Student Forge Technologies</p>
-                </div>
-            </div>
-            
-            <div class="footer">
-                <div class="footer-text">
-                    If you didn't request this, you can safely ignore this email.<br/>
-                    This link will expire in 1 hour.<br/><br/>
-                    &copy; 2026 Student Forge Technologies
-                </div>
-            </div>
-        </div>
-    </body>
-    </html>
-    `;
- 
+    const title = "Password Reset Request";
+    const content = "A secure request to reset your platform access has been initiated. This protocol will expire in 60 minutes. If you did not initiate this, please ignore this communication.";
+    const resetLink = `${BASE_URL}/intern/reset-password?token=${token}`;
+    const html = getSimpleTemplate(title, content, "Reset Protocol", resetLink, "Forge Security Team");
+
     try {
         await transporter.sendMail({
             from: '"Forge Security" <studentforgetechnologies@gmail.com>',
             to: email,
-            subject: "Reset your Forge Academy Intern Password",
+            subject: "Security Protocol: Reset Access Request",
             html: html,
         });
         return true;

@@ -1,113 +1,241 @@
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
-import {
-    Calendar,
-    ArrowRight,
-    PlusCircle,
-    Search,
-    MessageSquare,
-    Home,
-    ArrowLeft
-} from "lucide-react";
-import Breadcrumbs from "../components/Breadcrumbs";
+import { useState, useMemo, useEffect } from "react";
+import Navbar from "../components/home/Navbar";
+import SubNavbar from "../components/home/SubNavbar";
 import Footer from "../components/home/Footer";
+import CTA from "../components/home/CTA";
+import { 
+    Calendar, Trophy, MapPin, ArrowUpRight, 
+    Link2, Terminal, Shield, Cpu, Cloud,
+    Code2, Database, Laptop, Info, GraduationCap
+} from "lucide-react";
 
-export default function EventsPortal() {
-    const items = [
-        {
-            title: "Create Event",
-            desc: "Start a new workshop or hackathon and invite students to join.",
-            href: "/events/host",
-            icon: PlusCircle,
-            badge: "Host"
-        },
-        {
-            title: "Find Events",
-            desc: "Look for upcoming hackathons, missions, and workshops to join.",
-            href: "/events/explore",
-            icon: Search,
-            badge: "Browse"
-        },
-        {
-            title: "View Reviews",
-            desc: "Read what students and judges said about past events.",
-            href: "/events/review",
-            icon: MessageSquare,
-            badge: "Stories"
-        }
-    ];
+const techEventsIndia = [
+    {
+        title: "Microsoft Build: India",
+        organizer: "Microsoft",
+        date: "June 04-05, 2026",
+        location: "Hyderabad, TS",
+        type: "Developer Event",
+        attendees: "8K+ Devs",
+        category: "Software",
+        link: "https://build.microsoft.com/india",
+        logo: "https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg",
+        color: "text-sky-600"
+    },
+    {
+        title: "Google I/O Connect Bengaluru",
+        organizer: "Google",
+        date: "July 15-16, 2026",
+        location: "Bengaluru, KA",
+        type: "Developer Keynote",
+        attendees: "10K+ Local",
+        category: "AI & Web",
+        link: "https://io.google/connect/india/",
+        logo: "https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg",
+        color: "text-blue-500"
+    },
+    {
+        title: "PyCon India 2026",
+        organizer: "Python India",
+        date: "Sept 25-27, 2026",
+        location: "Chennai, TN",
+        type: "Open Source",
+        attendees: "3K+ Community",
+        category: "Python & ML",
+        link: "https://in.pycon.org/",
+        logo: "https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg",
+        color: "text-blue-600"
+    },
+    {
+        title: "AWS Summit Delhi",
+        organizer: "Amazon Web Services",
+        date: "Sept 10-11, 2026",
+        location: "New Delhi, DL",
+        type: "Cloud Summit",
+        attendees: "15K+ Professionals",
+        category: "Cloud",
+        link: "https://aws.amazon.com/events/summits/delhi/",
+        logo: "https://upload.wikimedia.org/wikipedia/commons/9/93/Amazon_Web_Services_Logo.svg",
+        color: "text-orange-500"
+    },
+    {
+        title: "IIT Bombay Techfest",
+        organizer: "IIT Bombay",
+        date: "Dec 26-28, 2026",
+        location: "Mumbai, MH",
+        type: "College Fest",
+        attendees: "175K+ Footfall",
+        category: "College Events",
+        link: "https://techfest.org/",
+        logo: "https://upload.wikimedia.org/wikipedia/en/1/1d/Indian_Institute_of_Technology_Bombay_Logo.svg",
+        color: "text-blue-600"
+    }
+];
+
+const eventCategories = ["All", "Industry Anchors", "College Events", "Cloud", "Software", "AI & Web", "Enterprise"];
+
+export default function EventsPage() {
+    const [selectedCategory, setSelectedCategory] = useState("All");
+    const [dbEvents, setDbEvents] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        fetch("/api/cleed/events")
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    const formatted = data.events.map((e: any) => ({
+                        ...e,
+                        attendees: e.price || "Contact for Details", // Repurpose price field if needed
+                        color: e.category === "College Events" ? "text-blue-600" : "text-emerald-500",
+                        logo: e.image || ""
+                    }));
+                    setDbEvents(formatted);
+                }
+            })
+            .finally(() => setLoading(false));
+    }, []);
+
+    const allEvents = useMemo(() => {
+        const merged = [...techEventsIndia, ...dbEvents];
+        // Remove duplicates by title if any
+        return Array.from(new Map(merged.map(item => [item.title, item])).values());
+    }, [dbEvents]);
+
+    const filteredEvents = useMemo(() => {
+        return allEvents.filter(e => {
+            if (selectedCategory === "All") return true;
+            if (selectedCategory === "Industry Anchors") return e.category !== "College Events";
+            return e.category === selectedCategory;
+        });
+    }, [selectedCategory, allEvents]);
 
     return (
-        <div className="min-h-screen bg-white text-zinc-900 font-sans selection:bg-zinc-100">
-            {/* Minimal Navbar - Sharp Edges */}
-            <nav className="sticky top-0 z-50 w-full border-b border-zinc-100 bg-white/95 backdrop-blur-sm">
-                <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-6 lg:px-10">
-                    <Link href="/" className="flex items-center gap-3 transition-opacity hover:opacity-70">
-                        <Home size={16} />
-                        <span className="text-[14px] tracking-tight">Home</span>
-                    </Link>
-                    <div className="flex items-center gap-3">
-                        <div className="h-1.5 w-1.5 bg-[#92E3A9]" />
-                        <span className="text-[11px] font-medium text-zinc-400 uppercase tracking-widest">Event Center</span>
-                    </div>
-                </div>
-            </nav>
+        <div className="min-h-screen bg-white font-sans selection:bg-blue-100 uppercase-none">
+            <Navbar />
+            <SubNavbar />
 
-            <main className="w-full">
-                {/* Header Section - Sharp Black */}
-                <div className="bg-black py-12 lg:py-16">
-                    <div className="mx-auto max-w-7xl px-6 lg:px-10">
-                        <Breadcrumbs items={[{ label: "Academy", href: "/" }, { label: "Events" }]} />
-                        <h1 className="text-4xl md:text-5xl tracking-tight text-white mt-8 mb-4">
-                            Events & Hackathons
-                        </h1>
-                        <p className="text-zinc-400 text-[15px] leading-relaxed max-w-md">
-                            Organize workshops, hackathons, and meetups easily with our tools.
-                        </p>
+            <main>
+                {/* Refined India-Centric Hero */}
+                <section className="bg-zinc-950 py-10 border-b border-white/5">
+                    <div className="mx-auto max-w-7xl px-6">
+                        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+                            <div className="space-y-2">
+                                <div className="inline-flex h-5 items-center px-2 bg-blue-600 text-white text-[9px] font-bold tracking-widest leading-none">
+                                    India Event Index
+                                </div>
+                                <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-white italic">
+                                    Tech <span className="text-blue-500">Summit</span> India
+                                </h1>
+                                <p className="text-zinc-400 text-xs md:text-sm max-w-xl font-medium">
+                                    The definitive technology roadmap across India. Segregated by high-impact industry anchors and elite college tech platforms.
+                                </p>
+                            </div>
+                            <div className="flex flex-wrap gap-2">
+                                {eventCategories.map(cat => (
+                                    <button
+                                        key={cat}
+                                        onClick={() => setSelectedCategory(cat)}
+                                        className={`px-3 py-1 text-[10px] font-bold border transition-all ${
+                                            selectedCategory === cat 
+                                            ? "bg-white text-zinc-950 border-white" 
+                                            : "text-zinc-400 border-white/10 hover:border-white/30"
+                                        }`}
+                                    >
+                                        {cat}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
                     </div>
-                </div>
+                </section>
 
-                <div className="mx-auto max-w-7xl px-6 lg:px-10 py-16 md:py-24">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
-                        {items.map((item, idx) => (
-                            <Link
-                                key={idx}
-                                href={item.href}
-                                className="group block border border-zinc-100 p-10 hover:border-black transition-all active:scale-[0.99] relative overflow-hidden"
-                            >
-                                <div className="space-y-6 relative z-10">
-                                    <div className="flex justify-between items-start">
-                                        <div className="w-12 h-12 border border-zinc-100 flex items-center justify-center text-zinc-200 group-hover:text-black group-hover:border-black transition-all">
-                                            <item.icon size={24} strokeWidth={1.5} />
+                {/* Localized High-Density Grid */}
+                <section className="py-8 bg-zinc-50 min-h-[600px]">
+                    <div className="mx-auto max-w-7xl px-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                            {filteredEvents.map((event, index) => (
+                                <div 
+                                    key={index} 
+                                    className="bg-white border border-zinc-200 p-5 rounded-none flex flex-col justify-between hover:border-blue-600 transition-all group"
+                                >
+                                    <div className="space-y-4">
+                                        <div className="flex justify-between items-start">
+                                            <div className="h-10 w-auto">
+                                                <img 
+                                                    src={event.logo} 
+                                                    alt={event.organizer} 
+                                                    className="h-full w-auto object-contain transition-all"
+                                                />
+                                            </div>
+                                            <div className="flex flex-col items-end gap-1">
+                                                {event.category === "College Events" && (
+                                                    <span className="text-[9px] font-bold text-blue-600 flex items-center gap-1">
+                                                        <GraduationCap className="w-3 h-3" /> Campus
+                                                    </span>
+                                                )}
+                                            </div>
                                         </div>
-                                        <span className="text-[10px] font-bold text-zinc-300 uppercase tracking-widest group-hover:text-black transition-colors">
-                                            {item.badge}
-                                        </span>
+                                        
+                                        <div className="space-y-1">
+                                            <h3 className="text-sm font-extrabold text-zinc-900 tracking-tight leading-tight group-hover:text-blue-600 transition-colors">
+                                                {event.title}
+                                            </h3>
+                                            <p className="text-[11px] font-medium text-zinc-400 italic">
+                                                Hosted by {event.organizer}
+                                            </p>
+                                        </div>
+
+                                        <div className="space-y-2.5 pt-1">
+                                            <div className="flex items-center gap-2.5 text-zinc-600">
+                                                <Calendar className="w-3.5 h-3.5 text-zinc-400 shrink-0" />
+                                                <span className="text-[11px] font-bold tracking-tight">{event.date}</span>
+                                            </div>
+                                            <div className="flex items-center gap-2.5 text-zinc-600">
+                                                <MapPin className="w-3.5 h-3.5 text-zinc-400 shrink-0" />
+                                                <span className="text-[11px] font-bold tracking-tight">{event.location}</span>
+                                            </div>
+                                            <div className="flex items-center gap-2.5 text-zinc-600">
+                                                <Laptop className="w-3.5 h-3.5 text-zinc-400 shrink-0" />
+                                                <span className="text-[11px] font-bold tracking-tight">{event.attendees}</span>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div className="space-y-2">
-                                        <h3 className="text-[20px] font-bold tracking-tight text-zinc-900">{item.title}</h3>
-                                        <p className="text-[14px] text-zinc-500 leading-relaxed line-clamp-2">
-                                            {item.desc}
-                                        </p>
-                                    </div>
-                                    <div className="flex items-center gap-2 text-[11px] font-bold text-zinc-400 group-hover:text-black transition-colors uppercase tracking-widest">
-                                        Open portal <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+
+                                    <div className="mt-8 pt-4 border-t border-zinc-100 flex items-center justify-between">
+                                        <div className="flex items-center gap-2">
+                                            <div className={`w-1.5 h-1.5 rounded-full bg-current ${event.color}`} />
+                                            <span className="text-[10px] font-bold text-zinc-500">
+                                                {event.category}
+                                            </span>
+                                        </div>
+                                        <a 
+                                            href={event.link}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="inline-flex items-center justify-center w-8 h-8 border border-zinc-200 hover:bg-blue-600 hover:border-blue-600 hover:text-white transition-all text-zinc-400"
+                                        >
+                                            <ArrowUpRight className="w-4 h-4" />
+                                        </a>
                                     </div>
                                 </div>
-                                <div className="absolute top-0 right-0 w-24 h-24 bg-zinc-50/50 -mr-12 -mt-12 group-hover:bg-[#92E3A9]/10 transition-colors" />
-                            </Link>
-                        ))}
-                    </div>
+                            ))}
 
-                    <div className="mt-12 pt-12 border-t border-zinc-100 text-center">
-                        <Link href="/" className="group inline-flex items-center gap-3 text-[11px] font-bold text-zinc-300 hover:text-black transition-colors uppercase tracking-widest">
-                            <ArrowLeft size={14} className="group-hover:-translate-x-1 transition-transform" />
-                            Return home
-                        </Link>
+                            {/* Campus Support Pipeline */}
+                            <div className="border border-dashed border-zinc-300 p-5 flex flex-col items-center justify-center text-center bg-zinc-50/50">
+                                <Info className="w-8 h-8 text-zinc-300 mb-4" />
+                                <h3 className="text-[11px] font-bold text-zinc-400 tracking-widest mb-2 px-4 leading-relaxed italic">More Campus Anchors Syncing</h3>
+                                <p className="text-[10px] text-zinc-400 font-medium italic leading-relaxed">
+                                    Onboarding Top-Tier IIT/NIT tech fests into the global index.
+                                </p>
+                            </div>
+                        </div>
                     </div>
-                </div>
+                </section>
+
+                <CTA />
             </main>
 
             <Footer />

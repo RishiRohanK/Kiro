@@ -1,5 +1,24 @@
-import { redirect } from "next/navigation";
+import Navbar from "./components/home/Navbar";
+import SubNavbar from "./components/home/SubNavbar";
+import Hero from "./components/home/Hero";
+import QuickLinks from "./components/home/QuickLinks";
+import ContentExplorer from "./components/home/ContentExplorer";
+import Community from "./components/home/Community";
+import CTA from "./components/home/CTA";
+import Footer from "./components/home/Footer";
 
 export default function Home() {
-  redirect("/intern/signin");
+  return (
+    <>
+      <Navbar />
+      <SubNavbar />
+      <Hero />
+      <QuickLinks />
+      <ContentExplorer />
+      <Community />
+      <CTA />
+      <Footer />
+    </>
+  );
 }
+

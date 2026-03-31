@@ -1,106 +1,157 @@
 "use client";
 
-import { ArrowRight, User, ShieldCheck, Home, ArrowLeft, GraduationCap, Building } from "lucide-react";
+import { ArrowRight, GraduationCap, Building, ShieldCheck, ChevronRight, CheckCircle2 } from "lucide-react";
 import Link from "next/link";
-import Breadcrumbs from "../components/Breadcrumbs";
+import Navbar from "../components/home/Navbar";
+import SubNavbar from "../components/home/SubNavbar";
 import Footer from "../components/home/Footer";
+import CTA from "../components/home/CTA";
 
 export default function GetStartedPage() {
-    return (
-        <div className="min-h-screen bg-white text-zinc-900 font-sans selection:bg-zinc-100">
-            {/* Minimal Navbar - Sharp Edges */}
-            <nav className="sticky top-0 z-50 w-full border-b border-zinc-100 bg-white/95 backdrop-blur-sm">
-                <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-6 lg:px-10">
-                    <Link href="/" className="flex items-center gap-3 transition-opacity hover:opacity-70">
-                        <Home size={16} />
-                        <span className="text-[14px] tracking-tight">Home</span>
-                    </Link>
-                    <div className="flex items-center gap-3">
-                        <div className="h-1.5 w-1.5 bg-[#92E3A9]" />
-                        <span className="text-[11px] font-medium text-zinc-400 uppercase tracking-widest">Login Portal</span>
-                    </div>
+  return (
+    <div className="min-h-screen bg-white text-zinc-900 font-sans selection:bg-blue-100">
+      
+      {/* 1. Global Navigation */}
+      <Navbar />
+      <SubNavbar />
+
+      <main className="w-full">
+        
+        {/* 2. Hero Section - Compact Height */}
+        <section className="relative bg-zinc-900 py-16 md:py-20 lg:py-24 overflow-hidden">
+          {/* Animated Background Accent */}
+          <div className="absolute top-0 right-0 w-[50%] h-full bg-blue-600/10 blur-[100px] pointer-events-none" />
+          
+          <div className="mx-auto max-w-7xl px-6 lg:px-10 relative z-10">
+            <div className="max-w-2xl space-y-4">
+              <div className="inline-flex items-center gap-2 px-3 py-1 border border-white/10 bg-white/5 text-blue-400 text-[10px] font-bold uppercase tracking-widest leading-none">
+                Onboarding Overview
+              </div>
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-medium tracking-tight text-white leading-[1.1]">
+                Let's get your <br />
+                <span className="text-blue-500">career moving.</span>
+              </h1>
+              <p className="text-[16px] md:text-[17px] text-zinc-400 leading-relaxed font-normal max-w-lg">
+                Welcome to Skill Grid by Student Forge. Your journey from academic learning to professional excellence starts here.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* 3. Description / Intro Section - Compact Padding */}
+        <section className="bg-white py-12 md:py-16 border-b border-zinc-100">
+          <div className="mx-auto max-w-7xl px-6 lg:px-10">
+            <div className="max-w-3xl mb-8">
+              <h2 className="text-3xl md:text-5xl font-normal tracking-tight text-zinc-900 leading-[1.15] mb-6">
+                Building the <span className="text-violet-500">future</span> of <span className="text-emerald-500">engineering</span> <br />
+                with the <span className="text-blue-500">Skill Grid</span> <span className="text-orange-400">infrastructure</span>.
+              </h2>
+              
+              <p className="text-[16px] md:text-[17px] text-zinc-500 leading-relaxed font-normal mb-8">
+                Created by <span className="font-bold text-zinc-900">Student Forge</span>, Skill Grid is the world's most 
+                complete ecosystem for professional growth. We replace disjointed learning platforms with a single, 
+                <span className="text-zinc-900 font-medium"> high-performance system</span> that integrates learning, 
+                building, and career placement directly into your workflow.
+              </p>
+              
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-4">
+                {[
+                  "Direct access to industry-curated curriculum",
+                  "Automated professional portfolio building",
+                  "Verified internship placements with partners",
+                  "Global networking with technical mentors",
+                  "Real-world project certification modules",
+                  "24/7 technical support and peer review"
+                ].map((text, i) => (
+                  <div key={i} className="flex items-start gap-2.5">
+                    <CheckCircle2 size={16} className="text-blue-600 mt-1 shrink-0" />
+                    <span className="text-[14px] text-zinc-600 font-medium leading-relaxed">{text}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* 4. About Skill Grid - Focused Intern Entry - Compact Padding */}
+        <section className="bg-zinc-50/50 py-16 md:py-20 overflow-hidden relative">
+          {/* Subtle Grid Pattern Overlay */}
+          <div className="absolute inset-0 opacity-[0.03] pointer-events-none" 
+               style={{ backgroundImage: `linear-gradient(#000 1px, transparent 1px), linear-gradient(90deg, #000 1px, transparent 1px)`, backgroundSize: '40px 40px' }} />
+
+          <div className="mx-auto max-w-7xl px-6 lg:px-10 relative z-10">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+              
+              {/* About Content */}
+              <div className="space-y-4">
+                <div className="inline-flex h-6 items-center px-3 border border-zinc-200 bg-white text-[10px] font-bold text-zinc-400 uppercase tracking-[0.2em]">
+                  The Ecosystem
                 </div>
-            </nav>
-
-            <main className="w-full">
-                {/* Header Section - Sharp Black */}
-                <div className="bg-black py-12 lg:py-16">
-                    <div className="mx-auto max-w-7xl px-6 lg:px-10">
-                        <Breadcrumbs items={[{ label: "Academy", href: "/" }, { label: "Login" }]} />
-                        <h1 className="text-4xl md:text-5xl tracking-tight text-white mt-8 mb-4">
-                            Choose Your Access
-                        </h1>
-                        <p className="text-zinc-400 text-[15px] leading-relaxed max-w-md font-medium text-[12px] opacity-70">
-                            Please select whether you are a student or a staff member to continue.
-                        </p>
+                <h2 className="text-4xl font-medium tracking-tighter text-zinc-900 leading-none">
+                  About <br /> <span className="text-blue-600">Skill Grid.</span>
+                </h2>
+                <div className="space-y-4 max-w-md">
+                  <p className="text-[15px] text-zinc-500 leading-relaxed font-normal">
+                    The Skill Grid is a specialized vertical infrastructure built for the next generation of engineers. 
+                    It's not just a platform; it's a verifiable pipeline from learning to placement.
+                  </p>
+                  <div className="pt-2 grid grid-cols-2 gap-6">
+                    <div>
+                      <h4 className="text-[20px] font-bold text-zinc-900 leading-none">500+</h4>
+                      <p className="text-[10px] text-zinc-400 font-bold uppercase mt-1 tracking-wider">Placements</p>
                     </div>
+                    <div>
+                      <h4 className="text-[20px] font-bold text-zinc-900 leading-none">98%</h4>
+                      <p className="text-[10px] text-zinc-400 font-bold uppercase mt-1 tracking-wider">Success Rate</p>
+                    </div>
+                  </div>
                 </div>
+              </div>
 
-                <div className="mx-auto max-w-7xl px-6 lg:px-10 py-12 md:py-16">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        {/* Student Entry */}
-                        <Link
-                            href="/signin"
-                            className="group block p-8 border border-zinc-100 transition-all hover:border-black active:scale-[0.99] bg-white relative overflow-hidden"
-                        >
-                            <div className="flex items-center justify-between gap-12">
-                                <div className="flex-1">
-                                    <div className="mb-6 flex items-center justify-between">
-                                        <div className="w-14 h-14 border border-zinc-100 flex items-center justify-center text-zinc-200 group-hover:text-black group-hover:border-black transition-all">
-                                            <GraduationCap size={28} strokeWidth={1} />
-                                        </div>
-                                    </div>
-                                    <h3 className="text-2xl tracking-tight text-zinc-900 mb-2 font-bold">Student Sign-in</h3>
-                                    <p className="text-zinc-500 text-[14px] leading-relaxed mb-6 line-clamp-2">
-                                        Join courses, build your profile, and see all student projects.
-                                    </p>
-                                    
-                                    <div className="flex items-center gap-2 text-[10px] font-bold text-zinc-300 uppercase tracking-widest">
-                                        <User size={12} strokeWidth={2} /> 
-                                        <span>Student Access</span>
-                                    </div>
-                                </div>
-                                <ArrowRight className="w-5 h-5 text-zinc-200 group-hover:text-black transition-colors shrink-0" />
-                            </div>
-                        </Link>
-
-                        {/* Staff Entry */}
-                        <Link
-                            href="/admin/login"
-                            className="group block p-8 border border-zinc-100 transition-all hover:border-black active:scale-[0.99] bg-white relative overflow-hidden"
-                        >
-                            <div className="flex items-center justify-between gap-12">
-                                <div className="flex-1">
-                                    <div className="mb-6 flex items-center justify-between">
-                                        <div className="w-14 h-14 border border-zinc-100 flex items-center justify-center text-zinc-200 group-hover:text-black group-hover:border-black transition-all">
-                                            <Building size={28} strokeWidth={1} />
-                                        </div>
-                                    </div>
-                                    <h3 className="text-2xl tracking-tight text-zinc-900 mb-2 font-bold">Staff Login</h3>
-                                    <p className="text-zinc-500 text-[14px] leading-relaxed mb-6 line-clamp-2">
-                                        Manage courses, check student work, and verify records.
-                                    </p>
-                                    
-                                    <div className="flex items-center gap-2 text-[10px] font-bold text-zinc-300 uppercase tracking-widest">
-                                        <ShieldCheck size={12} strokeWidth={2} /> 
-                                        <span>Internal Access</span>
-                                    </div>
-                                </div>
-                                <ArrowRight className="w-5 h-5 text-zinc-200 group-hover:text-black transition-colors shrink-0" />
-                            </div>
-                        </Link>
+              {/* Single Feature: Intern Portal */}
+              <div className="relative group">
+                <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-violet-600 opacity-20 blur-[20px] group-hover:opacity-40 transition-opacity duration-300 pointer-events-none" />
+                <Link 
+                  href="/intern/signup" 
+                  className="relative block p-8 bg-white border border-zinc-200 hover:border-zinc-900 transition-all duration-500 shadow-xl shadow-blue-500/5 rounded-none overflow-hidden"
+                >
+                  <div className="flex items-center justify-between mb-8">
+                    <div className="w-12 h-12 bg-zinc-900 flex items-center justify-center text-white">
+                      <GraduationCap size={24} />
                     </div>
-
-                    <div className="mt-12 pt-8 border-t border-zinc-100 text-center md:text-left">
-                        <Link href="/" className="group inline-flex items-center gap-3 text-[11px] font-bold text-zinc-300 hover:text-black transition-colors uppercase tracking-widest">
-                            <ArrowLeft size={14} className="group-hover:-translate-x-1 transition-transform" />
-                            Return to homepage
-                        </Link>
+                    <div className="bg-blue-100/50 px-2 py-0.5 text-[10px] font-bold text-blue-600 uppercase tracking-widest">
+                      Student Access
                     </div>
-                </div>
-            </main>
+                  </div>
+                  
+                  <div className="space-y-3 mb-8">
+                    <h3 className="text-[24px] font-bold tracking-tighter text-zinc-900">Join the Skill Grid</h3>
+                    <p className="text-[14px] text-zinc-500 leading-relaxed font-medium max-w-sm">
+                      Access your dashboard, track mastery, and unlock exclusive internship opportunities.
+                    </p>
+                  </div>
 
-            <Footer />
-        </div>
-    );
+                  <div className="flex items-center justify-between pt-4 border-t border-zinc-100">
+                    <span className="text-[11px] font-bold text-zinc-900 uppercase tracking-widest flex items-center gap-2">
+                       Continue to Onboarding <ArrowRight size={14} />
+                    </span>
+                    <CheckCircle2 className="text-blue-600 opacity-20 group-hover:opacity-100 transition-opacity" size={20} />
+                  </div>
+                </Link>
+              </div>
+
+            </div>
+          </div>
+        </section>
+
+        {/* 5. Final CTA */}
+        <CTA />
+
+      </main>
+
+      {/* 6. Footer */}
+      <Footer />
+    </div>
+  );
 }
+

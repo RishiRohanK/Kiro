@@ -7,178 +7,156 @@ import {
     Home,
     Search,
     HelpCircle,
-    ArrowLeft
+    ArrowLeft,
+    Shield,
+    FileText,
+    Zap,
+    Scale
 } from "lucide-react";
 import Breadcrumbs from "../components/Breadcrumbs";
 import Footer from "../components/home/Footer";
+import Navbar from "../components/home/Navbar";
+import SubNavbar from "../components/home/SubNavbar";
+import { motion } from "framer-motion";
 
 export default function DocsPage() {
-    const sections = [
+    const docSections = [
         {
-            title: "Getting Started",
-            links: ["Introduction", "Student Portal Guide", "Course Enrollment", "Join Community"]
+            id: "privacy",
+            title: "Privacy policy",
+            icon: <Shield size={18} />,
+            content: [
+                {
+                    heading: "Data collection & synchronization",
+                    body: "Our platform collects mission-critical data including academic identity, technical project submissions, and professional engagement metrics to synchronize your learning path with industry standards."
+                },
+                {
+                    heading: "Technical security node",
+                    body: "All user data is hosted on secure technical infrastructure with multi-layer encryption. We never share your private identifiers with third-party entities without explicit mission clearance."
+                }
+            ]
         },
         {
-            title: "Learning",
-            links: ["Course Access", "Submitting Projects", "Hackathon Guide", "Certificates"]
+            id: "terms",
+            title: "Terms of service",
+            icon: <Scale size={18} />,
+            content: [
+                {
+                    heading: "User conduct protocol",
+                    body: "Users must maintain professional integrity. Any attempts to bypass security nodes or engage in unauthorized data extraction will result in immediate termination of platform access."
+                },
+                {
+                    heading: "Intellectual property",
+                    body: "The Skill Grid architecture, brand assets, and course modules are protected property of Student Forge Technologies Private Limited. Unauthorized redistribution is strictly prohibited."
+                }
+            ]
         },
         {
-            title: "Payments",
-            links: ["Fee Structure", "Payment Rules", "Refund Policy", "Transfer Safety"]
-        },
-        {
-            title: "Accounts",
-            links: ["Logging In", "Reset Password", "Media Team Access", "Staff Guidelines"]
+            id: "updates",
+            title: "Platform updates",
+            icon: <Zap size={18} />,
+            content: [
+                {
+                    heading: "PRO-2.1.0 Architecture",
+                    body: "The latest platform update introduces high-density typography, multi-color vision nodes, and synchronized redirection anchors for zero-friction navigation."
+                },
+                {
+                    heading: "Durable workflow integration",
+                    body: "We have formally integrated the Workflow DevKit to enable resilient background operations and real-time mission status tracking for all student interns."
+                }
+            ]
         }
     ];
 
     return (
         <div className="min-h-screen bg-white text-zinc-900 font-sans selection:bg-zinc-100 flex flex-col">
-            {/* Minimal Navbar - Sharp Edges */}
-            <nav className="sticky top-0 z-50 w-full border-b border-zinc-100 bg-white/95 backdrop-blur-sm">
-                <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-6 lg:px-10">
-                    <Link href="/" className="flex items-center gap-3 transition-opacity hover:opacity-70 group">
-                        <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
-                        <span className="text-[14px] tracking-tight">Home</span>
-                    </Link>
-                    <div className="flex items-center gap-3">
-                        <div className="h-1.5 w-1.5 bg-[#92E3A9]" />
-                        <span className="text-[11px] font-medium text-zinc-400 uppercase tracking-widest">Site Guides</span>
-                    </div>
-                </div>
-            </nav>
+            <Navbar />
+            <SubNavbar />
 
             <main className="w-full flex-1">
-                {/* Header Section - Sharp Black */}
-                <div className="bg-black py-16 lg:py-24">
-                    <div className="mx-auto max-w-7xl px-6 lg:px-10">
+                {/* High-Fidelity Header */}
+                <div className="bg-zinc-900 py-12 md:py-16 overflow-hidden relative">
+                    <div className="absolute top-0 right-0 w-[50%] h-full bg-blue-600/5 blur-[100px] pointer-events-none" />
+                    <div className="mx-auto max-w-7xl px-6 lg:px-10 relative z-10">
                         <Breadcrumbs items={[{ label: "Support", href: "/support" }, { label: "Documentation" }]} />
-                        <h1 className="text-4xl md:text-5xl tracking-tight text-white mt-10 mb-6">
-                            Documentation
-                        </h1>
-                        <p className="text-zinc-400 text-[18px] leading-relaxed max-w-xl">
-                            Read our guides and learn how to use the Student Forge platform correctly.
-                        </p>
+                        <div className="max-w-3xl mt-6 space-y-3">
+                            <div className="inline-flex h-4 items-center px-1.5 border border-white/10 bg-white/5 text-blue-400 text-[9px] font-bold leading-none">
+                                Documentation hub
+                            </div>
+                            <h1 className="text-4xl md:text-5xl font-normal tracking-tighter text-white leading-tight">
+                                Platform <span className="text-blue-500">protocols</span>.
+                            </h1>
+                            <p className="text-zinc-400 text-[15px] md:text-[16px] max-w-xl font-normal leading-relaxed">
+                                Access the definitive guides for privacy, security, and technical updates. Synchronize with our legal and architectural standards.
+                            </p>
+                        </div>
                     </div>
                 </div>
 
-                <div className="mx-auto max-w-7xl px-6 lg:px-10 py-16 lg:py-24">
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-32">
-                        {/* Clean Sidebar - Text Only */}
-                        <aside className="lg:col-span-4 lg:sticky lg:top-32 h-fit space-y-12">
-                            <div className="space-y-12">
-                                {sections.map((section, idx) => (
-                                    <div key={idx} className="space-y-6">
-                                        <div className="border-b border-zinc-100 pb-3">
-                                            <h3 className="text-[12px] font-bold uppercase tracking-widest text-[#92E3A9]">{section.title}</h3>
-                                        </div>
-                                        <ul className="space-y-3">
-                                            {section.links.map((link, lIdx) => (
-                                                <li key={lIdx}>
-                                                    <button className="text-[14px] text-zinc-500 hover:text-black hover:translate-x-2 transition-all flex items-center gap-2 group text-left">
-                                                        <ChevronRight size={10} className="text-zinc-200 group-hover:text-black transition-colors" opacity={0.5} />
-                                                        {link}
-                                                    </button>
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    </div>
-                                ))}
+                <div className="mx-auto max-w-7xl px-6 lg:px-10 py-12 md:py-16">
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24">
+                        
+                        {/* High-Density Sidebar */}
+                        <aside className="lg:col-span-3 lg:sticky lg:top-32 h-fit space-y-8">
+                            <div className="space-y-4">
+                                <h3 className="text-[11px] font-bold text-zinc-400">Navigation nodes</h3>
+                                <div className="space-y-1">
+                                    {docSections.map((section) => (
+                                        <button 
+                                            key={section.id}
+                                            onClick={() => document.getElementById(section.id)?.scrollIntoView({ behavior: 'smooth' })}
+                                            className="w-full text-left px-3 py-2 text-[14px] font-medium text-zinc-500 hover:text-blue-600 hover:bg-blue-50 transition-all flex items-center gap-2 group"
+                                        >
+                                            <ChevronRight size={12} className="opacity-30 group-hover:opacity-100" />
+                                            {section.title}
+                                        </button>
+                                    ))}
+                                </div>
                             </div>
                         </aside>
 
-                        {/* Main Content Area - Typography Focused (No Boxes/Icons) */}
-                        <div className="lg:col-span-8 space-y-24">
-                            {/* Introduction List */}
-                            <section className="space-y-10">
-                                <h2 className="text-3xl font-bold tracking-tight text-zinc-900 border-b-2 border-zinc-100 pb-6">Welcome to the Forum</h2>
-                                <div className="space-y-12">
-                                    <div className="space-y-4">
-                                        <h4 className="text-[18px] font-bold uppercase tracking-tight text-zinc-900">Email System</h4>
-                                        <p className="text-zinc-500 text-[16px] leading-relaxed">
-                                            Student Forge lets you send emails easily. You can message student groups or entire teams from the mailer portal without any complex setup.
-                                        </p>
+                        {/* Typography-Focused Content */}
+                        <div className="lg:col-span-9 space-y-16">
+                            {docSections.map((section) => (
+                                <section key={section.id} id={section.id} className="space-y-8 scroll-mt-32">
+                                    <div className="flex items-center gap-3">
+                                        <div className="h-8 w-8 bg-zinc-900 flex items-center justify-center text-white">
+                                            {section.icon}
+                                        </div>
+                                        <h2 className="text-3xl font-normal tracking-tighter text-zinc-900 line-clamp-1">
+                                            {section.title}
+                                        </h2>
                                     </div>
-                                    <div className="space-y-4">
-                                        <h4 className="text-[18px] font-bold uppercase tracking-tight text-zinc-900">Events and Hackathons</h4>
-                                        <p className="text-zinc-500 text-[16px] leading-relaxed">
-                                            We coordinate student events and real-time workshops. You can view upcoming events and link your projects through the dashboard.
-                                        </p>
+                                    
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                        {section.content.map((item, i) => (
+                                            <div key={i} className="space-y-3 p-6 border border-zinc-100 bg-zinc-50/50 hover:border-blue-600/20 transition-all">
+                                                <h4 className="text-[15px] font-bold text-zinc-900 tracking-tight">
+                                                    {item.heading}
+                                                </h4>
+                                                <p className="text-zinc-500 text-[14px] leading-relaxed">
+                                                    {item.body}
+                                                </p>
+                                            </div>
+                                        ))}
                                     </div>
-                                    <div className="space-y-4">
-                                        <h4 className="text-[18px] font-bold uppercase tracking-tight text-zinc-900">Certification</h4>
-                                        <p className="text-zinc-500 text-[16px] leading-relaxed">
-                                            Once you complete a course or a project, you receive a certificate. These are verified and can be used to showcase your professional growth.
-                                        </p>
-                                    </div>
-                                </div>
-                            </section>
+                                </section>
+                            ))}
 
-                            {/* Payment Rules Section - Plain Text */}
-                            <section className="space-y-10 pt-10 border-t border-zinc-100">
-                                <div className="space-y-4">
-                                    <h2 className="text-3xl font-bold tracking-tight text-zinc-900">Payment Rules</h2>
-                                    <p className="text-zinc-500 text-[16px] font-medium leading-relaxed">
-                                        Please read these terms carefully before you pay for any service on Student Forge.
+                            {/* Additional Info / Footer Link */}
+                            <div className="pt-16 border-t border-zinc-100">
+                                <div className="space-y-6 max-w-2xl">
+                                    <h4 className="text-[18px] font-bold text-zinc-900 tracking-tight">Technical synchronization incomplete?</h4>
+                                    <p className="text-zinc-500 text-[14px] leading-relaxed">
+                                        If you require more detailed info regarding bank transfer protocols or mission-specific scaling, please initiate a support mission.
                                     </p>
-                                </div>
-
-                                <div className="space-y-16">
-                                    <div className="space-y-6">
-                                        <div className="space-y-2">
-                                            <p className="text-[11px] font-bold text-red-500 uppercase tracking-widest">Refund Policy</p>
-                                            <h4 className="text-2xl font-bold text-zinc-900 leading-tight">No Refunds are Given</h4>
-                                        </div>
-                                        <p className="text-zinc-500 text-[16px] leading-relaxed">
-                                            We do not offer any refunds once a student has enrolled and paid for a course or project. 
-                                            All payments are final. Ensure you review all course details and requirements before you proceed with a payment.
-                                        </p>
-                                    </div>
-
-                                    <div className="space-y-6">
-                                        <div className="space-y-2">
-                                            <p className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest">Enrollment</p>
-                                            <h4 className="text-2xl font-bold text-zinc-900 leading-tight">Verification Process</h4>
-                                        </div>
-                                        <p className="text-zinc-500 text-[16px] leading-relaxed">
-                                            When you submit your bank transfer details, our team checks the transaction manually. 
-                                            This process takes 24 to 48 hours. You will get portal access immediately after our team verifies the payment.
-                                        </p>
-                                    </div>
-
-                                    <div className="space-y-6">
-                                        <div className="space-y-2">
-                                            <p className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest">Security</p>
-                                            <h4 className="text-2xl font-bold text-zinc-900 leading-tight">Secure Transfers Only</h4>
-                                        </div>
-                                        <p className="text-zinc-500 text-[16px] leading-relaxed">
-                                            Only use the bank account numbers provided on the official enroll page. Student Forge will never ask for your card pin or passwords over email or phone.
-                                        </p>
-                                    </div>
-                                </div>
-                            </section>
-
-                            {/* Simple Footer Link */}
-                            <div className="pt-24 border-t border-zinc-100">
-                                <div className="space-y-6">
-                                    <h4 className="text-[20px] font-bold text-zinc-900">Still have questions?</h4>
-                                    <p className="text-zinc-500 text-[15px] max-w-md leading-relaxed">
-                                        If our guides do not have the answer, please talk to our support team for help with access or payments.
-                                    </p>
-                                    <Link href="/support" className="inline-flex items-center gap-3 text-black font-bold uppercase tracking-widest border-b-2 border-black pb-1 hover:opacity-70 transition-opacity">
-                                        Get help <ArrowRight size={16} />
+                                    <Link href="/support" className="inline-flex h-11 items-center justify-center gap-3 bg-zinc-900 px-8 text-[13px] font-bold text-white hover:bg-blue-600 transition-all">
+                                        Initiate support <ArrowRight size={14} />
                                     </Link>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-
-                <div className="mx-auto max-w-7xl px-6 lg:px-10 pb-24 text-center">
-                    <Link href="/" className="group inline-flex items-center gap-3 text-[11px] font-bold text-zinc-300 hover:text-black transition-colors uppercase tracking-widest">
-                        <ArrowLeft size={14} className="group-hover:-translate-x-1 transition-transform" />
-                        Go back to home
-                    </Link>
                 </div>
             </main>
 
