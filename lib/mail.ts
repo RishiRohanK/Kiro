@@ -22,11 +22,11 @@ const getSimpleTemplate = (title: string, content: string, ctaText: string, ctaU
     <style>
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #1a1a1a; margin: 0; padding: 0; background-color: #f9f9f9; }
         .wrapper { padding: 40px 20px; }
-        .container { max-width: 500px; margin: 0 auto; background: #ffffff; border: 1px solid #eeeeee; padding: 40px; }
+        .container { max-width: 500px; margin: 0 auto; background: #ffffff; border: 1px solid #eeeeee; padding: 40px; border-radius: 0px; }
         .logo { margin-bottom: 30px; }
         h1 { font-size: 20px; font-weight: 600; margin: 0 0 16px; color: #000; letter-spacing: -0.01em; }
         p { font-size: 14px; margin: 0 0 24px; color: #666; }
-        .button { display: inline-block; background: #000; color: #fff !important; padding: 12px 24px; text-decoration: none; font-size: 13px; font-weight: 600; border-radius: 0; transition: background 0.2s; }
+        .button { display: inline-block; background: #000; color: #fff !important; padding: 12px 24px; text-decoration: none; font-size: 13px; font-weight: 600; border-radius: 0px; transition: background 0.2s; }
         .footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; font-size: 12px; color: #999; }
         .team { font-weight: 600; color: #000; margin-bottom: 4px; }
     </style>
@@ -52,10 +52,10 @@ const getSimpleTemplate = (title: string, content: string, ctaText: string, ctaU
 `;
 
 export const sendApprovalEmail = async (email: string, name: string) => {
-    const title = `Account Approved: ${name}`;
-    const content = "Your account has been cleared for access by the administration. You can now access the internal technical modules and mission-critical tools.";
+    const title = "Your Account is Approved";
+    const content = "Hello! Your account is now ready to use. You can now log in to the dashboard and start your work. Welcome to Student Forge.";
     const ctaUrl = `${BASE_URL}/cleed/dashboard`;
-    const html = getSimpleTemplate(title, content, "Access Dashboard", ctaUrl, "Forge Admin Team");
+    const html = getSimpleTemplate(title, content, "Go to Dashboard", ctaUrl, "Student Forge Team");
 
     try {
         await transporter.sendMail({
@@ -72,10 +72,10 @@ export const sendApprovalEmail = async (email: string, name: string) => {
 };
 
 export const sendPasswordResetEmail = async (email: string, token: string) => {
-    const title = "Password Reset Request";
-    const content = "A secure request to reset your platform access has been initiated. This protocol will expire in 60 minutes. If you did not initiate this, please ignore this communication.";
+    const title = "Reset Your Password";
+    const content = "You asked to change your password. Click the button below to set a new password. This link will work for 1 hour. If you did not ask for this, please ignore this email.";
     const resetLink = `${BASE_URL}/intern/reset-password?token=${token}`;
-    const html = getSimpleTemplate(title, content, "Reset Protocol", resetLink, "Forge Security Team");
+    const html = getSimpleTemplate(title, content, "Change Password", resetLink, "Student Forge Team");
 
     try {
         await transporter.sendMail({
