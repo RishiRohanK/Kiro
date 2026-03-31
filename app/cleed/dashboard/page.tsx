@@ -33,7 +33,8 @@ import {
    DollarSign,
    MapPin,
    X as CloseIcon,
-   ChevronDown
+   ChevronDown,
+   Trash2
 } from "lucide-react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
@@ -423,6 +424,18 @@ export default function CleedDashboard() {
          console.error("Letter transmission failed");
       } finally {
          setSendingLetter(false);
+      }
+   };
+
+   const handleDeleteIntern = async (id: string) => {
+      if (!confirm("Are you sure you want to permanently remove this intern? All their data (attendance, tasks, submissions) will be deleted.")) return;
+      try {
+         const res = await fetch(`/api/cleed/interns?id=${id}`, { method: "DELETE" });
+         if (res.ok) {
+            fetchData();
+         }
+      } catch (err) {
+         console.error("Failed to delete intern node");
       }
    };
 
@@ -1153,26 +1166,35 @@ export default function CleedDashboard() {
                                              </div>
                                           </td>
                                           <td className="px-8 py-5 text-right">
-                                             {!intern.isApproved ? (
-                                                <button 
-                                                   onClick={() => handleApprove(intern.id)}
-                                                   disabled={isAuthorizing === intern.id}
-                                                   className="h-8 px-5 bg-blue-600 text-white text-[11px] font-bold hover:bg-blue-700 transition-all disabled:opacity-50"
-                                                >
-                                                   {isAuthorizing === intern.id ? "Authorizing..." : "Grant access"}
-                                                </button>
-                                             ) : (
-                                                <div className="flex items-center justify-end gap-3">
-                                                   {intern.githubLink && (
-                                                      <a href={intern.githubLink} target="_blank" className="p-2 border border-zinc-100 text-zinc-400 hover:text-zinc-900 transition-all">
-                                                         <Github size={14} />
-                                                      </a>
-                                                   )}
-                                                   <button className="p-2 border border-zinc-100 text-zinc-400 hover:text-blue-600 transition-all">
-                                                      <Mail size={14} />
+                                             <div className="flex items-center justify-end gap-2">
+                                                {!intern.isApproved ? (
+                                                   <button 
+                                                      onClick={() => handleApprove(intern.id)}
+                                                      disabled={isAuthorizing === intern.id}
+                                                      className="h-8 px-4 bg-blue-600 text-white text-[10px] font-bold hover:bg-blue-700 transition-all disabled:opacity-50"
+                                                   >
+                                                      {isAuthorizing === intern.id ? "..." : "Authorize"}
                                                    </button>
-                                                </div>
-                                             )}
+                                                ) : (
+                                                   <div className="flex items-center gap-1.5">
+                                                      {intern.githubLink && (
+                                                         <a href={intern.githubLink} target="_blank" className="p-1.5 border border-zinc-100 text-zinc-400 hover:text-zinc-900 transition-all">
+                                                            <Github size={12} />
+                                                         </a>
+                                                      )}
+                                                      <button className="p-1.5 border border-zinc-100 text-zinc-400 hover:text-blue-600 transition-all">
+                                                         <Mail size={12} />
+                                                      </button>
+                                                   </div>
+                                                )}
+                                                <button 
+                                                   onClick={() => handleDeleteIntern(intern.id)}
+                                                   className="p-1.5 border border-zinc-100 text-zinc-400 hover:text-red-500 transition-all ml-1"
+                                                   title="Delete Intern"
+                                                >
+                                                   <Trash2 size={12} />
+                                                </button>
+                                             </div>
                                           </td>
                                        </tr>
                                     ))
