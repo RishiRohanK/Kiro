@@ -444,6 +444,15 @@ export default function CleedDashboard() {
       }
    };
 
+   const handleLowerAllSignals = async () => {
+      try {
+         const res = await fetch("/api/cleed/interns/lower-all", { method: "POST" });
+         if (res.ok) fetchData();
+      } catch (err) {
+         console.error("Failed to clear active signals", err);
+      }
+   };
+
    const handleMarkAttendance = async (internId: string, status: string, workSummary: string) => {
       setMarkingId(internId);
       try {
@@ -1059,6 +1068,14 @@ export default function CleedDashboard() {
                               <p className="text-[13px] text-zinc-500 font-medium">Verify and authorize technical identities from the centralized hub.</p>
                            </div>
                            <div className="flex items-center gap-3">
+                              {raisedHandsCount > 0 && (
+                                 <button 
+                                    onClick={handleLowerAllSignals}
+                                    className="bg-zinc-900 hover:bg-black text-white px-3 py-1.5 text-[11px] font-bold transition-all shadow-sm flex items-center gap-1.5 cursor-pointer rounded-sm active:scale-95"
+                                 >
+                                    <Hand size={12} className="opacity-70" /> Clear Signals
+                                 </button>
+                              )}
                               <div className="bg-blue-50 text-blue-600 px-3 py-1.5 text-[11px] font-bold border border-blue-100">
                                  {interns.filter(i => i.isApproved).length} Authorized
                               </div>
