@@ -32,7 +32,8 @@ import {
    Building2,
    DollarSign,
    MapPin,
-   X as CloseIcon
+   X as CloseIcon,
+   ChevronDown
 } from "lucide-react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
@@ -689,66 +690,119 @@ export default function CleedDashboard() {
             )}
          </AnimatePresence>
 
-         {/* Desktop Sidebar - Simplified Sync */}
-         <aside className="hidden md:flex fixed left-0 top-0 h-full w-20 lg:w-64 bg-white border-r border-zinc-100 z-50 flex-col pt-[env(safe-area-inset-top)]">
+         {/* Desktop Sidebar - Black Dropdown Sync */}
+         <aside className="hidden md:flex fixed left-0 top-0 h-full w-20 lg:w-[260px] bg-black border-r border-zinc-900 z-50 flex-col pt-[env(safe-area-inset-top)]">
             <div className="p-8 flex items-center gap-3">
-               <div className="h-4 w-4 bg-blue-600 shadow-sm" />
-               <span className="hidden lg:block text-zinc-900 font-bold text-[16px] tracking-tight">Cleed hub</span>
+               <div className="h-4 w-4 bg-white shadow-sm" />
+               <span className="hidden lg:block text-white font-bold text-[16px] tracking-tight">CLEED HUB</span>
             </div>
 
-            <nav className="flex-1 mt-10 space-y-2 px-4 overflow-y-auto">
-               {[
-                  { id: "overview", icon: LayoutDashboard, label: "Overview" },
-                  { id: "interns", icon: Users, label: "Intern Registry" },
-                  { id: "internships", icon: Briefcase, label: "Internship Oversight" },
-                  { id: "assign", icon: Send, label: "Dispatch Task" },
-                  { id: "certification", icon: FileBadge, label: "Issuance Hub" },
-                  { id: "authorizations", icon: ShieldCheck, label: "Authorizations" },
-                  { id: "mentorship", icon: Users, label: "Mentorship Sessions" },
-                  { id: "schedule", icon: Calendar, label: "Schedule Dispatch" },
-                  { id: "workshop", icon: FileText, label: "Workshop Registry" },
-                  { id: "submissions", icon: ExternalLink, label: "Intern Submissions" },
-                  { id: "events", icon: LayoutDashboard, label: "Events Manager" },
-                  { id: "ideas", icon: Globe, label: "Ideation Control" },
-                  { id: "attendance", icon: CalendarCheck, label: "Attendance Protocol" },
-                  { id: "history", icon: History, label: "Logbook" }
-               ].map((item) => (
-                  <button
-                     key={item.id}
-                     onClick={() => setActiveTab(item.id)}
-                     className={`w-full h-11 flex items-center px-4 gap-4 transition-all relative group ${activeTab === item.id
-                           ? "bg-blue-50 text-blue-600"
-                           : "text-zinc-400 hover:text-zinc-900 hover:bg-zinc-50/50"
-                        }`}
-                  >
-                     {activeTab === item.id && (
-                        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-6 bg-blue-600" />
-                     )}
-                     <item.icon size={18} strokeWidth={activeTab === item.id ? 2.5 : 2} />
-                     <span className={`hidden lg:block text-[13px] ${activeTab === item.id ? "font-bold" : "font-medium"}`}>{item.label}</span>
-                  </button>
-               ))}
+            <nav className="flex-1 mt-6 px-3 overflow-y-auto space-y-4 custom-scrollbar pb-8">
+               
+               <details open className="group">
+                  <summary className="hidden lg:flex items-center justify-between text-[11px] font-bold text-zinc-500 uppercase tracking-widest px-3 py-2 cursor-pointer hover:text-zinc-300 transition-colors select-none list-none [&::-webkit-details-marker]:hidden">
+                     Operations
+                     <ChevronDown size={14} className="group-open:rotate-180 transition-transform text-zinc-600" />
+                  </summary>
+                  <div className="mt-1 space-y-0.5 ml-2 border-l border-zinc-900 pl-2">
+                     {[
+                       { id: "overview", icon: LayoutDashboard, label: "Platform Overview" },
+                       { id: "events", icon: LayoutDashboard, label: "Events Registry" },
+                       { id: "workshop", icon: FileText, label: "Workshop Deploy" },
+                       { id: "ideas", icon: Globe, label: "Ideation Control" }
+                     ].map((item) => (
+                       <button
+                          key={item.id}
+                          onClick={() => setActiveTab(item.id)}
+                          className={`w-full h-9 flex items-center px-3 gap-3 transition-all rounded-md ${activeTab === item.id
+                                ? "bg-white/10 text-white"
+                                : "text-zinc-400 hover:text-white hover:bg-white/5"
+                             }`}
+                       >
+                          <item.icon size={15} strokeWidth={activeTab === item.id ? 2.5 : 2} />
+                          <span className={`hidden lg:block text-[12px] ${activeTab === item.id ? "font-bold" : "font-medium"}`}>{item.label}</span>
+                       </button>
+                     ))}
+                  </div>
+               </details>
+
+               <details open className="group">
+                  <summary className="hidden lg:flex items-center justify-between text-[11px] font-bold text-zinc-500 uppercase tracking-widest px-3 py-2 cursor-pointer hover:text-zinc-300 transition-colors select-none list-none [&::-webkit-details-marker]:hidden">
+                     Intern Management
+                     <ChevronDown size={14} className="group-open:rotate-180 transition-transform text-zinc-600" />
+                  </summary>
+                  <div className="mt-1 space-y-0.5 ml-2 border-l border-zinc-900 pl-2">
+                     {[
+                       { id: "interns", icon: Users, label: "Intern Registry" },
+                       { id: "authorizations", icon: ShieldCheck, label: "Authorizations" },
+                       { id: "internships", icon: Briefcase, label: "Internship Oversight" },
+                       { id: "certification", icon: FileBadge, label: "Issuance Hub" },
+                       { id: "attendance", icon: CalendarCheck, label: "Attendance Protocol" },
+                     ].map((item) => (
+                       <button
+                          key={item.id}
+                          onClick={() => setActiveTab(item.id)}
+                          className={`w-full h-9 flex items-center px-3 gap-3 transition-all rounded-md ${activeTab === item.id
+                                ? "bg-white/10 text-white"
+                                : "text-zinc-400 hover:text-white hover:bg-white/5"
+                             }`}
+                       >
+                          <item.icon size={15} strokeWidth={activeTab === item.id ? 2.5 : 2} />
+                          <span className={`hidden lg:block text-[12px] ${activeTab === item.id ? "font-bold" : "font-medium"}`}>{item.label}</span>
+                       </button>
+                     ))}
+                  </div>
+               </details>
+
+               <details open className="group">
+                  <summary className="hidden lg:flex items-center justify-between text-[11px] font-bold text-zinc-500 uppercase tracking-widest px-3 py-2 cursor-pointer hover:text-zinc-300 transition-colors select-none list-none [&::-webkit-details-marker]:hidden">
+                     Technical Tasks
+                     <ChevronDown size={14} className="group-open:rotate-180 transition-transform text-zinc-600" />
+                  </summary>
+                  <div className="mt-1 space-y-0.5 ml-2 border-l border-zinc-900 pl-2">
+                     {[
+                       { id: "schedule", icon: Calendar, label: "Schedule Dispatch" },
+                       { id: "assign", icon: Send, label: "Mission Dispatch" },
+                       { id: "submissions", icon: ExternalLink, label: "Intern Submissions" },
+                       { id: "mentorship", icon: Users, label: "Mentorship Sessions" },
+                       { id: "history", icon: History, label: "Task Logbook" }
+                     ].map((item) => (
+                       <button
+                          key={item.id}
+                          onClick={() => setActiveTab(item.id)}
+                          className={`w-full h-9 flex items-center px-3 gap-3 transition-all rounded-md ${activeTab === item.id
+                                ? "bg-white/10 text-white"
+                                : "text-zinc-400 hover:text-white hover:bg-white/5"
+                             }`}
+                       >
+                          <item.icon size={15} strokeWidth={activeTab === item.id ? 2.5 : 2} />
+                          <span className={`hidden lg:block text-[12px] ${activeTab === item.id ? "font-bold" : "font-medium"}`}>{item.label}</span>
+                       </button>
+                     ))}
+                  </div>
+               </details>
+
             </nav>
 
             {raisedHandsCount > 0 && (
-               <div className="p-4 mx-4 mb-4 bg-amber-500/10 border border-amber-500/20 rounded-none animate-pulse lg:block hidden">
+               <div className="p-4 mx-4 mb-6 bg-amber-500/10 border border-amber-500/20 rounded-md animate-pulse lg:block hidden cursor-pointer" onClick={() => setActiveTab("interns")}>
                   <div className="flex items-center gap-2 text-amber-500">
                      <Hand size={16} />
-                     <span className="text-[12px] font-semibold leading-none">
+                     <span className="text-[12px] font-bold leading-none">
                         {raisedHandsCount} Signals Active
                      </span>
                   </div>
                </div>
             )}
 
-            <div className="p-6 border-t border-zinc-100">
+            <div className="p-5 border-t border-zinc-900 bg-[#0a0a0a]">
                <div className="flex items-center gap-3">
-                  <div className="h-8 w-8 bg-zinc-100 flex items-center justify-center text-zinc-400">
+                  <div className="h-8 w-8 bg-zinc-900 flex items-center justify-center text-zinc-500 rounded-md">
                      <Users size={16} />
                   </div>
                   <div className="hidden lg:block text-left overflow-hidden">
-                     <p className="text-[13px] text-zinc-900 font-bold truncate">Admin cleed</p>
-                     <p className="text-[10px] text-zinc-500 truncate lowercase">executive manager</p>
+                     <p className="text-[12px] text-zinc-100 font-bold truncate">Admin Node</p>
+                     <p className="text-[10px] text-zinc-600 truncate uppercase tracking-widest">Operator</p>
                   </div>
                </div>
             </div>
@@ -1030,16 +1084,21 @@ export default function CleedDashboard() {
                                        <td colSpan={4} className="px-8 py-20 text-center text-zinc-400 text-sm italic">No intern records synchronized from the database hub.</td>
                                     </tr>
                                  ) : (
-                                    interns.map((intern) => (
-                                       <tr key={intern.id} className="hover:bg-zinc-50/50 transition-colors">
+                                    [...interns].sort((a,b) => (b.handRaised ? 1 : 0) - (a.handRaised ? 1 : 0)).map((intern) => (
+                                       <tr key={intern.id} className={`transition-colors ${intern.handRaised ? "bg-amber-500/5 hover:bg-amber-500/10 border-l-2 border-amber-500" : "hover:bg-zinc-50/50 border-l-2 border-transparent"}`}>
                                           <td className="px-8 py-5">
                                              <div className="flex items-center gap-4">
-                                                <div className="h-9 w-9 bg-zinc-900 text-white flex items-center justify-center text-[12px] font-bold">
+                                                <div className={`h-9 w-9 text-white flex items-center justify-center text-[12px] font-bold ${intern.handRaised ? "bg-amber-500" : "bg-zinc-900"}`}>
                                                    {intern.name.charAt(0)}
                                                 </div>
                                                 <div className="flex flex-col">
                                                    <div className="flex items-center gap-2">
                                                       <span className="text-[14px] font-bold text-zinc-900">{intern.name}</span>
+                                                      {intern.handRaised && (
+                                                         <span className="text-amber-500 flex items-center" title="Signal Active">
+                                                            <Hand size={14} className="animate-pulse" />
+                                                         </span>
+                                                      )}
                                                       {intern.letterUrl && (
                                                          <span className="bg-blue-600/10 text-blue-600 text-[9px] font-bold px-1.5 py-0.5 rounded-full flex items-center gap-1 uppercase tracking-tighter">
                                                             <CheckCircle2 size={10} strokeWidth={3} /> Certified
