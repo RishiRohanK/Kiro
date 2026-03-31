@@ -42,8 +42,8 @@ const getSimpleTemplate = (title: string, content: string, ctaText: string, ctaU
             <a href="${ctaUrl}" class="button">${ctaText}</a>
             <div class="footer">
                 <div class="team">${team}</div>
-                <div>Student Forge Technologies</div>
-                <div style="margin-top: 10px;">&copy; 2026 Student Forge. Definitive Engineering Accelerator.</div>
+                <div>Student Forge</div>
+                <div style="margin-top: 10px;">&copy; 2026 Student Forge Technologies Pvt. Ltd.</div>
             </div>
         </div>
     </div>
