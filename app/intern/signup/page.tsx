@@ -89,9 +89,9 @@ export default function InternSignupPage() {
                             <ShieldAlert size={24} />
                         </div>
                         <div className="space-y-1">
-                            <h3 className="text-[15px] font-bold text-red-600 tracking-tight">Registration Protocol Frozen</h3>
+                            <h3 className="text-[15px] font-bold text-red-600 tracking-tight">Registrations are Closed</h3>
                             <p className="text-[12px] font-medium text-red-500/80 leading-relaxed max-w-[280px]">
-                                New intern intakes are currently offline. The validation window for Batch 2 has elapsed.
+                                We are no longer accepting new applications for Batch 2 at this time.
                             </p>
                         </div>
                     </div>
@@ -99,7 +99,7 @@ export default function InternSignupPage() {
                     <div className="pt-2">
                         <Link href="/intern/signin">
                             <button className="w-full h-[48px] bg-zinc-900 text-white text-[13px] font-bold transition-all hover:bg-black active:scale-[0.99] flex items-center justify-center shadow-xl shadow-black/10">
-                                Access Existing Identity Node
+                                Login to your account
                             </button>
                         </Link>
                     </div>
