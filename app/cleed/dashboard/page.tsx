@@ -668,18 +668,18 @@ export default function CleedDashboard() {
                   <div className="grid grid-cols-2 gap-3">
                      {[
                         { id: "overview", icon: LayoutDashboard, label: "Overview" },
-                        { id: "interns", icon: Users, label: "Intern Registry" },
-                        { id: "internships", icon: Briefcase, label: "Internship Oversight" },
-                        { id: "assign", icon: Send, label: "Dispatch Task" },
-                        { id: "certification", icon: FileBadge, label: "Issuance Hub" },
-                        { id: "authorizations", icon: ShieldCheck, label: "Authorizations" },
-                        { id: "mentorship", icon: Users, label: "Mentorship Sessions" },
-                        { id: "schedule", icon: Calendar, label: "Schedule Dispatch" },
-                        { id: "workshop", icon: FileText, label: "Workshop Registry" },
-                        { id: "submissions", icon: ExternalLink, label: "Intern Submissions" },
-                        { id: "events", icon: LayoutDashboard, label: "Events Manager" },
-                        { id: "ideas", icon: Globe, label: "Ideation Control" },
-                        { id: "attendance", icon: CalendarCheck, label: "Attendance Protocol" },
+                        { id: "interns", icon: Users, label: "Interns" },
+                        { id: "internships", icon: Briefcase, label: "Internships" },
+                        { id: "assign", icon: Send, label: "Assign Task" },
+                        { id: "certification", icon: FileBadge, label: "Certificates" },
+                        { id: "authorizations", icon: ShieldCheck, label: "Approvals" },
+                        { id: "mentorship", icon: Users, label: "Mentorship" },
+                        { id: "schedule", icon: Calendar, label: "Schedule" },
+                        { id: "workshop", icon: FileText, label: "Workshops" },
+                        { id: "submissions", icon: ExternalLink, label: "Submissions" },
+                        { id: "events", icon: LayoutDashboard, label: "Events" },
+                        { id: "ideas", icon: Globe, label: "Ideas" },
+                        { id: "attendance", icon: CalendarCheck, label: "Attendance" },
                         { id: "history", icon: History, label: "Logbook" }
                      ].map((item) => (
                         <button
@@ -715,10 +715,10 @@ export default function CleedDashboard() {
                   </summary>
                   <div className="mt-1 space-y-0.5 ml-2 border-l border-zinc-900 pl-2">
                      {[
-                       { id: "overview", icon: LayoutDashboard, label: "Platform Overview" },
-                       { id: "events", icon: LayoutDashboard, label: "Events Registry" },
-                       { id: "workshop", icon: FileText, label: "Workshop Deploy" },
-                       { id: "ideas", icon: Globe, label: "Ideation Control" }
+                       { id: "overview", icon: LayoutDashboard, label: "Overview" },
+                       { id: "events", icon: LayoutDashboard, label: "Events" },
+                       { id: "workshop", icon: FileText, label: "Workshops" },
+                       { id: "ideas", icon: Globe, label: "Ideas" }
                      ].map((item) => (
                        <button
                           key={item.id}
@@ -737,16 +737,16 @@ export default function CleedDashboard() {
 
                <details open className="group">
                   <summary className="hidden lg:flex items-center justify-between text-[11px] font-bold text-zinc-500 uppercase tracking-widest px-3 py-2 cursor-pointer hover:text-zinc-300 transition-colors select-none list-none [&::-webkit-details-marker]:hidden">
-                     Intern Management
+                     Interns & Approvals
                      <ChevronDown size={14} className="group-open:rotate-180 transition-transform text-zinc-600" />
                   </summary>
                   <div className="mt-1 space-y-0.5 ml-2 border-l border-zinc-900 pl-2">
                      {[
-                       { id: "interns", icon: Users, label: "Intern Registry" },
-                       { id: "authorizations", icon: ShieldCheck, label: "Authorizations" },
-                       { id: "internships", icon: Briefcase, label: "Internship Oversight" },
-                       { id: "certification", icon: FileBadge, label: "Issuance Hub" },
-                       { id: "attendance", icon: CalendarCheck, label: "Attendance Protocol" },
+                       { id: "interns", icon: Users, label: "Interns" },
+                       { id: "authorizations", icon: ShieldCheck, label: "Approvals" },
+                       { id: "internships", icon: Briefcase, label: "Internships" },
+                       { id: "certification", icon: FileBadge, label: "Certificates" },
+                       { id: "attendance", icon: CalendarCheck, label: "Attendance" },
                      ].map((item) => (
                        <button
                           key={item.id}
@@ -765,16 +765,16 @@ export default function CleedDashboard() {
 
                <details open className="group">
                   <summary className="hidden lg:flex items-center justify-between text-[11px] font-bold text-zinc-500 uppercase tracking-widest px-3 py-2 cursor-pointer hover:text-zinc-300 transition-colors select-none list-none [&::-webkit-details-marker]:hidden">
-                     Technical Tasks
+                     Tasks & Status
                      <ChevronDown size={14} className="group-open:rotate-180 transition-transform text-zinc-600" />
                   </summary>
                   <div className="mt-1 space-y-0.5 ml-2 border-l border-zinc-900 pl-2">
                      {[
-                       { id: "schedule", icon: Calendar, label: "Schedule Dispatch" },
-                       { id: "assign", icon: Send, label: "Mission Dispatch" },
-                       { id: "submissions", icon: ExternalLink, label: "Intern Submissions" },
-                       { id: "mentorship", icon: Users, label: "Mentorship Sessions" },
-                       { id: "history", icon: History, label: "Task Logbook" }
+                       { id: "schedule", icon: Calendar, label: "Schedule" },
+                       { id: "assign", icon: Send, label: "Assign Task" },
+                       { id: "submissions", icon: ExternalLink, label: "Submissions" },
+                       { id: "mentorship", icon: Users, label: "Mentorship" },
+                       { id: "history", icon: History, label: "Logbook" }
                      ].map((item) => (
                        <button
                           key={item.id}
@@ -798,7 +798,7 @@ export default function CleedDashboard() {
                   <div className="flex items-center gap-2 text-amber-500">
                      <Hand size={16} />
                      <span className="text-[12px] font-bold leading-none">
-                        {raisedHandsCount} Signals Active
+                        {raisedHandsCount} Raised Hands
                      </span>
                   </div>
                </div>
@@ -810,7 +810,7 @@ export default function CleedDashboard() {
                      <Users size={16} />
                   </div>
                   <div className="hidden lg:block text-left overflow-hidden">
-                     <p className="text-[12px] text-zinc-100 font-bold truncate">Admin Node</p>
+                     <p className="text-[12px] text-zinc-100 font-bold truncate">Dashboard Admin</p>
                      <p className="text-[10px] text-zinc-600 truncate uppercase tracking-widest">Operator</p>
                   </div>
                </div>
@@ -1064,8 +1064,8 @@ export default function CleedDashboard() {
                      <div className="bg-white border border-zinc-100 shadow-sm p-8">
                         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
                            <div className="space-y-1">
-                              <h2 className="text-2xl font-bold tracking-tight text-zinc-900 line-clamp-1">Intern registry</h2>
-                              <p className="text-[13px] text-zinc-500 font-medium">Verify and authorize technical identities from the centralized hub.</p>
+                              <h2 className="text-2xl font-bold tracking-tight text-zinc-900 line-clamp-1">Interns</h2>
+                              <p className="text-[13px] text-zinc-500 font-medium">Verify and authorize interns from this page.</p>
                            </div>
                            <div className="flex items-center gap-3">
                               {raisedHandsCount > 0 && (
@@ -1073,7 +1073,7 @@ export default function CleedDashboard() {
                                     onClick={handleLowerAllSignals}
                                     className="bg-zinc-900 hover:bg-black text-white px-3 py-1.5 text-[11px] font-bold transition-all shadow-sm flex items-center gap-1.5 cursor-pointer rounded-sm active:scale-95"
                                  >
-                                    <Hand size={12} className="opacity-70" /> Clear Signals
+                                    <Hand size={12} className="opacity-70" /> Lower All Hands
                                  </button>
                               )}
                               <div className="bg-blue-50 text-blue-600 px-3 py-1.5 text-[11px] font-bold border border-blue-100">
