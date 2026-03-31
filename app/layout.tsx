@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Dashboard",
+  title: "Student Forge | Skill Grid",
   description: "Learn to build modern software with our expert-led courses and projects.",
   manifest: "/manifest.json",
   icons: {
