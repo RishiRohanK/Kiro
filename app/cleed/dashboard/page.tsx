@@ -1242,7 +1242,7 @@ export default function CleedDashboard() {
                                                 </div>
                                                 <div className="flex flex-col">
                                                    <span className="text-[14px] font-bold text-zinc-900">{intern.name}</span>
-                                                   <span className="text-[11px] text-zinc-400">Domain: {intern.domain || "N/A"}</span>
+                                                   <span className="text-[11px] text-zinc-400">Branch: {intern.branch || "N/A"}</span>
                                                 </div>
                                              </div>
                                           </td>
