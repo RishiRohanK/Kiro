@@ -82,99 +82,27 @@ export default function InternSignupPage() {
                     </div>
                 </div>
 
-                {/* Form Section */}
-                <form onSubmit={handleSignup} className="space-y-5">
-                    <div className="space-y-1.5">
-                        <label className="text-[11px] font-bold text-zinc-400 ml-1 uppercase tracking-wider">
-                            Full Name
-                        </label>
-                        <input
-                            required
-                            type="text"
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
-                            className="w-full h-[46px] bg-[#F9F9F9] px-4 text-[13px] font-medium outline-none transition-all focus:bg-white border border-zinc-100 focus:border-zinc-300 placeholder:text-zinc-300"
-                            placeholder="John Doe"
-                        />
+                {/* Frozen Registration Section */}
+                <div className="space-y-8 mt-6">
+                    <div className="bg-red-50/50 border border-red-100 p-8 flex flex-col items-center text-center gap-4">
+                        <div className="h-12 w-12 bg-white border border-red-100 flex items-center justify-center text-red-500 rounded-full shadow-sm">
+                            <ShieldAlert size={24} />
+                        </div>
+                        <div className="space-y-1">
+                            <h3 className="text-[15px] font-bold text-red-600 tracking-tight">Registration Protocol Frozen</h3>
+                            <p className="text-[12px] font-medium text-red-500/80 leading-relaxed max-w-[280px]">
+                                New intern intakes are currently offline. The validation window for Batch 2 has elapsed.
+                            </p>
+                        </div>
                     </div>
 
-                    <div className="space-y-1.5">
-                        <label className="text-[11px] font-bold text-zinc-400 ml-1 uppercase tracking-wider">
-                            Email Address
-                        </label>
-                        <input
-                            required
-                            type="email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            className="w-full h-[46px] bg-[#F9F9F9] px-4 text-[13px] font-medium outline-none transition-all focus:bg-white border border-zinc-100 focus:border-zinc-300 placeholder:text-zinc-300"
-                            placeholder="name@example.com"
-                        />
-                    </div>
-
-                    <div className="space-y-1.5">
-                        <label className="text-[11px] font-bold text-zinc-400 ml-1 uppercase tracking-wider">
-                            Select College
-                        </label>
-                        <select
-                            required
-                            value={college}
-                            onChange={(e) => setCollege(e.target.value)}
-                            className="w-full h-[46px] bg-[#F9F9F9] px-4 text-[13px] font-medium outline-none transition-all focus:bg-white border border-zinc-100 focus:border-zinc-300 appearance-none cursor-pointer"
-                        >
-                            <option value="" disabled className="text-zinc-300">Choose your institution</option>
-                            {COLLEGES.map((c, idx) => (
-                                <option key={idx} value={c} className="text-zinc-800 py-2">
-                                    {c}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-
-                    <div className="space-y-1.5">
-                        <label className="text-[11px] font-bold text-zinc-400 ml-1 uppercase tracking-wider">
-                            Password
-                        </label>
-                        <div className="relative">
-                            <input
-                                required
-                                type={showPassword ? "text" : "password"}
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                className="w-full h-[46px] bg-[#F9F9F9] px-4 pr-10 text-[13px] font-medium outline-none transition-all focus:bg-white border border-zinc-100 focus:border-zinc-300 placeholder:text-zinc-300"
-                                placeholder="Min. 8 characters"
-                            />
-                            <button
-                                type="button"
-                                onClick={() => setShowPassword(!showPassword)}
-                                className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-300 hover:text-zinc-600 transition-colors"
-                            >
-                                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                    <div className="pt-2">
+                        <Link href="/intern/signin">
+                            <button className="w-full h-[48px] bg-zinc-900 text-white text-[13px] font-bold transition-all hover:bg-black active:scale-[0.99] flex items-center justify-center shadow-xl shadow-black/10">
+                                Access Existing Identity Node
                             </button>
-                        </div>
+                        </Link>
                     </div>
-
-                    {error && (
-                        <div className="p-3 bg-red-50 text-red-500 text-[11px] font-bold flex items-center gap-2 border border-red-100">
-                            <ShieldAlert size={14} />
-                            <span>{error}</span>
-                        </div>
-                    )}
-
-                    <button
-                        disabled={loading}
-                        type="submit"
-                        className="w-full h-[48px] bg-zinc-900 text-white text-[13px] font-bold transition-all hover:bg-black active:scale-[0.99] flex items-center justify-center gap-2 disabled:opacity-50"
-                    >
-                        {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Create Intern Account"}
-                    </button>
-                </form>
-
-
-                <div className="mt-10 text-center border-t border-zinc-100 pt-6">
-                    <p className="text-[12px] text-zinc-400 font-medium tracking-tight">
-                        Already registered? <Link href="/intern/signin" className="text-zinc-900 font-bold hover:underline ml-1">Login here</Link>
-                    </p>
                 </div>
             </div>
         </div>
