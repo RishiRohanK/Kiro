@@ -224,8 +224,8 @@ function InternDashboardLayoutContent({
                     {children}
                 </main>
 
-                {/* Mobile Bottom Navigation (Edge-to-Edge) */}
-                <nav className="fixed bottom-0 left-0 right-0 h-16 bg-white border-t border-zinc-200 lg:hidden flex items-center justify-around px-2 z-50 pb-safe shadow-[0_-4px_16px_rgba(0,0,0,0.04)]">
+                {/* Mobile Bottom Navigation (Edge-to-Edge Dark) */}
+                <nav className="fixed bottom-0 left-0 right-0 h-16 bg-black border-t border-white/10 lg:hidden flex items-center justify-around px-2 z-50 pb-safe shadow-[0_-4px_16px_rgba(0,0,0,0.2)]">
                     {navItems.filter(i => i.mobile).map((item) => {
                         const itemUrl = new URL(item.slug, "http://localhost");
                         const itemPath = itemUrl.pathname;
@@ -237,11 +237,11 @@ function InternDashboardLayoutContent({
                                 key={item.name}
                                 href={item.slug} 
                                 className={`flex flex-col items-center justify-center gap-1 transition-all ${
-                                    isActive ? "text-[#0055FF]" : "text-zinc-400"
+                                    isActive ? "text-white" : "text-zinc-500"
                                 }`}
                             >
                                 <item.icon size={20} strokeWidth={isActive ? 2.5 : 2} />
-                                <span className={`text-[9px] font-bold uppercase tracking-tight ${isActive ? "text-[#0055FF]" : "text-zinc-400"}`}>
+                                <span className={`text-[9px] font-bold uppercase tracking-tight ${isActive ? "text-white" : "text-zinc-500"}`}>
                                     {item.name}
                                 </span>
                             </Link>
