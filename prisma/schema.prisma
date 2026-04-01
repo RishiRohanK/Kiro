@@ -337,9 +337,11 @@ model Schedule {
   // Team and Project Details
   teamAllocation  String?  // e.g., "Team 01, Team 05"
   mentorName      String?  // e.g., "Rohan Kalapa"
+  mentorEmail     String?  // New field
   projectName     String?  // e.g., "E-commerce Engine"
   projectDocLink  String?  // e.g., "https://docs..."
   teamLead        String?  // e.g., "Intern A"
+  teamInternIds   String[] // Array of assigned intern IDs
 
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt

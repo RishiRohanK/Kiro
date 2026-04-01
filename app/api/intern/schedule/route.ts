@@ -21,11 +21,26 @@ export async function GET(req: Request) {
             }
         });
 
+        // Resolve intern names for teamInternIds
+        const allInternIds = Array.from(new Set(schedules.flatMap((s: any) => s.teamInternIds || [])));
+        const internNamesMap: Record<string, string> = {};
+        
+        if (allInternIds.length > 0) {
+            const interns = await prisma.user.findMany({
+                where: { id: { in: allInternIds } },
+                select: { id: true, name: true }
+            });
+            interns.forEach(i => {
+                internNamesMap[i.id] = i.name;
+            });
+        }
+
         const mappedSchedules = schedules.map((s: any) => ({
             ...s,
             isCompleted: s.submissions && s.submissions.length > 0,
             githubLink: s.submissions?.[0]?.githubLink || null,
-            submissionLink: s.submissions?.[0]?.submissionLink || null
+            submissionLink: s.submissions?.[0]?.submissionLink || null,
+            teamInternNames: (s.teamInternIds || []).map((id: string) => internNamesMap[id] || "Unknown Intern")
         }));
 
         return NextResponse.json({ success: true, schedules: mappedSchedules });
@@ -51,7 +66,8 @@ export async function POST(req: Request) {
             mentorName,
             projectName,
             projectDocLink,
-            teamLead
+            teamLead,
+            teamInternIds = [] // Received from admin selection
         } = body;
 
         const schedule = await prisma.schedule.create({
@@ -69,9 +85,33 @@ export async function POST(req: Request) {
                 mentorName,
                 projectName,
                 projectDocLink,
-                teamLead
+                teamLead,
+                teamInternIds
             }
         });
+
+        // Notify Interns via Email
+        if (teamInternIds.length > 0) {
+            const interns = await prisma.user.findMany({
+                where: { id: { in: teamInternIds } },
+                select: { email: true, name: true }
+            });
+
+            const teamNames = interns.map(i => i.name);
+            const { sendTeamAssignmentEmail } = await import("@/lib/mail");
+
+            for (const intern of interns) {
+                if (intern.email) {
+                    await sendTeamAssignmentEmail(
+                        intern.email,
+                        intern.name,
+                        projectName || typeOfWork,
+                        mentorName || "Admin",
+                        teamNames
+                    );
+                }
+            }
+        }
 
         return NextResponse.json({ success: true, schedule });
     } catch (error: any) {

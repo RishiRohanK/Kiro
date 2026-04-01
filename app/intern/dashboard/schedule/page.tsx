@@ -29,6 +29,8 @@ interface ScheduleItem {
     projectName?: string;
     projectDocLink?: string;
     teamLead?: string;
+    teamInternIds?: string[];
+    teamInternNames?: string[];
 }
 
 export default function SchedulePage() {
@@ -196,12 +198,17 @@ export default function SchedulePage() {
                                                                     <p className="text-xs font-bold text-zinc-900 mt-1">{item.projectName}</p>
                                                                 </div>
                                                             )}
-                                                            {item.teamAllocation && (
+                                                            {(item.teamInternNames && item.teamInternNames.length > 0) ? (
                                                                 <div>
                                                                     <p className="text-[10px] font-bold text-zinc-400 uppercase">Team Members</p>
+                                                                    <p className="text-xs font-bold text-zinc-900 mt-1">{item.teamInternNames.join(", ")}</p>
+                                                                </div>
+                                                            ) : item.teamAllocation ? (
+                                                                <div>
+                                                                    <p className="text-[10px] font-bold text-zinc-400 uppercase">Team Allocation</p>
                                                                     <p className="text-xs font-bold text-zinc-900 mt-1">{item.teamAllocation}</p>
                                                                 </div>
-                                                            )}
+                                                            ) : null}
                                                             {item.mentorName && (
                                                                 <div>
                                                                     <p className="text-[10px] font-bold text-zinc-400 uppercase">Assigned Mentor</p>

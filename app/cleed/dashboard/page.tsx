@@ -161,7 +161,7 @@ export default function CleedDashboard() {
    const [formSuccess, setFormSuccess] = useState(false);
    const [letterSuccess, setLetterSuccess] = useState(false);
    const [offerLetterSuccess, setOfferLetterSuccess] = useState(false);
-   const [scheduleData, setScheduleData] = useState({
+   const [scheduleData, setScheduleData] = useState<any>({
       week: "",
       typeOfWork: "",
       toolsUsed: "",
@@ -175,7 +175,8 @@ export default function CleedDashboard() {
       mentorName: "",
       projectName: "",
       projectDocLink: "",
-      teamLead: ""
+      teamLead: "",
+      teamInternIds: [] // Array to store selected intern IDs
    });
    const [sendingSchedule, setSendingSchedule] = useState(false);
    const [scheduleSuccess, setScheduleSuccess] = useState(false);
@@ -556,10 +557,10 @@ export default function CleedDashboard() {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                ...scheduleData,
-               toolsUsed: scheduleData.toolsUsed.split(",").map(s => s.trim()).filter(s => s !== ""),
-               deploymentTools: scheduleData.deploymentTools.split(",").map(s => s.trim()).filter(s => s !== ""),
-               requirements: scheduleData.requirements.split("\n").map(s => s.trim()).filter(s => s !== ""),
-               outcomes: scheduleData.outcomes.split("\n").map(s => s.trim()).filter(s => s !== "")
+               toolsUsed: scheduleData.toolsUsed.split(",").map((s: any) => s.trim()).filter((s: any) => s !== ""),
+               deploymentTools: scheduleData.deploymentTools.split(",").map((s: any) => s.trim()).filter((s: any) => s !== ""),
+               requirements: scheduleData.requirements.split("\n").map((s: any) => s.trim()).filter((s: any) => s !== ""),
+               outcomes: scheduleData.outcomes.split("\n").map((s: any) => s.trim()).filter((s: any) => s !== "")
             }),
          });
          if (res.ok) {
@@ -578,7 +579,8 @@ export default function CleedDashboard() {
                mentorName: "",
                projectName: "",
                projectDocLink: "",
-               teamLead: ""
+               teamLead: "",
+               teamInternIds: []
             });
             setTimeout(() => setScheduleSuccess(false), 3000);
          }
@@ -1513,6 +1515,28 @@ export default function CleedDashboard() {
                                     {sendingSchedule ? "Synchronizing cycle..." : "Confirm & dispatch cycle"}
                                  </button>
                                  {scheduleSuccess && <p className="text-emerald-600 text-[11px] font-bold text-center mt-4">Mission cycle synchronized.</p>}
+                              </div>
+                           </div>
+
+                           <div className="lg:col-span-2 pt-10 border-t border-zinc-100 mt-10">
+                              <label className="text-[11px] font-bold text-zinc-400 uppercase tracking-tighter block mb-6">Select team interns (Form Team)</label>
+                              <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3 max-h-[300px] overflow-y-auto p-4 bg-zinc-50 border border-zinc-100 rounded">
+                                 {interns.filter(i => i.isApproved).map((intern: any) => (
+                                    <label key={intern.id} className={`flex flex-col p-4 border transition-all cursor-pointer rounded relative ${scheduleData.teamInternIds.includes(intern.id) ? 'bg-zinc-900 border-zinc-900 shadow-md' : 'bg-white border-zinc-100 hover:border-blue-200'}`}>
+                                       <input 
+                                          type="checkbox" 
+                                          checked={scheduleData.teamInternIds.includes(intern.id)}
+                                          onChange={(e) => {
+                                             const ids = e.target.checked 
+                                                ? [...scheduleData.teamInternIds, intern.id]
+                                                : scheduleData.teamInternIds.filter((id: any) => id !== intern.id);
+                                             setScheduleData({ ...scheduleData, teamInternIds: ids });
+                                          }}
+                                          className="absolute top-2 right-2 h-3 w-3 accent-blue-600 cursor-pointer"
+                                       />
+                                       <p className={`text-[11px] font-bold truncate pr-3 ${scheduleData.teamInternIds.includes(intern.id) ? 'text-white' : 'text-zinc-900'}`}>{intern.name}</p>
+                                    </label>
+                                 ))}
                               </div>
                            </div>
                         </form>

@@ -110,3 +110,23 @@ export const sendOfferLetterEmail = async (email: string, name: string) => {
         return false;
     }
 };
+
+export const sendTeamAssignmentEmail = async (email: string, name: string, projectName: string, mentorName: string, teamMembers: string[]) => {
+    const title = "Project Team Assignment";
+    const content = `Hello ${name}! You have been assigned to the project: <b>${projectName}</b>.<br/><br/><b>Team Members:</b> ${teamMembers.join(", ")}<br/><b>Mentor:</b> ${mentorName}<br/><br/>You can now synchronize with your team and start working on the milestones.`;
+    const ctaUrl = `${BASE_URL}/intern/dashboard/schedule`;
+    const html = getSimpleTemplate(title, content, "View Mission Details", ctaUrl, "Student Forge Team");
+
+    try {
+        await transporter.sendMail({
+            from: '"Student Forge" <studentforgetechnologies@gmail.com>',
+            to: email,
+            subject: `Project Assignment: ${projectName}`,
+            html: html,
+        });
+        return true;
+    } catch (error) {
+        console.error("Team Assignment Mail Error:", error);
+        return false;
+    }
+};
