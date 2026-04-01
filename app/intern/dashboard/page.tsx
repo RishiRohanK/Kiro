@@ -226,11 +226,6 @@ function InternDashboardContent() {
          const data = await res.json();
          setUserStatus(data);
          
-         const lastAckLetter = localStorage.getItem(`letter_ack_${id}`);
-         if (data.letterUrl && data.letterUrl !== lastAckLetter) {
-            setShowLetterModal(true);
-         }
-         
          const lastAckOffer = localStorage.getItem(`offer_letter_ack_${id}`);
          if (data.offerLetterUrl && data.offerLetterUrl !== lastAckOffer) {
             setShowOfferLetterModal(true);
@@ -449,7 +444,7 @@ function InternDashboardContent() {
                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                   <div className="p-5 border border-zinc-100 bg-white shadow-sm flex flex-col justify-between h-32"><div className="flex items-center justify-between"><span className="text-xs font-medium text-zinc-400">Assignments</span><Briefcase size={16} className="text-[#0055FF]" /></div><div className="mt-auto"><p className="text-2xl font-bold">{tasks.filter(t => t.status === 'pending').length}</p><p className="text-[10px] text-zinc-500 mt-1">Pending tasks</p></div></div>
                   <div className="p-5 border border-zinc-100 bg-white shadow-sm flex flex-col justify-between h-32"><div className="flex items-center justify-between"><span className="text-xs font-medium text-zinc-400">Attendance</span><Check size={16} className="text-emerald-500" /></div><div className="mt-auto"><div className="flex items-baseline gap-2"><p className="text-2xl font-bold text-zinc-900">{attendancePercentage}%</p><span className="text-[10px] text-zinc-400">({attendanceCount} Days)</span></div><p className="text-[10px] text-zinc-500 mt-1">Present percentage</p></div></div>
-                  <div className="p-5 border border-zinc-100 bg-white shadow-sm flex flex-col justify-between h-32"><div className="flex items-center justify-between"><span className="text-xs font-medium text-zinc-400">Status</span><FileBadge size={16} className={userStatus?.letterUrl ? "text-blue-500" : "text-zinc-300"} /></div><div className="mt-auto"><p className="text-sm font-bold text-zinc-900">{userStatus?.letterUrl ? "Letter ready" : "Still processing"}</p><p className="text-[10px] text-zinc-500 mt-1">Current status</p></div></div>
+                  <div className="p-5 border border-zinc-100 bg-white shadow-sm flex flex-col justify-between h-32"><div className="flex items-center justify-between"><span className="text-xs font-medium text-zinc-400">Status</span><FileBadge size={16} className={userStatus?.offerLetterUrl ? "text-emerald-500" : "text-zinc-300"} /></div><div className="mt-auto"><p className="text-sm font-bold text-zinc-900">{userStatus?.offerLetterUrl ? "Offer Letter Issued" : "Processing"}</p><p className="text-[10px] text-zinc-500 mt-1">Current status</p></div></div>
                   <div className="p-5 border border-zinc-100 bg-white shadow-sm flex flex-col justify-between h-32"><div className="flex items-center justify-between"><span className="text-xs font-medium text-zinc-400">Next shift</span><Calendar size={16} className="text-amber-500" /></div><div className="mt-auto"><p className="text-sm font-bold text-zinc-900">Today, 10:00 AM</p><p className="text-[10px] text-zinc-500 mt-1">Starting time</p></div></div>
                </div>
                
@@ -459,17 +454,9 @@ function InternDashboardContent() {
                      Admin notice: Interns make sure to raise your hand whenever you come in for the day, at least once, so that your attendance can be calculated
                   </p>
                </div>
-
-               {userStatus?.letterUrl && (
-                  <div className="p-4 border border-zinc-100 bg-white flex items-center justify-between shadow-sm hover:border-blue-100 transition-all">
-                     <div className="flex items-center gap-3"><div className="h-8 w-8 bg-black text-white flex items-center justify-center"><FileBadge size={16} /></div><div><h3 className="text-xs font-bold text-zinc-900">Internship completion letter</h3><p className="text-[10px] text-zinc-500 mt-0.5">Your official letter is now available for download.</p></div></div>
-                     <a href={userStatus.letterUrl} target="_blank" className="h-8 px-4 bg-[#0055FF] text-white text-xs font-semibold flex items-center gap-2 hover:bg-black transition-all">Download <Download size={13} /></a>
-                  </div>
-               )}
-
                {userStatus?.offerLetterUrl && (
                   <div className="p-4 border border-zinc-100 bg-white flex items-center justify-between shadow-sm hover:border-emerald-100 transition-all">
-                     <div className="flex items-center gap-3"><div className="h-8 w-8 bg-zinc-900 text-white flex items-center justify-center"><ShieldCheck size={16} /></div><div><h3 className="text-xs font-bold text-zinc-900">Official offer letter</h3><p className="text-[10px] text-zinc-500 mt-0.5">Welcome! Your internship offer documents are ready.</p></div></div>
+                     <div className="flex items-center gap-3"><div className="h-8 w-8 bg-zinc-900 text-white flex items-center justify-center"><ShieldCheck size={16} /></div><div><h3 className="text-xs font-bold text-zinc-900">Internship offer letter</h3><p className="text-[10px] text-zinc-500 mt-0.5">Welcome! Your official internship offer documents are ready for download.</p></div></div>
                      <a href={userStatus.offerLetterUrl} target="_blank" className="h-8 px-4 bg-zinc-900 text-white text-xs font-semibold flex items-center gap-2 hover:bg-black transition-all">View Offer <Download size={13} /></a>
                   </div>
                )}
@@ -921,7 +908,7 @@ function InternDashboardContent() {
                      <div className="space-y-1.5 mb-7">
                         <h2 className="text-lg font-bold text-zinc-900">Offer Issued</h2>
                         <p className="text-xs font-medium text-zinc-500 leading-relaxed px-2">
-                           Congratulations! Your official internship offer letter has been synchronized.
+                           Congratulations! Your official internship offer documents have been synchronized.
                         </p>
                      </div>
 

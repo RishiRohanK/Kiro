@@ -34,7 +34,8 @@ import {
    MapPin,
    X as CloseIcon,
    ChevronDown,
-   Trash2
+   Trash2,
+   Check
 } from "lucide-react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
@@ -1277,47 +1278,11 @@ export default function CleedDashboard() {
                {/* Issuance Hub - Professional Certification node */}
                {activeTab === "certification" && (
                   <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-12">
-                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        {/* Internship Letter */}
-                        <div className="bg-white border border-zinc-100 p-8">
-                           <div className="space-y-2 mb-8">
-                              <h2 className="text-xl font-bold tracking-tight text-zinc-900 line-clamp-1">Completion certificate</h2>
-                              <p className="text-[12px] text-zinc-500 font-medium">Issue professional verification letters to high-performing interns.</p>
-                           </div>
-                           <form onSubmit={handleSendLetter} className="space-y-6">
-                              <div className="space-y-1">
-                                 <label className="text-[11px] font-bold text-zinc-400">Verified identity</label>
-                                 <select 
-                                    className="w-full h-11 bg-zinc-50 border border-zinc-100 px-4 text-sm font-bold outline-none focus:border-blue-600"
-                                    onChange={(e) => {
-                                       const intern = interns.find(i => i.id === e.target.value);
-                                       if (intern) setSelectedIntern(intern);
-                                    }}
-                                 >
-                                    <option value="">Select a student...</option>
-                                    {interns.filter(i => i.isApproved).map(i => (
-                                       <option key={i.id} value={i.id}>
-                                          {i.name} {i.letterUrl ? "✓ Certified" : ""}
-                                       </option>
-                                    ))}
-                                 </select>
-                              </div>
-                              <div className="space-y-1">
-                                 <label className="text-[11px] font-bold text-zinc-400">Asset link (PDF/Image)</label>
-                                 <input required value={letterUrl} onChange={(e) => setLetterUrl(e.target.value)} className="w-full h-11 bg-white border border-zinc-100 px-4 text-sm font-bold outline-none focus:border-blue-600" placeholder="https://res.cloudinary.com/..." />
-                              </div>
-                              <button disabled={sendingLetter || !selectedIntern} className="w-full h-14 bg-blue-600 text-white text-[13px] font-bold hover:bg-zinc-900 transition-all disabled:opacity-50">
-                                 {sendingLetter ? "Transmitting asset..." : "Issue certification"}
-                              </button>
-                              {letterSuccess && <p className="text-emerald-600 text-[11px] font-bold text-center">Certification transmitted.</p>}
-                           </form>
-                        </div>
-
                         {/* Offer Letter */}
-                        <div className="bg-white border border-zinc-100 p-8">
+                        <div className="max-w-2xl mx-auto bg-white border border-zinc-100 p-8">
                            <div className="space-y-2 mb-8">
-                              <h2 className="text-xl font-bold tracking-tight text-zinc-900 line-clamp-1">Offer letter</h2>
-                              <p className="text-[12px] text-zinc-500 font-medium">Dispatch official offer documents to newly onboarded interns.</p>
+                              <h2 className="text-xl font-bold tracking-tight text-zinc-900 line-clamp-1">Offer letter issuance</h2>
+                              <p className="text-[12px] text-zinc-500 font-medium">Dispatch official offer documents to newly onboarded interns. This will also send an automated notification email.</p>
                            </div>
                            <form onSubmit={handleSendOfferLetter} className="space-y-6">
                               <div className="space-y-1">
@@ -1344,12 +1309,25 @@ export default function CleedDashboard() {
                               <button disabled={sendingOfferLetter || !selectedIntern} className="w-full h-14 bg-zinc-900 text-white text-[13px] font-bold hover:bg-blue-600 transition-all disabled:opacity-50">
                                  {sendingOfferLetter ? "Dispatching offer..." : "Issue offer letter"}
                               </button>
-                              {offerLetterSuccess && <p className="text-emerald-600 text-[11px] font-bold text-center">Offer letter synchronized.</p>}
                            </form>
                         </div>
-                     </div>
                   </motion.div>
                )}
+
+               <AnimatePresence>
+                  {offerLetterSuccess && (
+                     <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/20 backdrop-blur-sm">
+                        <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }} className="bg-white max-w-[320px] w-full p-8 border border-zinc-100 shadow-2xl text-center relative">
+                           <div className="h-12 w-12 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-5">
+                              <Check size={24} />
+                           </div>
+                           <h3 className="text-sm font-bold text-zinc-900 mb-2">Offer Dispatch Successful</h3>
+                           <p className="text-[11px] text-zinc-500 font-medium mb-6">Internship offer has been synchronized with the student's dashboard and notification email dispatched.</p>
+                           <button onClick={() => setOfferLetterSuccess(false)} className="w-full h-11 bg-zinc-900 text-white text-[11px] font-bold hover:bg-black transition-all">Dismiss Protocol</button>
+                        </motion.div>
+                     </div>
+                  )}
+               </AnimatePresence>
 
                {/* Mentorship Sessions - Professional Guidance registry */}
                {activeTab === "mentorship" && (
