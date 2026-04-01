@@ -1600,24 +1600,42 @@ export default function CleedDashboard() {
                         ) : submissions.length === 0 ? (
                            <p className="py-20 text-center text-zinc-400 text-sm italic">No missions submitted for audit.</p>
                         ) : (
-                           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                           <div className="grid grid-cols-1 gap-6">
                               {submissions.map((sub: any) => (
-                                 <div key={sub.id} className="p-6 border border-zinc-100 bg-zinc-50/50 group hover:border-[#0055FF]/30 transition-all">
-                                    <div className="flex items-center justify-between mb-4">
-                                       <span className="text-[10px] font-bold text-[#0055FF] truncate max-w-[150px]">{sub.user?.name}</span>
-                                       <span className="text-[10px] text-zinc-400 font-bold">{new Date(sub.createdAt).toLocaleDateString()}</span>
-                                    </div>
-                                    <h4 className="text-sm font-bold text-zinc-900 mb-2 truncate">{sub.title}</h4>
-                                    <p className="text-[12px] text-zinc-500 line-clamp-3 mb-6 h-12">{sub.description}</p>
-                                    <div className="flex items-center justify-between pt-4 border-t border-zinc-100">
-                                       <a href={sub.githubLink} target="_blank" className="flex items-center gap-2 text-[11px] font-bold text-zinc-900 hover:text-blue-600">
-                                          <Github size={12} /> GitHub
-                                       </a>
-                                       <button className="flex items-center gap-2 text-[11px] font-bold text-blue-600">
-                                          <CheckCircle2 size={12} /> Pass Audit
-                                       </button>
-                                    </div>
-                                 </div>
+                               <div key={sub.id} className="p-6 bg-white border border-zinc-100 flex flex-col md:flex-row md:items-center justify-between gap-6 hover:border-[#0055FF]/20 transition-all rounded">
+                                  <div className="flex flex-col min-w-[200px]">
+                                     <span className="text-[11px] font-bold text-zinc-400 uppercase tracking-tighter mb-1">Student Identity</span>
+                                     <h4 className="text-[14px] font-bold text-zinc-900">{sub.intern?.name || "Unknown Intern"}</h4>
+                                     <p className="text-[11px] text-zinc-500">{sub.intern?.email}</p>
+                                  </div>
+
+                                  <div className="flex flex-col flex-1">
+                                     <span className="text-[11px] font-bold text-zinc-400 uppercase tracking-tighter mb-1">Mission Protocol</span>
+                                     <h4 className="text-[13px] font-bold text-zinc-900 truncate">{sub.schedule?.typeOfWork || "General Mission"}</h4>
+                                     <p className="text-[11px] text-[#0055FF] font-medium italic mt-1">{sub.schedule?.projectName || "Internal Cycle"}</p>
+                                  </div>
+
+                                  <div className="flex items-center gap-6">
+                                     <div className="flex flex-col h-11">
+                                        <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-tight mb-1 font-mono">Repo</span>
+                                        <a href={sub.githubLink} target="_blank" className="flex items-center gap-2 text-[12px] font-bold text-zinc-900 hover:text-[#0055FF]">
+                                           <Github size={14} /> Repository
+                                        </a>
+                                     </div>
+                                     <div className="flex flex-col h-11 border-l border-zinc-100 pl-6">
+                                        <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-tight mb-1 font-mono">Manifest</span>
+                                        <a href={sub.submissionLink} target="_blank" className="flex items-center gap-2 text-[12px] font-bold text-[#0055FF] hover:underline">
+                                           <ExternalLink size={14} /> Portfolio Link
+                                        </a>
+                                     </div>
+                                  </div>
+
+                                  <div className="flex items-center gap-3 md:border-l md:border-zinc-100 md:pl-6">
+                                     <button className="h-10 px-6 bg-zinc-900 text-white text-[11px] font-bold hover:bg-[#0055FF] transition-all flex items-center gap-2 rounded-sm">
+                                        <CheckCircle2 size={14} /> Audit Synchronized
+                                     </button>
+                                  </div>
+                               </div>
                               ))}
                            </div>
                         )}
