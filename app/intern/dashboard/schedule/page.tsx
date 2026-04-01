@@ -8,7 +8,8 @@ import {
     Github, 
     Clock, 
     Terminal,
-    Target
+    Target,
+    Lock
 } from "lucide-react";
 
 interface ScheduleItem {
@@ -153,8 +154,8 @@ export default function SchedulePage() {
                                                     <span className="text-[10px] bg-green-50 text-green-600 px-2 py-0.5 rounded border border-green-100">Submitted</span>
                                                 )}
                                                 {isClosed && (
-                                                    <span className="text-[10px] bg-red-50 text-red-500 px-2 py-0.5 rounded border border-red-100 font-bold uppercase tracking-wide">
-                                                        🔒 Closed
+                                                    <span className="text-[10px] bg-red-50 text-red-500 px-2 py-0.5 rounded border border-red-100 font-bold uppercase tracking-wide flex items-center gap-1">
+                                                        <Lock size={10} className="text-black" /> Closed
                                                     </span>
                                                 )}
                                                 {isPastDeadline && item.isCompleted && (
@@ -289,7 +290,7 @@ export default function SchedulePage() {
                                                 {isClosed ? (
                                                     <div className="space-y-4">
                                                         <div className="flex items-center gap-2 p-3 bg-red-100 border border-red-300 rounded-lg">
-                                                            <span className="text-red-600 text-lg">🔒</span>
+                                                            <Lock size={18} className="text-black" />
                                                             <div>
                                                                 <p className="text-xs font-bold text-red-700">Submission Closed</p>
                                                                 <p className="text-[10px] text-red-500">Deadline has passed. This form is frozen.</p>
