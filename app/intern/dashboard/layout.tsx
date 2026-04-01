@@ -224,30 +224,38 @@ function InternDashboardLayoutContent({
                     {children}
                 </main>
 
-                {/* Mobile Bottom Navigation (iPhone Style) */}
-                <nav className="fixed bottom-0 left-0 right-0 h-16 bg-white border-t border-zinc-200 lg:hidden flex items-center justify-around px-2 z-50 pb-safe shadow-[0_-4px_24px_rgba(0,0,0,0.04)]">
-                    {navItems.filter(i => i.mobile).map((item) => {
-                        const itemUrl = new URL(item.slug, "http://localhost");
-                        const itemPath = itemUrl.pathname;
-                        const itemView = itemUrl.searchParams.get("view");
-                        const isActive = pathname === itemPath && (itemView === currentView || (!itemView && !currentView));
-                        
-                        return (
-                            <Link 
-                                key={item.name}
-                                href={item.slug} 
-                                className={`flex flex-col items-center justify-center gap-1 transition-all ${
-                                    isActive ? "text-[#0055FF]" : "text-zinc-400"
-                                }`}
-                            >
-                                <item.icon size={20} strokeWidth={isActive ? 2.5 : 2} />
-                                <span className={`text-[10px] font-bold uppercase tracking-tight ${isActive ? "text-[#0055FF]" : "text-zinc-400"}`}>
-                                    {item.name}
-                                </span>
-                            </Link>
-                        );
-                    })}
-                </nav>
+                {/* Mobile Bottom Navigation (Floating Dock) */}
+                <div className="fixed bottom-4 inset-x-0 flex justify-center z-50 lg:hidden px-6 pointer-events-none">
+                    <nav className="h-14 w-full max-w-[340px] bg-black/90 backdrop-blur-md border border-white/10 flex items-center justify-around px-4 shadow-[0_8px_32px_rgba(0,0,0,0.15)] rounded-2xl pointer-events-auto ring-1 ring-white/10">
+                        {navItems.filter(i => i.mobile).map((item) => {
+                            const itemUrl = new URL(item.slug, "http://localhost");
+                            const itemPath = itemUrl.pathname;
+                            const itemView = itemUrl.searchParams.get("view");
+                            const isActive = pathname === itemPath && (itemView === currentView || (!itemView && !currentView));
+                            
+                            return (
+                                <Link 
+                                    key={item.name}
+                                    href={item.slug} 
+                                    className={`flex flex-col items-center justify-center gap-1 transition-all relative ${
+                                        isActive ? "text-white" : "text-zinc-500"
+                                    }`}
+                                >
+                                    {isActive && (
+                                        <motion.div 
+                                            layoutId="activeNav"
+                                            className="absolute -top-1 w-1 h-1 bg-white rounded-full shadow-[0_0_8px_rgba(255,255,255,0.8)]"
+                                        />
+                                    )}
+                                    <item.icon size={20} strokeWidth={isActive ? 2.5 : 2} />
+                                    <span className={`text-[9px] font-bold uppercase tracking-tight ${isActive ? "text-white" : "text-zinc-500"}`}>
+                                        {item.name}
+                                    </span>
+                                </Link>
+                            );
+                        })}
+                    </nav>
+                </div>
 
                 {/* Mobile Side Drawer */}
                 <AnimatePresence>
