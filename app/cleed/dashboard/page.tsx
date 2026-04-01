@@ -170,7 +170,12 @@ export default function CleedDashboard() {
       description: "",
       outcomes: "",
       deadline: "",
-      batch: "Batch 1"
+      batch: "Batch 1",
+      teamAllocation: "",
+      mentorName: "",
+      projectName: "",
+      projectDocLink: "",
+      teamLead: ""
    });
    const [sendingSchedule, setSendingSchedule] = useState(false);
    const [scheduleSuccess, setScheduleSuccess] = useState(false);
@@ -568,7 +573,12 @@ export default function CleedDashboard() {
                description: "",
                outcomes: "",
                deadline: "",
-               batch: "Batch 1"
+               batch: "Batch 1",
+               teamAllocation: "",
+               mentorName: "",
+               projectName: "",
+               projectDocLink: "",
+               teamLead: ""
             });
             setTimeout(() => setScheduleSuccess(false), 3000);
          }
@@ -1463,6 +1473,26 @@ export default function CleedDashboard() {
                               <div className="space-y-1">
                                  <label className="text-[11px] font-bold text-zinc-400 uppercase tracking-tighter">Final Deadline Node</label>
                                  <input required type="date" value={scheduleData.deadline} onChange={(e) => setScheduleData({ ...scheduleData, deadline: e.target.value })} className="w-full h-11 bg-white border border-zinc-100 px-4 text-sm font-bold outline-none focus:border-blue-600" />
+                              </div>
+                              <div className="space-y-1">
+                                 <label className="text-[11px] font-bold text-zinc-400 uppercase tracking-tighter">Team Numbers (csv)</label>
+                                 <input required value={scheduleData.teamAllocation} onChange={(e) => setScheduleData({ ...scheduleData, teamAllocation: e.target.value })} className="w-full h-11 bg-white border border-zinc-100 px-4 text-sm font-bold outline-none focus:border-blue-600" placeholder="Team 1, Team 2..." />
+                              </div>
+                              <div className="space-y-1">
+                                 <label className="text-[11px] font-bold text-zinc-400 uppercase tracking-tighter">Assigned Mentor</label>
+                                 <input required value={scheduleData.mentorName} onChange={(e) => setScheduleData({ ...scheduleData, mentorName: e.target.value })} className="w-full h-11 bg-white border border-zinc-100 px-4 text-sm font-bold outline-none focus:border-blue-600" placeholder="Assigned Mentor Name" />
+                              </div>
+                              <div className="space-y-1">
+                                 <label className="text-[11px] font-bold text-zinc-400 uppercase tracking-tighter">Project Name</label>
+                                 <input required value={scheduleData.projectName} onChange={(e) => setScheduleData({ ...scheduleData, projectName: e.target.value })} className="w-full h-11 bg-white border border-zinc-100 px-4 text-sm font-bold outline-none focus:border-blue-600" placeholder="Enter project title" />
+                              </div>
+                              <div className="space-y-1">
+                                 <label className="text-[11px] font-bold text-zinc-400 uppercase tracking-tighter">Project Doc Link</label>
+                                 <input required value={scheduleData.projectDocLink} onChange={(e) => setScheduleData({ ...scheduleData, projectDocLink: e.target.value })} className="w-full h-11 bg-white border border-zinc-100 px-4 text-sm font-bold outline-none focus:border-blue-600" placeholder="https://..." />
+                              </div>
+                              <div className="space-y-1">
+                                 <label className="text-[11px] font-bold text-zinc-400 uppercase tracking-tighter">Team Lead (Optional)</label>
+                                 <input value={scheduleData.teamLead} onChange={(e) => setScheduleData({ ...scheduleData, teamLead: e.target.value })} className="w-full h-11 bg-white border border-zinc-100 px-4 text-sm font-bold outline-none focus:border-blue-600" placeholder="Designated lead" />
                               </div>
                            </div>
                            <div className="space-y-6">

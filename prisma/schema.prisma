@@ -333,6 +333,14 @@ model Schedule {
   submissionLink  String?  // Link for interns to submit their work
   githubLink      String?  // Final GitHub link submission
   isCompleted     Boolean  @default(false)
+  
+  // Team and Project Details
+  teamAllocation  String?  // e.g., "Team 01, Team 05"
+  mentorName      String?  // e.g., "Rohan Kalapa"
+  projectName     String?  // e.g., "E-commerce Engine"
+  projectDocLink  String?  // e.g., "https://docs..."
+  teamLead        String?  // e.g., "Intern A"
+
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
   submissions     ScheduleSubmission[]

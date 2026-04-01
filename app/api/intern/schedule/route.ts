@@ -46,7 +46,12 @@ export async function POST(req: Request) {
             description, 
             outcomes, 
             deadline,
-            batch = "Batch 1"
+            batch = "Batch 1",
+            teamAllocation,
+            mentorName,
+            projectName,
+            projectDocLink,
+            teamLead
         } = body;
 
         const schedule = await prisma.schedule.create({
@@ -59,7 +64,12 @@ export async function POST(req: Request) {
                 requirements: requirements || [], 
                 description,
                 outcomes, 
-                deadline: new Date(deadline)
+                deadline: new Date(deadline),
+                teamAllocation,
+                mentorName,
+                projectName,
+                projectDocLink,
+                teamLead
             }
         });
 

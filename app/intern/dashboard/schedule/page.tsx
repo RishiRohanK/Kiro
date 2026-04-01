@@ -24,6 +24,11 @@ interface ScheduleItem {
     submissionLink?: string;
     githubLink?: string;
     isCompleted: boolean;
+    teamAllocation?: string;
+    mentorName?: string;
+    projectName?: string;
+    projectDocLink?: string;
+    teamLead?: string;
 }
 
 export default function SchedulePage() {
@@ -180,6 +185,45 @@ export default function SchedulePage() {
                                                     <h4 className="text-xs font-medium text-zinc-400 mb-2">Description</h4>
                                                     <p className="text-sm leading-relaxed">{item.description}</p>
                                                 </div>
+
+                                                {(item.projectName || item.teamAllocation || item.mentorName) && (
+                                                    <div className="p-4 bg-zinc-50 border border-zinc-100 space-y-4">
+                                                        <h4 className="text-[10px] font-bold text-[#0055FF] uppercase tracking-widest">Project & Team Allocation</h4>
+                                                        <div className="grid grid-cols-2 gap-4">
+                                                            {item.projectName && (
+                                                                <div>
+                                                                    <p className="text-[10px] font-bold text-zinc-400 uppercase">Project</p>
+                                                                    <p className="text-xs font-bold text-zinc-900 mt-1">{item.projectName}</p>
+                                                                </div>
+                                                            )}
+                                                            {item.teamAllocation && (
+                                                                <div>
+                                                                    <p className="text-[10px] font-bold text-zinc-400 uppercase">Team Members</p>
+                                                                    <p className="text-xs font-bold text-zinc-900 mt-1">{item.teamAllocation}</p>
+                                                                </div>
+                                                            )}
+                                                            {item.mentorName && (
+                                                                <div>
+                                                                    <p className="text-[10px] font-bold text-zinc-400 uppercase">Assigned Mentor</p>
+                                                                    <p className="text-xs font-bold text-zinc-900 mt-1">{item.mentorName}</p>
+                                                                </div>
+                                                            )}
+                                                            {item.teamLead && (
+                                                                <div>
+                                                                    <p className="text-[10px] font-bold text-zinc-400 uppercase">Team Lead</p>
+                                                                    <p className="text-xs font-bold text-zinc-900 mt-1">{item.teamLead}</p>
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                        {item.projectDocLink && (
+                                                            <div className="pt-2">
+                                                                <a href={item.projectDocLink} target="_blank" className="h-9 w-full bg-zinc-900 text-white text-[11px] font-bold flex items-center justify-center gap-2 hover:bg-black transition-all">
+                                                                    <ExternalLink size={14} /> Open Project Docs
+                                                                </a>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                )}
 
                                                 <div>
                                                     <h4 className="text-xs font-medium text-zinc-400 mb-2">Tools to be used</h4>
