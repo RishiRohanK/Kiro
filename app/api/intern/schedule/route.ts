@@ -7,7 +7,13 @@ export async function GET(req: Request) {
         const internId = searchParams.get('internId');
         const batch = searchParams.get('batch') || "Batch 1"; // Default to Batch 1 if not specified
 
-        const where: any = { batch };
+        const where: any = { 
+            batch,
+            OR: [
+                { teamInternIds: { has: internId } },
+                { teamInternIds: { isEmpty: true } }
+            ]
+        };
 
         const schedules = await prisma.schedule.findMany({
             where,
