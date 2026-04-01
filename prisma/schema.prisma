@@ -81,6 +81,7 @@ model User {
   isApproved Boolean  @default(false)
   handRaised Boolean  @default(false)
   letterUrl  String?
+  offerLetterUrl String?
   lastActive DateTime @default(now())
   college    String?
   batch      String?   @default("Batch 1")

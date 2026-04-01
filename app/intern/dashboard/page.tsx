@@ -100,6 +100,7 @@ function InternDashboardContent() {
    const [isUpdating, setIsUpdating] = useState<string | null>(null);
    const [userStatus, setUserStatus] = useState<any>(null);
    const [showLetterModal, setShowLetterModal] = useState(false);
+   const [showOfferLetterModal, setShowOfferLetterModal] = useState(false);
 
    // Kanban State
    const [personalTasks, setPersonalTasks] = useState<PersonalTask[]>([]);
@@ -224,9 +225,15 @@ function InternDashboardContent() {
          const res = await fetch(`/api/intern/status?id=${id}`);
          const data = await res.json();
          setUserStatus(data);
-         const lastAck = localStorage.getItem(`letter_ack_${id}`);
-         if (data.letterUrl && data.letterUrl !== lastAck) {
+         
+         const lastAckLetter = localStorage.getItem(`letter_ack_${id}`);
+         if (data.letterUrl && data.letterUrl !== lastAckLetter) {
             setShowLetterModal(true);
+         }
+         
+         const lastAckOffer = localStorage.getItem(`offer_letter_ack_${id}`);
+         if (data.offerLetterUrl && data.offerLetterUrl !== lastAckOffer) {
+            setShowOfferLetterModal(true);
          }
       } catch (e) {
          console.error("Status check offline");
@@ -454,9 +461,16 @@ function InternDashboardContent() {
                </div>
 
                {userStatus?.letterUrl && (
-                  <div className="p-4 border border-zinc-100 bg-white flex items-center justify-between shadow-sm">
-                     <div className="flex items-center gap-3"><div className="h-8 w-8 bg-black text-white flex items-center justify-center"><FileBadge size={16} /></div><div><h3 className="text-xs font-bold text-zinc-900">Internship letter</h3><p className="text-[10px] text-zinc-500 mt-0.5">Your official letter is now available for download.</p></div></div>
+                  <div className="p-4 border border-zinc-100 bg-white flex items-center justify-between shadow-sm hover:border-blue-100 transition-all">
+                     <div className="flex items-center gap-3"><div className="h-8 w-8 bg-black text-white flex items-center justify-center"><FileBadge size={16} /></div><div><h3 className="text-xs font-bold text-zinc-900">Internship completion letter</h3><p className="text-[10px] text-zinc-500 mt-0.5">Your official letter is now available for download.</p></div></div>
                      <a href={userStatus.letterUrl} target="_blank" className="h-8 px-4 bg-[#0055FF] text-white text-xs font-semibold flex items-center gap-2 hover:bg-black transition-all">Download <Download size={13} /></a>
+                  </div>
+               )}
+
+               {userStatus?.offerLetterUrl && (
+                  <div className="p-4 border border-zinc-100 bg-white flex items-center justify-between shadow-sm hover:border-emerald-100 transition-all">
+                     <div className="flex items-center gap-3"><div className="h-8 w-8 bg-zinc-900 text-white flex items-center justify-center"><ShieldCheck size={16} /></div><div><h3 className="text-xs font-bold text-zinc-900">Official offer letter</h3><p className="text-[10px] text-zinc-500 mt-0.5">Welcome! Your internship offer documents are ready.</p></div></div>
+                     <a href={userStatus.offerLetterUrl} target="_blank" className="h-8 px-4 bg-zinc-900 text-white text-xs font-semibold flex items-center gap-2 hover:bg-black transition-all">View Offer <Download size={13} /></a>
                   </div>
                )}
 
@@ -889,6 +903,34 @@ function InternDashboardContent() {
                         </a>
                         <button onClick={() => { setShowLetterModal(false); localStorage.setItem(`letter_ack_${user.id}`, userStatus.letterUrl); }} className="h-10 w-full text-[12px] font-bold text-zinc-400 hover:text-zinc-900 transition-colors">
                            Close
+                        </button>
+                     </div>
+                  </motion.div>
+               </div>
+            )}
+
+            {showOfferLetterModal && userStatus?.offerLetterUrl && (
+               <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/40 backdrop-blur-sm">
+                  <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} className="bg-white max-w-[300px] w-full p-8 border border-zinc-100 rounded-2xl shadow-2xl relative text-center">
+                     <button onClick={() => { setShowOfferLetterModal(false); localStorage.setItem(`offer_letter_ack_${user.id}`, userStatus.offerLetterUrl); }} className="absolute top-4 right-4 text-zinc-300 hover:text-zinc-600 transition-colors"><X size={18} /></button>
+                     
+                     <div className="mx-auto h-12 w-12 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center mb-5">
+                        <ShieldCheck size={24} />
+                     </div>
+
+                     <div className="space-y-1.5 mb-7">
+                        <h2 className="text-lg font-bold text-zinc-900">Offer Issued</h2>
+                        <p className="text-xs font-medium text-zinc-500 leading-relaxed px-2">
+                           Congratulations! Your official internship offer letter has been synchronized.
+                        </p>
+                     </div>
+
+                     <div className="flex flex-col gap-3">
+                        <a href={userStatus.offerLetterUrl} target="_blank" rel="noopener noreferrer" onClick={() => { setShowOfferLetterModal(false); localStorage.setItem(`offer_letter_ack_${user.id}`, userStatus.offerLetterUrl); }} className="h-12 w-full bg-zinc-900 text-white text-xs font-bold flex items-center justify-center gap-2 hover:bg-blue-600 transition-all rounded-xl shadow-lg shadow-blue-600/10">
+                           View Offer <Download size={15} />
+                        </a>
+                        <button onClick={() => { setShowOfferLetterModal(false); localStorage.setItem(`offer_letter_ack_${user.id}`, userStatus.offerLetterUrl); }} className="text-[11px] font-bold text-zinc-400 hover:text-zinc-900 transition-colors uppercase tracking-widest">
+                           Dismiss
                         </button>
                      </div>
                   </motion.div>

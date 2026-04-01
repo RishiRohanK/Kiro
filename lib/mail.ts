@@ -20,8 +20,8 @@ const getSimpleTemplate = (title: string, content: string, ctaText: string, ctaU
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #1a1a1a; margin: 0; padding: 0; background-color: #f9f9f9; }
-        .wrapper { padding: 40px 20px; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #1a1a1a; margin: 0; padding: 0; background-color: #ffffff; }
+        .wrapper { padding: 40px 20px; background-color: #ffffff; }
         .container { max-width: 500px; margin: 0 auto; background: #ffffff; border: 1px solid #eeeeee; padding: 40px; border-radius: 0px; }
         .logo { margin-bottom: 30px; }
         h1 { font-size: 20px; font-weight: 600; margin: 0 0 16px; color: #000; letter-spacing: -0.01em; }
@@ -87,6 +87,26 @@ export const sendPasswordResetEmail = async (email: string, token: string) => {
         return true;
     } catch (error) {
         console.error("Password reset mail error:", error);
+        return false;
+    }
+};
+
+export const sendOfferLetterEmail = async (email: string, name: string) => {
+    const title = "Internship Offer Letter Issued";
+    const content = `Congratulations ${name}! Your official internship offer letter has been issued. You can now access and download it directly from your dashboard. Welcome to the Student Forge community.`;
+    const ctaUrl = `${BASE_URL}/intern/dashboard`;
+    const html = getSimpleTemplate(title, content, "View in Dashboard", ctaUrl, "Student Forge Team");
+
+    try {
+        await transporter.sendMail({
+            from: '"Student Forge" <studentforgetechnologies@gmail.com>',
+            to: email,
+            subject: `Offer Letter Issued: ${name}`,
+            html: html,
+        });
+        return true;
+    } catch (error) {
+        console.error("Offer Letter Mail Error:", error);
         return false;
     }
 };

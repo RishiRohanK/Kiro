@@ -47,6 +47,7 @@ interface Intern {
    isApproved: boolean;
    handRaised: boolean;
    letterUrl?: string;
+   offerLetterUrl?: string;
    lastActive?: string;
    branch?: string;
    college?: string;
@@ -152,10 +153,13 @@ export default function CleedDashboard() {
    // Forms
    const [taskData, setTaskData] = useState({ title: "", description: "", attachmentUrl: "", batch: "Batch 2" });
    const [letterUrl, setLetterUrl] = useState("");
+   const [offerLetterUrl, setOfferLetterUrl] = useState("");
    const [sendingTask, setSendingTask] = useState(false);
    const [sendingLetter, setSendingLetter] = useState(false);
+   const [sendingOfferLetter, setSendingOfferLetter] = useState(false);
    const [formSuccess, setFormSuccess] = useState(false);
    const [letterSuccess, setLetterSuccess] = useState(false);
+   const [offerLetterSuccess, setOfferLetterSuccess] = useState(false);
    const [scheduleData, setScheduleData] = useState({
       week: "",
       typeOfWork: "",
@@ -424,6 +428,30 @@ export default function CleedDashboard() {
          console.error("Letter transmission failed");
       } finally {
          setSendingLetter(false);
+      }
+   };
+
+   const handleSendOfferLetter = async (e: React.FormEvent) => {
+      e.preventDefault();
+      if (!selectedIntern || !offerLetterUrl) return;
+      setSendingOfferLetter(true);
+      try {
+         const res = await fetch("/api/cleed/offer-letter", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ internId: selectedIntern.id, offerLetterUrl }),
+         });
+
+         if (res.ok) {
+            setOfferLetterSuccess(true);
+            setOfferLetterUrl("");
+            setTimeout(() => setOfferLetterSuccess(false), 3000);
+            fetchData();
+         }
+      } catch (err) {
+         console.error("Offer letter transmission failed");
+      } finally {
+         setSendingOfferLetter(false);
       }
    };
 
@@ -1249,38 +1277,76 @@ export default function CleedDashboard() {
                {/* Issuance Hub - Professional Certification node */}
                {activeTab === "certification" && (
                   <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-12">
-                     <div className="max-w-2xl bg-white border border-zinc-100 p-8">
-                        <div className="space-y-2 mb-8">
-                           <h2 className="text-2xl font-bold tracking-tight text-zinc-900 line-clamp-1">Issuance hub</h2>
-                           <p className="text-[14px] text-zinc-500 font-medium">Issue professional verification letters to high-performing interns.</p>
+                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        {/* Internship Letter */}
+                        <div className="bg-white border border-zinc-100 p-8">
+                           <div className="space-y-2 mb-8">
+                              <h2 className="text-xl font-bold tracking-tight text-zinc-900 line-clamp-1">Completion certificate</h2>
+                              <p className="text-[12px] text-zinc-500 font-medium">Issue professional verification letters to high-performing interns.</p>
+                           </div>
+                           <form onSubmit={handleSendLetter} className="space-y-6">
+                              <div className="space-y-1">
+                                 <label className="text-[11px] font-bold text-zinc-400">Verified identity</label>
+                                 <select 
+                                    className="w-full h-11 bg-zinc-50 border border-zinc-100 px-4 text-sm font-bold outline-none focus:border-blue-600"
+                                    onChange={(e) => {
+                                       const intern = interns.find(i => i.id === e.target.value);
+                                       if (intern) setSelectedIntern(intern);
+                                    }}
+                                 >
+                                    <option value="">Select a student...</option>
+                                    {interns.filter(i => i.isApproved).map(i => (
+                                       <option key={i.id} value={i.id}>
+                                          {i.name} {i.letterUrl ? "✓ Certified" : ""}
+                                       </option>
+                                    ))}
+                                 </select>
+                              </div>
+                              <div className="space-y-1">
+                                 <label className="text-[11px] font-bold text-zinc-400">Asset link (PDF/Image)</label>
+                                 <input required value={letterUrl} onChange={(e) => setLetterUrl(e.target.value)} className="w-full h-11 bg-white border border-zinc-100 px-4 text-sm font-bold outline-none focus:border-blue-600" placeholder="https://res.cloudinary.com/..." />
+                              </div>
+                              <button disabled={sendingLetter || !selectedIntern} className="w-full h-14 bg-blue-600 text-white text-[13px] font-bold hover:bg-zinc-900 transition-all disabled:opacity-50">
+                                 {sendingLetter ? "Transmitting asset..." : "Issue certification"}
+                              </button>
+                              {letterSuccess && <p className="text-emerald-600 text-[11px] font-bold text-center">Certification transmitted.</p>}
+                           </form>
                         </div>
-                        <form onSubmit={handleSendLetter} className="space-y-6">
-                           <div className="space-y-1">
-                              <label className="text-[11px] font-bold text-zinc-400">Verified identity</label>
-                              <select 
-                                 className="w-full h-11 bg-zinc-50 border border-zinc-100 px-4 text-sm font-bold outline-none focus:border-blue-600"
-                                 onChange={(e) => {
-                                    const intern = interns.find(i => i.id === e.target.value);
-                                    if (intern) setSelectedIntern(intern);
-                                 }}
-                              >
-                                 <option value="">Select a student...</option>
-                                 {interns.filter(i => i.isApproved).map(i => (
-                                    <option key={i.id} value={i.id}>
-                                       {i.name} {i.letterUrl ? "✓ Certified" : ""}
-                                    </option>
-                                 ))}
-                              </select>
+
+                        {/* Offer Letter */}
+                        <div className="bg-white border border-zinc-100 p-8">
+                           <div className="space-y-2 mb-8">
+                              <h2 className="text-xl font-bold tracking-tight text-zinc-900 line-clamp-1">Offer letter</h2>
+                              <p className="text-[12px] text-zinc-500 font-medium">Dispatch official offer documents to newly onboarded interns.</p>
                            </div>
-                           <div className="space-y-1">
-                              <label className="text-[11px] font-bold text-zinc-400">Asset link (PDF/Image)</label>
-                              <input required value={letterUrl} onChange={(e) => setLetterUrl(e.target.value)} className="w-full h-11 bg-white border border-zinc-100 px-4 text-sm font-bold outline-none focus:border-blue-600" placeholder="https://res.cloudinary.com/..." />
-                           </div>
-                           <button disabled={sendingLetter || !selectedIntern} className="w-full h-14 bg-blue-600 text-white text-[13px] font-bold hover:bg-zinc-900 transition-all disabled:opacity-50">
-                              {sendingLetter ? "Transmitting asset..." : "Issue certification"}
-                           </button>
-                           {letterSuccess && <p className="text-emerald-600 text-[11px] font-bold text-center">Certification transmitted.</p>}
-                        </form>
+                           <form onSubmit={handleSendOfferLetter} className="space-y-6">
+                              <div className="space-y-1">
+                                 <label className="text-[11px] font-bold text-zinc-400">Target intern</label>
+                                 <select 
+                                    className="w-full h-11 bg-zinc-50 border border-zinc-100 px-4 text-sm font-bold outline-none focus:border-blue-600"
+                                    onChange={(e) => {
+                                       const intern = interns.find(i => i.id === e.target.value);
+                                       if (intern) setSelectedIntern(intern);
+                                    }}
+                                 >
+                                    <option value="">Select a student...</option>
+                                    {interns.filter(i => i.isApproved).map(i => (
+                                       <option key={i.id} value={i.id}>
+                                          {i.name} {i.offerLetterUrl ? "✓ Offer Issued" : ""}
+                                       </option>
+                                    ))}
+                                 </select>
+                              </div>
+                              <div className="space-y-1">
+                                 <label className="text-[11px] font-bold text-zinc-400">Document link (PDF/Image)</label>
+                                 <input required value={offerLetterUrl} onChange={(e) => setOfferLetterUrl(e.target.value)} className="w-full h-11 bg-white border border-zinc-100 px-4 text-sm font-bold outline-none focus:border-blue-600" placeholder="https://res.cloudinary.com/..." />
+                              </div>
+                              <button disabled={sendingOfferLetter || !selectedIntern} className="w-full h-14 bg-zinc-900 text-white text-[13px] font-bold hover:bg-blue-600 transition-all disabled:opacity-50">
+                                 {sendingOfferLetter ? "Dispatching offer..." : "Issue offer letter"}
+                              </button>
+                              {offerLetterSuccess && <p className="text-emerald-600 text-[11px] font-bold text-center">Offer letter synchronized.</p>}
+                           </form>
+                        </div>
                      </div>
                   </motion.div>
                )}
