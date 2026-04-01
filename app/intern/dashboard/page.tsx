@@ -116,6 +116,7 @@ function InternDashboardContent() {
    const [allInterns, setAllInterns] = useState<any[]>([]);
    const [selectedUser, setSelectedUser] = useState<any>(null); 
    const [myId, setMyId] = useState<string | null>(null);
+   const [showCommunityRoster, setShowCommunityRoster] = useState(false);
    const chatEndRef = useRef<HTMLDivElement>(null);
 
    useEffect(() => {
@@ -423,14 +424,14 @@ function InternDashboardContent() {
    });
 
    return (
-      <div className={`p-4 lg:p-6 max-w-[1600px] w-full mx-auto bg-white ${activeTab === "community" ? "h-[calc(100vh-3.5rem)] overflow-hidden" : "min-h-screen"}`}>
+      <div className={`p-4 lg:p-6 max-w-[1600px] w-full mx-auto bg-white ${activeTab === "community" ? "h-[calc(100vh-3.5rem)] overflow-hidden" : "min-h-screen pb-24 lg:pb-6"}`}>
          {activeTab === "overview" && (
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6 text-left">
                <div className="mb-8 font-sans flex flex-col md:flex-row md:items-end justify-between gap-4">
                   <div>
-                     <h1 className="text-xl font-bold text-zinc-900">Welcome back, {user.name.split(' ')[0]}</h1>
-                     <div className="flex items-center gap-2 mt-1.5">
-                        <span className="px-2 py-0.5 bg-blue-50 text-blue-600 border border-blue-100 text-[10px] font-bold rounded-sm uppercase tracking-tight flex items-center gap-1.5">
+                     <h1 className="text-xl lg:text-2xl font-bold text-zinc-900 leading-tight">Welcome back, {user.name.split(' ')[0]}</h1>
+                     <div className="flex flex-wrap items-center gap-2 mt-2">
+                        <span className="px-2 py-0.5 bg-blue-50 text-blue-600 border border-blue-100 text-[10px] font-bold rounded-sm uppercase tracking-tight flex items-center gap-1.5 shrink-0">
                            <Layers size={10} /> {user.batch || "Batch 1"}
                         </span>
                         <span className="px-2 py-0.5 bg-zinc-50 text-zinc-500 border border-zinc-100 text-[10px] font-bold rounded-sm flex items-center gap-1.5">
@@ -438,7 +439,7 @@ function InternDashboardContent() {
                         </span>
                      </div>
                   </div>
-                  <p className="text-zinc-400 text-xs font-semibold">Your intern session is active.</p>
+                  <p className="text-zinc-400 text-[10px] lg:text-xs font-semibold uppercase tracking-widest bg-zinc-50 px-2 py-1 border border-zinc-100 sm:border-none sm:bg-transparent sm:p-0">Session Active</p>
                </div>
 
                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -455,9 +456,19 @@ function InternDashboardContent() {
                   </p>
                </div>
                {userStatus?.offerLetterUrl && (
-                  <div className="p-4 border border-zinc-100 bg-white flex items-center justify-between shadow-sm hover:border-emerald-100 transition-all">
-                     <div className="flex items-center gap-3"><div className="h-8 w-8 bg-zinc-900 text-white flex items-center justify-center"><ShieldCheck size={16} /></div><div><h3 className="text-xs font-bold text-zinc-900">Internship offer letter</h3><p className="text-[10px] text-zinc-500 mt-0.5">Welcome! Your official internship offer documents are ready for download.</p></div></div>
-                     <a href={userStatus.offerLetterUrl} target="_blank" className="h-8 px-4 bg-zinc-900 text-white text-xs font-semibold flex items-center gap-2 hover:bg-black transition-all">View Offer <Download size={13} /></a>
+                  <div className="p-4 lg:p-6 border border-emerald-100 bg-white flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm hover:border-emerald-200 transition-all">
+                     <div className="flex items-start lg:items-center gap-3">
+                       <div className="h-10 w-10 bg-zinc-900 text-white flex items-center justify-center shrink-0">
+                          <ShieldCheck size={20} />
+                       </div>
+                       <div>
+                          <h3 className="text-xs lg:text-sm font-bold text-zinc-900">Internship offer letter issued</h3>
+                          <p className="text-[10px] lg:text-xs text-zinc-500 mt-1 leading-relaxed">Welcome to the forge program. Your official legal documents are ready.</p>
+                       </div>
+                     </div>
+                     <a href={userStatus.offerLetterUrl} target="_blank" className="w-full sm:w-auto h-10 px-6 bg-zinc-900 text-white text-[11px] font-bold flex items-center justify-center gap-2 hover:bg-black transition-all">
+                        Download Document <Download size={14} />
+                     </a>
                   </div>
                )}
 
@@ -689,15 +700,15 @@ function InternDashboardContent() {
 
 
          {activeTab === "community" && (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="h-full flex flex-col bg-white border border-zinc-100 overflow-hidden text-left">
-               <div className="flex flex-1 overflow-hidden h-full">
-                  <aside className="w-64 border-r border-zinc-100 bg-[#FAFAFA] flex flex-col h-full overflow-hidden shrink-0">
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="h-[calc(100vh-8.5rem)] lg:h-full flex flex-col bg-white border border-zinc-100 overflow-hidden text-left mb-20 lg:mb-0">
+               <div className="flex flex-1 overflow-hidden h-full relative">
+                  <aside className={`${showCommunityRoster ? "flex translate-x-0" : "hidden lg:flex -translate-x-full lg:translate-x-0"} absolute lg:relative inset-0 lg:inset-auto z-40 w-full lg:w-64 border-r border-zinc-100 bg-[#FAFAFA] transition-transform duration-300 flex-col h-full overflow-hidden shrink-0`}>
                      <div className="p-5 border-b border-zinc-100 bg-white shrink-0">
                         <div className="flex items-center gap-2 text-[11px] font-bold text-zinc-400 mb-4">
                            <Users size={14} /> Intern roster
                         </div>
                         <button 
-                           onClick={() => setSelectedUser(null)}
+                           onClick={() => { setSelectedUser(null); setShowCommunityRoster(false); }}
                            className={`w-full flex items-center gap-3 p-3 text-sm font-semibold transition-all ${
                               !selectedUser ? "bg-[#0055FF] text-white shadow-sm" : "bg-white border border-zinc-100 text-zinc-500 hover:bg-zinc-50"
                            }`}
@@ -713,7 +724,7 @@ function InternDashboardContent() {
                                 <button 
                                    key={i}
                                    disabled={!activeUser}
-                                   onClick={() => setSelectedUser(activeUser)}
+                                   onClick={() => { setSelectedUser(activeUser); setShowCommunityRoster(false); }}
                                    className={`w-full flex items-center gap-3 p-3 transition-all border ${
                                       isSelected 
                                       ? "bg-white border-[#0055FF]/20 text-[#0055FF] shadow-sm font-semibold" 
@@ -743,19 +754,25 @@ function InternDashboardContent() {
                   </aside>
 
                   <div className="flex-1 flex flex-col bg-white h-full relative overflow-hidden">
-                     <div className="p-5 border-b border-zinc-100 flex items-center justify-between bg-white z-10 shrink-0">
+                     <div className="p-4 lg:p-5 border-b border-zinc-100 flex items-center justify-between bg-white z-10 shrink-0">
                         <div className="flex items-center gap-3">
-                           <div className="h-10 w-10 bg-zinc-50 border border-zinc-100 flex items-center justify-center text-[#0055FF]">
-                              {selectedUser ? <User size={20} /> : <Globe size={20} />}
+                           <button 
+                              onClick={() => setShowCommunityRoster(true)}
+                              className="lg:hidden p-2 -ml-2 text-zinc-400 hover:bg-zinc-50"
+                           >
+                              <Users size={18} />
+                           </button>
+                           <div className="h-9 w-9 lg:h-10 lg:w-10 bg-zinc-50 border border-zinc-100 flex items-center justify-center text-[#0055FF]">
+                              {selectedUser ? <User size={18} /> : <Globe size={18} />}
                            </div>
                            <div>
                               <h2 className="text-sm font-bold text-zinc-900 leading-none mb-1">
                                  {selectedUser ? selectedUser.name : "Community chat"}
                               </h2>
                               <div className="flex items-center gap-1.5">
-                                 <Circle size={6} fill="currentColor" className={selectedUser ? "text-emerald-500" : "text-blue-500"} />
-                                 <span className="text-[10px] font-semibold text-zinc-400 capitalize">
-                                    {selectedUser ? "Direct session" : "Broadcast channel"}
+                                 <Circle size={5} fill="currentColor" className={selectedUser ? "text-emerald-500" : "text-blue-500"} />
+                                 <span className="text-[9px] font-semibold text-zinc-400 uppercase">
+                                    {selectedUser ? "Session Active" : "Broadcast Mode"}
                                  </span>
                               </div>
                            </div>

@@ -15,11 +15,11 @@ export default function InternSettings() {
     if (!user) return null;
 
     return (
-        <div className="p-8 lg:p-12 max-w-4xl mx-auto space-y-12">
+        <div className="p-4 lg:p-12 max-w-4xl mx-auto space-y-10 pb-24 lg:pb-12">
             {/* Header */}
             <div>
-                <h1 className="text-3xl font-bold tracking-tight text-zinc-900">Settings</h1>
-                <p className="text-zinc-500 text-sm mt-2">Manage your account preferences and security.</p>
+                <h1 className="text-2xl lg:text-3xl font-bold tracking-tight text-zinc-900">Settings</h1>
+                <p className="text-zinc-500 text-[11px] lg:text-sm mt-1">Manage your account preferences and security.</p>
             </div>
 
             {/* Profile Section */}

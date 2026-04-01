@@ -112,12 +112,12 @@ export default function SchedulePage() {
     );
 
     return (
-        <div className="p-4 lg:p-6 max-w-7xl w-full mx-auto bg-white min-h-screen">
-            <header className="mb-10 pt-4">
-                <h1 className="text-xl font-bold tracking-tight text-zinc-900 font-sans">
+        <div className="p-4 lg:p-6 max-w-7xl w-full mx-auto bg-white min-h-screen pb-24 lg:pb-6">
+            <header className="mb-8 pt-2">
+                <h1 className="text-xl lg:text-2xl font-bold tracking-tight text-zinc-900 font-sans">
                    Internship Roadmap <span className="text-[#0055FF] font-medium">Session Update.</span>
                 </h1>
-                <p className="text-zinc-400 text-[12px] font-medium mt-1">
+                <p className="text-zinc-400 text-[10px] lg:text-[12px] font-medium mt-1">
                    Monitor progress objectives and synchronize submission protocols.
                 </p>
             </header>
