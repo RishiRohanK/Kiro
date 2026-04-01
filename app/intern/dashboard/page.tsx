@@ -443,10 +443,22 @@ function InternDashboardContent() {
                </div>
 
                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                  <div className="p-5 border border-zinc-100 bg-white shadow-sm flex flex-col justify-between h-32"><div className="flex items-center justify-between"><span className="text-xs font-medium text-zinc-400">Assignments</span><Briefcase size={16} className="text-[#0055FF]" /></div><div className="mt-auto"><p className="text-2xl font-bold">{tasks.filter(t => t.status === 'pending').length}</p><p className="text-[10px] text-zinc-500 mt-1">Pending tasks</p></div></div>
-                  <div className="p-5 border border-zinc-100 bg-white shadow-sm flex flex-col justify-between h-32"><div className="flex items-center justify-between"><span className="text-xs font-medium text-zinc-400">Attendance</span><Check size={16} className="text-emerald-500" /></div><div className="mt-auto"><div className="flex items-baseline gap-2"><p className="text-2xl font-bold text-zinc-900">{attendancePercentage}%</p><span className="text-[10px] text-zinc-400">({attendanceCount} Days)</span></div><p className="text-[10px] text-zinc-500 mt-1">Present percentage</p></div></div>
-                  <div className="p-5 border border-zinc-100 bg-white shadow-sm flex flex-col justify-between h-32"><div className="flex items-center justify-between"><span className="text-xs font-medium text-zinc-400">Status</span><FileBadge size={16} className={userStatus?.offerLetterUrl ? "text-emerald-500" : "text-zinc-300"} /></div><div className="mt-auto"><p className="text-sm font-bold text-zinc-900">{userStatus?.offerLetterUrl ? "Offer Letter Issued" : "Processing"}</p><p className="text-[10px] text-zinc-500 mt-1">Current status</p></div></div>
-                  <div className="p-5 border border-zinc-100 bg-white shadow-sm flex flex-col justify-between h-32"><div className="flex items-center justify-between"><span className="text-xs font-medium text-zinc-400">Next shift</span><Calendar size={16} className="text-amber-500" /></div><div className="mt-auto"><p className="text-sm font-bold text-zinc-900">Today, 10:00 AM</p><p className="text-[10px] text-zinc-500 mt-1">Starting time</p></div></div>
+                  <div className="p-5 border border-blue-100 bg-blue-50/40 shadow-sm flex flex-col justify-between h-32">
+                     <div className="flex items-center justify-between"><span className="text-[10px] font-bold text-blue-600 uppercase tracking-tight">Assignments</span><Briefcase size={16} className="text-blue-500" /></div>
+                     <div className="mt-auto"><p className="text-2xl font-bold text-zinc-900">{tasks.filter(t => t.status === 'pending').length}</p><p className="text-[10px] text-blue-500/70 mt-1 uppercase font-bold tracking-tight">Pending tasks</p></div>
+                  </div>
+                  <div className="p-5 border border-emerald-100 bg-emerald-50/40 shadow-sm flex flex-col justify-between h-32">
+                     <div className="flex items-center justify-between"><span className="text-[10px] font-bold text-emerald-600 uppercase tracking-tight">Attendance</span><Check size={16} className="text-emerald-500" /></div>
+                     <div className="mt-auto"><div className="flex items-baseline gap-2"><p className="text-2xl font-bold text-zinc-900">{attendancePercentage}%</p><span className="text-[10px] text-emerald-500/70 font-bold">({attendanceCount} Days)</span></div><p className="text-[10px] text-emerald-500/70 mt-1 uppercase font-bold tracking-tight">Present percentage</p></div>
+                  </div>
+                  <div className="p-5 border border-zinc-200 bg-zinc-50 shadow-sm flex flex-col justify-between h-32">
+                     <div className="flex items-center justify-between"><span className="text-[10px] font-bold text-zinc-500 uppercase tracking-tight">Status</span><FileBadge size={16} className={userStatus?.offerLetterUrl ? "text-emerald-500" : "text-zinc-300"} /></div>
+                     <div className="mt-auto"><p className="text-sm font-bold text-zinc-900 uppercase tracking-tight">{userStatus?.offerLetterUrl ? "Letter Issued" : "Processing"}</p><p className="text-[10px] text-zinc-400 mt-1 uppercase font-bold tracking-tight">Current phase</p></div>
+                  </div>
+                  <div className="p-5 border border-amber-100 bg-amber-50/40 shadow-sm flex flex-col justify-between h-32">
+                     <div className="flex items-center justify-between"><span className="text-[10px] font-bold text-amber-600 uppercase tracking-tight">Next shift</span><Calendar size={16} className="text-amber-500" /></div>
+                     <div className="mt-auto"><p className="text-sm font-bold text-zinc-900 uppercase tracking-tight">Today, 10:00 AM</p><p className="text-[10px] text-amber-500/70 mt-1 uppercase font-bold tracking-tight">Starting time</p></div>
+                  </div>
                </div>
                
                <div className="p-4 bg-red-50 border-l-4 border-red-500 flex items-center gap-3">
@@ -477,13 +489,18 @@ function InternDashboardContent() {
                      <div className="flex items-center justify-between mb-4"><h2 className="text-xs font-bold text-zinc-400">Active roadmap progression ({user.batch || "Batch 1"})</h2><Link href="/intern/dashboard/schedule" className="text-xs font-bold text-[#0055FF] hover:underline flex items-center gap-1">Full roadmap <ChevronRight size={12} /></Link></div>
                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {schedules.length > 0 ? schedules.slice(0, 2).map((item) => (
-                           <div key={item.id} className="p-6 border border-zinc-100 bg-white hover:border-[#0055FF]/30 transition-all flex flex-col h-full text-left">
-                              <div className="flex items-center justify-between mb-4"><span className="text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 border border-blue-100">{item.week}</span>{item.isCompleted && <CheckCircle2 size={14} className="text-emerald-500" />}</div>
-                              <h3 className="text-sm font-bold text-zinc-900 mb-2">{item.typeOfWork}</h3>
+                           <div key={item.id} className="p-6 border border-zinc-100 bg-white hover:border-blue-200 transition-all flex flex-col h-full text-left shadow-sm group">
+                              <div className="flex items-center justify-between mb-4">
+                                 <span className="text-[10px] font-bold text-blue-600 bg-blue-50/50 px-2 py-0.5 border border-blue-100/50">
+                                    {item.week}
+                                 </span>
+                                 {item.isCompleted && <CheckCircle2 size={14} className="text-emerald-500" />}
+                              </div>
+                              <h3 className="text-sm font-bold text-zinc-900 mb-2 group-hover:text-blue-600 transition-colors">{item.typeOfWork}</h3>
                               <p className="text-xs text-zinc-500 leading-relaxed mb-4 flex-1 line-clamp-3">{item.description}</p>
                               <div className="pt-4 border-t border-zinc-50 flex items-center justify-between mt-auto">
-                                 <div className="flex items-center gap-2"><Target size={14} className="text-zinc-300" /><span className="text-[10px] text-zinc-400 font-medium">Goal: {item.deadline.split('T')[0]}</span></div>
-                                 <span className="text-[10px] text-zinc-400 font-bold">Ongoing</span>
+                                 <div className="flex items-center gap-2"><Target size={14} className="text-zinc-300" /><span className="text-[10px] text-zinc-400 font-bold uppercase tracking-tight">Timeline: {item.deadline.split('T')[0]}</span></div>
+                                 <span className="text-[10px] text-zinc-400 font-bold uppercase tracking-widest">Ongoing</span>
                               </div>
                            </div>
                         )) : (
@@ -496,14 +513,16 @@ function InternDashboardContent() {
                   </div>
 
                   <aside className="lg:col-span-4 space-y-6">
-                     <div className="p-6 border border-zinc-100 bg-[#FAFAFA] flex flex-col gap-4 text-left">
-                        <div className="flex items-center gap-2 text-xs font-bold text-zinc-900"><Map size={16} className="text-[#0055FF]" /> Program overview</div>
-                        <p className="text-xs text-zinc-500 leading-relaxed">Your professional growth is mapped across your {user.batch || "Batch 1"} internship duration. Ensure all milestones are met on time.</p>
-                        <div className="space-y-3">
-                           <div className="flex items-center justify-between p-3 bg-white border border-zinc-100"><span className="text-[10px] font-bold text-zinc-400">Weeks completed</span><span className="text-sm font-bold text-zinc-900">{schedules.filter(s => s.isCompleted).length}</span></div>
-                           <div className="flex items-center justify-between p-3 bg-white border border-zinc-100"><span className="text-[10px] font-bold text-zinc-400">Total milestones</span><span className="text-sm font-bold text-zinc-900">{schedules.length}</span></div>
+                     <div className="p-6 border border-zinc-200 bg-zinc-50/50 flex flex-col gap-5 text-left rounded-sm">
+                        <div className="flex items-center gap-2 text-[11px] font-bold text-zinc-900 uppercase tracking-widest pb-3 border-b border-zinc-200/50">
+                           <Map size={14} className="text-blue-500" /> Program overview
                         </div>
-                        <Link href="/intern/dashboard/schedule" className="w-full h-11 bg-black text-white text-[10px] font-bold flex items-center justify-center hover:bg-[#0055FF] transition-all">View roadmap progression</Link>
+                        <p className="text-xs text-zinc-500 leading-relaxed font-medium">Your professional growth is mapped across your {user.batch || "Batch 1"} internship duration. Ensure all milestones are met on time.</p>
+                        <div className="space-y-2">
+                           <div className="flex items-center justify-between p-3 bg-white border border-zinc-100 shadow-xs"><span className="text-[10px] font-bold text-zinc-400 uppercase tracking-tight">Weeks completed</span><span className="text-sm font-bold text-zinc-900">{schedules.filter(s => s.isCompleted).length}</span></div>
+                           <div className="flex items-center justify-between p-3 bg-white border border-zinc-100 shadow-xs"><span className="text-[10px] font-bold text-zinc-400 uppercase tracking-tight">Total milestones</span><span className="text-sm font-bold text-zinc-900">{schedules.length}</span></div>
+                        </div>
+                        <Link href="/intern/dashboard/schedule" className="w-full h-11 bg-zinc-900 text-white text-[10px] font-bold flex items-center justify-center hover:bg-black transition-all shadow-lg shadow-zinc-900/10">View full progression</Link>
                      </div>
                   </aside>
                </div>
