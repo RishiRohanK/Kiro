@@ -18,6 +18,7 @@ export async function GET(req: Request) {
           email: true,
           handRaised: true,
           letterUrl: true,
+          offerLetterUrl: true,
           isApproved: true,
       }
     });
