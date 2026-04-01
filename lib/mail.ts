@@ -35,7 +35,7 @@ const getSimpleTemplate = (title: string, content: string, ctaText: string, ctaU
     <div class="wrapper">
         <div class="container">
             <div class="logo">
-                <img src="https://ik.imagekit.io/dypkhqxip/sflogo" alt="Student Forge" height="24" />
+                <img src="https://ik.imagekit.io/dypkhqxip/Screenshot%202026-04-02%20at%2000.53.30.png" alt="Student Forge" height="24" />
             </div>
             <h1>${title}</h1>
             <p>${content}</p>
