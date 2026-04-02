@@ -11,6 +11,7 @@ import {
    CheckCircle2,
    Clock,
    ChevronRight,
+   ChevronLeft,
    Search,
    RefreshCw,
    FileBadge,
@@ -159,9 +160,6 @@ function InternDashboardContent() {
          fetchTasks(userData.id, userData.batch);
          fetchStatus(userData.id);
          fetchAttendance(userData.id);
-         fetchSchedules(userData.id, userData.batch);
-         fetchAllInterns();
-         
          const syncInterval = setInterval(() => {
             fetchTasks(userData.id, userData.batch);
             fetchStatus(userData.id);
@@ -174,26 +172,38 @@ function InternDashboardContent() {
                .catch(() => {});
          }, 20000);
 
-         // Relay Node Initialization: Production Node Link
+         const cleanup = () => {
+             clearInterval(syncInterval);
+         };
+         
+         return cleanup;
+      };
+
+      const cleanupPromise = syncSession();
+      
+      return () => {
+         cleanupPromise.then(cb => cb && cb());
+      };
+   }, [router]);
+
+   const [showChatSidebar, setShowChatSidebar] = useState(true);
+
+   // Relay Node Initialization: Production Node Link
+   useEffect(() => {
+      if (user && !socket) {
          const newSocket = io("https://serversf.onrender.com");
          setSocket(newSocket);
-
+         
+         // Event: Mission Handshake Data Synchronization
          newSocket.on("receive_message", (msg: ChatMessage) => {
             setMessages(prev => [...prev, msg]);
          });
 
          return () => {
-            clearInterval(syncInterval);
             newSocket.disconnect();
          };
-      };
-
-      const cleanup = syncSession();
-      
-      return () => {
-         cleanup.then(cb => cb && cb());
-      };
-   }, [router]);
+      }
+   }, [user, socket]);
 
    // Historical Syncing & Team Enclave Synchronization
    useEffect(() => {
@@ -717,19 +727,24 @@ function InternDashboardContent() {
 
 
          {activeTab === "chat" && (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="h-[calc(100vh-12rem)] min-h-[500px] flex bg-white border border-zinc-200 rounded-lg overflow-hidden text-left mb-6 shadow-sm">
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="h-[calc(100vh-8rem)] lg:h-[calc(100vh-12rem)] min-h-[500px] flex bg-white border border-zinc-200 rounded-lg overflow-hidden text-left mb-6 shadow-sm relative">
                {/* Simplified Sidebar: Your Team */}
-               <aside className="w-64 bg-zinc-50 border-r border-zinc-200 flex flex-col shrink-0">
-                  <div className="p-6 border-b border-zinc-200 bg-white">
-                     <h3 className="text-xs font-bold text-zinc-900 uppercase tracking-widest leading-none">Your Team</h3>
-                     <p className="text-[10px] text-zinc-400 mt-2 font-medium">Chat with your group members.</p>
+               <aside className={`${showChatSidebar ? "flex" : "hidden"} lg:flex absolute inset-0 z-20 lg:relative lg:inset-auto w-full lg:w-64 bg-zinc-50 border-r border-zinc-200 flex-col shrink-0`}>
+                  <div className="p-6 border-b border-zinc-200 bg-white flex items-center justify-between">
+                     <div>
+                        <h3 className="text-xs font-bold text-zinc-900 uppercase tracking-widest leading-none">Your Team</h3>
+                        <p className="text-[10px] text-zinc-400 mt-2 font-medium">Chat with your group members.</p>
+                     </div>
+                     <button onClick={() => setShowChatSidebar(false)} className="lg:hidden p-2 text-zinc-400">
+                        <ChevronRight size={18} />
+                     </button>
                   </div>
                   
                   <div className="flex-1 overflow-y-auto no-scrollbar py-4">
                      {/* Team Members List */}
                      <div className="px-4 mb-6">
                         <button 
-                           onClick={() => setSelectedUser(null)}
+                           onClick={() => { setSelectedUser(null); setShowChatSidebar(false); }}
                            className={`w-full flex items-center gap-3 p-3 text-xs font-bold transition-all rounded-xl mb-2 ${!selectedUser ? "bg-black text-white shadow-md" : "hover:bg-zinc-200 text-zinc-600"}`}
                         >
                            <Users size={16} /> Team Chat
@@ -758,7 +773,7 @@ function InternDashboardContent() {
                                  return (
                                     <button 
                                        key={i}
-                                       onClick={() => setSelectedUser(peer)}
+                                       onClick={() => { setSelectedUser(peer); setShowChatSidebar(false); }}
                                        className={`w-full flex items-center gap-3 p-3 transition-all rounded-xl ${selectedUser?.id === peer.id ? "bg-white border border-zinc-200 text-black shadow-sm" : "text-zinc-600 hover:bg-zinc-100"}`}
                                     >
                                        <div className="h-8 w-8 bg-zinc-900 text-white flex items-center justify-center text-xs font-bold rounded-lg group-hover:scale-105 transition-transform">
@@ -792,27 +807,30 @@ function InternDashboardContent() {
                </aside>
 
                {/* Chat Container */}
-               <div className="flex-1 flex flex-col bg-white overflow-hidden">
+               <div className={`flex-1 flex flex-col bg-white overflow-hidden ${!showChatSidebar ? "flex" : "hidden lg:flex"}`}>
                   {/* Simple Header */}
-                  <div className="px-8 py-6 border-b border-zinc-100 flex items-center justify-between bg-white/80 backdrop-blur-md">
-                     <div className="flex items-center gap-4">
-                        <div className="h-10 w-10 bg-black text-white flex items-center justify-center font-bold rounded-lg">
-                           {selectedUser ? <User size={18} /> : <Users size={18} />}
+                  <div className="px-4 lg:px-8 py-4 lg:py-6 border-b border-zinc-100 flex items-center justify-between bg-white/80 backdrop-blur-md sticky top-0 z-10">
+                     <div className="flex items-center gap-3 lg:gap-4 truncate">
+                        <button onClick={() => setShowChatSidebar(true)} className="lg:hidden p-2 -ml-2 text-zinc-400 hover:text-black transition-colors">
+                           <ChevronLeft size={20} />
+                        </button>
+                        <div className="h-8 w-8 lg:h-10 lg:w-10 bg-black text-white flex items-center justify-center font-bold rounded-lg shrink-0">
+                           {selectedUser ? <User size={16} /> : <Users size={16} />}
                         </div>
-                        <div>
-                           <h2 className="text-base font-bold text-zinc-900 leading-none mb-1.5">
+                        <div className="truncate">
+                           <h2 className="text-sm lg:text-base font-bold text-zinc-900 leading-none mb-1 lg:mb-1.5 truncate">
                               {selectedUser ? selectedUser.name : (schedules.find(s => s.week.includes("Week 2"))?.teamAllocation || "Team Chat")}
                            </h2>
                            <div className="flex items-center gap-2">
                               <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-                              <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Active session</span>
+                              <span className="text-[9px] lg:text-[10px] font-bold text-zinc-400 uppercase tracking-widest leading-none">Active session</span>
                            </div>
                         </div>
                      </div>
                   </div>
 
                   {/* Messages Section */}
-                  <div className="flex-1 overflow-y-auto p-8 space-y-8 bg-zinc-50/30 no-scrollbar">
+                  <div className="flex-1 overflow-y-auto p-4 lg:p-8 space-y-6 lg:space-y-8 bg-zinc-50/30 no-scrollbar">
                      {messages.filter(m => 
                         selectedUser 
                            ? (m.senderId === selectedUser.id || (m.senderId === user.id && m.targetId === selectedUser.id)) 
@@ -820,7 +838,7 @@ function InternDashboardContent() {
                      ).length === 0 ? (
                         <div className="h-full flex flex-col items-center justify-center text-zinc-300">
                            <MessageSquare size={48} className="mb-4 opacity-20" />
-                           <p className="text-sm font-bold uppercase tracking-widest opacity-40">Start a conversation</p>
+                           <p className="text-xs font-bold uppercase tracking-widest opacity-40">Start a conversation</p>
                         </div>
                      ) : (
                         messages.filter(m => 
@@ -831,15 +849,15 @@ function InternDashboardContent() {
                            const isOwn = msg.senderId === user.id;
                            return (
                               <div key={i} className={`flex flex-col ${isOwn ? "items-end" : "items-start"}`}>
-                                 <div className={`max-w-[70%] ${isOwn ? "text-right" : "text-left"}`}>
+                                 <div className={`max-w-[85%] lg:max-w-[70%] ${isOwn ? "text-right" : "text-left"}`}>
                                     {!isOwn && (
-                                       <span className="text-[10px] font-bold text-zinc-400 mb-2 block uppercase px-1">
+                                       <span className="text-[9px] lg:text-[10px] font-bold text-zinc-400 mb-1 lg:mb-2 block uppercase px-1">
                                           {msg.senderName}
                                        </span>
                                     )}
-                                    <div className={`px-5 py-4 border ${isOwn ? "bg-black border-black text-white rounded-2xl rounded-tr-sm shadow-lg shadow-black/10" : "bg-white border-zinc-200 text-zinc-900 rounded-2xl rounded-tl-sm shadow-sm"}`}>
-                                       <p className="text-sm font-medium leading-relaxed">{msg.content}</p>
-                                       <span className={`text-[9px] font-bold block mt-3 opacity-40 ${isOwn ? "text-zinc-400" : "text-zinc-500"}`}>
+                                    <div className={`px-4 lg:px-5 py-3 lg:py-4 border ${isOwn ? "bg-black border-black text-white rounded-2xl rounded-tr-sm shadow-lg shadow-black/10" : "bg-white border-zinc-200 text-zinc-900 rounded-2xl rounded-tl-sm shadow-sm"}`}>
+                                       <p className="text-xs lg:text-sm font-medium leading-relaxed">{msg.content}</p>
+                                       <span className={`text-[8px] lg:text-[9px] font-bold block mt-2 lg:mt-3 opacity-40 ${isOwn ? "text-zinc-400" : "text-zinc-500"}`}>
                                           {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                        </span>
                                     </div>
@@ -852,16 +870,16 @@ function InternDashboardContent() {
                   </div>
 
                   {/* Simple Input Box */}
-                  <form onSubmit={handleSendMessage} className="px-8 py-6 bg-white border-t border-zinc-100 flex gap-4">
+                  <form onSubmit={handleSendMessage} className="px-4 lg:px-8 py-4 lg:py-6 bg-white border-t border-zinc-100 flex gap-2 lg:gap-4">
                      <input 
                         type="text" 
                         value={inputText}
                         onChange={(e) => setInputText(e.target.value)}
-                        className="flex-1 px-6 h-14 bg-zinc-50 border border-zinc-200 text-sm font-semibold rounded-2xl focus:border-black focus:bg-white outline-none transition-all placeholder:text-zinc-300"
-                        placeholder={selectedUser ? `Message ${selectedUser.name}...` : "Send a message to your team..."}
+                        className="flex-1 px-4 lg:px-6 h-12 lg:h-14 bg-zinc-50 border border-zinc-200 text-xs lg:text-sm font-semibold rounded-xl lg:rounded-2xl focus:border-black focus:bg-white outline-none transition-all placeholder:text-zinc-300"
+                        placeholder={selectedUser ? `Message ${selectedUser.name}...` : "Send a message..."}
                      />
-                     <button type="submit" disabled={!activeTeamId || !inputText.trim()} className="h-14 px-10 bg-black text-white hover:bg-zinc-800 transition-all font-bold text-xs uppercase tracking-widest rounded-2xl disabled:opacity-30 active:scale-95 flex items-center gap-2">
-                        <Send size={16} /> Send
+                     <button type="submit" disabled={!activeTeamId || !inputText.trim()} className="h-12 w-12 lg:h-14 lg:px-10 lg:w-auto bg-black text-white hover:bg-zinc-800 transition-all font-bold text-[10px] lg:text-xs uppercase tracking-widest rounded-xl lg:rounded-2xl disabled:opacity-30 active:scale-95 flex items-center justify-center gap-2">
+                        <Send size={16} /> <span className="hidden lg:inline">Send</span>
                      </button>
                   </form>
                </div>
