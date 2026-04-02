@@ -45,7 +45,6 @@ import {
    MoreVertical
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { io } from "socket.io-client";
 import { supabase } from "@/lib/supabase";
 
 interface Task {
@@ -77,15 +76,6 @@ interface ScheduleItem {
    batch: string;
 }
 
-interface ChatMessage {
-   userId: string;
-   userName: string;
-   text: string;
-   time: string;
-   colorIndex: number;
-   targetSocketId?: string;
-   isPrivate?: boolean;
-}
 
 function InternDashboardContent() {
    const router = useRouter();
@@ -107,17 +97,6 @@ function InternDashboardContent() {
    const [isAddingPersonalTask, setIsAddingPersonalTask] = useState(false);
    const [newPersonalTask, setNewPersonalTask] = useState({ title: "", description: "" });
    const [isSavingPersonalTask, setIsSavingPersonalTask] = useState(false);
-
-   // Chat State
-   const [messages, setMessages] = useState<ChatMessage[]>([]);
-   const [inputText, setInputText] = useState("");
-   const [socket, setSocket] = useState<any>(null);
-   const [activeUsersList, setActiveUsersList] = useState<any[]>([]);
-   const [allInterns, setAllInterns] = useState<any[]>([]);
-   const [selectedUser, setSelectedUser] = useState<any>(null); 
-   const [myId, setMyId] = useState<string | null>(null);
-   const [showCommunityRoster, setShowCommunityRoster] = useState(false);
-   const chatEndRef = useRef<HTMLDivElement>(null);
 
    useEffect(() => {
       const syncSession = async () => {
@@ -158,13 +137,7 @@ function InternDashboardContent() {
          fetchStatus(userData.id);
          fetchAttendance(userData.id);
          fetchSchedules(userData.id, userData.batch);
-         fetchAllInterns();
-         // Inline fetch to avoid temporal dead zone with const declaration
-         fetch(`/api/intern/personal-tasks?userId=${userData.id}`)
-            .then(r => r.json())
-            .then(d => { if (d.success) setPersonalTasks(d.tasks); })
-            .catch(() => {});
-
+         
          const syncInterval = setInterval(() => {
             fetchTasks(userData.id, userData.batch);
             fetchStatus(userData.id);
@@ -176,26 +149,6 @@ function InternDashboardContent() {
                .catch(() => {});
          }, 20000);
 
-         const newSocket = io({ reconnectionDelayMax: 10000 });
-         setSocket(newSocket);
-
-         newSocket.on("connect", () => {
-            setMyId(newSocket.id || null);
-            newSocket.emit("join-community", { 
-               id: userData.id, 
-               name: userData.name, 
-               colorIndex: userData.id.length % 4 
-            });
-         });
-
-         newSocket.on("receive-message", (msg: ChatMessage) => {
-            setMessages(prev => [...prev, msg]);
-         });
-
-         newSocket.on("active-users", (users: any[]) => {
-            setActiveUsersList(users);
-         });
-
          return syncInterval;
       };
 
@@ -203,23 +156,9 @@ function InternDashboardContent() {
       
       return () => {
          init.then(interval => interval && typeof interval !== 'function' && clearInterval(interval));
-         if (socket) socket.disconnect();
       };
    }, [router]);
 
-   useEffect(() => {
-      chatEndRef.current?.scrollIntoView({ behavior: "auto" });
-   }, [messages]);
-
-   const fetchAllInterns = async () => {
-      try {
-         const res = await fetch("/api/intern/all");
-         const data = await res.json();
-         setAllInterns(data);
-      } catch (error) {
-         console.error("Failed to fetch all interns");
-      }
-   };
 
    const fetchStatus = async (id: string) => {
       try {
@@ -293,23 +232,6 @@ function InternDashboardContent() {
       }
    };
 
-   const handleSendMessage = (e: React.FormEvent) => {
-      e.preventDefault();
-      if (!inputText.trim() || !socket || !user) return;
-
-      const message: ChatMessage = {
-         userId: user.id,
-         userName: user.name,
-         text: inputText,
-         time: new Date().toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' }),
-         colorIndex: user.id.length % 4,
-         targetSocketId: selectedUser?.socketId,
-         isPrivate: !!selectedUser
-      };
-
-      socket.emit("send-message", message);
-      setInputText("");
-   };
 
    const handleSignOut = () => {
       localStorage.removeItem("intern_user");
@@ -406,25 +328,8 @@ function InternDashboardContent() {
    const attendanceCount = attendanceHistory.filter(a => a.status === 'PRESENT').length;
    const attendancePercentage = attendanceHistory.length > 0 ? Math.round((attendanceCount / attendanceHistory.length) * 100) : 0;
 
-   const bubbleColors = [
-      { bg: "bg-blue-50/50", border: "border-blue-100", text: "text-blue-900", name: "text-blue-600" },
-      { bg: "bg-emerald-50/50", border: "border-emerald-100", text: "text-emerald-900", name: "text-emerald-600" },
-      { bg: "bg-indigo-50/50", border: "border-indigo-100", text: "text-indigo-900", name: "text-indigo-600" },
-      { bg: "bg-amber-50/50", border: "border-amber-100", text: "text-amber-900", name: "text-amber-600" }
-   ];
-
-   const filteredMessages = messages.filter(msg => {
-      if (selectedUser) {
-         return (msg.isPrivate && (
-            (msg.userId === selectedUser.id && msg.targetSocketId === myId) || 
-            (msg.userId === user.id && msg.targetSocketId === selectedUser.socketId)
-         ));
-      }
-      return !msg.isPrivate;
-   });
-
    return (
-      <div className={`p-4 lg:p-6 max-w-[1600px] w-full mx-auto bg-white ${activeTab === "community" ? "h-[calc(100vh-3.5rem)] overflow-hidden" : "min-h-screen pb-24 lg:pb-6"}`}>
+      <div className="p-4 lg:p-6 max-w-[1600px] w-full mx-auto bg-white min-h-screen pb-24 lg:pb-6">
          {activeTab === "overview" && (
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6 text-left">
                <div className="mb-8 font-sans flex flex-col md:flex-row md:items-end justify-between gap-4">
@@ -718,132 +623,6 @@ function InternDashboardContent() {
          )}
 
 
-         {activeTab === "community" && (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="h-[calc(100vh-8.5rem)] lg:h-full flex flex-col bg-white border border-zinc-100 overflow-hidden text-left mb-20 lg:mb-0">
-               <div className="flex flex-1 overflow-hidden h-full relative">
-                  <aside className={`${showCommunityRoster ? "flex translate-x-0" : "hidden lg:flex -translate-x-full lg:translate-x-0"} absolute lg:relative inset-0 lg:inset-auto z-40 w-full lg:w-64 border-r border-zinc-100 bg-[#FAFAFA] transition-transform duration-300 flex-col h-full overflow-hidden shrink-0`}>
-                     <div className="p-5 border-b border-zinc-100 bg-white shrink-0">
-                        <div className="flex items-center gap-2 text-[11px] font-bold text-zinc-400 mb-4">
-                           <Users size={14} /> Intern roster
-                        </div>
-                        <button 
-                           onClick={() => { setSelectedUser(null); setShowCommunityRoster(false); }}
-                           className={`w-full flex items-center gap-3 p-3 text-sm font-semibold transition-all ${
-                              !selectedUser ? "bg-[#0055FF] text-white shadow-sm" : "bg-white border border-zinc-100 text-zinc-500 hover:bg-zinc-50"
-                           }`}
-                        >
-                           <Globe size={14} /> Community hub
-                        </button>
-                     </div>
-                     <div className="flex-1 overflow-y-auto p-3 space-y-1 no-scrollbar">
-                        {allInterns.filter(u => u.id !== user.id).map((u, i) => {
-                             const activeUser = activeUsersList.find(au => au.id === u.id);
-                             const isSelected = selectedUser?.id === u.id;
-                             return (
-                                <button 
-                                   key={i}
-                                   disabled={!activeUser}
-                                   onClick={() => { setSelectedUser(activeUser); setShowCommunityRoster(false); }}
-                                   className={`w-full flex items-center gap-3 p-3 transition-all border ${
-                                      isSelected 
-                                      ? "bg-white border-[#0055FF]/20 text-[#0055FF] shadow-sm font-semibold" 
-                                      : activeUser 
-                                        ? "border-transparent text-zinc-500 hover:bg-white hover:border-zinc-100"
-                                        : "border-transparent opacity-40 grayscale cursor-not-allowed"
-                                   }`}
-                                >
-                                   <div className="relative shrink-0">
-                                      <div className="h-8 w-8 bg-zinc-200 text-zinc-500 flex items-center justify-center text-[11px] font-bold">
-                                         {u.name[0]}
-                                      </div>
-                                      {activeUser && (
-                                         <div className="absolute -bottom-0.5 -right-0.5 h-2 w-2 bg-emerald-500 border-2 border-[#FAFAFA] rounded-full" />
-                                      )}
-                                   </div>
-                                   <div className="text-left overflow-hidden">
-                                      <p className="text-xs font-semibold truncate leading-none mb-1">{u.name}</p>
-                                      <p className="text-[9px] font-medium text-zinc-400">
-                                         {activeUser ? "Active now" : "Offline"}
-                                      </p>
-                                   </div>
-                                </button>
-                             );
-                          })}
-                     </div>
-                  </aside>
-
-                  <div className="flex-1 flex flex-col bg-white h-full relative overflow-hidden">
-                     <div className="p-4 lg:p-5 border-b border-zinc-100 flex items-center justify-between bg-white z-10 shrink-0">
-                        <div className="flex items-center gap-3">
-                           <button 
-                              onClick={() => setShowCommunityRoster(true)}
-                              className="lg:hidden p-2 -ml-2 text-zinc-400 hover:bg-zinc-50"
-                           >
-                              <Users size={18} />
-                           </button>
-                           <div className="h-9 w-9 lg:h-10 lg:w-10 bg-zinc-50 border border-zinc-100 flex items-center justify-center text-[#0055FF]">
-                              {selectedUser ? <User size={18} /> : <Globe size={18} />}
-                           </div>
-                           <div>
-                              <h2 className="text-sm font-bold text-zinc-900 leading-none mb-1">
-                                 {selectedUser ? selectedUser.name : "Community chat"}
-                              </h2>
-                              <div className="flex items-center gap-1.5">
-                                 <Circle size={5} fill="currentColor" className={selectedUser ? "text-emerald-500" : "text-blue-500"} />
-                                 <span className="text-[9px] font-semibold text-zinc-400 uppercase">
-                                    {selectedUser ? "Session Active" : "Broadcast Mode"}
-                                 </span>
-                              </div>
-                           </div>
-                        </div>
-                     </div>
-
-                     <div className="flex-1 overflow-y-auto p-6 space-y-6 bg-[#FBFBFB] no-scrollbar">
-                        {filteredMessages.length === 0 ? (
-                           <div className="h-full flex flex-col items-center justify-center text-zinc-300">
-                              <MessageSquare size={32} className="mb-2 opacity-50" />
-                              <p className="text-xs font-semibold uppercase tracking-widest opacity-50">Secure connection</p>
-                           </div>
-                        ) : (
-                           filteredMessages.map((msg, i) => {
-                              const isOwn = msg.userId === user.id;
-                              const theme = bubbleColors[msg.colorIndex % 4];
-                              return (
-                                 <div key={i} className={`flex flex-col ${isOwn ? "items-end" : "items-start"}`}>
-                                     <div className={`max-w-[75%] ${isOwn ? "text-right" : "text-left"}`}>
-                                        {!isOwn && !selectedUser && (
-                                           <span className={`text-[10px] font-bold mb-1.5 block ${theme.name}`}>
-                                              {msg.userName}
-                                           </span>
-                                        )}
-                                        <div className={`p-4 border ${isOwn ? "bg-white border-[#0055FF]/20 shadow-sm rounded-l-2xl rounded-tr-2xl" : `bg-white ${theme.border} shadow-sm rounded-r-2xl rounded-tl-2xl`} `}>
-                                           <p className="text-[14px] leading-relaxed text-zinc-800 font-medium">{msg.text}</p>
-                                           <span className="text-[9px] font-bold text-zinc-400 block mt-2 tracking-tighter">{msg.time}</span>
-                                        </div>
-                                     </div>
-                                 </div>
-                              );
-                           })
-                        )}
-                        <div ref={chatEndRef} />
-                     </div>
-
-                     <form onSubmit={handleSendMessage} className="p-5 border-t border-zinc-100 flex gap-3 bg-white shrink-0">
-                        <input 
-                           type="text" 
-                           value={inputText}
-                           onChange={(e) => setInputText(e.target.value)}
-                           className="flex-1 px-4 h-11 border border-zinc-100 bg-[#FAFAFA] text-sm font-medium focus:bg-white focus:border-[#0055FF]/30 outline-none transition-all placeholder:text-zinc-300"
-                           placeholder={selectedUser ? `Message ${selectedUser.name}...` : "Broadcast to community..."}
-                        />
-                        <button type="submit" className="h-11 px-6 bg-black text-white hover:bg-[#0055FF] transition-all flex items-center justify-center font-bold text-[11px]">
-                           Send <Send size={14} className="ml-2" />
-                        </button>
-                     </form>
-                  </div>
-               </div>
-            </motion.div>
-         )}
 
          {activeTab === "tasks" && (
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-4 text-left">
