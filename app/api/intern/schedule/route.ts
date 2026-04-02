@@ -5,15 +5,15 @@ export async function GET(req: Request) {
     try {
         const { searchParams } = new URL(req.url);
         const internId = searchParams.get('internId');
-        const batch = searchParams.get('batch') || "Batch 1"; // Default to Batch 1 if not specified
+        const batch = searchParams.get('batch') || "Batch 1"; 
 
-        const where: any = { 
-            batch,
-            OR: [
+        const where: any = { batch };
+        if (internId) {
+            where.OR = [
                 { teamInternIds: { has: internId } },
                 { teamInternIds: { isEmpty: true } }
-            ]
-        };
+            ];
+        }
 
         const schedules = await prisma.schedule.findMany({
             where,
@@ -51,6 +51,7 @@ export async function GET(req: Request) {
 
         return NextResponse.json({ success: true, schedules: mappedSchedules });
     } catch (error) {
+        console.error("Schedule Fetch Error:", error);
         return NextResponse.json({ success: false, error: "Database error" }, { status: 500 });
     }
 }
@@ -122,6 +123,37 @@ export async function POST(req: Request) {
         return NextResponse.json({ success: true, schedule });
     } catch (error: any) {
         console.error("Schedule Creation Error:", error);
+        return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+    }
+}
+export async function PATCH(req: Request) {
+    try {
+        const body = await req.json();
+        const { id, ...data } = body;
+
+        if (data.deadline) data.deadline = new Date(data.deadline);
+
+        const schedule = await prisma.schedule.update({
+            where: { id },
+            data
+        });
+
+        return NextResponse.json({ success: true, schedule });
+    } catch (error: any) {
+        console.error("Schedule Update Error:", error);
+        return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+    }
+}
+
+export async function DELETE(req: Request) {
+    try {
+        const { searchParams } = new URL(req.url);
+        const id = searchParams.get('id');
+        if (!id) throw new Error("ID required");
+
+        await prisma.schedule.delete({ where: { id } });
+        return NextResponse.json({ success: true });
+    } catch (error: any) {
         return NextResponse.json({ success: false, error: error.message }, { status: 500 });
     }
 }

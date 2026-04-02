@@ -35,7 +35,8 @@ import {
    X as CloseIcon,
    ChevronDown,
    Trash2,
-   Check
+   Check,
+   Settings
 } from "lucide-react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
@@ -184,6 +185,10 @@ export default function CleedDashboard() {
    const [scheduleSuccess, setScheduleSuccess] = useState(false);
    const [submissions, setSubmissions] = useState<any[]>([]);
    const [loadingSubmissions, setLoadingSubmissions] = useState(false);
+   const [allSchedules, setAllSchedules] = useState<any[]>([]);
+   const [loadingSchedules, setLoadingSchedules] = useState(false);
+   const [editingSchedule, setEditingSchedule] = useState<any>(null);
+   const [batchFilter, setBatchFilter] = useState("Batch 1");
    // Events Data
    const [eventData, setEventData] = useState({
       title: "",
@@ -366,6 +371,14 @@ export default function CleedDashboard() {
          } catch (err) { console.error("Internships fetch failure"); }
       };
 
+      const fetchAllSchedules = async () => {
+         try {
+            const res = await fetch(`/api/intern/schedule?batch=${batchFilter}`);
+            const data = await res.json();
+            if (data.success) setAllSchedules(data.schedules);
+         } catch (err) { console.error("Schedules fetch failure"); }
+      };
+
       await Promise.allSettled([
          fetchInterns(),
          fetchTasks(),
@@ -373,7 +386,8 @@ export default function CleedDashboard() {
          fetchWorkshop(),
          fetchEvents(),
          fetchIdeas(),
-         fetchInternships()
+         fetchInternships(),
+         fetchAllSchedules()
       ]);
       setIsLoading(false);
    };
@@ -724,6 +738,8 @@ export default function CleedDashboard() {
                      {[
                         { id: "overview", icon: LayoutDashboard, label: "Overview" },
                         { id: "interns", icon: Users, label: "Interns" },
+                        { id: "schedule", icon: Calendar, label: "Dispatch Schedule" },
+                        { id: "manage_schedules", icon: Settings, label: "Manage Schedules" },
                         { id: "internships", icon: Briefcase, label: "Internships" },
                         { id: "assign", icon: Send, label: "Assign Task" },
                         { id: "certification", icon: FileBadge, label: "Certificates" },
@@ -825,7 +841,8 @@ export default function CleedDashboard() {
                   </summary>
                   <div className="mt-1 space-y-0.5 ml-2 border-l border-zinc-200 pl-2">
                      {[
-                       { id: "schedule", icon: Calendar, label: "Schedule" },
+                       { id: "schedule", icon: Calendar, label: "Dispatch Schedule" },
+                       { id: "manage_schedules", icon: Settings, label: "Manage Schedules" },
                        { id: "assign", icon: Send, label: "Assign Task" },
                        { id: "submissions", icon: ExternalLink, label: "Submissions" },
                        { id: "mentorship", icon: Users, label: "Mentorship" },
@@ -1834,6 +1851,166 @@ export default function CleedDashboard() {
                            {tasks.length === 0 && <p className="text-center py-20 text-zinc-400 text-sm italic">Logbook is currently synchronized with no entry nodes.</p>}
                         </div>
                      </div>
+                  </motion.div>
+               )}
+
+               {/* Manage Schedules - Tactical Mission Control */}
+               {activeTab === "manage_schedules" && (
+                  <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-8 text-left">
+                     <div className="bg-white border border-zinc-100 shadow-sm p-8">
+                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
+                           <div className="space-y-1">
+                              <h2 className="text-2xl font-bold tracking-tight text-zinc-900">Mission calibration</h2>
+                              <p className="text-[14px] text-zinc-500">Recalibrate existing mission protocols and team allocations.</p>
+                           </div>
+                           <div className="flex items-center gap-3">
+                              <select 
+                                 value={batchFilter} 
+                                 onChange={(e) => setBatchFilter(e.target.value)}
+                                 className="h-10 bg-zinc-50 border border-zinc-100 px-4 text-[11px] font-bold uppercase tracking-widest outline-none focus:border-blue-600"
+                              >
+                                 <option value="Batch 1">Batch 1</option>
+                                 <option value="Batch 2">Batch 2</option>
+                              </select>
+                              <button 
+                                 onClick={() => { fetchData(); }}
+                                 className="h-10 px-4 border border-zinc-100 bg-white hover:bg-zinc-50 transition-all"
+                              >
+                                 <RefreshCw size={14} className={isLoading ? "animate-spin" : ""} />
+                              </button>
+                           </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                           {allSchedules.length === 0 ? (
+                              <p className="col-span-full py-20 text-center text-zinc-400 italic">Zero mission logs detected for this batch protocol.</p>
+                           ) : (
+                              allSchedules.map((schedule) => (
+                                 <div key={schedule.id} className="border border-zinc-100 bg-zinc-50/50 p-6 space-y-4 hover:border-blue-600/30 transition-all">
+                                    <div className="flex items-center justify-between">
+                                       <span className="text-[10px] font-bold bg-white px-2 py-1 border border-zinc-100 text-blue-600 uppercase tracking-widest">{schedule.week}</span>
+                                       <div className="flex items-center gap-2">
+                                          <button 
+                                             onClick={() => setEditingSchedule(schedule)}
+                                             className="p-2 text-zinc-400 hover:text-blue-600 transition-colors"
+                                          >
+                                             <FileText size={16} />
+                                          </button>
+                                          <button 
+                                             onClick={async () => {
+                                                if(confirm("Permanently neutralize this mission protocol?")) {
+                                                   const res = await fetch(`/api/intern/schedule?id=${schedule.id}`, { method: "DELETE" });
+                                                   if(res.ok) fetchData();
+                                                }
+                                             }}
+                                             className="p-2 text-zinc-400 hover:text-red-600 transition-colors"
+                                          >
+                                             <Trash2 size={16} />
+                                          </button>
+                                       </div>
+                                    </div>
+                                    <div>
+                                       <h4 className="text-sm font-bold text-zinc-900 mb-1">{schedule.projectName || schedule.typeOfWork}</h4>
+                                       <p className="text-[11px] text-zinc-500 font-medium line-clamp-2">{schedule.description}</p>
+                                    </div>
+                                    <div className="pt-4 border-t border-zinc-100 flex items-center justify-between">
+                                       <div className="flex items-center gap-2">
+                                          <div className="h-2 w-2 rounded-full bg-emerald-500" />
+                                          <span className="text-[10px] font-bold text-zinc-400 uppercase">{schedule.teamAllocation || "No Team"}</span>
+                                       </div>
+                                       <span className="text-[10px] font-bold text-zinc-400">{new Date(schedule.deadline).toLocaleDateString()}</span>
+                                    </div>
+                                 </div>
+                              ))
+                           )}
+                        </div>
+                     </div>
+
+                     {/* Tactical Recalibration Portal (Edit Modal) */}
+                     <AnimatePresence>
+                        {editingSchedule && (
+                           <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/40 backdrop-blur-sm">
+                              <motion.div 
+                                 initial={{ opacity: 0, scale: 0.95 }}
+                                 animate={{ opacity: 1, scale: 1 }}
+                                 exit={{ opacity: 0, scale: 0.95 }}
+                                 className="bg-white max-w-4xl w-full max-h-[90vh] overflow-y-auto p-10 border border-zinc-100 shadow-2xl relative"
+                              >
+                                 <button 
+                                    onClick={() => setEditingSchedule(null)}
+                                    className="absolute top-6 right-6 text-zinc-400 hover:text-black transition-colors"
+                                 >
+                                    <CloseIcon size={24} />
+                                 </button>
+
+                                 <div className="mb-10 text-left">
+                                    <h3 className="text-2xl font-bold tracking-tight text-zinc-900 mb-2 font-sans">Tactical mission recalibration</h3>
+                                    <p className="text-[14px] text-zinc-500 font-medium">Updating parameters for {editingSchedule.week} authorization.</p>
+                                 </div>
+
+                                 <form 
+                                    onSubmit={async (e) => {
+                                       e.preventDefault();
+                                       setLoadingSchedules(true);
+                                       try {
+                                          const res = await fetch("/api/intern/schedule", {
+                                             method: "PATCH",
+                                             headers: { "Content-Type": "application/json" },
+                                             body: JSON.stringify({
+                                                id: editingSchedule.id,
+                                                week: editingSchedule.week,
+                                                typeOfWork: editingSchedule.typeOfWork,
+                                                description: editingSchedule.description,
+                                                teamAllocation: editingSchedule.teamAllocation,
+                                                deadline: editingSchedule.deadline,
+                                                projectName: editingSchedule.projectName,
+                                                projectDocLink: editingSchedule.projectDocLink,
+                                                mentorName: editingSchedule.mentorName,
+                                                batch: editingSchedule.batch,
+                                                teamLead: editingSchedule.teamLead,
+                                                toolsUsed: Array.isArray(editingSchedule.toolsUsed) ? editingSchedule.toolsUsed : editingSchedule.toolsUsed.split(",").map((s: any) => s.trim()),
+                                                requirements: Array.isArray(editingSchedule.requirements) ? editingSchedule.requirements : editingSchedule.requirements.split("\n").map((s: any) => s.trim()),
+                                                outcomes: Array.isArray(editingSchedule.outcomes) ? editingSchedule.outcomes : editingSchedule.outcomes.split("\n").map((s: any) => s.trim()),
+                                                deploymentTools: Array.isArray(editingSchedule.deploymentTools) ? editingSchedule.deploymentTools : editingSchedule.deploymentTools.split(",").map((s: any) => s.trim())
+                                             })
+                                          });
+                                          if (res.ok) {
+                                             setEditingSchedule(null);
+                                             fetchData();
+                                          }
+                                       } catch (err) { console.error("Recalibration failure"); }
+                                       finally { setLoadingSchedules(false); }
+                                    }}
+                                    className="grid grid-cols-1 md:grid-cols-2 gap-8 text-left"
+                                 >
+                                    <div className="space-y-1">
+                                       <label className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest">Phase (Week)</label>
+                                       <input required value={editingSchedule.week} onChange={(e) => setEditingSchedule({ ...editingSchedule, week: e.target.value })} className="w-full h-12 bg-white border border-zinc-100 px-4 text-sm font-bold outline-none focus:border-blue-600" />
+                                    </div>
+                                    <div className="space-y-1">
+                                       <label className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest">Mission Code (Project Name)</label>
+                                       <input required value={editingSchedule.projectName} onChange={(e) => setEditingSchedule({ ...editingSchedule, projectName: e.target.value })} className="w-full h-12 bg-white border border-zinc-100 px-4 text-sm font-bold outline-none focus:border-blue-600" />
+                                    </div>
+                                    <div className="md:col-span-2 space-y-1">
+                                       <label className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest">Description</label>
+                                       <textarea required rows={4} value={editingSchedule.description} onChange={(e) => setEditingSchedule({ ...editingSchedule, description: e.target.value })} className="w-full bg-white border border-zinc-100 p-4 text-sm font-bold outline-none focus:border-blue-600 resize-none" />
+                                    </div>
+                                    <div className="space-y-1">
+                                       <label className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest">Team Allocation</label>
+                                       <input value={editingSchedule.teamAllocation} onChange={(e) => setEditingSchedule({ ...editingSchedule, teamAllocation: e.target.value })} className="w-full h-12 bg-white border border-zinc-100 px-4 text-sm font-bold outline-none focus:border-blue-600" />
+                                    </div>
+                                    <div className="space-y-1">
+                                       <label className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest">Hand-in Deadline</label>
+                                       <input type="date" value={new Date(editingSchedule.deadline).toISOString().split('T')[0]} onChange={(e) => setEditingSchedule({ ...editingSchedule, deadline: e.target.value })} className="w-full h-12 bg-white border border-zinc-100 px-4 text-sm font-bold outline-none focus:border-blue-600" />
+                                    </div>
+                                    <button disabled={loadingSchedules} className="md:col-span-2 w-full h-14 bg-zinc-900 text-white text-[13px] font-bold hover:bg-black transition-all flex items-center justify-center gap-3">
+                                       {loadingSchedules ? <RefreshCw className="animate-spin" size={18} /> : "Finalize Recalibration"}
+                                    </button>
+                                 </form>
+                              </motion.div>
+                           </div>
+                        )}
+                     </AnimatePresence>
                   </motion.div>
                )}
             </div>
