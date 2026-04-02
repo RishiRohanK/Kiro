@@ -174,8 +174,8 @@ function InternDashboardContent() {
                .catch(() => {});
          }, 20000);
 
-         // Relay Node Initialization
-         const newSocket = io("http://localhost:5005"); // Standardized relay port
+         // Relay Node Initialization: Production Node Link
+         const newSocket = io("https://serversf.onrender.com");
          setSocket(newSocket);
 
          newSocket.on("receive_message", (msg: ChatMessage) => {
