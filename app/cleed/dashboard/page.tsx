@@ -53,6 +53,7 @@ interface Intern {
    branch?: string;
    college?: string;
    githubLink?: string;
+   batch?: string;
 }
 
 interface WorkshopEntry {
@@ -145,6 +146,7 @@ export default function CleedDashboard() {
    // Selection
    const [selectedIntern, setSelectedIntern] = useState<Intern | null>(null);
    const [isAuthorizing, setIsAuthorizing] = useState<string | null>(null);
+   const [internBatchFilter, setInternBatchFilter] = useState("All");
 
    // Attendance Protocol States
    const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
@@ -1519,9 +1521,26 @@ export default function CleedDashboard() {
                            </div>
 
                            <div className="lg:col-span-2 pt-10 border-t border-zinc-100 mt-10">
-                              <label className="text-[11px] font-bold text-zinc-400 uppercase tracking-tighter block mb-6">Select team interns (Form Team)</label>
+                              <div className="flex items-center justify-between mb-6">
+                                 <label className="text-[11px] font-bold text-zinc-400 uppercase tracking-tighter block">Select team interns (Form Team)</label>
+                                 <div className="flex items-center gap-2">
+                                    <span className="text-[10px] font-bold text-zinc-400 uppercase">Filter by:</span>
+                                    <select 
+                                       value={internBatchFilter} 
+                                       onChange={(e) => setInternBatchFilter(e.target.value)}
+                                       className="h-8 bg-zinc-50 border border-zinc-100 px-3 text-[10px] font-bold outline-none focus:border-blue-600 rounded uppercase tracking-widest cursor-pointer"
+                                    >
+                                       <option value="All">All Batches</option>
+                                       <option value="Batch 1">Batch 1 Only</option>
+                                       <option value="Batch 2">Batch 2 Only</option>
+                                    </select>
+                                 </div>
+                              </div>
                               <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3 max-h-[300px] overflow-y-auto p-4 bg-zinc-50 border border-zinc-100 rounded">
-                                 {interns.filter(i => i.isApproved).map((intern: any) => (
+                                 {interns
+                                    .filter(i => i.isApproved)
+                                    .filter(i => internBatchFilter === "All" || i.batch === internBatchFilter)
+                                    .map((intern: any) => (
                                     <label key={intern.id} className={`flex flex-col p-4 border transition-all cursor-pointer rounded relative ${scheduleData.teamInternIds.includes(intern.id) ? 'bg-zinc-900 border-zinc-900 shadow-md' : 'bg-white border-zinc-100 hover:border-blue-200'}`}>
                                        <input 
                                           type="checkbox" 
