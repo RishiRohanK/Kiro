@@ -395,8 +395,12 @@ model Internship {
   updatedAt   DateTime @updatedAt
 }
 
-// Submitter Context for Internships
-/**
- * Internship table already added. Appending new fields via 'alter' logic isn't prisma ways,
- * so we update the model directly in schema.prisma.
- */
+model Message {
+  id        String   @id @default(cuid())
+  teamId    String
+  senderId  String
+  senderName String?
+  targetId  String?  // Optional recipient ID for private mission signals
+  content   String
+  createdAt DateTime @default(now())
+}

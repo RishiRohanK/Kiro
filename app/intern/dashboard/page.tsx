@@ -45,6 +45,7 @@ import {
    MoreVertical
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { io } from "socket.io-client";
 import { supabase } from "@/lib/supabase";
 
 interface Task {
@@ -74,8 +75,19 @@ interface ScheduleItem {
    deadline: string;
    isCompleted: boolean;
    batch: string;
+   teamInternIds: string[];
 }
 
+
+interface ChatMessage {
+   id?: string;
+   teamId: string;
+   senderId: string;
+   senderName?: string;
+   content: string;
+   createdAt: string;
+   targetId?: string | null;
+}
 
 function InternDashboardContent() {
    const router = useRouter();
@@ -97,6 +109,16 @@ function InternDashboardContent() {
    const [isAddingPersonalTask, setIsAddingPersonalTask] = useState(false);
    const [newPersonalTask, setNewPersonalTask] = useState({ title: "", description: "" });
    const [isSavingPersonalTask, setIsSavingPersonalTask] = useState(false);
+
+
+   // Relay Terminal (Group Chat)
+   const [messages, setMessages] = useState<ChatMessage[]>([]);
+   const [inputText, setInputText] = useState("");
+   const [socket, setSocket] = useState<any>(null);
+   const [activeTeamId, setActiveTeamId] = useState<string | null>(null);
+   const [selectedUser, setSelectedUser] = useState<any>(null);
+   const [allInterns, setAllInterns] = useState<any[]>([]);
+   const chatEndRef = useRef<HTMLDivElement>(null);
 
    useEffect(() => {
       const syncSession = async () => {
@@ -137,27 +159,71 @@ function InternDashboardContent() {
          fetchStatus(userData.id);
          fetchAttendance(userData.id);
          fetchSchedules(userData.id, userData.batch);
+         fetchAllInterns();
          
          const syncInterval = setInterval(() => {
             fetchTasks(userData.id, userData.batch);
             fetchStatus(userData.id);
             fetchAttendance(userData.id);
             fetchSchedules(userData.id, userData.batch);
+            fetchAllInterns();
             fetch(`/api/intern/personal-tasks?userId=${userData.id}`)
                .then(r => r.json())
                .then(d => { if (d.success) setPersonalTasks(d.tasks); })
                .catch(() => {});
          }, 20000);
 
-         return syncInterval;
+         // Relay Node Initialization
+         const newSocket = io("http://localhost:5005"); // Standardized relay port
+         setSocket(newSocket);
+
+         newSocket.on("receive_message", (msg: ChatMessage) => {
+            setMessages(prev => [...prev, msg]);
+         });
+
+         return () => {
+            clearInterval(syncInterval);
+            newSocket.disconnect();
+         };
       };
 
-      const init = syncSession();
+      const cleanup = syncSession();
       
       return () => {
-         init.then(interval => interval && typeof interval !== 'function' && clearInterval(interval));
+         cleanup.then(cb => cb && cb());
       };
    }, [router]);
+
+   // Historical Syncing & Team Enclave Synchronization
+   useEffect(() => {
+      if (socket && schedules.length > 0 && user) {
+         // Focus on the specific Week 2 allocation as requested by mission protocol
+         const teamSchedule = schedules.find(s => s.week.includes("Week 2") && s.teamInternIds?.length > 0) 
+                              || schedules.find(s => s.teamInternIds?.length > 0) 
+                              || schedules[0];
+         
+         const currentTeamId = teamSchedule.id; 
+         setActiveTeamId(currentTeamId);
+         socket.emit("join_team", currentTeamId);
+         
+         // Reconstruct historical logs
+         fetch(`/api/messages?teamId=${currentTeamId}`)
+            .then(res => res.json())
+            .then(data => {
+               if (data.success) {
+                  const formatted = data.messages.map((m: any) => ({
+                    ...m,
+                    content: m.content || m.text
+                  }));
+                  setMessages(formatted);
+               }
+            });
+      }
+   }, [socket, schedules, user]);
+
+   useEffect(() => {
+      chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+   }, [messages]);
 
 
    const fetchStatus = async (id: string) => {
@@ -213,6 +279,16 @@ function InternDashboardContent() {
       }
    };
 
+   const fetchAllInterns = async () => {
+      try {
+         const res = await fetch("/api/cleed/interns");
+         const data = await res.json();
+         if (Array.isArray(data)) setAllInterns(data);
+      } catch (e) {
+         console.error("Enclave synchronization failed");
+      }
+   };
+
    const updateTaskStatus = async (taskId: string, currentStatus: string) => {
       setIsUpdating(taskId);
       const newStatus = currentStatus === "pending" ? "completed" : "pending";
@@ -236,6 +312,22 @@ function InternDashboardContent() {
    const handleSignOut = () => {
       localStorage.removeItem("intern_user");
       router.push("/intern/signin");
+   };
+
+   const handleSendMessage = (e: React.FormEvent) => {
+      e.preventDefault();
+      if (!inputText.trim() || !socket || !user || !activeTeamId) return;
+
+      const messageData = {
+         teamId: activeTeamId,
+         senderId: user.id,
+         senderName: user.name,
+         message: inputText,
+         targetId: selectedUser?.id || null,
+      };
+
+      socket.emit("send_message", messageData);
+      setInputText("");
    };
 
    if (!user) return null;
@@ -623,6 +715,157 @@ function InternDashboardContent() {
          )}
 
 
+         {activeTab === "chat" && (
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="h-[calc(100vh-12rem)] min-h-[500px] flex bg-white border border-zinc-200 rounded-lg overflow-hidden text-left mb-6 shadow-sm">
+               {/* Simplified Sidebar: Your Team */}
+               <aside className="w-64 bg-zinc-50 border-r border-zinc-200 flex flex-col shrink-0">
+                  <div className="p-6 border-b border-zinc-200 bg-white">
+                     <h3 className="text-xs font-bold text-zinc-900 uppercase tracking-widest leading-none">Your Team</h3>
+                     <p className="text-[10px] text-zinc-400 mt-2 font-medium">Chat with your group members.</p>
+                  </div>
+                  
+                  <div className="flex-1 overflow-y-auto no-scrollbar py-4">
+                     {/* Team Members List */}
+                     <div className="px-4 mb-6">
+                        <button 
+                           onClick={() => setSelectedUser(null)}
+                           className={`w-full flex items-center gap-3 p-3 text-xs font-bold transition-all rounded-xl mb-2 ${!selectedUser ? "bg-black text-white shadow-md" : "hover:bg-zinc-200 text-zinc-600"}`}
+                        >
+                           <Users size={16} /> Team Chat
+                        </button>
+                        
+                        <div className="h-px bg-zinc-200 my-4 mx-2" />
+                        
+                        <p className="px-3 py-2 text-[10px] font-bold text-zinc-400 uppercase tracking-tight">Teammates</p>
+                        <div className="space-y-1 mt-1">
+                           {(() => {
+                              const activeSchedule = schedules.find(s => s.id === activeTeamId) || schedules.find(s => s.teamInternIds?.length > 0);
+                              const teamIds = activeSchedule?.teamInternIds || [];
+                              const teamPeers = teamIds.filter(id => id !== user.id);
+
+                              if (teamPeers.length === 0) {
+                                 return (
+                                    <div className="p-6 text-center">
+                                       <p className="text-[10px] text-zinc-300 font-bold uppercase tracking-wider">No teammates yet</p>
+                                    </div>
+                                 );
+                              }
+
+                              return teamPeers.map((peerId, i) => {
+                                 const peer = allInterns.find(it => it.id === peerId);
+                                 if (!peer) return null;
+                                 return (
+                                    <button 
+                                       key={i}
+                                       onClick={() => setSelectedUser(peer)}
+                                       className={`w-full flex items-center gap-3 p-3 transition-all rounded-xl ${selectedUser?.id === peer.id ? "bg-white border border-zinc-200 text-black shadow-sm" : "text-zinc-600 hover:bg-zinc-100"}`}
+                                    >
+                                       <div className="h-8 w-8 bg-zinc-900 text-white flex items-center justify-center text-xs font-bold rounded-lg group-hover:scale-105 transition-transform">
+                                          {peer.name[0]}
+                                       </div>
+                                       <div className="text-left overflow-hidden">
+                                          <p className="text-xs font-bold truncate leading-none mb-1">{peer.name}</p>
+                                          <div className="flex items-center gap-1">
+                                             <div className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                                             <p className="text-[9px] font-bold text-zinc-400 uppercase">Mission Active</p>
+                                          </div>
+                                       </div>
+                                    </button>
+                                 );
+                              });
+                           })()}
+                        </div>
+                     </div>
+                  </div>
+
+                  {/* Profile Section */}
+                  <div className="p-4 bg-zinc-100/50 border-t border-zinc-200 flex items-center gap-3">
+                     <div className="h-9 w-9 bg-black text-white flex items-center justify-center text-xs font-bold rounded-lg">
+                        {user.name[0]}
+                     </div>
+                     <div className="overflow-hidden">
+                        <p className="text-xs font-bold text-zinc-900 truncate leading-none mb-1">{user.name}</p>
+                        <p className="text-[9px] font-bold text-zinc-400 uppercase">You</p>
+                     </div>
+                  </div>
+               </aside>
+
+               {/* Chat Container */}
+               <div className="flex-1 flex flex-col bg-white overflow-hidden">
+                  {/* Simple Header */}
+                  <div className="px-8 py-6 border-b border-zinc-100 flex items-center justify-between bg-white/80 backdrop-blur-md">
+                     <div className="flex items-center gap-4">
+                        <div className="h-10 w-10 bg-black text-white flex items-center justify-center font-bold rounded-lg">
+                           {selectedUser ? <User size={18} /> : <Users size={18} />}
+                        </div>
+                        <div>
+                           <h2 className="text-base font-bold text-zinc-900 leading-none mb-1.5">
+                              {selectedUser ? selectedUser.name : (schedules.find(s => s.week.includes("Week 2"))?.teamAllocation || "Team Chat")}
+                           </h2>
+                           <div className="flex items-center gap-2">
+                              <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+                              <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Active session</span>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+
+                  {/* Messages Section */}
+                  <div className="flex-1 overflow-y-auto p-8 space-y-8 bg-zinc-50/30 no-scrollbar">
+                     {messages.filter(m => 
+                        selectedUser 
+                           ? (m.senderId === selectedUser.id || (m.senderId === user.id && m.targetId === selectedUser.id)) 
+                           : (!m.targetId)
+                     ).length === 0 ? (
+                        <div className="h-full flex flex-col items-center justify-center text-zinc-300">
+                           <MessageSquare size={48} className="mb-4 opacity-20" />
+                           <p className="text-sm font-bold uppercase tracking-widest opacity-40">Start a conversation</p>
+                        </div>
+                     ) : (
+                        messages.filter(m => 
+                           selectedUser 
+                              ? (m.senderId === selectedUser.id || (m.senderId === user.id && m.targetId === selectedUser.id)) 
+                              : (!m.targetId)
+                        ).map((msg, i) => {
+                           const isOwn = msg.senderId === user.id;
+                           return (
+                              <div key={i} className={`flex flex-col ${isOwn ? "items-end" : "items-start"}`}>
+                                 <div className={`max-w-[70%] ${isOwn ? "text-right" : "text-left"}`}>
+                                    {!isOwn && (
+                                       <span className="text-[10px] font-bold text-zinc-400 mb-2 block uppercase px-1">
+                                          {msg.senderName}
+                                       </span>
+                                    )}
+                                    <div className={`px-5 py-4 border ${isOwn ? "bg-black border-black text-white rounded-2xl rounded-tr-sm shadow-lg shadow-black/10" : "bg-white border-zinc-200 text-zinc-900 rounded-2xl rounded-tl-sm shadow-sm"}`}>
+                                       <p className="text-sm font-medium leading-relaxed">{msg.content}</p>
+                                       <span className={`text-[9px] font-bold block mt-3 opacity-40 ${isOwn ? "text-zinc-400" : "text-zinc-500"}`}>
+                                          {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                       </span>
+                                    </div>
+                                 </div>
+                              </div>
+                           );
+                        })
+                     )}
+                     <div ref={chatEndRef} />
+                  </div>
+
+                  {/* Simple Input Box */}
+                  <form onSubmit={handleSendMessage} className="px-8 py-6 bg-white border-t border-zinc-100 flex gap-4">
+                     <input 
+                        type="text" 
+                        value={inputText}
+                        onChange={(e) => setInputText(e.target.value)}
+                        className="flex-1 px-6 h-14 bg-zinc-50 border border-zinc-200 text-sm font-semibold rounded-2xl focus:border-black focus:bg-white outline-none transition-all placeholder:text-zinc-300"
+                        placeholder={selectedUser ? `Message ${selectedUser.name}...` : "Send a message to your team..."}
+                     />
+                     <button type="submit" disabled={!activeTeamId || !inputText.trim()} className="h-14 px-10 bg-black text-white hover:bg-zinc-800 transition-all font-bold text-xs uppercase tracking-widest rounded-2xl disabled:opacity-30 active:scale-95 flex items-center gap-2">
+                        <Send size={16} /> Send
+                     </button>
+                  </form>
+               </div>
+            </motion.div>
+         )}
 
          {activeTab === "tasks" && (
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-4 text-left">
