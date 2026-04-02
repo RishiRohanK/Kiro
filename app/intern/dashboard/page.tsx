@@ -76,6 +76,7 @@ interface ScheduleItem {
    isCompleted: boolean;
    batch: string;
    teamInternIds: string[];
+   teamAllocation?: string;
 }
 
 
