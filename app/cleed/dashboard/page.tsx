@@ -1885,15 +1885,18 @@ export default function CleedDashboard() {
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                            {allSchedules.length === 0 ? (
                               <p className="col-span-full py-20 text-center text-zinc-400 italic">Zero mission logs detected for this batch protocol.</p>
-                           ) : (
+                                                      ) : (
                               allSchedules.map((schedule) => (
-                                 <div key={schedule.id} className="border border-zinc-100 bg-zinc-50/50 p-6 space-y-4 hover:border-blue-600/30 transition-all">
+                                 <div key={schedule.id} className="border border-zinc-100 bg-white p-8 space-y-6 hover:border-blue-600/30 transition-all shadow-sm group">
                                     <div className="flex items-center justify-between">
-                                       <span className="text-[10px] font-bold bg-white px-2 py-1 border border-zinc-100 text-blue-600 uppercase tracking-widest">{schedule.week}</span>
+                                       <div className="flex items-center gap-3">
+                                          <span className="text-[10px] font-bold bg-zinc-900 px-3 py-1 text-white uppercase tracking-widest">{schedule.week}</span>
+                                          <span className="text-[10px] font-bold bg-blue-50 text-blue-600 px-3 py-1 border border-blue-100 uppercase tracking-widest">{schedule.batch}</span>
+                                       </div>
                                        <div className="flex items-center gap-2">
                                           <button 
                                              onClick={() => setEditingSchedule(schedule)}
-                                             className="p-2 text-zinc-400 hover:text-blue-600 transition-colors"
+                                             className="h-10 w-10 flex items-center justify-center bg-zinc-50 text-zinc-400 hover:text-blue-600 hover:bg-white border border-zinc-100 transition-all"
                                           >
                                              <FileText size={16} />
                                           </button>
@@ -1904,22 +1907,70 @@ export default function CleedDashboard() {
                                                    if(res.ok) fetchData();
                                                 }
                                              }}
-                                             className="p-2 text-zinc-400 hover:text-red-600 transition-colors"
+                                             className="h-10 w-10 flex items-center justify-center bg-zinc-50 text-zinc-400 hover:text-red-600 hover:bg-white border border-zinc-100 transition-all"
                                           >
                                              <Trash2 size={16} />
                                           </button>
                                        </div>
                                     </div>
-                                    <div>
-                                       <h4 className="text-sm font-bold text-zinc-900 mb-1">{schedule.projectName || schedule.typeOfWork}</h4>
-                                       <p className="text-[11px] text-zinc-500 font-medium line-clamp-2">{schedule.description}</p>
-                                    </div>
-                                    <div className="pt-4 border-t border-zinc-100 flex items-center justify-between">
-                                       <div className="flex items-center gap-2">
-                                          <div className="h-2 w-2 rounded-full bg-emerald-500" />
-                                          <span className="text-[10px] font-bold text-zinc-400 uppercase">{schedule.teamAllocation || "No Team"}</span>
+
+                                    <div className="space-y-4">
+                                       <div className="space-y-1">
+                                          <h4 className="text-xl font-bold text-zinc-900 tracking-tight">{schedule.projectName || schedule.typeOfWork}</h4>
+                                          <p className="text-[13px] text-zinc-500 font-medium leading-relaxed">{schedule.description}</p>
                                        </div>
-                                       <span className="text-[10px] font-bold text-zinc-400">{new Date(schedule.deadline).toLocaleDateString()}</span>
+
+                                       <div className="grid grid-cols-2 gap-6 pt-4">
+                                          <div className="space-y-1">
+                                             <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Team Allocation</span>
+                                             <p className="text-[14px] font-bold text-zinc-900">{schedule.teamAllocation || "Universal Pool"}</p>
+                                          </div>
+                                          <div className="space-y-1">
+                                             <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Technician Lead</span>
+                                             <p className="text-[14px] font-bold text-zinc-900">{schedule.teamLead || "Not Assigned"}</p>
+                                          </div>
+                                          <div className="space-y-1">
+                                             <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Mentor Node</span>
+                                             <p className="text-[14px] font-bold text-zinc-900">{schedule.mentorName || "Administrative"}</p>
+                                          </div>
+                                          <div className="space-y-1">
+                                             <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Hand-in Deadline</span>
+                                             <p className="text-[14px] font-bold text-blue-600">{new Date(schedule.deadline).toLocaleDateString()}</p>
+                                          </div>
+                                       </div>
+
+                                       <div className="space-y-3 pt-4">
+                                          <div className="space-y-1">
+                                             <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Team Roster ({schedule.teamInternNames?.length || 0})</span>
+                                             <div className="flex flex-wrap gap-2">
+                                                {Array.isArray(schedule.teamInternNames) && schedule.teamInternNames.length > 0 ? (
+                                                   schedule.teamInternNames.map((name: string, i: number) => (
+                                                      <span key={i} className="text-[11px] bg-zinc-50 border border-zinc-100 px-2 py-1 font-bold text-zinc-600 uppercase tracking-tight">{name}</span>
+                                                   ))
+                                                ) : (
+                                                   <p className="text-[11px] text-zinc-400 italic">No specific identities synchronized.</p>
+                                                )}
+                                             </div>
+                                          </div>
+
+                                          <div className="space-y-1">
+                                             <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Technology Stack</span>
+                                             <div className="flex flex-wrap gap-2 text-[11px] font-bold text-zinc-900">
+                                                {schedule.toolsUsed?.map((tool: string, i: number) => (
+                                                   <span key={i} className="bg-zinc-50 px-2 py-1">#{tool}</span>
+                                                ))}
+                                             </div>
+                                          </div>
+
+                                          {schedule.projectDocLink && (
+                                             <div className="space-y-1">
+                                                <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Mission Documentation</span>
+                                                <a href={schedule.projectDocLink} target="_blank" className="text-[13px] font-bold text-blue-600 flex items-center gap-2 hover:underline">
+                                                   View Protocol Asset <ExternalLink size={12} />
+                                                </a>
+                                             </div>
+                                          )}
+                                       </div>
                                     </div>
                                  </div>
                               ))
@@ -2001,8 +2052,24 @@ export default function CleedDashboard() {
                                        <input value={editingSchedule.teamAllocation} onChange={(e) => setEditingSchedule({ ...editingSchedule, teamAllocation: e.target.value })} className="w-full h-12 bg-white border border-zinc-100 px-4 text-sm font-bold outline-none focus:border-blue-600" />
                                     </div>
                                     <div className="space-y-1">
+                                       <label className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest">Technician Lead</label>
+                                       <input value={editingSchedule.teamLead} onChange={(e) => setEditingSchedule({ ...editingSchedule, teamLead: e.target.value })} className="w-full h-12 bg-white border border-zinc-100 px-4 text-sm font-bold outline-none focus:border-blue-600" />
+                                    </div>
+                                    <div className="space-y-1">
+                                       <label className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest">Mentor Node</label>
+                                       <input value={editingSchedule.mentorName} onChange={(e) => setEditingSchedule({ ...editingSchedule, mentorName: e.target.value })} className="w-full h-12 bg-white border border-zinc-100 px-4 text-sm font-bold outline-none focus:border-blue-600" />
+                                    </div>
+                                    <div className="space-y-1">
+                                       <label className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest">Protocol Documentation Link</label>
+                                       <input value={editingSchedule.projectDocLink} onChange={(e) => setEditingSchedule({ ...editingSchedule, projectDocLink: e.target.value })} className="w-full h-12 bg-white border border-zinc-100 px-4 text-sm font-bold outline-none focus:border-blue-600" />
+                                    </div>
+                                    <div className="space-y-1">
                                        <label className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest">Hand-in Deadline</label>
                                        <input type="date" value={new Date(editingSchedule.deadline).toISOString().split('T')[0]} onChange={(e) => setEditingSchedule({ ...editingSchedule, deadline: e.target.value })} className="w-full h-12 bg-white border border-zinc-100 px-4 text-sm font-bold outline-none focus:border-blue-600" />
+                                    </div>
+                                    <div className="space-y-1">
+                                       <label className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest">Technology Stack (Comma Separated)</label>
+                                       <input value={Array.isArray(editingSchedule.toolsUsed) ? editingSchedule.toolsUsed.join(", ") : editingSchedule.toolsUsed} onChange={(e) => setEditingSchedule({ ...editingSchedule, toolsUsed: e.target.value })} className="w-full h-12 bg-white border border-zinc-100 px-4 text-sm font-bold outline-none focus:border-blue-600" />
                                     </div>
                                     <button disabled={loadingSchedules} className="md:col-span-2 w-full h-14 bg-zinc-900 text-white text-[13px] font-bold hover:bg-black transition-all flex items-center justify-center gap-3">
                                        {loadingSchedules ? <RefreshCw className="animate-spin" size={18} /> : "Finalize Recalibration"}
