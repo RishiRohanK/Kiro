@@ -94,7 +94,7 @@ export async function POST(req: Request) {
                 projectDocLink,
                 teamLead,
                 teamInternIds
-            }
+            } as any
         });
 
         // Notify Interns via Email

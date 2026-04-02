@@ -15,7 +15,7 @@ export async function POST(req: Request) {
     // Update Database
     const user = await prisma.user.update({
       where: { id: internId },
-      data: { offerLetterUrl },
+      data: { offerLetterUrl } as any,
     });
 
     // Send Notification Email
