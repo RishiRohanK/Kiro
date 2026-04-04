@@ -300,6 +300,18 @@ export default function CleedDashboard() {
       document.body.removeChild(link);
    };
 
+   const fetchAllSchedules = async () => {
+      try {
+         const res = await fetch(`/api/intern/schedule?batch=${batchFilter}`);
+         const data = await res.json();
+         if (data.success) setAllSchedules(data.schedules);
+      } catch (err) { console.error("Schedules fetch failure"); }
+   };
+
+   useEffect(() => {
+      fetchAllSchedules();
+   }, [batchFilter]);
+
    useEffect(() => {
       fetchAttendance();
    }, [selectedDate]);
@@ -370,14 +382,6 @@ export default function CleedDashboard() {
             const data = await res.json();
             if (data.success) setInternships(data.internships);
          } catch (err) { console.error("Internships fetch failure"); }
-      };
-
-      const fetchAllSchedules = async () => {
-         try {
-            const res = await fetch(`/api/intern/schedule?batch=${batchFilter}`);
-            const data = await res.json();
-            if (data.success) setAllSchedules(data.schedules);
-         } catch (err) { console.error("Schedules fetch failure"); }
       };
 
       await Promise.allSettled([
