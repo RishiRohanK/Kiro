@@ -565,6 +565,36 @@ export default function CleedDashboard() {
       }
    };
 
+   const handleMarkHandRaisedAttendance = async () => {
+      const approvedInterns = interns.filter(i => i.isApproved);
+      if (approvedInterns.length === 0) return;
+
+      setMarkingId("all");
+      try {
+         await Promise.all(
+            approvedInterns.map(intern => {
+               const record = currentAttendance.find(a => a.userId === intern.id);
+               const status = intern.handRaised ? "PRESENT" : "ABSENT";
+               return fetch("/api/cleed/attendance", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({
+                     internId: intern.id,
+                     status,
+                     workSummary: record?.workSummary || "",
+                     date: selectedDate
+                  })
+               });
+            })
+         );
+         await fetchAttendance();
+      } catch (err) {
+         console.error("Selective protocol failure");
+      } finally {
+         setMarkingId(null);
+      }
+   };
+
    const handlePostSchedule = async (e: React.FormEvent) => {
       e.preventDefault();
       setSendingSchedule(true);
@@ -1787,9 +1817,13 @@ export default function CleedDashboard() {
                               <h2 className="text-2xl font-bold tracking-tight text-zinc-900">Attendance protocol</h2>
                               <input type="date" value={selectedDate} onChange={(e) => setSelectedDate(e.target.value)} className="text-sm font-bold text-blue-600 bg-blue-50 px-2 py-1 outline-none border-none" />
                            </div>
-                           <div className="flex items-center gap-3">
+                           <div className="flex flex-wrap items-center gap-3">
                               <button onClick={() => handleMarkAllAttendance("PRESENT")} className="h-10 px-6 bg-emerald-600 text-white text-[11px] font-bold hover:bg-emerald-700 transition-all">Mark all present</button>
                               <button onClick={() => handleMarkAllAttendance("ABSENT")} className="h-10 px-6 bg-zinc-900 text-white text-[11px] font-bold hover:bg-blue-600 transition-all">Mark all absent</button>
+                              <button onClick={() => handleMarkHandRaisedAttendance()} className="h-10 px-6 bg-amber-500 text-white text-[11px] font-bold hover:bg-amber-600 transition-all flex items-center gap-2">
+                                 <Hand size={14} />
+                                 Mark Hands Present
+                              </button>
                            </div>
                         </div>
 
@@ -1797,16 +1831,24 @@ export default function CleedDashboard() {
                            {interns.filter(i => i.isApproved).map((intern) => {
                               const record = currentAttendance.find(a => a.userId === intern.id);
                               return (
-                                 <div key={intern.id} className="p-6 border border-zinc-100 bg-white group hover:border-[#0055FF]/20 transition-all">
+                                 <div key={intern.id} className={`p-6 border group hover:border-[#0055FF]/20 transition-all relative ${intern.handRaised ? "bg-amber-50/20 border-amber-500/30" : "bg-white border-zinc-100"}`}>
                                     <div className="flex items-center justify-between mb-4">
-                                       <div className="h-3 w-3 bg-zinc-100" />
-                                       {record && (
-                                          <span className={`text-[10px] font-bold px-2 py-0.5 border ${
-                                             record.status === "PRESENT" ? "bg-emerald-50 text-emerald-600 border-emerald-100" : "bg-red-50 text-red-600 border-red-100"
-                                          }`}>
-                                             {record.status}
-                                          </span>
-                                       )}
+                                       <div className={`h-3 w-3 ${intern.handRaised ? "bg-amber-500" : "bg-zinc-100"}`} />
+                                       <div className="flex items-center gap-2">
+                                          {intern.handRaised && (
+                                             <div className="flex items-center gap-1.5 px-2 py-0.5 bg-amber-500 text-white text-[9px] font-bold tracking-tight">
+                                                <Hand size={10} />
+                                                HAND RAISED
+                                             </div>
+                                          )}
+                                          {record && (
+                                             <span className={`text-[10px] font-bold px-2 py-0.5 border ${
+                                                record.status === "PRESENT" ? "bg-emerald-50 text-emerald-600 border-emerald-100" : "bg-red-50 text-red-600 border-red-100"
+                                             }`}>
+                                                {record.status}
+                                             </span>
+                                          )}
+                                       </div>
                                     </div>
                                     <p className="text-[14px] font-bold text-zinc-900 mb-1">{intern.name}</p>
                                     <p className="text-[10px] text-zinc-400 font-bold mb-6">{intern.branch || 'Technical branch'}</p>
