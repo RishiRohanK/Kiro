@@ -89,8 +89,8 @@ export default function InternSignupPage() {
                             <Lock className="text-zinc-400" size={24} />
                         </div>
                         <div className="text-center px-6">
-                            <h3 className="text-xl font-bold tracking-tight text-zinc-900 mb-2 uppercase tracking-widest text-[14px]">
-                                Registration Frozen
+                            <h3 className="text-xl font-bold tracking-tight text-zinc-900 mb-2 text-[14px]">
+                                Registration frozen
                             </h3>
                             <p className="text-[13px] text-zinc-500 leading-relaxed font-medium">
                                 Batch 2 registrations are currently closed. Please contact administrators for the next intake window.
@@ -101,26 +101,26 @@ export default function InternSignupPage() {
                     <div className="flex flex-col gap-3">
                          <div className="bg-red-50 border-l-2 border-red-400 p-4 flex items-start gap-3">
                              <ShieldAlert className="text-red-500 mt-0.5" size={14} />
-                             <p className="text-[11px] text-red-800 font-bold leading-relaxed uppercase tracking-tight">
+                             <p className="text-[11px] text-red-800 font-bold leading-relaxed">
                                 Registration closed. System is locked.
                              </p>
                          </div>
                          <Link 
                             href="/intern/signin" 
-                            className="w-full h-12 bg-black text-white text-[11px] font-bold uppercase tracking-widest flex items-center justify-center hover:opacity-90 transition-opacity"
+                            className="w-full h-12 bg-black text-white text-[11px] font-medium flex items-center justify-center hover:opacity-90 transition-opacity"
                          >
-                            Intern Sign In Login
+                            Intern login
                          </Link>
                          <Link 
                             href="/" 
-                            className="w-full h-12 border border-zinc-100 bg-white text-zinc-500 text-[11px] font-bold uppercase tracking-widest flex items-center justify-center hover:bg-zinc-50 transition-colors"
+                            className="w-full h-12 border border-zinc-100 bg-white text-zinc-500 text-[11px] font-medium flex items-center justify-center hover:bg-zinc-50 transition-colors"
                          >
-                            Return to Website Home
+                            Return to home
                          </Link>
                     </div>
 
-                    <p className="text-center text-[10px] text-zinc-400 mt-6 pt-6 border-t border-zinc-100 font-bold uppercase tracking-widest">
-                        Student Forge Initiative • Administrative Protocol
+                    <p className="text-center text-[10px] text-zinc-400 mt-6 pt-6 border-t border-zinc-100 font-bold tracking-widest">
+                        Student forge initiative • Administrative protocol
                     </p>
                 </div>
             </div>
