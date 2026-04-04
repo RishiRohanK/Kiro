@@ -8,11 +8,7 @@ import Footer from "../components/home/Footer";
 
 const POSITIONS = [
     "Marketing Lead",
-    "UI/UX Designer",
-    "Frontend Developer",
-    "Backend Developer",
-    "Content Strategist",
-    "Social Media Manager"
+    "UI/UX Designer"
 ];
 
 interface FormInputProps {
@@ -32,7 +28,7 @@ export default function HiringPage() {
         position: "",
         resumeLink: ""
     });
-    
+
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState("");
@@ -80,7 +76,7 @@ export default function HiringPage() {
                                             Apply here
                                         </h1>
                                         <p className="text-[14px] text-zinc-500 font-medium">
-                                            We are looking for people to join our team. 
+                                            We are looking for people to join our team.
                                             Please fill the details below to apply.
                                         </p>
                                     </div>
@@ -93,32 +89,32 @@ export default function HiringPage() {
                                         )}
 
                                         <div className="grid grid-cols-1 gap-6">
-                                            <FormInput 
-                                                label="Your Name" 
+                                            <FormInput
+                                                label="Your Name"
                                                 value={formData.name}
-                                                onChange={(val: string) => setFormData({...formData, name: val})}
+                                                onChange={(val: string) => setFormData({ ...formData, name: val })}
                                                 required
                                             />
-                                            <FormInput 
-                                                label="Email" 
+                                            <FormInput
+                                                label="Email"
                                                 type="email"
                                                 value={formData.email}
-                                                onChange={(val: string) => setFormData({...formData, email: val})}
+                                                onChange={(val: string) => setFormData({ ...formData, email: val })}
                                                 required
                                             />
-                                            <FormInput 
-                                                label="Phone" 
+                                            <FormInput
+                                                label="Phone"
                                                 value={formData.phone}
-                                                onChange={(val: string) => setFormData({...formData, phone: val})}
+                                                onChange={(val: string) => setFormData({ ...formData, phone: val })}
                                                 required
                                             />
-                                            
+
                                             <div className="space-y-2">
                                                 <label className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest block">Position</label>
-                                                <select 
+                                                <select
                                                     className="w-full h-11 bg-zinc-50 border border-zinc-200 px-4 text-[13px] outline-none focus:bg-white focus:border-zinc-900 transition-all appearance-none font-medium rounded-none"
                                                     value={formData.position}
-                                                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFormData({...formData, position: e.target.value})}
+                                                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFormData({ ...formData, position: e.target.value })}
                                                     required
                                                 >
                                                     <option value="" disabled>Select position</option>
@@ -128,17 +124,17 @@ export default function HiringPage() {
                                                 </select>
                                             </div>
 
-                                            <FormInput 
-                                                label="Resume Drive Link" 
+                                            <FormInput
+                                                label="Resume Drive Link"
                                                 placeholder="https://drive.google.com/..."
                                                 value={formData.resumeLink}
-                                                onChange={(val: string) => setFormData({...formData, resumeLink: val})}
+                                                onChange={(val: string) => setFormData({ ...formData, resumeLink: val })}
                                                 required
                                             />
                                         </div>
 
-                                        <button 
-                                            type="submit" 
+                                        <button
+                                            type="submit"
                                             disabled={loading}
                                             className="h-12 bg-black text-white px-10 text-[11px] font-bold uppercase tracking-widest hover:bg-zinc-800 transition-all disabled:opacity-30 rounded-none w-full md:w-auto"
                                         >
@@ -155,7 +151,7 @@ export default function HiringPage() {
                                             Thank you for applying. We will check your details and talk to you soon.
                                         </p>
                                     </div>
-                                    <button 
+                                    <button
                                         onClick={() => setSuccess(false)}
                                         className="text-[11px] font-bold uppercase tracking-widest border-b border-zinc-900 pb-1 hover:text-zinc-500 hover:border-zinc-500 transition-all"
                                     >
@@ -167,9 +163,9 @@ export default function HiringPage() {
 
                         {/* Banner Section */}
                         <div className="bg-zinc-50 flex items-center justify-center p-0">
-                            <img 
-                                src="https://ik.imagekit.io/dypkhqxip/sfhiring" 
-                                alt="Hiring Banner" 
+                            <img
+                                src="https://ik.imagekit.io/dypkhqxip/sfhiring"
+                                alt="Hiring Banner"
                                 className="w-full h-full object-cover"
                             />
                         </div>
@@ -186,7 +182,7 @@ function FormInput({ label, value, onChange, type = "text", placeholder = "", re
     return (
         <div className="space-y-2">
             <label className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest block">{label}</label>
-            <input 
+            <input
                 type={type}
                 value={value}
                 onChange={(e) => onChange(e.target.value)}
