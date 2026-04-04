@@ -99,10 +99,10 @@ export default function InternSignupPage() {
                     </div>
 
                     <div className="flex flex-col gap-3">
-                         <div className="bg-amber-50 border-l-2 border-amber-400 p-4 flex items-start gap-3">
-                             <ShieldAlert className="text-amber-500 mt-0.5" size={14} />
-                             <p className="text-[11px] text-amber-800 font-bold leading-relaxed uppercase tracking-tight">
-                                Administrator Control Active: System state is locked.
+                         <div className="bg-red-50 border-l-2 border-red-400 p-4 flex items-start gap-3">
+                             <ShieldAlert className="text-red-500 mt-0.5" size={14} />
+                             <p className="text-[11px] text-red-800 font-bold leading-relaxed uppercase tracking-tight">
+                                Registration closed. System is locked.
                              </p>
                          </div>
                          <Link 
