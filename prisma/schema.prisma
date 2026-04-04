@@ -247,15 +247,15 @@ model Project {
   hackathonName   String   @default("HACK FORGE Hackathon 2026")
 }
 
-model JavaWorkshop {
-  id        String   @id @default(cuid())
-  name      String
-  branch    String
-  year      String
-  email     String
-  phone     String
-  status    String   @default("pending")
-  createdAt DateTime @default(now())
+model HiringApplication {
+  id          String   @id @default(cuid())
+  name        String
+  email       String
+  phone       String
+  position    String   // Marketing Lead, UI/UX Designer, etc.
+  resumeLink  String   // e.g., Drive link
+  status      String   @default("pending")
+  createdAt   DateTime @default(now())
 }
 
 

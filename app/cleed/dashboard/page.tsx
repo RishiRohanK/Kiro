@@ -15,6 +15,7 @@ import {
    Clock,
    AlertCircle,
    Mail,
+   Phone,
    Briefcase,
    Github,
    Globe,
@@ -58,13 +59,13 @@ interface Intern {
    batch?: string;
 }
 
-interface WorkshopEntry {
+interface HiringApplication {
    id: string;
    name: string;
-   branch: string;
-   year: string;
    email: string;
    phone: string;
+   position: string;
+   resumeLink: string;
    status: string;
    createdAt: string;
 }
@@ -137,7 +138,7 @@ interface InternshipItem {
 export default function CleedDashboard() {
    const [activeTab, setActiveTab] = useState("overview");
    const [interns, setInterns] = useState<Intern[]>([]);
-   const [workshopEntries, setWorkshopEntries] = useState<WorkshopEntry[]>([]);
+   const [hiringApplications, setHiringApplications] = useState<HiringApplication[]>([]);
    const [tasks, setTasks] = useState<Task[]>([]);
    const [mentorshipSessions, setMentorshipSessions] = useState<MentorshipSession[]>([]);
    const [events, setEvents] = useState<EventItem[]>([]);
@@ -258,29 +259,29 @@ export default function CleedDashboard() {
       }
    };
 
-   const fetchWorkshopEntries = async () => {
+   const fetchHiringApplications = async () => {
       try {
-         const res = await fetch("/api/forms/workshop");
+         const res = await fetch("/api/hiring");
          const data = await res.json();
          if (data.success) {
-            setWorkshopEntries(data.data);
+            setHiringApplications(data.applicants);
          }
       } catch (err) {
-         console.error("Workshop fetch failure");
+         console.error("Hiring fetch failure");
       }
    };
 
-   const downloadWorkshopCsv = () => {
-      if (workshopEntries.length === 0) return;
+   const downloadHiringCsv = () => {
+      if (hiringApplications.length === 0) return;
 
-      const headers = ["ID", "Name", "Branch", "Year", "Email", "Phone", "Status", "Created At"];
-      const rows = workshopEntries.map(i => [
+      const headers = ["ID", "Name", "Email", "Phone", "Position", "Resume Link", "Status", "Created At"];
+      const rows = hiringApplications.map(i => [
          i.id,
          i.name,
-         i.branch,
-         i.year,
          i.email,
          i.phone,
+         i.position,
+         i.resumeLink,
          i.status,
          new Date(i.createdAt).toLocaleString()
       ]);
@@ -294,7 +295,7 @@ export default function CleedDashboard() {
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute("download", `workshop_entries_${new Date().toISOString().split('T')[0]}.csv`);
+      link.setAttribute("download", `hiring_applications_${new Date().toISOString().split('T')[0]}.csv`);
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -352,12 +353,12 @@ export default function CleedDashboard() {
          } catch (err) { console.error("Mentorship fetch failure"); }
       };
 
-      const fetchWorkshop = async () => {
+      const fetchHiring = async () => {
          try {
-            const res = await fetch("/api/forms/workshop");
+            const res = await fetch("/api/hiring");
             const data = await res.json();
-            if (data.success) setWorkshopEntries(data.data);
-         } catch (err) { console.error("Workshop fetch failure"); }
+            if (data.success) setHiringApplications(data.applicants);
+         } catch (err) { console.error("Hiring fetch failure"); }
       };
 
       const fetchEvents = async () => {
@@ -388,7 +389,7 @@ export default function CleedDashboard() {
          fetchInterns(),
          fetchTasks(),
          fetchMentorship(),
-         fetchWorkshop(),
+         fetchHiring(),
          fetchEvents(),
          fetchIdeas(),
          fetchInternships(),
@@ -781,7 +782,7 @@ export default function CleedDashboard() {
                         { id: "authorizations", icon: ShieldCheck, label: "Approvals" },
                         { id: "mentorship", icon: Users, label: "Mentorship" },
                         { id: "schedule", icon: Calendar, label: "Schedule" },
-                        { id: "workshop", icon: FileText, label: "Workshops" },
+                        { id: "hiring", icon: Briefcase, label: "Hiring" },
                         { id: "submissions", icon: ExternalLink, label: "Submissions" },
                         { id: "events", icon: LayoutDashboard, label: "Events" },
                         { id: "ideas", icon: Globe, label: "Ideas" },
@@ -931,7 +932,7 @@ export default function CleedDashboard() {
                   <span className="text-zinc-400 text-xs md:text-sm whitespace-nowrap">Dashboard</span>
                   <ChevronRight size={14} className="text-zinc-300 flex-shrink-0" />
                   <span className="text-zinc-900 font-bold text-xs md:text-sm truncate uppercase tracking-tighter">
-                     {activeTab === "internships" ? "Internship Oversight" : activeTab === "interns" ? "Interns" : activeTab === "assign" ? "Allocations" : activeTab === "certification" ? "Certifications" : activeTab === "authorizations" ? "Authorizations" : activeTab === "mentorship" ? "Mentorship" : activeTab === "schedule" ? "Schedule" : activeTab === "workshop" ? "Workshop Registry" : activeTab === "submissions" ? "Submissions" : activeTab === "events" ? "Events Index" : activeTab === "ideas" ? "Ideation Oversight" : activeTab === "attendance" ? "Attendance" : "Logbook"}
+                     {activeTab === "internships" ? "Internship Oversight" : activeTab === "interns" ? "Interns" : activeTab === "assign" ? "Allocations" : activeTab === "certification" ? "Certifications" : activeTab === "authorizations" ? "Authorizations" : activeTab === "mentorship" ? "Mentorship" : activeTab === "schedule" ? "Schedule" : activeTab === "hiring" ? "Hiring Registry" : activeTab === "submissions" ? "Submissions" : activeTab === "events" ? "Events Index" : activeTab === "ideas" ? "Ideation Oversight" : activeTab === "attendance" ? "Attendance" : "Logbook"}
                   </span>
                </div>
 
@@ -1101,12 +1102,12 @@ export default function CleedDashboard() {
                         </div>
 
                         <div className="bg-purple-50/50 border border-purple-100 p-5 rounded-lg shadow-sm group text-left transition-all hover:bg-purple-50">
-                           <div className="flex items-center justify-between mb-3">
-                              <p className="text-[10px] font-bold text-purple-600 uppercase tracking-widest leading-none">Workshops</p>
-                              <FileText size={14} className="text-purple-400" />
-                           </div>
-                           <div className="flex items-baseline gap-2">
-                              <h3 className="text-3xl font-bold tracking-tight text-purple-900">{workshopEntries.length}</h3>
+                           <div className="space-y-4">
+                              <p className="text-[10px] font-bold text-purple-600 uppercase tracking-widest leading-none">Hiring Applications</p>
+                              <div className="flex items-end justify-between">
+                              <h3 className="text-3xl font-bold tracking-tight text-purple-900">{hiringApplications.length}</h3>
+                              <Briefcase className="text-purple-200" size={32} strokeWidth={1} />
+                              </div>
                            </div>
                         </div>
 
@@ -1615,47 +1616,69 @@ export default function CleedDashboard() {
                   </motion.div>
                )}
 
-               {/* Workshop Registry Hub */}
-               {activeTab === "workshop" && (
-                  <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-8">
-                     <div className="bg-white border border-zinc-100 p-8 text-left">
-                        <div className="flex items-center justify-between mb-8">
-                           <div className="space-y-1">
-                              <h2 className="text-2xl font-bold tracking-tight text-zinc-900">Workshop registry</h2>
-                              <p className="text-[13px] text-zinc-500">Documented technical enrollments from the public portal.</p>
+               {/* Hiring Applications Registry Hub */}
+               {activeTab === "hiring" && (
+                  <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-10">
+                     <div className="bg-white border border-zinc-100 p-8 md:p-12 shadow-sm relative overflow-hidden text-left text-zinc-900 selection:bg-black selection:text-white">
+                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 mb-12 relative z-10">
+                           <div className="space-y-2">
+                              <h2 className="text-2xl font-bold tracking-tight text-zinc-900">Hiring registry</h2>
+                              <p className="text-[14px] text-zinc-500 font-medium">Recruit talent efficiently. Total applicants: {hiringApplications.length}</p>
                            </div>
-                           <button onClick={downloadWorkshopCsv} className="h-10 px-6 bg-zinc-900 text-white text-[11px] font-bold hover:bg-zinc-800 transition-all flex items-center gap-2">
-                              <Download size={14} /> Export CSV
+                           <button onClick={downloadHiringCsv} className="h-10 px-6 bg-zinc-900 text-white text-[11px] font-bold hover:bg-zinc-800 transition-all flex items-center gap-2">
+                              <Download size={14} />
+                              Export Hiring Index
                            </button>
                         </div>
-                        <div className="overflow-x-auto -mx-8">
-                           <table className="w-full border-collapse">
-                              <thead>
-                                 <tr className="border-b border-zinc-100 bg-zinc-50/50">
-                                    <th className="px-8 py-4 text-[10px] font-bold text-zinc-400 uppercase tracking-widest text-left">Enrollment ID</th>
-                                    <th className="px-6 py-4 text-[10px] font-bold text-zinc-400 uppercase tracking-widest text-left">Full Identity</th>
-                                    <th className="px-6 py-4 text-[10px] font-bold text-zinc-400 uppercase tracking-widest text-left">Academic context</th>
-                                    <th className="px-8 py-4 text-[10px] font-bold text-zinc-400 uppercase tracking-widest text-right">Status</th>
-                                 </tr>
-                              </thead>
-                              <tbody className="divide-y divide-zinc-50">
-                                 {workshopEntries.map((i) => (
-                                    <tr key={i.id}>
-                                       <td className="px-8 py-4 text-[11px] font-mono text-zinc-400">{i.id}</td>
-                                       <td className="px-6 py-4">
-                                          <div className="flex flex-col">
-                                             <span className="text-[13px] font-bold text-zinc-900">{i.name}</span>
-                                             <span className="text-[11px] text-zinc-400">{i.email}</span>
-                                          </div>
-                                       </td>
-                                       <td className="px-6 py-4 text-[12px] font-bold text-zinc-500">{i.branch} / {i.year} Year</td>
-                                       <td className="px-8 py-4 text-right">
-                                          <span className="px-2 py-0.5 bg-emerald-50 text-emerald-600 text-[10px] font-bold border border-emerald-100 uppercase">{i.status}</span>
-                                       </td>
-                                    </tr>
-                                 ))}
-                              </tbody>
-                           </table>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 relative z-10">
+                           {hiringApplications.length === 0 ? (
+                              <div className="col-span-full py-32 text-center bg-zinc-50 border border-dashed border-zinc-200">
+                                 <p className="text-[13px] text-zinc-400 font-bold uppercase tracking-widest">No candidates detected yet.</p>
+                              </div>
+                           ) : (
+                              hiringApplications.map((app) => (
+                                 <div key={app.id} className="bg-white border border-zinc-100 p-8 space-y-6 hover:border-blue-600 transition-all group shadow-sm bg-zinc-50/10">
+                                    <div className="flex items-start justify-between">
+                                       <div className="space-y-1">
+                                          <h4 className="text-[16px] font-bold text-zinc-900 group-hover:text-blue-600 transition-colors uppercase tracking-tight">{app.name}</h4>
+                                          <p className="text-[10px] font-black text-blue-600 uppercase tracking-[0.1em]">{app.position}</p>
+                                       </div>
+                                       <span className={`text-[8px] font-black uppercase px-2 py-0.5 tracking-tighter ${app.status === 'pending' ? 'bg-amber-100 text-amber-600' : 'bg-emerald-100 text-emerald-600'}`}>
+                                          {app.status}
+                                       </span>
+                                    </div>
+                                    
+                                    <div className="space-y-4 pt-4 border-t border-zinc-50">
+                                       <div className="flex items-center gap-3 text-zinc-500">
+                                          <Mail size={14} strokeWidth={2.5} />
+                                          <span className="text-[12px] font-bold lowercase">{app.email}</span>
+                                       </div>
+                                       <div className="flex items-center gap-3 text-zinc-500">
+                                          <Phone size={14} strokeWidth={2.5} />
+                                          <span className="text-[12px] font-bold">{app.phone}</span>
+                                       </div>
+                                       <div className="flex items-center gap-3">
+                                          <Paperclip size={14} className="text-zinc-400" strokeWidth={2.5} />
+                                          <a href={app.resumeLink} target="_blank" className="text-[10px] font-black text-zinc-900 hover:text-blue-600 uppercase tracking-widest flex items-center gap-2 border-b-2 border-zinc-100 group-hover:border-blue-600 transition-all">
+                                             View Resume link
+                                             <ExternalLink size={10} />
+                                          </a>
+                                       </div>
+                                    </div>
+
+                                    <div className="pt-4 flex items-center gap-2">
+                                       <button className="h-9 px-4 bg-zinc-900 text-white text-[10px] font-bold uppercase tracking-widest hover:bg-blue-600 transition-all w-full flex items-center justify-center gap-2">
+                                          Update status
+                                          <ChevronDown size={12} />
+                                       </button>
+                                       <button className="h-9 w-9 flex items-center justify-center border border-zinc-100 text-zinc-300 hover:text-red-500 hover:bg-red-50 transition-all">
+                                          <Trash2 size={14} />
+                                       </button>
+                                    </div>
+                                 </div>
+                              ))
+                           )}
                         </div>
                      </div>
                   </motion.div>
