@@ -4,6 +4,9 @@ import bcrypt from "bcryptjs";
 import { Role } from "@prisma/client";
 
 export async function POST(req: Request) {
+    // 🛡️ REGISTRATION FREEZE PROTOCOL
+    return NextResponse.json({ error: "Registrations for Batch 2 are currently frozen. Please contact the Student Forge administration for information on next intake." }, { status: 403 });
+
     try {
         const { name, email, password, college } = await req.json();
 

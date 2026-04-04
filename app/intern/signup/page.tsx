@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ShieldAlert, Loader2, Eye, EyeOff, User, Mail, School } from "lucide-react";
+import { ShieldAlert, Loader2, Eye, EyeOff, User, Mail, School, Lock } from "lucide-react";
 
 const COLLEGES = [
     "CMR Institute of Technology (CMRIT Hyderabad)",
@@ -82,96 +82,47 @@ export default function InternSignupPage() {
                     </div>
                 </div>
 
-                {/* Active Registration Form */}
-                <form onSubmit={handleSignup} className="space-y-4">
-                    {error && (
-                        <div className="bg-red-50 text-red-500 p-3 text-[12px] font-bold text-center border border-red-200">
-                            {error}
+                {/* Registration Frozen Overlay */}
+                <div className="space-y-8 animate-in fade-in duration-700">
+                    <div className="flex flex-col items-center gap-6 py-10 bg-zinc-50 border border-dashed border-zinc-200">
+                        <div className="w-16 h-16 bg-white border border-zinc-100 flex items-center justify-center shadow-sm">
+                            <Lock className="text-zinc-400" size={24} />
                         </div>
-                    )}
-
-                    <div className="space-y-3">
-                        <div className="relative">
-                            <User className="absolute left-3 top-3.5 text-zinc-400" size={16} />
-                            <input
-                                type="text"
-                                placeholder="Full Name"
-                                value={name}
-                                onChange={(e) => setName(e.target.value)}
-                                className="w-full h-[44px] pl-10 pr-4 bg-[#FAFAFA] border border-zinc-200 text-[13px] text-zinc-900 focus:outline-none focus:border-zinc-400 transition-colors placeholder:text-zinc-500 shadow-inner shadow-zinc-50"
-                                required
-                            />
-                        </div>
-
-                        <div className="relative">
-                            <Mail className="absolute left-3 top-3.5 text-zinc-400" size={16} />
-                            <input
-                                type="email"
-                                placeholder="Email Address"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                className="w-full h-[44px] pl-10 pr-4 bg-[#FAFAFA] border border-zinc-200 text-[13px] text-zinc-900 focus:outline-none focus:border-zinc-400 transition-colors placeholder:text-zinc-500 shadow-inner shadow-zinc-50"
-                                required
-                            />
-                        </div>
-
-                        <div className="relative">
-                            <School className="absolute left-3 top-3.5 text-zinc-400" size={16} />
-                            <select
-                                value={college}
-                                onChange={(e) => setCollege(e.target.value)}
-                                className="w-full h-[44px] pl-10 pr-4 bg-[#FAFAFA] border border-zinc-200 text-[13px] text-zinc-900 focus:outline-none focus:border-zinc-400 transition-colors appearance-none shadow-inner shadow-zinc-50"
-                                required
-                            >
-                                <option value="" disabled className="text-zinc-500">Select your college</option>
-                                {COLLEGES.map((c) => (
-                                    <option key={c} value={c}>{c}</option>
-                                ))}
-                            </select>
-                            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-zinc-400">
-                                <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
-                            </div>
-                        </div>
-
-                        <div className="relative">
-                            {showPassword ? (
-                                <EyeOff className="absolute left-3 top-3.5 text-zinc-400" size={16} />
-                            ) : (
-                                <Eye className="absolute left-3 top-3.5 text-zinc-400" size={16} />
-                            )}
-                            <input
-                                type={showPassword ? "text" : "password"}
-                                placeholder="Password"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                className="w-full h-[44px] pl-10 pr-10 bg-[#FAFAFA] border border-zinc-200 text-[13px] text-zinc-900 focus:outline-none focus:border-zinc-400 transition-colors placeholder:text-zinc-500 shadow-inner shadow-zinc-50"
-                                required
-                            />
-                            <button
-                                type="button"
-                                onClick={() => setShowPassword(!showPassword)}
-                                className="absolute right-3 top-3.5 text-zinc-400 hover:text-zinc-600 transition-colors"
-                            >
-                                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-                            </button>
+                        <div className="text-center px-6">
+                            <h3 className="text-xl font-bold tracking-tight text-zinc-900 mb-2 uppercase tracking-widest text-[14px]">
+                                Registration Frozen
+                            </h3>
+                            <p className="text-[13px] text-zinc-500 leading-relaxed font-medium">
+                                Batch 2 registrations are currently closed. Please contact administrators for the next intake window.
+                            </p>
                         </div>
                     </div>
 
-                    <button
-                        type="submit"
-                        disabled={loading}
-                        className="w-full h-[44px] bg-zinc-900 text-white text-[13px] font-bold mt-2 transition-all hover:bg-black active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center shadow-xl shadow-black/10"
-                    >
-                        {loading ? <Loader2 className="animate-spin" size={16} /> : "Create Account"}
-                    </button>
+                    <div className="flex flex-col gap-3">
+                         <div className="bg-amber-50 border-l-2 border-amber-400 p-4 flex items-start gap-3">
+                             <ShieldAlert className="text-amber-500 mt-0.5" size={14} />
+                             <p className="text-[11px] text-amber-800 font-bold leading-relaxed uppercase tracking-tight">
+                                Administrator Control Active: System state is locked.
+                             </p>
+                         </div>
+                         <Link 
+                            href="/intern/signin" 
+                            className="w-full h-12 bg-black text-white text-[11px] font-bold uppercase tracking-widest flex items-center justify-center hover:opacity-90 transition-opacity"
+                         >
+                            Intern Sign In Login
+                         </Link>
+                         <Link 
+                            href="/" 
+                            className="w-full h-12 border border-zinc-100 bg-white text-zinc-500 text-[11px] font-bold uppercase tracking-widest flex items-center justify-center hover:bg-zinc-50 transition-colors"
+                         >
+                            Return to Website Home
+                         </Link>
+                    </div>
 
-                    <p className="text-center text-[12px] text-zinc-500 mt-6 pt-6 border-t border-zinc-100">
-                        Already have an account?{" "}
-                        <Link href="/intern/signin" className="text-black font-bold hover:underline underline-offset-2">
-                            Sign In
-                        </Link>
+                    <p className="text-center text-[10px] text-zinc-400 mt-6 pt-6 border-t border-zinc-100 font-bold uppercase tracking-widest">
+                        Student Forge Initiative • Administrative Protocol
                     </p>
-                </form>
+                </div>
             </div>
         </div>
     );
