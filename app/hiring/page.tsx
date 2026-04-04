@@ -164,7 +164,7 @@ export default function HiringPage() {
                         {/* Banner Section */}
                         <div className="bg-zinc-50 flex items-center justify-center p-0">
                             <img
-                                src="https://ik.imagekit.io/dypkhqxip/sfhiring"
+                                src="https://ik.imagekit.io/dypkhqxip/Hiring%20(1).png"
                                 alt="Hiring Banner"
                                 className="w-full h-full object-cover"
                             />
