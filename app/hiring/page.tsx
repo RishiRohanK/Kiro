@@ -7,12 +7,12 @@ import SubNavbar from "../components/home/SubNavbar";
 import Footer from "../components/home/Footer";
 
 const POSITIONS = [
-    "marketing lead",
-    "ui/ux designer",
-    "frontend developer",
-    "backend developer",
-    "content strategist",
-    "social media manager"
+    "Marketing Lead",
+    "UI/UX Designer",
+    "Frontend Developer",
+    "Backend Developer",
+    "Content Strategist",
+    "Social Media Manager"
 ];
 
 interface FormInputProps {
@@ -54,10 +54,10 @@ export default function HiringPage() {
                 setFormData({ name: "", email: "", phone: "", position: "", resumeLink: "" });
             } else {
                 const data = await res.json();
-                setError(data.error || "could not send application. please try again.");
+                setError(data.error || "Could not send application. Please try again.");
             }
         } catch (err) {
-            setError("connection issue.");
+            setError("Connection issue.");
         } finally {
             setLoading(false);
         }
@@ -76,60 +76,60 @@ export default function HiringPage() {
                             {!success ? (
                                 <div className="space-y-12">
                                     <div className="space-y-3">
-                                        <h1 className="text-3xl font-normal tracking-tight text-zinc-900 lowercase">
-                                            apply here
+                                        <h1 className="text-3xl font-normal tracking-tight text-zinc-900">
+                                            Apply here
                                         </h1>
-                                        <p className="text-[14px] text-zinc-500 font-medium lowercase">
-                                            we are looking for people to join our team. 
-                                            please fill the details below to apply.
+                                        <p className="text-[14px] text-zinc-500 font-medium">
+                                            We are looking for people to join our team. 
+                                            Please fill the details below to apply.
                                         </p>
                                     </div>
 
                                     <form onSubmit={handleSubmit} className="space-y-8">
                                         {error && (
-                                            <p className="text-red-600 text-[12px] font-bold bg-red-50 p-3 border border-red-100 lowercase">
+                                            <p className="text-red-600 text-[12px] font-bold bg-red-50 p-3 border border-red-100">
                                                 {error}
                                             </p>
                                         )}
 
                                         <div className="grid grid-cols-1 gap-6">
                                             <FormInput 
-                                                label="your name" 
+                                                label="Your Name" 
                                                 value={formData.name}
                                                 onChange={(val: string) => setFormData({...formData, name: val})}
                                                 required
                                             />
                                             <FormInput 
-                                                label="email" 
+                                                label="Email" 
                                                 type="email"
                                                 value={formData.email}
                                                 onChange={(val: string) => setFormData({...formData, email: val})}
                                                 required
                                             />
                                             <FormInput 
-                                                label="phone" 
+                                                label="Phone" 
                                                 value={formData.phone}
                                                 onChange={(val: string) => setFormData({...formData, phone: val})}
                                                 required
                                             />
                                             
                                             <div className="space-y-2">
-                                                <label className="text-[11px] font-bold text-zinc-400 lowercase block">position</label>
+                                                <label className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest block">Position</label>
                                                 <select 
-                                                    className="w-full h-11 bg-zinc-50 border border-zinc-200 px-4 text-[13px] outline-none focus:bg-white focus:border-zinc-900 transition-all appearance-none font-medium rounded-none lowercase"
+                                                    className="w-full h-11 bg-zinc-50 border border-zinc-200 px-4 text-[13px] outline-none focus:bg-white focus:border-zinc-900 transition-all appearance-none font-medium rounded-none"
                                                     value={formData.position}
                                                     onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFormData({...formData, position: e.target.value})}
                                                     required
                                                 >
-                                                    <option value="" disabled className="lowercase">select position</option>
+                                                    <option value="" disabled>Select position</option>
                                                     {POSITIONS.map(p => (
-                                                        <option key={p} value={p} className="lowercase">{p}</option>
+                                                        <option key={p} value={p}>{p}</option>
                                                     ))}
                                                 </select>
                                             </div>
 
                                             <FormInput 
-                                                label="resume drive link" 
+                                                label="Resume Drive Link" 
                                                 placeholder="https://drive.google.com/..."
                                                 value={formData.resumeLink}
                                                 onChange={(val: string) => setFormData({...formData, resumeLink: val})}
@@ -140,9 +140,9 @@ export default function HiringPage() {
                                         <button 
                                             type="submit" 
                                             disabled={loading}
-                                            className="h-12 bg-black text-white px-10 text-[11px] font-bold lowercase tracking-widest hover:bg-zinc-800 transition-all disabled:opacity-30 rounded-none w-full md:w-auto"
+                                            className="h-12 bg-black text-white px-10 text-[11px] font-bold uppercase tracking-widest hover:bg-zinc-800 transition-all disabled:opacity-30 rounded-none w-full md:w-auto"
                                         >
-                                            {loading ? <Loader2 className="animate-spin" size={14} /> : "send application"}
+                                            {loading ? <Loader2 className="animate-spin" size={14} /> : "Send Application"}
                                         </button>
                                     </form>
                                 </div>
@@ -150,16 +150,16 @@ export default function HiringPage() {
                                 <div className="py-20 text-center space-y-6 animate-in fade-in duration-700">
                                     <CheckCircle2 size={48} className="mx-auto text-zinc-900" strokeWidth={1} />
                                     <div className="space-y-2">
-                                        <h3 className="text-2xl font-normal text-zinc-900 lowercase">application sent.</h3>
-                                        <p className="text-[14px] text-zinc-500 max-w-xs mx-auto lowercase">
-                                            thank you for applying. we will check your details and talk to you soon.
+                                        <h3 className="text-2xl font-normal text-zinc-900">Application Sent.</h3>
+                                        <p className="text-[14px] text-zinc-500 max-w-xs mx-auto">
+                                            Thank you for applying. We will check your details and talk to you soon.
                                         </p>
                                     </div>
                                     <button 
                                         onClick={() => setSuccess(false)}
-                                        className="text-[11px] font-bold lowercase border-b border-zinc-900 pb-1 hover:text-zinc-500 hover:border-zinc-500 transition-all"
+                                        className="text-[11px] font-bold uppercase tracking-widest border-b border-zinc-900 pb-1 hover:text-zinc-500 hover:border-zinc-500 transition-all"
                                     >
-                                        go back to form
+                                        Go back to form
                                     </button>
                                 </div>
                             )}
@@ -169,7 +169,7 @@ export default function HiringPage() {
                         <div className="bg-zinc-50 flex items-center justify-center p-0">
                             <img 
                                 src="https://ik.imagekit.io/dypkhqxip/sfhiring" 
-                                alt="hiring banner" 
+                                alt="Hiring Banner" 
                                 className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700"
                             />
                         </div>
@@ -185,13 +185,13 @@ export default function HiringPage() {
 function FormInput({ label, value, onChange, type = "text", placeholder = "", required = false }: FormInputProps) {
     return (
         <div className="space-y-2">
-            <label className="text-[11px] font-bold text-zinc-400 lowercase block">{label}</label>
+            <label className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest block">{label}</label>
             <input 
                 type={type}
                 value={value}
                 onChange={(e) => onChange(e.target.value)}
                 placeholder={placeholder}
-                className="w-full h-11 bg-zinc-50 border border-zinc-200 px-4 text-[13px] outline-none focus:bg-white focus:border-zinc-900 transition-all font-medium rounded-none lowercase placeholder:lowercase"
+                className="w-full h-11 bg-zinc-50 border border-zinc-200 px-4 text-[13px] outline-none focus:bg-white focus:border-zinc-900 transition-all font-medium rounded-none"
                 required={required}
             />
         </div>
