@@ -22,7 +22,10 @@ import {
     Ticket,
     CreditCard,
     ArrowRight,
-    QrCode
+    QrCode,
+    XCircle,
+    AlertCircle,
+    X
 } from "lucide-react";
 import Breadcrumbs from "../../../components/Breadcrumbs";
 import Footer from "../../../components/home/Footer";
@@ -48,6 +51,7 @@ export default function EnrollmentPage() {
     const [finalPrice, setFinalPrice] = useState<number>(1499);
     const [paymentMethod, setPaymentMethod] = useState<"razorpay" | "upi">("razorpay");
     const [isRevealed, setIsRevealed] = useState(false);
+    const [failureDetails, setFailureDetails] = useState<any>(null);
 
     const [formData, setFormData] = useState({
         name: "",
@@ -159,7 +163,8 @@ export default function EnrollmentPage() {
                     if (verifyData.success) {
                         setStep(4);
                     } else {
-                        setError("Payment verification failed. Please contact support.");
+                        setFailureDetails({ description: verifyData.error || "Verification failed" });
+                        setStep(5);
                     }
                 },
                 prefill: {
@@ -171,6 +176,12 @@ export default function EnrollmentPage() {
             };
 
             const rzp = new window.Razorpay(options);
+            
+            rzp.on('payment.failed', function (response: any) {
+                setFailureDetails(response.error);
+                setStep(5);
+            });
+
             rzp.open();
         } catch (err: any) {
              console.error("Payment Step Error:", err);
@@ -217,6 +228,81 @@ export default function EnrollmentPage() {
             <Loader2 className="w-8 h-8 animate-spin" strokeWidth={1.5} />
         </div>
     );
+
+    if (step === 5) {
+        return (
+            <div className="min-h-screen bg-white text-zinc-900 flex flex-col items-center justify-center p-6">
+                <div className="w-full max-w-md border border-zinc-200 shadow-xl overflow-hidden animate-in zoom-in-95 duration-500">
+                    <div className="bg-red-600 p-8 text-white text-center">
+                        <div className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-4 backdrop-blur-sm">
+                             <XCircle size={32} />
+                        </div>
+                        <h2 className="text-2xl font-bold tracking-tight uppercase tracking-widest text-[14px]">Payment Failed</h2>
+                        <p className="text-red-100 text-[12px] font-medium mt-1">Transaction was not successful</p>
+                    </div>
+
+                    <div className="p-8 bg-white space-y-6">
+                        <div className="space-y-4">
+                             <div className="flex justify-between items-center text-[11px] font-bold text-zinc-400 uppercase tracking-widest">
+                                 <span>Transaction Details</span>
+                                 <span className="text-zinc-300">#RAZORPAY_FAILURE</span>
+                             </div>
+                             <div className="space-y-3 pt-2">
+                                 <div className="flex justify-between text-[13px]">
+                                     <span className="text-zinc-500">Course</span>
+                                     <span className="font-bold text-zinc-900 text-right max-w-[200px]">{course?.title}</span>
+                                 </div>
+                                 <div className="flex justify-between text-[13px]">
+                                     <span className="text-zinc-500">Amount</span>
+                                     <span className="font-bold text-zinc-900">₹{finalPrice}</span>
+                                 </div>
+                                 <div className="flex justify-between text-[13px]">
+                                     <span className="text-zinc-500">Payment ID</span>
+                                     <span className="font-medium text-zinc-900">{failureDetails?.metadata?.payment_id || "N/A"}</span>
+                                 </div>
+                                 <div className="flex justify-between text-[13px]">
+                                     <span className="text-zinc-500">Timestamp</span>
+                                     <span className="font-medium text-zinc-900">{new Date().toLocaleString()}</span>
+                                 </div>
+                             </div>
+                        </div>
+
+                        <div className="bg-zinc-50 p-4 border border-zinc-100 space-y-2">
+                            <span className="text-[9px] font-bold text-red-600 uppercase tracking-widest block">Failure Reason</span>
+                            <p className="text-[12px] text-zinc-600 leading-relaxed font-medium italic">
+                                "{failureDetails?.description || "The transaction was canceled or interrupted systemically."}"
+                            </p>
+                        </div>
+
+                        <div className="pt-4 space-y-3">
+                            <button 
+                                onClick={() => { setStep(2); setError(""); }}
+                                className="w-full bg-black text-white h-12 text-[11px] font-bold uppercase tracking-widest hover:opacity-90 transition-opacity"
+                            >
+                                Try Payment Again
+                            </button>
+                            <button 
+                                onClick={() => setStep(1)}
+                                className="w-full bg-zinc-100 text-zinc-900 h-12 text-[11px] font-bold uppercase tracking-widest hover:bg-zinc-200 transition-colors"
+                            >
+                                Re-verify Details
+                            </button>
+                        </div>
+                    </div>
+
+                    <div className="p-4 bg-zinc-50/50 border-t border-zinc-100 text-center">
+                         <p className="text-[10px] text-zinc-400 font-medium">
+                             If money was deducted, it will be refunded within 5-7 business days.
+                         </p>
+                    </div>
+                </div>
+                
+                <Link href="/courses" className="mt-8 text-[11px] font-bold text-zinc-400 uppercase tracking-[0.2em] hover:text-black transition-colors flex items-center gap-2">
+                    <ArrowLeft size={12} /> Back to Academy
+                </Link>
+            </div>
+        );
+    }
 
     if (step === 4) {
         return (
