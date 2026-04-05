@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Shield, Lock, Mail, ArrowRight, Loader2 } from "lucide-react";
-import { motion } from "framer-motion";
+import { Shield, Lock, Mail, ArrowRight, Loader2, RefreshCw } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { PWAInstallButton } from "@/app/components/PWAInstallButton";
 
 export default function CleedLoginPage() {
@@ -11,7 +11,22 @@ export default function CleedLoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [showPreloader, setShowPreloader] = useState(true);
   const router = useRouter();
+
+  useEffect(() => {
+    // 10 Second Preloader Logic
+    const loaderTimer = setTimeout(() => {
+      setShowPreloader(false);
+      // Persistent Login Check
+      const isAuthenticated = localStorage.getItem("cleed_auth_v2");
+      if (isAuthenticated === "active") {
+        router.push("/cleed/dashboard");
+      }
+    }, 10000);
+
+    return () => clearTimeout(loaderTimer);
+  }, [router]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,6 +41,8 @@ export default function CleedLoginPage() {
       });
 
       if (res.ok) {
+        // Persist session
+        localStorage.setItem("cleed_auth_v2", "active");
         router.push("/cleed/dashboard");
       } else {
         const data = await res.json();
@@ -39,7 +56,44 @@ export default function CleedLoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F5F7FA] flex flex-col items-center justify-center p-6 relative">
+    <div className="min-h-screen bg-[#F5F7FA] flex flex-col items-center justify-center p-6 relative overflow-hidden">
+      <AnimatePresence>
+        {showPreloader && (
+          <motion.div 
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 0, scale: 1.1 }}
+            transition={{ duration: 0.8, ease: "easeInOut" }}
+            className="fixed inset-0 z-[100] flex flex-col items-center justify-center pointer-events-auto"
+            style={{ backgroundColor: '#F5332C' }}
+          >
+            <div className="flex flex-col items-center gap-10">
+              <motion.div 
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+                className="flex items-center gap-3"
+              >
+                <span className="text-5xl font-black text-white tracking-tighter uppercase leading-none select-none">Cleed</span>
+                <motion.div 
+                  animate={{ scale: [1, 1.2, 1] }}
+                  transition={{ duration: 1.5, repeat: Infinity }}
+                  className="h-4 w-4 bg-white rounded-none" 
+                />
+              </motion.div>
+
+              <div className="relative h-16 w-16">
+                 <motion.div
+                   animate={{ rotate: 360 }}
+                   transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                   className="absolute inset-0 border-4 border-white/20 border-t-white rounded-full"
+                 />
+              </div>
+              <p className="text-white/40 text-[10px] font-bold tracking-[0.3em] uppercase mt-4">Initializing Security Node</p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Structural Accent */}
       <div className="absolute top-0 left-0 w-full h-1 bg-[#F5332C]" />
       
