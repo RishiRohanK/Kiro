@@ -57,6 +57,7 @@ interface Intern {
    college?: string;
    githubLink?: string;
    batch?: string;
+   attendancePercentage?: number;
 }
 
 interface HiringApplication {
@@ -1259,6 +1260,11 @@ export default function CleedDashboard() {
                                                 <span className={`text-[11px] font-bold ${intern.isApproved ? 'text-emerald-600' : 'text-amber-600'}`}>
                                                    {intern.isApproved ? 'Authorized' : 'Pending auth'}
                                                 </span>
+                                                {intern.isApproved && (
+                                                   <span className={`ml-2 text-[10px] font-bold px-2 py-0.5 rounded-full ${intern.attendancePercentage && intern.attendancePercentage < 75 ? 'bg-red-50 text-red-600 border border-red-100' : 'bg-emerald-50 text-emerald-600 border border-emerald-100'}`}>
+                                                      {intern.attendancePercentage ?? 0}% Attendance
+                                                   </span>
+                                                )}
                                              </div>
                                           </td>
                                           <td className="px-8 py-5 text-right">

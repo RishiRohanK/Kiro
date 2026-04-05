@@ -3,17 +3,34 @@ import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
-    const interns = await prisma.user.findMany({
-      where: {
-        role: "INTERN",
-      },
+    const [interns, globalTotalDays] = await Promise.all([
+      prisma.user.findMany({
+        where: { role: "INTERN" },
+        include: {
+          attendances: {
+            select: { status: true }
+          }
+        },
+        orderBy: { createdAt: "desc" },
+      }),
+      prisma.attendance.groupBy({
+        by: ['date']
+      }).then(res => res.length)
+    ]);
 
-      orderBy: {
-        createdAt: "desc",
-      },
+    const internsWithAttendance = interns.map(intern => {
+      const presentCount = intern.attendances.filter(a => a.status === 'PRESENT' || a.status === 'LATE').length;
+      const percentage = globalTotalDays > 0 ? (presentCount / globalTotalDays) * 100 : 0;
+      const { attendances, ...rest } = intern;
+      return {
+        ...rest,
+        attendancePercentage: Math.round(percentage),
+        presentCount,
+        totalTrackingDays: globalTotalDays
+      };
     });
 
-    return NextResponse.json(interns);
+    return NextResponse.json(internsWithAttendance);
   } catch (error) {
     console.error("Error fetching interns:", error);
     return NextResponse.json({ error: "Failed to fetch interns" }, { status: 500 });

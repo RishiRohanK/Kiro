@@ -99,7 +99,7 @@ function InternDashboardContent() {
    const [user, setUser] = useState<any>(null);
    const [tasks, setTasks] = useState<Task[]>([]);
    const [schedules, setSchedules] = useState<ScheduleItem[]>([]);
-   const [attendanceHistory, setAttendanceHistory] = useState<any[]>([]);
+   const [attendanceData, setAttendanceData] = useState<{ history: any[], totalTrackingDays: number }>({ history: [], totalTrackingDays: 0 });
    const [isLoading, setIsLoading] = useState(true);
    const [isUpdating, setIsUpdating] = useState<string | null>(null);
    const [userStatus, setUserStatus] = useState<any>(null);
@@ -283,7 +283,7 @@ function InternDashboardContent() {
          const res = await fetch(`/api/intern/attendance?internId=${id}`);
          if (res.ok) {
             const data = await res.json();
-            setAttendanceHistory(data);
+            setAttendanceData(data);
          }
       } catch (error) {
          console.error("Attendance retrieval offline");
@@ -428,8 +428,9 @@ function InternDashboardContent() {
       }
    };
 
-   const attendanceCount = attendanceHistory.filter(a => a.status === 'PRESENT').length;
-   const attendancePercentage = attendanceHistory.length > 0 ? Math.round((attendanceCount / attendanceHistory.length) * 100) : 0;
+   const attendanceCount = attendanceData.history.filter(a => a.status === 'PRESENT' || a.status === 'LATE').length;
+   const attendancePercentage = attendanceData.totalTrackingDays > 0 ? Math.round((attendanceCount / attendanceData.totalTrackingDays) * 100) : 0;
+   const isLowAttendance = attendancePercentage < 75;
 
    return (
       <div className="p-4 lg:p-6 max-w-[1600px] w-full mx-auto bg-white min-h-screen pb-24 lg:pb-6">
@@ -475,6 +476,24 @@ function InternDashboardContent() {
                      Admin notice: Interns make sure to raise your hand whenever you come in for the day, at least once, so that your attendance can be calculated
                   </p>
                </div>
+
+               {isLowAttendance && attendanceData.totalTrackingDays > 0 && (
+                  <motion.div 
+                     initial={{ opacity: 0, x: -20 }} 
+                     animate={{ opacity: 1, x: 0 }}
+                     className="p-4 bg-amber-50 border border-amber-200 flex items-center gap-4 shadow-sm"
+                  >
+                     <div className="h-10 w-10 bg-amber-500 text-white flex items-center justify-center shrink-0 rounded-full">
+                        <AlertCircle size={20} />
+                     </div>
+                     <div className="flex-1">
+                        <h3 className="text-xs font-bold text-amber-900 uppercase tracking-tight">Low Attendance Warning</h3>
+                        <p className="text-[10px] text-amber-700 mt-1 font-medium leading-relaxed">
+                           Your current attendance is <span className="font-bold underline">{attendancePercentage}%</span>. The minimum required attendance is 75%. Please ensure regular attendance to avoid mission termination.
+                        </p>
+                     </div>
+                  </motion.div>
+               )}
                {userStatus?.offerLetterUrl && (
                   <div className="p-4 lg:p-6 border border-emerald-100 bg-white flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm hover:border-emerald-200 transition-all">
                      <div className="flex items-start lg:items-center gap-3">
@@ -919,11 +938,11 @@ function InternDashboardContent() {
                   <table className="w-full text-left border-collapse">
                      <thead><tr className="bg-zinc-50/50 border-b border-zinc-100"><th className="px-8 py-5 text-xs font-bold text-zinc-400">Date</th><th className="px-8 py-5 text-xs font-bold text-zinc-400">Type</th><th className="px-8 py-5 text-xs font-bold text-zinc-400 text-right">Status</th></tr></thead>
                      <tbody className="divide-y divide-zinc-50">
-                        {attendanceHistory.map((log) => (
+                        {attendanceData.history.map((log: any) => (
                            <tr key={log.id} className="hover:bg-zinc-50/30 transition-colors">
                               <td className="px-8 py-4"><div className="flex flex-col"><span className="text-sm font-semibold text-zinc-900">{new Date(log.date).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })}</span><span className="text-[10px] text-zinc-300">{new Date(log.date).getFullYear()} record</span></div></td>
                               <td className="px-8 py-4"><span className="text-xs text-zinc-500">Regular session</span></td>
-                              <td className="px-8 py-4 text-right"><div className="flex items-center justify-end gap-2"><div className={`h-1.5 w-1.5 ${log.status === "PRESENT" ? "bg-emerald-500" : "bg-rose-500"}`} /><span className={`text-xs font-semibold ${log.status === "PRESENT" ? "text-emerald-600" : "text-rose-600"}`}>{log.status === "PRESENT" ? "Present" : "Absent"}</span></div></td>
+                              <td className="px-8 py-4 text-right"><div className="flex items-center justify-end gap-2"><div className={`h-1.5 w-1.5 ${log.status === "PRESENT" || log.status === "LATE" ? "bg-emerald-500" : "bg-rose-500"}`} /><span className={`text-xs font-semibold ${log.status === "PRESENT" || log.status === "LATE" ? "text-emerald-600" : "text-rose-600"}`}>{log.status === "PRESENT" ? "Present" : log.status === "LATE" ? "Late" : "Absent"}</span></div></td>
                            </tr>
                         ))}
                      </tbody>
