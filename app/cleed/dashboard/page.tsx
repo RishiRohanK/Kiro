@@ -897,11 +897,12 @@ export default function CleedDashboard() {
                   </summary>
                   <div className="mt-1 space-y-0.5 ml-2 border-l border-zinc-200 pl-2">
                      {[
-                       { id: "interns", icon: Users, label: "Interns" },
-                       { id: "authorizations", icon: ShieldCheck, label: "Approvals" },
-                       { id: "internships", icon: Briefcase, label: "Internships" },
-                       { id: "certification", icon: FileBadge, label: "Certificates" },
-                       { id: "attendance", icon: CalendarCheck, label: "Attendance" },
+                        { id: "interns", icon: Users, label: "Interns" },
+                        { id: "authorizations", icon: ShieldCheck, label: "Approvals" },
+                        { id: "hiring", icon: Briefcase, label: "Hiring Registry" },
+                        { id: "internships", icon: Briefcase, label: "Internships" },
+                        { id: "certification", icon: FileBadge, label: "Certificates" },
+                        { id: "attendance", icon: CalendarCheck, label: "Attendance" },
                      ].map((item) => (
                        <button
                           key={item.id}
@@ -1149,7 +1150,7 @@ export default function CleedDashboard() {
                            </div>
                         </div>
 
-                        <div className="bg-purple-50/50 border border-purple-100 p-5 rounded-lg shadow-sm group text-left transition-all hover:bg-purple-50">
+                        <div onClick={() => setActiveTab("hiring")} className="bg-purple-50/50 border border-purple-100 p-5 rounded-lg shadow-sm group text-left transition-all hover:bg-purple-50 cursor-pointer">
                            <div className="space-y-4">
                               <p className="text-[10px] font-bold text-purple-600 uppercase tracking-widest leading-none">Hiring Applications</p>
                               <div className="flex items-end justify-between">
@@ -1197,6 +1198,7 @@ export default function CleedDashboard() {
                               {[
                                  { id: "interns", label: "Registry" },
                                  { id: "internships", label: "Oversight" },
+                                 { id: "hiring", label: "Recruit" },
                                  { id: "assign", label: "Dispatch" },
                                  { id: "submissions", label: "Audits" },
                                  { id: "schedule", label: "Cycles" },
