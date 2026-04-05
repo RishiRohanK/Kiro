@@ -221,6 +221,41 @@ export default function CleedDashboard() {
    const [sendingInternship, setSendingInternship] = useState(false);
    const [internshipSuccess, setInternshipSuccess] = useState(false);
 
+   // Interview Schedule State
+   const [isInterviewModalOpen, setIsInterviewModalOpen] = useState(false);
+   const [selectedApplicant, setSelectedApplicant] = useState<HiringApplication | null>(null);
+   const [interviewTiming, setInterviewTiming] = useState("");
+   const [isSendingInterview, setIsSendingInterview] = useState(false);
+   const [interviewSuccess, setInterviewSuccess] = useState(false);
+
+   const handleScheduleInterview = async (e: React.FormEvent) => {
+      e.preventDefault();
+      if (!selectedApplicant || !interviewTiming) return;
+      setIsSendingInterview(true);
+      setInterviewSuccess(false);
+      try {
+         const res = await fetch("/api/cleed/hiring/interview", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ applicantId: selectedApplicant.id, timing: interviewTiming }),
+         });
+         const data = await res.json();
+         if (data.success) {
+            setInterviewSuccess(true);
+            setTimeout(() => {
+               setIsInterviewModalOpen(false);
+               setInterviewSuccess(false);
+               setInterviewTiming("");
+               fetchData(); // Refresh list to see updated status
+            }, 2000);
+         }
+      } catch (error) {
+         console.error("Interview schedule fail");
+      } finally {
+         setIsSendingInterview(null as any);
+      }
+   };
+
    // Mobile Menu
    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -246,6 +281,16 @@ export default function CleedDashboard() {
          fetchSubmissions();
       }
    }, [activeTab]);
+
+   const handleDeleteHiringApplication = async (id: string) => {
+      if (!confirm("Permanently neutralize this application node?")) return;
+      try {
+         await fetch(`/api/hiring?id=${id}`, { method: "DELETE" });
+         fetchData();
+      } catch (err) {
+         console.error("Delete fail");
+      }
+   };
 
    const fetchSubmissions = async () => {
       setLoadingSubmissions(true);
@@ -1675,13 +1720,26 @@ export default function CleedDashboard() {
                                        </div>
                                     </div>
 
-                                    <div className="pt-4 flex items-center gap-2">
-                                       <button className="h-9 px-4 bg-zinc-900 text-white text-[10px] font-bold uppercase tracking-widest hover:bg-blue-600 transition-all w-full flex items-center justify-center gap-2">
-                                          Update status
-                                          <ChevronDown size={12} />
-                                       </button>
-                                       <button className="h-9 w-9 flex items-center justify-center border border-zinc-100 text-zinc-300 hover:text-red-500 hover:bg-red-50 transition-all">
+                                    <div className="pt-4 flex flex-col gap-2">
+                                       <div className="flex items-center gap-2">
+                                          <button 
+                                             onClick={() => {
+                                                setSelectedApplicant(app);
+                                                setIsInterviewModalOpen(true);
+                                             }}
+                                             className="h-9 px-4 bg-blue-600 text-white text-[10px] font-bold uppercase tracking-widest hover:bg-blue-700 transition-all flex-1 flex items-center justify-center gap-2"
+                                          >
+                                             <Calendar size={12} />
+                                             Invite to Interview
+                                          </button>
+                                          <button className="h-9 px-4 bg-zinc-900 text-white text-[10px] font-bold uppercase tracking-widest hover:bg-zinc-800 transition-all flexitems-center justify-center gap-2">
+                                             Update status
+                                             <ChevronDown size={12} />
+                                          </button>
+                                       </div>
+                                       <button onClick={() => handleDeleteHiringApplication(app.id)} className="h-9 w-full flex items-center justify-center border border-zinc-100 text-zinc-300 hover:text-red-500 hover:bg-red-50 transition-all">
                                           <Trash2 size={14} />
+                                          <span className="ml-2 text-[10px] font-bold uppercase">Delete Node</span>
                                        </button>
                                     </div>
                                  </div>
@@ -2156,6 +2214,62 @@ export default function CleedDashboard() {
                                     <button disabled={loadingSchedules} className="md:col-span-2 w-full h-14 bg-zinc-900 text-white text-[13px] font-bold hover:bg-black transition-all flex items-center justify-center gap-3">
                                        {loadingSchedules ? <RefreshCw className="animate-spin" size={18} /> : "Finalize Recalibration"}
                                     </button>
+                                 </form>
+                              </motion.div>
+                           </div>
+                        )}
+
+                        {isInterviewModalOpen && selectedApplicant && (
+                           <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/40 backdrop-blur-sm">
+                              <motion.div 
+                                 initial={{ opacity: 0, scale: 0.95 }}
+                                 animate={{ opacity: 1, scale: 1 }}
+                                 exit={{ opacity: 0, scale: 0.95 }}
+                                 className="bg-white max-w-lg w-full p-10 border border-zinc-100 shadow-2xl relative text-left"
+                              >
+                                 <button 
+                                    onClick={() => setIsInterviewModalOpen(false)}
+                                    className="absolute top-6 right-6 text-zinc-300 hover:text-black transition-colors"
+                                 >
+                                    <CloseIcon size={20} />
+                                 </button>
+
+                                 <div className="mb-10">
+                                    <h3 className="text-xl font-bold tracking-tight text-zinc-900 mb-2">Schedule Interview</h3>
+                                    <p className="text-[13px] text-zinc-500 font-medium">Invitation will be dispatched to <b>{selectedApplicant.name}</b> for the <b>{selectedApplicant.position}</b> node.</p>
+                                 </div>
+
+                                 <form onSubmit={handleScheduleInterview} className="space-y-6">
+                                    <div className="space-y-2">
+                                       <label className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest flex items-center gap-2">
+                                          <Clock size={12} />
+                                          Interview Timing
+                                       </label>
+                                       <input 
+                                          required 
+                                          type="text"
+                                          placeholder="e.g. Tomorrow, 11:00 AM IST"
+                                          value={interviewTiming}
+                                          onChange={(e) => setInterviewTiming(e.target.value)}
+                                          className="w-full h-12 bg-zinc-50 border border-zinc-100 px-4 text-sm font-bold outline-none focus:border-blue-600 focus:bg-white transition-all"
+                                       />
+                                    </div>
+
+                                    <div className="p-4 bg-zinc-50 border border-zinc-100 text-[11px] text-zinc-500 space-y-2">
+                                       <p className="font-bold text-zinc-900 uppercase tracking-tighter">Location (Fixed Node)</p>
+                                       <p>STUDENT FORGE Corporate office</p>
+                                       <p>HF2R+CCV, Devender Colony, Kompally, Hyderabad, Telangana 500100</p>
+                                    </div>
+
+                                    <button 
+                                       disabled={isSendingInterview || !interviewTiming} 
+                                       className="w-full h-14 bg-blue-600 text-white text-[13px] font-bold hover:bg-blue-700 transition-all flex items-center justify-center gap-3 disabled:opacity-50"
+                                    >
+                                       {isSendingInterview ? <RefreshCw className="animate-spin" size={18} /> : "Dispatch Invitation"}
+                                    </button>
+                                    {interviewSuccess && (
+                                       <p className="text-emerald-600 text-[11px] font-bold text-center animate-pulse">Invitation Sent. Applicant standing updated.</p>
+                                    )}
                                  </form>
                               </motion.div>
                            </div>

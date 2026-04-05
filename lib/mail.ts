@@ -130,3 +130,23 @@ export const sendTeamAssignmentEmail = async (email: string, name: string, proje
         return false;
     }
 };
+
+export const sendInterviewEmail = async (email: string, name: string, position: string, timing: string) => {
+    const title = "Interview Invitation";
+    const content = `Hello ${name},<br/><br/>Congratulations! Your application for the <b>${position}</b> position has been shortlisted. We would like to invite you for an interview to further discuss your profile.<br/><br/><b>Interview Timing:</b> ${timing}<br/><b>Location:</b> STUDENT FORGE Corporate office in Hyderabad, Telangana<br/><b>Address:</b> HF2R+CCV, Devender Colony, Kompally, Hyderabad, Telangana 500100<br/><br/>Please confirm your availability by replying to this email. We look forward to meeting you.`;
+    const ctaUrl = "https://maps.app.goo.gl/qYmZQxU95P2h5uWf6"; // Link to directions if possible, or just a placeholder
+    const html = getSimpleTemplate(title, content, "View Directions", ctaUrl, "HR Team");
+
+    try {
+        await transporter.sendMail({
+            from: '"Student Forge HR" <studentforgetechnologies@gmail.com>',
+            to: email,
+            subject: `Interview Invitation: ${position}`,
+            html: html,
+        });
+        return true;
+    } catch (error) {
+        console.error("Interview Mail Error:", error);
+        return false;
+    }
+}
