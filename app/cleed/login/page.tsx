@@ -61,34 +61,23 @@ export default function CleedLoginPage() {
         {showPreloader && (
           <motion.div 
             initial={{ opacity: 1 }}
-            exit={{ opacity: 0, scale: 1.1 }}
-            transition={{ duration: 0.8, ease: "easeInOut" }}
-            className="fixed inset-0 z-[100] flex flex-col items-center justify-center pointer-events-auto"
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.6, ease: "easeInOut" }}
+            className="fixed inset-0 z-[100] flex flex-col items-center justify-center"
             style={{ backgroundColor: '#F5332C' }}
           >
-            <div className="flex flex-col items-center gap-10">
-              <motion.div 
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
-                className="flex items-center gap-3"
-              >
-                <span className="text-5xl font-black text-white tracking-tighter uppercase leading-none select-none">Cleed</span>
-                <motion.div 
-                  animate={{ scale: [1, 1.2, 1] }}
-                  transition={{ duration: 1.5, repeat: Infinity }}
-                  className="h-4 w-4 bg-white rounded-none" 
-                />
-              </motion.div>
-
-              <div className="relative h-16 w-16">
+            <div className="flex flex-col items-center gap-8">
+              <div className="flex items-center gap-2">
+                <span className="text-4xl font-black text-white tracking-tighter uppercase leading-none select-none">Cleed</span>
+                <div className="h-2 w-2 bg-white rounded-none" />
+              </div>
+              <div className="h-10 w-10 relative">
                  <motion.div
                    animate={{ rotate: 360 }}
                    transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                   className="absolute inset-0 border-4 border-white/20 border-t-white rounded-full"
+                   className="absolute inset-0 border-[2px] border-white/20 border-t-white rounded-full"
                  />
               </div>
-              <p className="text-white/40 text-[10px] font-bold tracking-[0.3em] uppercase mt-4">Initializing Security Node</p>
             </div>
           </motion.div>
         )}
