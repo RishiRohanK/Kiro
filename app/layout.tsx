@@ -14,15 +14,15 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Student Forge | Skill Grid",
-  description: "Learn to build modern software with our expert-led courses and projects.",
+  title: "Cleed Admin | Terminal",
+  description: "Secure administrative management system for Cleed operations.",
   manifest: "/manifest.json",
   icons: {
     icon: [
-      { url: "/sf-next-logo.png", type: "image/png" }
+      { url: "https://ik.imagekit.io/dypkhqxip/White%20Modern%20Minimalist%20Signature%20Brand%20Logo%20(1).png", type: "image/png" }
     ],
-    shortcut: "/sf-next-logo.png",
-    apple: "/cleedlogo.png",
+    shortcut: "https://ik.imagekit.io/dypkhqxip/White%20Modern%20Minimalist%20Signature%20Brand%20Logo%20(1).png",
+    apple: "https://ik.imagekit.io/dypkhqxip/White%20Modern%20Minimalist%20Signature%20Brand%20Logo%20(1).png",
   },
 };
 
@@ -37,11 +37,11 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-        <meta name="theme-color" content="#000000" />
+        <meta name="theme-color" content="#F5332C" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-        <meta name="apple-mobile-web-app-title" content="Dashboard" />
-        <link rel="apple-touch-icon" href="/cleedlogo.png" />
+        <meta name="apple-mobile-web-app-title" content="Cleed" />
+        <link rel="apple-touch-icon" href="https://ik.imagekit.io/dypkhqxip/White%20Modern%20Minimalist%20Signature%20Brand%20Logo%20(1).png" />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased selection:bg-zinc-50 selection:text-black`}
