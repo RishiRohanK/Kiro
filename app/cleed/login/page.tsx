@@ -26,102 +26,108 @@ export default function CleedLoginPage() {
       });
 
       if (res.ok) {
-        // In a real app, set cookie/session here
-        // For simplicity, we'll just redirect
         router.push("/cleed/dashboard");
       } else {
         const data = await res.json();
-        setError(data.error || "Invalid credentials");
+        setError(data.error || "Access denied. Check credentials.");
       }
     } catch (err) {
-      setError("An error occurred. Please try again.");
+      setError("Communication failure. Try again.");
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center p-6 relative overflow-hidden">
-      {/* Decorative Background */}
-      <div className="absolute top-0 left-0 w-full h-full bg-[#0055FF]/5 blur-[120px] rounded-full -translate-x-1/2 -translate-y-1/2" />
-      <div className="absolute bottom-0 right-0 w-full h-full bg-[#0055FF]/5 blur-[120px] rounded-full translate-x-1/2 translate-y-1/2" />
+    <div className="min-h-screen bg-[#F5F7FA] flex flex-col items-center justify-center p-6 relative">
+      {/* Structural Accent */}
+      <div className="absolute top-0 left-0 w-full h-1 bg-[#F5332C]" />
       
       <motion.div 
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-md relative z-10"
+        className="w-full max-w-sm"
       >
-        <div className="bg-zinc-900/50 backdrop-blur-xl border border-zinc-800 p-8 md:p-12 shadow-2xl">
-          <div className="flex flex-col items-center mb-10 text-center">
-            <div className="h-16 w-16 bg-[#0055FF] flex items-center justify-center mb-6 shadow-2xl shadow-[#0055FF]/20">
-              <Shield className="text-white h-8 w-8" />
+        <div className="bg-white border border-zinc-200 p-10 rounded-none shadow-sm space-y-8 relative overflow-hidden">
+          {/* Industrial Corner Mark */}
+          <div className="absolute top-0 right-0 h-4 w-4" style={{ backgroundColor: '#F5332C' }} />
+
+          <div className="flex items-center gap-2">
+             <span className="text-2xl font-black text-zinc-900 tracking-tighter uppercase leading-none select-none">Cleed</span>
+             <div className="h-2 w-2 rounded-none" style={{ backgroundColor: '#F5332C' }} />
+          </div>
+
+          <div className="space-y-4">
+            <div className="space-y-1">
+              <h2 className="text-xl font-bold tracking-tight text-zinc-900">Log in</h2>
+              <p className="text-zinc-500 text-[13px] font-medium leading-none mb-4">Access the administrative terminal.</p>
             </div>
-            <h1 className="text-2xl font-bold tracking-tight text-white mb-2">Cleed Access</h1>
-            <p className="text-zinc-500 text-sm">Secure administrative gateway</p>
+            {/* Structural Sub-line */}
+            <div className="h-[1px] w-full bg-zinc-100" />
           </div>
 
           <form onSubmit={handleLogin} className="space-y-6">
             <div className="space-y-2">
-              <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 ml-1">Email Identifier</label>
+              <label className="text-[11px] font-bold text-zinc-400">Email address</label>
               <div className="relative group">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-600 group-focus-within:text-[#0055FF] transition-colors" />
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400 group-focus-within:text-[#F5332C] transition-colors" />
                 <input 
                   required
                   type="email" 
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Enter administrator email"
-                  className="w-full h-14 bg-black/40 border border-zinc-800 pl-12 pr-4 text-base md:text-sm text-white outline-none focus:border-[#0055FF] transition-all"
+                  placeholder="admin@cleed.com"
+                  className="w-full h-12 bg-zinc-50 border border-zinc-200 pl-12 pr-4 text-sm font-bold text-zinc-900 outline-none focus:border-[#F5332C] focus:bg-white transition-all rounded-none"
                 />
               </div>
             </div>
 
             <div className="space-y-2">
-              <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 ml-1">Security Key</label>
+              <label className="text-[11px] font-bold text-zinc-400">Security key</label>
               <div className="relative group">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-600 group-focus-within:text-[#0055FF] transition-colors" />
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400 group-focus-within:text-[#F5332C] transition-colors" />
                 <input 
                   required
                   type="password" 
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter secure password"
-                  className="w-full h-14 bg-black/40 border border-zinc-800 pl-12 pr-4 text-base md:text-sm text-white outline-none focus:border-[#0055FF] transition-all"
+                  placeholder="Enter password"
+                  className="w-full h-12 bg-zinc-50 border border-zinc-200 pl-12 pr-4 text-sm font-bold text-zinc-900 outline-none focus:border-[#F5332C] focus:bg-white transition-all rounded-none"
                 />
               </div>
             </div>
 
             {error && (
-              <motion.p 
+              <motion.div 
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="text-red-500 text-[12px] font-medium text-center"
+                className="bg-red-50 border border-red-100 p-3"
               >
-                {error}
-              </motion.p>
+                <p className="text-red-600 text-[11px] font-bold text-center">{error}</p>
+              </motion.div>
             )}
 
             <button 
               disabled={isLoading}
               type="submit"
-              className="w-full h-14 bg-white text-black text-[12px] font-bold uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-[#0055FF] hover:text-white transition-all disabled:opacity-50"
+              className="w-full h-12 bg-zinc-900 text-white text-[11px] font-bold tracking-widest hover:bg-black transition-all disabled:opacity-50 flex items-center justify-center gap-2 rounded-none"
             >
               {isLoading ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
               ) : (
-                <>
-                  Authenticate <ArrowRight className="h-4 w-4" />
-                </>
+                <>Sign in <ArrowRight size={14} /></>
               )}
             </button>
           </form>
 
-          <p className="mt-10 text-center text-zinc-600 text-[11px]">
-            Unauthorized access is strictly prohibited and monitored.
-          </p>
+          <div className="pt-6 border-t border-zinc-100 flex flex-col items-center gap-6">
+            <p className="text-center text-zinc-400 text-[10px] font-medium leading-relaxed">
+              Administrative access only. Technical activity is synchronized and monitored.
+            </p>
+            <PWAInstallButton />
+          </div>
         </div>
       </motion.div>
-      <PWAInstallButton />
     </div>
   );
 }

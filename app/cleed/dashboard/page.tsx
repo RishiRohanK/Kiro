@@ -812,42 +812,49 @@ export default function CleedDashboard() {
             </button>
          </div>
 
-         {/* Mobile Menu Overlay - High-Density Industrial Red */}
+         {/* Mobile Menu Overlay - Full Industrial Command Hub */}
          <AnimatePresence>
             {isMobileMenuOpen && (
                <motion.div
                   initial={{ opacity: 0, y: -20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
-                  className="md:hidden fixed inset-0 z-[55] pt-24 px-6 overflow-y-auto pb-20"
+                  className="md:hidden fixed inset-0 z-[55] pt-24 px-6 overflow-y-auto pb-40"
                   style={{ backgroundColor: '#F5332C' }}
                >
-                  <div className="grid grid-cols-2 gap-3 pb-10">
+                  <div className="grid grid-cols-2 gap-3">
                      {[
                         { id: "overview", icon: LayoutDashboard, label: "Home" },
+                        { id: "events", icon: LayoutDashboard, label: "Events" }, // Using LayoutDashboard since Globe is more for Ideas
+                        { id: "ideas", icon: Globe, label: "Ideas" },
                         { id: "interns", icon: Users, label: "Interns" },
-                        { id: "attendance", icon: CalendarCheck, label: "Attendance" },
+                        { id: "authorizations", icon: ShieldCheck, label: "Approvals" },
                         { id: "hiring", icon: Briefcase, label: "Hiring" },
-                        { id: "assign", icon: Send, label: "Dispatch" },
-                        { id: "history", icon: History, label: "Logbook" },
-                        { id: "submissions", icon: ExternalLink, label: "Audit" },
+                        { id: "internships", icon: Briefcase, label: "Programs" },
+                        { id: "certification", icon: FileBadge, label: "Certificates" },
+                        { id: "attendance", icon: CalendarCheck, label: "Attendance" },
+                        { id: "schedule", icon: Calendar, label: "Daily Plan" },
                         { id: "manage_schedules", icon: Settings, label: "Schedules" },
+                        { id: "assign", icon: Send, label: "Dispatch" },
+                        { id: "submissions", icon: ExternalLink, label: "Audit" },
+                        { id: "mentorship", icon: Users, label: "Mentors" },
+                        { id: "history", icon: History, label: "Logbook" }
                      ].map((item) => (
                         <button
                            key={item.id}
                            onClick={() => { setActiveTab(item.id); setIsMobileMenuOpen(false); }}
-                           className={`h-28 border flex flex-col items-center justify-center gap-3 transition-all rounded-none ${activeTab === item.id
+                           className={`h-24 border flex flex-col items-center justify-center gap-2.5 transition-all rounded-none ${activeTab === item.id
                                  ? "bg-white/20 text-white border-white border-l-4 -ml-[1px]"
                                  : "bg-white/5 text-white/80 border-white/10"
                               }`}
                         >
-                           <item.icon size={22} strokeWidth={activeTab === item.id ? 2.5 : 2} />
-                           <span className="text-[12px] font-bold text-center tracking-tight">{item.label}</span>
+                           <item.icon size={20} strokeWidth={activeTab === item.id ? 2.5 : 2} />
+                           <span className="text-[11px] font-bold text-center tracking-tight leading-none">{item.label}</span>
                         </button>
                      ))}
                   </div>
-                  <div className="pt-10 border-t border-white/10 text-center">
-                     <p className="text-white/40 text-[10px] font-bold tracking-widest uppercase">Cleed Management Terminal</p>
+                  <div className="mt-12 pt-8 border-t border-white/10 text-center pb-20">
+                     <p className="text-white/40 text-[9px] font-bold tracking-widest uppercase">Cleed Management Terminal</p>
                   </div>
                </motion.div>
             )}
