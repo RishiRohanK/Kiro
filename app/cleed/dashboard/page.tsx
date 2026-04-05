@@ -812,36 +812,42 @@ export default function CleedDashboard() {
             </button>
          </div>
 
-         {/* Mobile Menu Overlay - High-Density Sync */}
+         {/* Mobile Menu Overlay - High-Density Industrial Red */}
          <AnimatePresence>
             {isMobileMenuOpen && (
                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="md:hidden fixed inset-0 bg-white z-[55] pt-24 px-6 overflow-y-auto pb-20"
+                  initial={{ opacity: 0, y: -20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  className="md:hidden fixed inset-0 z-[55] pt-24 px-6 overflow-y-auto pb-20"
+                  style={{ backgroundColor: '#F5332C' }}
                >
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-2 gap-3 pb-10">
                      {[
                         { id: "overview", icon: LayoutDashboard, label: "Home" },
                         { id: "interns", icon: Users, label: "Interns" },
-                        { id: "attendance", icon: CalendarCheck, label: "Presence" },
+                        { id: "attendance", icon: CalendarCheck, label: "Attendance" },
                         { id: "hiring", icon: Briefcase, label: "Hiring" },
-                        { id: "assign", icon: Send, label: "Tasks" },
-                        { id: "history", icon: History, label: "Log" }
+                        { id: "assign", icon: Send, label: "Dispatch" },
+                        { id: "history", icon: History, label: "Logbook" },
+                        { id: "submissions", icon: ExternalLink, label: "Audit" },
+                        { id: "manage_schedules", icon: Settings, label: "Schedules" },
                      ].map((item) => (
                         <button
                            key={item.id}
                            onClick={() => { setActiveTab(item.id); setIsMobileMenuOpen(false); }}
-                           className={`h-24 border border-white/10 flex flex-col items-center justify-center gap-3 transition-all ${activeTab === item.id
-                                 ? "bg-white/20 text-white font-bold"
-                                 : "bg-white/5 text-white/70"
+                           className={`h-28 border flex flex-col items-center justify-center gap-3 transition-all rounded-none ${activeTab === item.id
+                                 ? "bg-white/20 text-white border-white border-l-4 -ml-[1px]"
+                                 : "bg-white/5 text-white/80 border-white/10"
                               }`}
                         >
-                           <item.icon size={20} />
-                           <span className="text-[11px] font-bold text-center tracking-tight uppercase">{item.label}</span>
+                           <item.icon size={22} strokeWidth={activeTab === item.id ? 2.5 : 2} />
+                           <span className="text-[12px] font-bold text-center tracking-tight">{item.label}</span>
                         </button>
                      ))}
+                  </div>
+                  <div className="pt-10 border-t border-white/10 text-center">
+                     <p className="text-white/40 text-[10px] font-bold tracking-widest uppercase">Cleed Management Terminal</p>
                   </div>
                </motion.div>
             )}
