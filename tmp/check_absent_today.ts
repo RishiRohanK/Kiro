@@ -11,16 +11,19 @@ const adapter = new PrismaPg(pool)
 const prisma = new PrismaClient({ adapter })
 
 async function main() {
+  const today = '2026-04-05Z'; // Simplified for this check
   const batch2Interns = await prisma.user.findMany({
-    where: { batch: 'Batch 2' },
-    select: { name: true, createdAt: true }
+    where: { batch: 'Batch 2', role: 'INTERN' },
+    include: {
+      attendances: {
+        where: { date: { gte: new Date('2026-04-05T00:00:00Z'), lt: new Date('2026-04-06T00:00:00Z') } }
+      }
+    }
   })
-  console.log('Batch 2 Interns createdAt dates:')
-  console.table(batch2Interns.map(i => ({ name: i.name, createdAt: i.createdAt.toISOString() })))
   
-  const allDates = await prisma.attendance.groupBy({ by: ['date'] })
-  console.log('Unique Attendance Dates:')
-  console.log(allDates.map(d => d.date.toISOString()).sort())
+  const absentToday = batch2Interns.filter(i => i.attendances.length === 0);
+  console.log(`Batch 2 interns absent today (2026-04-05): ${absentToday.length}`);
+  console.table(absentToday.map(i => ({ name: i.name })));
 }
 
 main()

@@ -458,7 +458,14 @@ function InternDashboardContent() {
                   </div>
                   <div className="p-5 border border-emerald-100 bg-emerald-50/40 shadow-sm flex flex-col justify-between h-32">
                      <div className="flex items-center justify-between"><span className="text-[10px] font-bold text-emerald-600 uppercase tracking-tight">Attendance</span><Check size={16} className="text-emerald-500" /></div>
-                     <div className="mt-auto"><div className="flex items-baseline gap-2"><p className="text-2xl font-bold text-zinc-900">{attendancePercentage}%</p><span className="text-[10px] text-emerald-500/70 font-bold">({attendanceCount} Days)</span></div><p className="text-[10px] text-emerald-500/70 mt-1 uppercase font-bold tracking-tight">Present percentage</p></div>
+                      <div className="mt-auto">
+                        <div className="flex items-baseline gap-2">
+                           <p className="text-2xl font-bold text-zinc-900">{attendancePercentage}%</p>
+                           <span className="text-[10px] text-emerald-500/70 font-bold">({attendanceCount}/{attendanceData.totalTrackingDays} Days)</span>
+                        </div>
+                        <p className="text-[10px] text-emerald-500/70 mt-1 uppercase font-bold tracking-tight">Mission Presence Ratio</p>
+                        <p className="text-[8px] text-zinc-400 mt-2 italic font-medium">*Calculated relative to sessions active since your enrollment</p>
+                      </div>
                   </div>
                   <div className="p-5 border border-zinc-200 bg-zinc-50 shadow-sm flex flex-col justify-between h-32">
                      <div className="flex items-center justify-between"><span className="text-[10px] font-bold text-zinc-500 uppercase tracking-tight">Status</span><FileBadge size={16} className={userStatus?.offerLetterUrl ? "text-emerald-500" : "text-zinc-300"} /></div>
