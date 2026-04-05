@@ -37,3 +37,37 @@ export async function GET(req: Request) {
         return NextResponse.json({ error: "Failed to retrieve applicants." }, { status: 500 });
     }
 }
+
+export async function PATCH(req: Request) {
+    try {
+        const { id, status } = await req.json();
+        if (!id || !status) return NextResponse.json({ error: "ID and status required." }, { status: 400 });
+
+        const updated = await prisma.hiringApplication.update({
+            where: { id },
+            data: { status }
+        });
+
+        return NextResponse.json({ success: true, updated });
+    } catch (error) {
+        console.error("Hiring Status patch error:", error);
+        return NextResponse.json({ error: "Failed to update node." }, { status: 500 });
+    }
+}
+
+export async function DELETE(req: Request) {
+    try {
+        const { searchParams } = new URL(req.url);
+        const id = searchParams.get("id");
+        if (!id) return NextResponse.json({ error: "ID required." }, { status: 400 });
+
+        await prisma.hiringApplication.delete({
+            where: { id }
+        });
+
+        return NextResponse.json({ success: true, message: "Node neutralized." });
+    } catch (error) {
+        console.error("Hiring deletion error:", error);
+        return NextResponse.json({ error: "Failed to neutralize node." }, { status: 500 });
+    }
+}

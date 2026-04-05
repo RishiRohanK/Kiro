@@ -1674,9 +1674,9 @@ export default function CleedDashboard() {
 
                {/* Hiring Applications Registry Hub */}
                {activeTab === "hiring" && (
-                  <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-10">
-                     <div className="bg-white border border-zinc-100 p-8 md:p-12 shadow-sm relative overflow-hidden text-left text-zinc-900 selection:bg-black selection:text-white">
-                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 mb-12 relative z-10">
+                  <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-6 md:space-y-10">
+                     <div className="bg-white border border-zinc-100 p-6 md:p-12 shadow-sm relative overflow-hidden text-left text-zinc-900 selection:bg-black selection:text-white">
+                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8 md:mb-12 relative z-10">
                            <div className="space-y-2">
                               <h2 className="text-2xl font-bold tracking-tight text-zinc-900">Hiring registry</h2>
                               <p className="text-[14px] text-zinc-500 font-medium">Recruit talent efficiently. Total applicants: {hiringApplications.length}</p>
@@ -1729,29 +1729,53 @@ export default function CleedDashboard() {
                                        )}
                                     </div>
 
-                                    <div className="pt-4 flex flex-col gap-2">
-                                       <div className="flex items-center gap-2">
-                                          <button 
-                                             onClick={() => {
-                                                setSelectedApplicant(app);
-                                                setIsInterviewModalOpen(true);
-                                                if (app.interviewTiming) setInterviewTiming(app.interviewTiming);
-                                             }}
-                                             className="h-9 px-4 bg-blue-600 text-white text-[10px] font-bold uppercase tracking-widest hover:bg-blue-700 transition-all flex-1 flex items-center justify-center gap-2"
-                                          >
-                                             <Calendar size={12} />
-                                             {app.status === "interview_scheduled" ? "Reschedule Interview" : "Invite to Interview"}
-                                          </button>
-                                          <button className="h-9 px-4 bg-zinc-900 text-white text-[10px] font-bold uppercase tracking-widest hover:bg-zinc-800 transition-all flexitems-center justify-center gap-2">
-                                             Update status
-                                             <ChevronDown size={12} />
-                                          </button>
-                                       </div>
-                                       <button onClick={() => handleDeleteHiringApplication(app.id)} className="h-9 w-full flex items-center justify-center border border-zinc-100 text-zinc-300 hover:text-red-500 hover:bg-red-50 transition-all">
-                                          <Trash2 size={14} />
-                                          <span className="ml-2 text-[10px] font-bold uppercase">Delete Node</span>
-                                       </button>
-                                    </div>
+                                    <div className="pt-4 space-y-3">
+                                        <div className="flex flex-col sm:flex-row items-stretch gap-2">
+                                           <button 
+                                              onClick={() => {
+                                                 setSelectedApplicant(app);
+                                                 setIsInterviewModalOpen(true);
+                                                 if (app.interviewTiming) setInterviewTiming(app.interviewTiming);
+                                              }}
+                                              className="h-10 px-4 bg-blue-600 text-white text-[10px] font-black uppercase tracking-widest hover:bg-blue-700 transition-all flex-1 flex items-center justify-center gap-2"
+                                           >
+                                              <Calendar size={12} />
+                                              {app.status === "interview_scheduled" ? "Reschedule" : "Invite"}
+                                           </button>
+                                           
+                                           <div className="flex-1 relative group/status">
+                                              <button className="h-10 w-full px-4 bg-zinc-900 text-white text-[10px] font-black uppercase tracking-widest hover:bg-zinc-800 transition-all flex items-center justify-center gap-2">
+                                                 Status
+                                                 <ChevronDown size={12} />
+                                              </button>
+                                              <div className="absolute bottom-full left-0 w-full bg-white border border-zinc-100 shadow-2xl overflow-hidden opacity-0 invisible group-hover/status:opacity-100 group-hover/status:visible transition-all z-20">
+                                                 {['pending', 'interview_scheduled', 'offered', 'rejected'].map((s) => (
+                                                    <button 
+                                                       key={s}
+                                                       onClick={async () => {
+                                                          try {
+                                                             await fetch("/api/hiring", {
+                                                                method: "PATCH",
+                                                                headers: { "Content-Type": "application/json" },
+                                                                body: JSON.stringify({ id: app.id, status: s })
+                                                             });
+                                                             fetchData();
+                                                          } catch (err) { console.error("Status update fail"); }
+                                                       }}
+                                                       className={`w-full text-left px-4 py-3 text-[9px] font-black uppercase tracking-widest border-b border-zinc-50 last:border-0 hover:bg-zinc-50 ${app.status === s ? 'text-blue-600 bg-blue-50/20' : 'text-zinc-500'}`}
+                                                    >
+                                                       {s.replace("_", " ")}
+                                                    </button>
+                                                 ))}
+                                              </div>
+                                           </div>
+                                        </div>
+                                        
+                                        <button onClick={() => handleDeleteHiringApplication(app.id)} className="h-10 w-full flex items-center justify-center border border-zinc-100 text-zinc-300 hover:text-red-500 hover:bg-red-50 transition-all">
+                                           <Trash2 size={14} />
+                                           <span className="ml-2 text-[10px] font-black uppercase">Neutralize node</span>
+                                        </button>
+                                     </div>
                                  </div>
                               ))
                            )}
@@ -2235,7 +2259,7 @@ export default function CleedDashboard() {
                                  initial={{ opacity: 0, scale: 0.95 }}
                                  animate={{ opacity: 1, scale: 1 }}
                                  exit={{ opacity: 0, scale: 0.95 }}
-                                 className="bg-white max-w-lg w-full p-10 border border-zinc-100 shadow-2xl relative text-left"
+                                 className="bg-white max-w-lg w-full p-6 md:p-10 border border-zinc-100 shadow-2xl relative text-left"
                               >
                                  <button 
                                     onClick={() => setIsInterviewModalOpen(false)}
