@@ -3,30 +3,41 @@ import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
-    const [interns, globalTotalDays] = await Promise.all([
+    const [interns, allDates] = await Promise.all([
       prisma.user.findMany({
         where: { role: "INTERN" },
         include: {
           attendances: {
-            select: { status: true }
+            select: { status: true, date: true }
           }
         },
         orderBy: { createdAt: "desc" },
       }),
       prisma.attendance.groupBy({
         by: ['date']
-      }).then(res => res.length)
+      })
     ]);
 
     const internsWithAttendance = interns.map(intern => {
       const presentCount = intern.attendances.filter(a => a.status === 'PRESENT' || a.status === 'LATE').length;
-      const percentage = globalTotalDays > 0 ? (presentCount / globalTotalDays) * 100 : 0;
+      
+      const internCreationDate = new Date(intern.createdAt);
+      internCreationDate.setHours(0, 0, 0, 0);
+
+      const relevantDaysCount = allDates.filter(d => {
+         const sessionDate = new Date(d.date);
+         sessionDate.setHours(0, 0, 0, 0);
+         return sessionDate >= internCreationDate;
+      }).length;
+
+      const percentage = relevantDaysCount > 0 ? (presentCount / relevantDaysCount) * 100 : 0;
       const { attendances, ...rest } = intern;
+      
       return {
         ...rest,
         attendancePercentage: Math.round(percentage),
         presentCount,
-        totalTrackingDays: globalTotalDays
+        totalTrackingDays: relevantDaysCount
       };
     });
 
