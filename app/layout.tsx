@@ -19,10 +19,10 @@ export const metadata: Metadata = {
   manifest: "/manifest.json",
   icons: {
     icon: [
-      { url: "https://ik.imagekit.io/dypkhqxip/White%20Modern%20Minimalist%20Signature%20Brand%20Logo%20(1).png", type: "image/png" }
+      { url: "https://ik.imagekit.io/dypkhqxip/White%20Modern%20Minimalist%20Signature%20Brand%20Logo%20(2).png", type: "image/png" }
     ],
-    shortcut: "https://ik.imagekit.io/dypkhqxip/White%20Modern%20Minimalist%20Signature%20Brand%20Logo%20(1).png",
-    apple: "https://ik.imagekit.io/dypkhqxip/White%20Modern%20Minimalist%20Signature%20Brand%20Logo%20(1).png",
+    shortcut: "https://ik.imagekit.io/dypkhqxip/White%20Modern%20Minimalist%20Signature%20Brand%20Logo%20(2).png",
+    apple: "https://ik.imagekit.io/dypkhqxip/White%20Modern%20Minimalist%20Signature%20Brand%20Logo%20(2).png",
   },
 };
 
@@ -41,7 +41,7 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="apple-mobile-web-app-title" content="Cleed" />
-        <link rel="apple-touch-icon" href="https://ik.imagekit.io/dypkhqxip/White%20Modern%20Minimalist%20Signature%20Brand%20Logo%20(1).png" />
+        <link rel="apple-touch-icon" href="https://ik.imagekit.io/dypkhqxip/White%20Modern%20Minimalist%20Signature%20Brand%20Logo%20(2).png" />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased selection:bg-zinc-50 selection:text-black`}
