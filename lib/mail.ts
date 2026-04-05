@@ -145,8 +145,11 @@ export const sendInterviewEmail = async (email: string, name: string, position: 
             html: html,
         });
         return true;
-    } catch (error) {
-        console.error("Interview Mail Error:", error);
+    } catch (error: any) {
+        console.error("Interview Mail Dispatch Failure:", error.message || error);
+        if (error.code === 'EAUTH') {
+            console.error("Gmail Authentication Failure. Check your APP PASSWORD.");
+        }
         return false;
     }
 }

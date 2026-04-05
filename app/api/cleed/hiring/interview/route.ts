@@ -22,14 +22,18 @@ export async function POST(req: Request) {
         const mailSent = await sendInterviewEmail(applicant.email, applicant.name, applicant.position, timing);
 
         if (mailSent) {
-            // Optionally update applicant status to 'called' or similar
+            // Update applicant status and timing for persistence
             await prisma.hiringApplication.update({
                 where: { id: applicantId },
-                data: { status: "interview_scheduled" }
+                data: { 
+                    status: "interview_scheduled",
+                    interviewTiming: timing
+                }
             });
             return NextResponse.json({ success: true, message: "Interview invitation dispatched successfully." });
         } else {
-            return NextResponse.json({ error: "Failed to dispatch interview email." }, { status: 500 });
+            console.error("sendInterviewEmail returned false for", applicant.email);
+            return NextResponse.json({ error: "Failed to dispatch email. Gmail sync may be blocked or invalid credentials." }, { status: 500 });
         }
 
     } catch (error) {

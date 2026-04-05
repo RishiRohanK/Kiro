@@ -70,6 +70,7 @@ interface HiringApplication {
    position: string;
    resumeLink: string;
    status: string;
+   interviewTiming?: string;
    createdAt: string;
 }
 
@@ -252,7 +253,7 @@ export default function CleedDashboard() {
       } catch (error) {
          console.error("Interview schedule fail");
       } finally {
-         setIsSendingInterview(null as any);
+         setIsSendingInterview(false);
       }
    };
 
@@ -1699,8 +1700,8 @@ export default function CleedDashboard() {
                                           <h4 className="text-[16px] font-bold text-zinc-900 group-hover:text-blue-600 transition-colors uppercase tracking-tight">{app.name}</h4>
                                           <p className="text-[10px] font-black text-blue-600 uppercase tracking-[0.1em]">{app.position}</p>
                                        </div>
-                                       <span className={`text-[8px] font-black uppercase px-2 py-0.5 tracking-tighter ${app.status === 'pending' ? 'bg-amber-100 text-amber-600' : 'bg-emerald-100 text-emerald-600'}`}>
-                                          {app.status}
+                                       <span className={`text-[8px] font-black uppercase px-2 py-0.5 tracking-tighter ${app.status === 'pending' ? 'bg-amber-100 text-amber-600' : app.status === 'interview_scheduled' ? 'bg-blue-100 text-blue-600' : 'bg-emerald-100 text-emerald-600'}`}>
+                                          {app.status.replace("_", " ")}
                                        </span>
                                     </div>
                                     
@@ -1720,6 +1721,12 @@ export default function CleedDashboard() {
                                              <ExternalLink size={10} />
                                           </a>
                                        </div>
+                                       {app.interviewTiming && (
+                                          <div className="flex items-center gap-3 text-blue-600 bg-blue-50/50 p-2 border border-blue-100/50">
+                                             <Clock size={12} />
+                                             <span className="text-[10px] font-bold uppercase">Scheduled: {app.interviewTiming}</span>
+                                          </div>
+                                       )}
                                     </div>
 
                                     <div className="pt-4 flex flex-col gap-2">
@@ -1728,11 +1735,12 @@ export default function CleedDashboard() {
                                              onClick={() => {
                                                 setSelectedApplicant(app);
                                                 setIsInterviewModalOpen(true);
+                                                if (app.interviewTiming) setInterviewTiming(app.interviewTiming);
                                              }}
                                              className="h-9 px-4 bg-blue-600 text-white text-[10px] font-bold uppercase tracking-widest hover:bg-blue-700 transition-all flex-1 flex items-center justify-center gap-2"
                                           >
                                              <Calendar size={12} />
-                                             Invite to Interview
+                                             {app.status === "interview_scheduled" ? "Reschedule Interview" : "Invite to Interview"}
                                           </button>
                                           <button className="h-9 px-4 bg-zinc-900 text-white text-[10px] font-bold uppercase tracking-widest hover:bg-zinc-800 transition-all flexitems-center justify-center gap-2">
                                              Update status

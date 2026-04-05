@@ -255,6 +255,7 @@ model HiringApplication {
   position    String   // Marketing Lead, UI/UX Designer, etc.
   resumeLink  String   // e.g., Drive link
   status      String   @default("pending")
+  interviewTiming String?
   createdAt   DateTime @default(now())
 }
 
