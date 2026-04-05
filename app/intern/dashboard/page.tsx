@@ -99,7 +99,7 @@ function InternDashboardContent() {
    const [user, setUser] = useState<any>(null);
    const [tasks, setTasks] = useState<Task[]>([]);
    const [schedules, setSchedules] = useState<ScheduleItem[]>([]);
-   const [attendanceData, setAttendanceData] = useState<{ history: any[], totalTrackingDays: number }>({ history: [], totalTrackingDays: 0 });
+   const [attendanceData, setAttendanceData] = useState<{ history: any[], totalTrackingDays: number, presentCount?: number }>({ history: [], totalTrackingDays: 0 });
    const [isLoading, setIsLoading] = useState(true);
    const [isUpdating, setIsUpdating] = useState<string | null>(null);
    const [userStatus, setUserStatus] = useState<any>(null);
@@ -428,8 +428,8 @@ function InternDashboardContent() {
       }
    };
 
-   const attendanceCount = attendanceData.history.filter(a => a.status === 'PRESENT' || a.status === 'LATE').length;
-   const attendancePercentage = attendanceData.totalTrackingDays > 0 ? Math.round((attendanceCount / attendanceData.totalTrackingDays) * 100) : 0;
+   const attendanceCount = attendanceData.presentCount || attendanceData.history.filter(a => a.status === 'PRESENT' || a.status === 'LATE').length;
+   const attendancePercentage = attendanceData.totalTrackingDays > 0 ? Math.min(100, Math.round((attendanceCount / attendanceData.totalTrackingDays) * 100)) : 0;
    const isLowAttendance = attendancePercentage < 75;
 
    return (

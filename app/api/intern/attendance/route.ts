@@ -24,25 +24,28 @@ export async function GET(req: Request) {
        return NextResponse.json({ error: "Intern not found" }, { status: 404 });
     }
 
-    const internAttendances = await prisma.attendance.findMany({
+    const allInternAttendances = await prisma.attendance.findMany({
       where: { userId: internId },
-      orderBy: { date: "desc" },
-      take: 30,
     });
 
-    // Start tracking from the day they were created (ignoring time for fair start)
+    const presentCount = new Set(allInternAttendances
+      .filter(a => a.status === 'PRESENT' || a.status === 'LATE')
+      .map(a => new Date(a.date).toDateString())
+    ).size;
+
     const internCreationDate = new Date(intern.createdAt);
     internCreationDate.setHours(0, 0, 0, 0);
 
-    const relevantTrackingDays = allDates.filter(d => {
-       const sessionDate = new Date(d.date);
-       sessionDate.setHours(0, 0, 0, 0);
-       return sessionDate >= internCreationDate;
-    }).length;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const diffTime = Math.abs(today.getTime() - internCreationDate.getTime());
+    const relevantTrackingDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
 
     return NextResponse.json({ 
-      history: internAttendances, 
-      totalTrackingDays: relevantTrackingDays 
+       history: allInternAttendances.slice(0, 30), // Still return short history for UI display
+       totalTrackingDays: relevantTrackingDays,
+       presentCount: presentCount // Added to help UI calculation
     });
   } catch (error) {
     console.error("Attendance Retrieval error:", error);

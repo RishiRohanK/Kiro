@@ -19,23 +19,28 @@ export async function GET() {
     ]);
 
     const internsWithAttendance = interns.map(intern => {
-      const presentCount = intern.attendances.filter(a => a.status === 'PRESENT' || a.status === 'LATE').length;
+      // Use Set to count only unique present days
+      const presentCount = new Set(intern.attendances
+        .filter(a => a.status === 'PRESENT' || a.status === 'LATE')
+        .map(a => new Date(a.date).toDateString())
+      ).size;
       
       const internCreationDate = new Date(intern.createdAt);
       internCreationDate.setHours(0, 0, 0, 0);
 
-      const relevantDaysCount = allDates.filter(d => {
-         const sessionDate = new Date(d.date);
-         sessionDate.setHours(0, 0, 0, 0);
-         return sessionDate >= internCreationDate;
-      }).length;
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      // Total calendar days from creation until today inclusive
+      const diffTime = Math.abs(today.getTime() - internCreationDate.getTime());
+      const relevantDaysCount = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
 
       const percentage = relevantDaysCount > 0 ? (presentCount / relevantDaysCount) * 100 : 0;
       const { attendances, ...rest } = intern;
       
       return {
         ...rest,
-        attendancePercentage: Math.round(percentage),
+        attendancePercentage: Math.min(100, Math.round(percentage)),
         presentCount,
         totalTrackingDays: relevantDaysCount
       };

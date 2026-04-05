@@ -58,6 +58,8 @@ interface Intern {
    githubLink?: string;
    batch?: string;
    attendancePercentage?: number;
+   presentCount?: number;
+   totalTrackingDays?: number;
 }
 
 interface HiringApplication {
@@ -1262,7 +1264,7 @@ export default function CleedDashboard() {
                                                 </span>
                                                 {intern.isApproved && (
                                                    <span className={`ml-2 text-[10px] font-bold px-2 py-0.5 rounded-full ${intern.attendancePercentage && intern.attendancePercentage < 75 ? 'bg-red-50 text-red-600 border border-red-100' : 'bg-emerald-50 text-emerald-600 border border-emerald-100'}`}>
-                                                      {intern.attendancePercentage ?? 0}% Attendance
+                                                      {intern.attendancePercentage ?? 0}% Attendance ({intern.presentCount ?? 0}/{intern.totalTrackingDays ?? 0} Days)
                                                    </span>
                                                 )}
                                              </div>
@@ -1883,8 +1885,13 @@ export default function CleedDashboard() {
                                           )}
                                        </div>
                                     </div>
-                                    <p className="text-[14px] font-bold text-zinc-900 mb-1">{intern.name}</p>
-                                    <p className="text-[10px] text-zinc-400 font-bold mb-6">{intern.branch || 'Technical branch'}</p>
+                                    <p className="text-[14px] font-bold text-zinc-900 mb-0.5">{intern.name}</p>
+                                    <div className="flex items-center gap-2 mb-6">
+                                       <p className="text-[9px] text-zinc-400 font-bold uppercase tracking-tight">{intern.branch || 'Technical branch'}</p>
+                                       <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-sm ${intern.attendancePercentage && intern.attendancePercentage < 75 ? 'bg-red-50 text-red-600' : 'bg-blue-50 text-blue-600'}`}>
+                                          {intern.attendancePercentage ?? 0}% ({intern.presentCount ?? 0}/{intern.totalTrackingDays ?? 0}d)
+                                       </span>
+                                    </div>
                                     <div className="flex items-center gap-2">
                                        <button 
                                           onClick={() => handleMarkAttendance(intern.id, "PRESENT", record?.workSummary || "")}
