@@ -2253,66 +2253,96 @@ export default function CleedDashboard() {
                            </div>
                         )}
 
-                        {isInterviewModalOpen && selectedApplicant && (
-                           <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/40 backdrop-blur-sm">
-                              <motion.div 
-                                 initial={{ opacity: 0, scale: 0.95 }}
-                                 animate={{ opacity: 1, scale: 1 }}
-                                 exit={{ opacity: 0, scale: 0.95 }}
-                                 className="bg-white max-w-lg w-full p-6 md:p-10 border border-zinc-100 shadow-2xl relative text-left"
-                              >
-                                 <button 
-                                    onClick={() => setIsInterviewModalOpen(false)}
-                                    className="absolute top-6 right-6 text-zinc-300 hover:text-black transition-colors"
-                                 >
-                                    <CloseIcon size={20} />
-                                 </button>
-
-                                 <div className="mb-10">
-                                    <h3 className="text-xl font-bold tracking-tight text-zinc-900 mb-2">Schedule Interview</h3>
-                                    <p className="text-[13px] text-zinc-500 font-medium">Invitation will be dispatched to <b>{selectedApplicant.name}</b> for the <b>{selectedApplicant.position}</b> node.</p>
-                                 </div>
-
-                                 <form onSubmit={handleScheduleInterview} className="space-y-6">
-                                    <div className="space-y-2">
-                                       <label className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest flex items-center gap-2">
-                                          <Clock size={12} />
-                                          Interview Timing
-                                       </label>
-                                       <input 
-                                          required 
-                                          type="text"
-                                          placeholder="e.g. Tomorrow, 11:00 AM IST"
-                                          value={interviewTiming}
-                                          onChange={(e) => setInterviewTiming(e.target.value)}
-                                          className="w-full h-12 bg-zinc-50 border border-zinc-100 px-4 text-sm font-bold outline-none focus:border-blue-600 focus:bg-white transition-all"
-                                       />
-                                    </div>
-
-                                    <div className="p-4 bg-zinc-50 border border-zinc-100 text-[11px] text-zinc-500 space-y-2">
-                                       <p className="font-bold text-zinc-900 uppercase tracking-tighter">Location (Fixed Node)</p>
-                                       <p>STUDENT FORGE Corporate office</p>
-                                       <p>HF2R+CCV, Devender Colony, Kompally, Hyderabad, Telangana 500100</p>
-                                    </div>
-
-                                    <button 
-                                       disabled={isSendingInterview || !interviewTiming} 
-                                       className="w-full h-14 bg-blue-600 text-white text-[13px] font-bold hover:bg-blue-700 transition-all flex items-center justify-center gap-3 disabled:opacity-50"
-                                    >
-                                       {isSendingInterview ? <RefreshCw className="animate-spin" size={18} /> : "Dispatch Invitation"}
-                                    </button>
-                                    {interviewSuccess && (
-                                       <p className="text-emerald-600 text-[11px] font-bold text-center animate-pulse">Invitation Sent. Applicant standing updated.</p>
-                                    )}
-                                 </form>
-                              </motion.div>
-                           </div>
-                        )}
                      </AnimatePresence>
                   </motion.div>
                )}
             </div>
          </main>
+
+         <AnimatePresence>
+            {isInterviewModalOpen && selectedApplicant && (
+               <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/40 backdrop-blur-sm">
+                  <motion.div 
+                     initial={{ opacity: 0, scale: 0.95 }}
+                     animate={{ opacity: 1, scale: 1 }}
+                     exit={{ opacity: 0, scale: 0.95 }}
+                     className="bg-white max-w-lg w-full p-6 md:p-10 border border-zinc-100 shadow-2xl relative text-left"
+                  >
+                     <button 
+                        onClick={() => setIsInterviewModalOpen(false)}
+                        className="absolute top-6 right-6 text-zinc-300 hover:text-black transition-colors"
+                     >
+                        <CloseIcon size={20} />
+                     </button>
+
+                     <div className="mb-10">
+                        <h3 className="text-xl font-bold tracking-tight text-zinc-900 mb-2">Schedule Interview</h3>
+                        <p className="text-[13px] text-zinc-500 font-medium">Invitation for <b>{selectedApplicant.name}</b> · <b>{selectedApplicant.position}</b></p>
+                     </div>
+
+                     <form onSubmit={handleScheduleInterview} className="space-y-6">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                           <div className="space-y-2">
+                              <label className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest flex items-center gap-2">
+                                 <Calendar size={12} />
+                                 Date
+                              </label>
+                              <input 
+                                 required 
+                                 type="date"
+                                 value={interviewTiming.split(' at ')[0] || ""}
+                                 onChange={(e) => {
+                                    const time = interviewTiming.split(' at ')[1] || "";
+                                    setInterviewTiming(`${e.target.value}${time ? ' at ' + time : ''}`);
+                                 }}
+                                 className="w-full h-12 bg-zinc-50 border border-zinc-100 px-4 text-sm font-bold outline-none focus:border-blue-600 focus:bg-white transition-all shadow-sm"
+                              />
+                           </div>
+                           <div className="space-y-2">
+                              <label className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest flex items-center gap-2">
+                                 <Clock size={12} />
+                                 Time
+                              </label>
+                              <input 
+                                 required 
+                                 type="time"
+                                 value={interviewTiming.split(' at ')[1] || ""}
+                                 onChange={(e) => {
+                                    const date = interviewTiming.split(' at ')[0] || "";
+                                    setInterviewTiming(`${date}${e.target.value ? ' at ' + e.target.value : ''}`);
+                                 }}
+                                 className="w-full h-12 bg-zinc-50 border border-zinc-100 px-4 text-sm font-bold outline-none focus:border-blue-600 focus:bg-white transition-all shadow-sm"
+                              />
+                           </div>
+                        </div>
+
+                        <div className="space-y-2">
+                           <label className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest">Selected Schedule Preview</label>
+                           <div className="h-12 bg-zinc-900 text-white flex items-center px-4 text-xs font-bold tracking-tight">
+                              {interviewTiming || "Selection required..."}
+                           </div>
+                        </div>
+
+                        <div className="p-4 bg-zinc-50 border border-zinc-100 text-[11px] text-zinc-500 space-y-2">
+                           <p className="font-bold text-zinc-900 uppercase tracking-tighter">Location (Fixed Node)</p>
+                           <p>STUDENT FORGE Corporate office</p>
+                           <p>HF2R+CCV, Devender Colony, Kompally, Hyderabad, Telangana 500100</p>
+                        </div>
+
+                        <button 
+                           disabled={isSendingInterview || !interviewTiming.includes(' at ')} 
+                           className="w-full h-14 bg-blue-600 text-white text-[13px] font-bold hover:bg-blue-700 transition-all flex items-center justify-center gap-3 disabled:opacity-50"
+                        >
+                           {isSendingInterview ? <RefreshCw className="animate-spin" size={18} /> : "Confirm & Send Invitation"}
+                        </button>
+                        {interviewSuccess && (
+                           <p className="text-emerald-600 text-[11px] font-bold text-center animate-pulse">Invitation Sent. Applicant standing updated.</p>
+                        )}
+                     </form>
+                  </motion.div>
+               </div>
+            )}
+         </AnimatePresence>
       </div>
    );
 }
