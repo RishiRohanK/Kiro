@@ -41,3 +41,38 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: "Critical synchronization failure." }, { status: 500 });
     }
 }
+
+export async function PATCH(req: Request) {
+    try {
+        const { applicantId, timing } = await req.json();
+
+        if (!applicantId || !timing) {
+            return NextResponse.json({ error: "Applicant identity and updated timing required." }, { status: 400 });
+        }
+
+        const applicant = await prisma.hiringApplication.findUnique({
+            where: { id: applicantId }
+        });
+
+        if (!applicant) {
+            return NextResponse.json({ error: "Applicant not found." }, { status: 404 });
+        }
+
+        const { sendRescheduleEmail } = await import("@/lib/mail");
+        const mailSent = await sendRescheduleEmail(applicant.email, applicant.name, applicant.position, timing);
+
+        if (mailSent) {
+            await prisma.hiringApplication.update({
+                where: { id: applicantId },
+                data: { interviewTiming: timing }
+            });
+            return NextResponse.json({ success: true, message: "Reschedule notice dispatched successfully." });
+        } else {
+            return NextResponse.json({ error: "Failed to dispatch reschedule email." }, { status: 500 });
+        }
+
+    } catch (error) {
+        console.error("Reschedule API Error:", error);
+        return NextResponse.json({ error: "Critical synchronization failure." }, { status: 500 });
+    }
+}

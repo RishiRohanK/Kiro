@@ -134,7 +134,7 @@ export const sendTeamAssignmentEmail = async (email: string, name: string, proje
 export const sendInterviewEmail = async (email: string, name: string, position: string, timing: string) => {
     const title = "Interview Invitation";
     const content = `Hello ${name},<br/><br/>Congratulations! Your application for the <b>${position}</b> position has been shortlisted. We would like to invite you for an interview to further discuss your profile.<br/><br/><b>Interview Timing:</b> ${timing}<br/><b>Location:</b> STUDENT FORGE Corporate office in Hyderabad, Telangana<br/><b>Address:</b> HF2R+CCV, Devender Colony, Kompally, Hyderabad, Telangana 500100<br/><br/>Please confirm your availability by replying to this email. We look forward to meeting you.`;
-    const ctaUrl = "https://maps.app.goo.gl/qYmZQxU95P2h5uWf6"; // Link to directions if possible, or just a placeholder
+    const ctaUrl = "https://maps.app.goo.gl/6EGvQ1jbTURoiA1a8"; // Link to directions if possible, or just a placeholder
     const html = getSimpleTemplate(title, content, "View Directions", ctaUrl, "HR Team");
 
     try {
@@ -150,6 +150,26 @@ export const sendInterviewEmail = async (email: string, name: string, position: 
         if (error.code === 'EAUTH') {
             console.error("Gmail Authentication Failure. Check your APP PASSWORD.");
         }
+        return false;
+    }
+}
+
+export const sendRescheduleEmail = async (email: string, name: string, position: string, timing: string) => {
+    const title = "Interview Rescheduled";
+    const content = `Hello ${name},<br/><br/>Your interview for the <b>${position}</b> position has been rescheduled. We apologize for any inconvenience caused.<br/><br/><b>Updated Timing:</b> ${timing}<br/><b>Location:</b> STUDENT FORGE Corporate office in Hyderabad, Telangana<br/><b>Address:</b> HF2R+CCV, Devender Colony, Kompally, Hyderabad, Telangana 500100<br/><br/>Please confirm your receipt of this update. We look forward to meeting you.`;
+    const ctaUrl = "https://maps.app.goo.gl/6EGvQ1jbTURoiA1a8";
+    const html = getSimpleTemplate(title, content, "View Directions", ctaUrl, "HR Team");
+
+    try {
+        await transporter.sendMail({
+            from: '"Student Forge HR" <studentforgetechnologies@gmail.com>',
+            to: email,
+            subject: `Updated Schedule: ${position}`,
+            html: html,
+        });
+        return true;
+    } catch (error: any) {
+        console.error("Reschedule Mail Dispatch Failure:", error.message || error);
         return false;
     }
 }

@@ -195,6 +195,7 @@ export default function CleedDashboard() {
    const [loadingSchedules, setLoadingSchedules] = useState(false);
    const [editingSchedule, setEditingSchedule] = useState<any>(null);
    const [batchFilter, setBatchFilter] = useState("Batch 1");
+   const [submissionFilter, setSubmissionFilter] = useState("all"); // "all", "missing_task1_batch1", "missing_task1_batch2"
    // Events Data
    const [eventData, setEventData] = useState({
       title: "",
@@ -234,9 +235,12 @@ export default function CleedDashboard() {
       if (!selectedApplicant || !interviewTiming) return;
       setIsSendingInterview(true);
       setInterviewSuccess(false);
+
+      const isReschedule = selectedApplicant.status === "interview_scheduled";
+
       try {
          const res = await fetch("/api/cleed/hiring/interview", {
-            method: "POST",
+            method: isReschedule ? "PATCH" : "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ applicantId: selectedApplicant.id, timing: interviewTiming }),
          });
@@ -251,7 +255,7 @@ export default function CleedDashboard() {
             }, 2000);
          }
       } catch (error) {
-         console.error("Interview schedule fail");
+         console.error("Interview schedule action failed");
       } finally {
          setIsSendingInterview(false);
       }
@@ -345,6 +349,33 @@ export default function CleedDashboard() {
       const link = document.createElement("a");
       link.href = url;
       link.setAttribute("download", `hiring_applications_${new Date().toISOString().split('T')[0]}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+   };
+
+   const downloadMissingCsv = (list: any[], batch: string) => {
+      if (list.length === 0) return;
+
+      const headers = ["ID", "Name", "Email", "Batch", "Status"];
+      const rows = list.map(i => [
+         i.id,
+         i.name,
+         i.email,
+         i.batch,
+         "NOT SUBMITTED (Task 1)"
+      ]);
+
+      const csvContent = [
+         headers.join(","),
+         ...rows.map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(","))
+      ].join("\n");
+
+      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", `not_submitted_Task1_${batch.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.csv`);
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -1727,50 +1758,162 @@ export default function CleedDashboard() {
                            <div className="py-24 text-center bg-zinc-50 border border-zinc-200">
                               <p className="text-[13px] text-zinc-400 font-bold animate-pulse">Loading submissions...</p>
                            </div>
-                        ) : submissions.length === 0 ? (
-                           <div className="py-24 text-center bg-zinc-50 border border-zinc-200">
-                              <p className="text-[13px] text-zinc-400 font-bold">No project submissions found.</p>
-                           </div>
                         ) : (
-                           <div className="grid grid-cols-1 gap-3">
-                              {submissions.map((sub: any) => (
-                                 <div key={sub.id} className="p-5 bg-white border border-zinc-200 flex flex-col md:flex-row md:items-center justify-between gap-6 hover:border-zinc-400 transition-all rounded-none">
-                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 flex-1 gap-6 md:gap-12">
-                                       <div className="flex flex-col">
-                                          <span className="text-[9px] font-bold text-zinc-400 mb-1">Intern</span>
-                                          <h4 className="text-[14px] font-bold text-zinc-900 leading-none">{sub.intern?.name || "Unknown"}</h4>
-                                          <p className="text-[10px] text-zinc-500 font-medium mt-1">{sub.intern?.email}</p>
-                                       </div>
+                           <div className="space-y-6">
+                              {/* Submission Filter Controls */}
+                              <div className="flex flex-wrap items-center gap-3 border-b border-zinc-100 pb-6">
+                                 <button 
+                                    onClick={() => setSubmissionFilter("all")}
+                                    className={`h-9 px-5 text-[10px] font-bold tracking-widest border transition-all flex items-center gap-2 ${submissionFilter === "all" ? "bg-zinc-900 text-white border-zinc-900" : "bg-white text-zinc-500 border-zinc-200 hover:border-zinc-400"}`}
+                                 >
+                                    ALL SUBMISSIONS
+                                 </button>
+                                 <button 
+                                    onClick={() => setSubmissionFilter("missing_task1_batch1")}
+                                    className={`h-9 px-5 text-[10px] font-bold tracking-widest border transition-all flex items-center gap-2 ${submissionFilter === "missing_task1_batch1" ? "bg-red-600 text-white border-red-600" : "bg-white text-zinc-500 border-zinc-200 hover:border-zinc-400"}`}
+                                 >
+                                    <AlertCircle size={13} /> MISSING TASK 1 (BATCH 1)
+                                 </button>
+                                 <button 
+                                    onClick={() => setSubmissionFilter("missing_task1_batch2")}
+                                    className={`h-9 px-5 text-[10px] font-bold tracking-widest border transition-all flex items-center gap-2 ${submissionFilter === "missing_task1_batch2" ? "bg-red-600 text-white border-red-600" : "bg-white text-zinc-500 border-zinc-200 hover:border-zinc-400"}`}
+                                 >
+                                    <AlertCircle size={13} /> MISSING TASK 1 (BATCH 2)
+                                 </button>
+                              </div>
 
-                                       <div className="flex flex-col">
-                                          <span className="text-[9px] font-bold text-zinc-400 mb-1">Project</span>
-                                          <h4 className="text-[13px] font-bold text-zinc-900 leading-none truncate">{sub.schedule?.typeOfWork || sub.schedule?.projectName || "General Work"}</h4>
-                                          <p className="text-[10px] text-red-600 font-bold mt-1">{sub.schedule?.projectName || "Internal Assignment"}</p>
-                                       </div>
-
-                                       <div className="flex items-center gap-8 lg:justify-start">
-                                          <div className="flex flex-col">
-                                             <span className="text-[9px] font-bold text-zinc-400 mb-1">Source</span>
-                                             <a href={sub.githubLink} target="_blank" className="flex items-center gap-1.5 text-[11px] font-bold text-zinc-900 hover:text-red-600 transition-colors">
-                                                <Github size={13} /> Repository
-                                             </a>
-                                          </div>
-                                          <div className="flex flex-col border-l border-zinc-100 pl-8">
-                                             <span className="text-[9px] font-bold text-zinc-400 mb-1">Portfolio</span>
-                                             <a href={sub.submissionLink} target="_blank" className="flex items-center gap-1.5 text-[11px] font-bold text-zinc-900 hover:text-red-600 transition-colors">
-                                                <ExternalLink size={13} /> View Link
-                                             </a>
-                                          </div>
-                                       </div>
+                              {submissionFilter === "all" ? (
+                                 submissions.length === 0 ? (
+                                    <div className="py-24 text-center bg-zinc-50 border border-zinc-200">
+                                       <p className="text-[13px] text-zinc-400 font-bold">No project submissions found.</p>
                                     </div>
+                                 ) : (
+                                    <div className="grid grid-cols-1 gap-3">
+                                       {submissions.map((sub: any) => (
+                                          <div key={sub.id} className="p-5 bg-white border border-zinc-200 flex flex-col md:flex-row md:items-center justify-between gap-6 hover:border-zinc-400 transition-all rounded-none">
+                                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 flex-1 gap-6 md:gap-12">
+                                                <div className="flex flex-col">
+                                                   <span className="text-[9px] font-bold text-zinc-400 mb-1">Intern</span>
+                                                   <h4 className="text-[14px] font-bold text-zinc-900 leading-none">{sub.intern?.name || "Unknown"}</h4>
+                                                   <p className="text-[10px] text-zinc-500 font-medium mt-1">{sub.intern?.email}</p>
+                                                </div>
 
-                                    <div className="flex items-center gap-3 md:border-l md:border-zinc-100 md:pl-6">
-                                       <button className="h-9 px-6 bg-zinc-900 text-white text-[10px] font-bold tracking-widest hover:bg-black transition-all rounded-none flex items-center gap-2">
-                                          <CheckCircle2 size={13} /> Verify
-                                       </button>
+                                                <div className="flex flex-col">
+                                                   <span className="text-[9px] font-bold text-zinc-400 mb-1">Project</span>
+                                                   <h4 className="text-[13px] font-bold text-zinc-900 leading-none truncate">{sub.schedule?.typeOfWork || sub.schedule?.projectName || "General Work"}</h4>
+                                                   <p className="text-[10px] text-red-600 font-bold mt-1">{sub.schedule?.projectName || "Internal Assignment"}</p>
+                                                </div>
+
+                                                <div className="flex items-center gap-8 lg:justify-start">
+                                                   <div className="flex flex-col">
+                                                      <span className="text-[9px] font-bold text-zinc-400 mb-1">Source</span>
+                                                      <a href={sub.githubLink} target="_blank" className="flex items-center gap-1.5 text-[11px] font-bold text-zinc-900 hover:text-red-600 transition-colors">
+                                                         <Github size={13} /> Repository
+                                                      </a>
+                                                   </div>
+                                                   <div className="flex flex-col border-l border-zinc-100 pl-8">
+                                                      <span className="text-[9px] font-bold text-zinc-400 mb-1">Portfolio</span>
+                                                      <a href={sub.submissionLink} target="_blank" className="flex items-center gap-1.5 text-[11px] font-bold text-zinc-900 hover:text-red-600 transition-colors">
+                                                         <ExternalLink size={13} /> View Link
+                                                      </a>
+                                                   </div>
+                                                </div>
+                                             </div>
+
+                                             <div className="flex items-center gap-3 md:border-l md:border-zinc-100 md:pl-6">
+                                                <button className="h-9 px-6 bg-zinc-900 text-white text-[10px] font-bold tracking-widest hover:bg-black transition-all rounded-none flex items-center gap-2">
+                                                   <CheckCircle2 size={13} /> Verify
+                                                </button>
+                                             </div>
+                                          </div>
+                                       ))}
                                     </div>
-                                 </div>
-                              ))}
+                                 )
+                              ) : (
+                                 // Missing Submissions Logic
+                                 (() => {
+                                    const targetBatch = submissionFilter === "missing_task1_batch1" ? "Batch 1" : "Batch 2";
+                                    const missingInterns = interns.filter(intern => {
+                                       // Ensure batch matches exactly (case insensitive)
+                                       if (!intern.batch || intern.batch.toLowerCase() !== targetBatch.toLowerCase()) return false;
+                                       if (!intern.isApproved) return false;
+                                       
+                                       const hasSubmitted = submissions.some(sub => {
+                                          const isSameIntern = String(sub.internId) === String(intern.id);
+                                          if (!isSameIntern) return false;
+
+                                          // Very broad check for "Task 1" or "Week 1"
+                                          const scheduleTitle = (sub.schedule?.projectName || "").toLowerCase();
+                                          const scheduleWeek = (sub.schedule?.week || "").toLowerCase();
+                                          const scheduleWork = (sub.schedule?.typeOfWork || "").toLowerCase();
+                                          const scheduleMainTitle = (sub.schedule?.title || "").toLowerCase();
+
+                                          return scheduleWeek.includes("1") || 
+                                                 scheduleWeek.includes("one") ||
+                                                 scheduleTitle.includes("task 1") || 
+                                                 scheduleTitle.includes("week 1") ||
+                                                 scheduleMainTitle.includes("task 1") ||
+                                                 scheduleMainTitle.includes("week 1") ||
+                                                 scheduleWork.includes("task 1") ||
+                                                 scheduleWork.includes("week 1") ||
+                                                 (scheduleWeek === "1") ||
+                                                 (scheduleTitle.includes("task") && scheduleTitle.includes("1"));
+                                       });
+
+                                       return !hasSubmitted;
+                                    });
+
+                                    return (
+                                       <div className="space-y-6">
+                                          <div className="flex items-center justify-between px-1 bg-zinc-50 border border-zinc-100 p-4">
+                                             <div className="flex items-center gap-4">
+                                                <div className="h-10 w-10 bg-red-50 flex items-center justify-center">
+                                                   <AlertCircle className="text-red-600" size={20} />
+                                                </div>
+                                                <div className="space-y-0.5">
+                                                   <p className="text-[11px] font-bold text-zinc-900 uppercase tracking-widest">SUBMISSION AUDIT: {targetBatch}</p>
+                                                   <p className="text-[10px] text-zinc-500 font-bold">{missingInterns.length} students pending Task 1</p>
+                                                </div>
+                                             </div>
+                                             <button 
+                                                onClick={() => downloadMissingCsv(missingInterns, targetBatch)}
+                                                className="h-10 px-6 bg-zinc-900 text-white text-[10px] font-bold tracking-widest hover:bg-black transition-all rounded-none flex items-center gap-2"
+                                             >
+                                                <Download size={14} /> DOWNLOAD CSV
+                                             </button>
+                                          </div>
+                                          
+                                          {missingInterns.length === 0 ? (
+                                             <div className="py-24 text-center bg-zinc-50 border border-zinc-200">
+                                                <CheckCircle2 className="mx-auto mb-4 text-emerald-500" size={32} />
+                                                <p className="text-[13px] text-zinc-400 font-bold uppercase tracking-tighter">Mission Accomplished</p>
+                                                <p className="text-[11px] text-zinc-400 mt-1">All {targetBatch} interns have submitted Task 1.</p>
+                                             </div>
+                                          ) : (
+                                             <div className="grid grid-cols-1 gap-3">
+                                                {missingInterns.map((intern: any) => (
+                                                   <div key={intern.id} className="p-5 bg-white border border-zinc-200 flex flex-col md:flex-row md:items-center justify-between gap-6 hover:border-red-400 transition-all rounded-none">
+                                                      <div className="flex flex-col flex-1">
+                                                         <div className="flex items-center gap-2 mb-1">
+                                                            <span className="text-[9px] font-bold text-red-600 uppercase bg-red-50 px-2 py-0.5">Missing Task 1</span>
+                                                            <span className="text-[9px] font-bold text-zinc-400 uppercase">{intern.batch}</span>
+                                                         </div>
+                                                         <h4 className="text-[14px] font-bold text-zinc-900 leading-none">{intern.name}</h4>
+                                                         <p className="text-[10px] text-zinc-500 font-medium mt-1">{intern.email}</p>
+                                                      </div>
+                                                      <div className="flex items-center gap-3 md:border-l md:border-zinc-100 md:pl-6">
+                                                         <a href={`mailto:${intern.email}`} className="h-9 px-6 bg-red-600 text-white text-[10px] font-bold tracking-widest hover:bg-red-700 transition-all rounded-none flex items-center gap-2">
+                                                            <Mail size={13} /> Nudge Intern
+                                                         </a>
+                                                      </div>
+                                                   </div>
+                                                ))}
+                                             </div>
+                                          )}
+                                       </div>
+                                    );
+                                 })()
+                              )}
                            </div>
                         )}
                      </div>
@@ -2206,7 +2349,9 @@ export default function CleedDashboard() {
                      </button>
 
                      <div className="mb-10">
-                        <h3 className="text-xl font-bold tracking-tight text-zinc-900 mb-2">Schedule Interview</h3>
+                        <h3 className="text-xl font-bold tracking-tight text-zinc-900 mb-2">
+                           {selectedApplicant?.status === "interview_scheduled" ? "Reschedule Interview" : "Schedule Interview"}
+                        </h3>
                         <p className="text-[13px] text-zinc-500 font-medium">Invitation for <b>{selectedApplicant?.name}</b> · <b>{selectedApplicant?.position}</b></p>
                      </div>
 
@@ -2263,10 +2408,13 @@ export default function CleedDashboard() {
                            disabled={isSendingInterview || !interviewTiming.includes(' at ')} 
                            className="w-full h-14 bg-blue-600 text-white text-[13px] font-bold hover:bg-blue-700 transition-all flex items-center justify-center gap-3 disabled:opacity-50"
                         >
-                           {isSendingInterview ? <RefreshCw className="animate-spin" size={18} /> : "Confirm & Send Invitation"}
+                           {isSendingInterview ? <RefreshCw className="animate-spin" size={18} /> : 
+                            selectedApplicant?.status === "interview_scheduled" ? "Confirm & Send Reschedule Notice" : "Confirm & Send Invitation"}
                         </button>
                         {interviewSuccess && (
-                           <p className="text-emerald-600 text-[11px] font-bold text-center animate-pulse">Invitation Sent. Applicant standing updated.</p>
+                           <p className="text-emerald-600 text-[11px] font-bold text-center animate-pulse">
+                              {selectedApplicant?.status === "interview_scheduled" ? "Reschedule Notice Sent." : "Invitation Sent."} Applicant standing updated.
+                           </p>
                         )}
                      </form>
                   </motion.div>
