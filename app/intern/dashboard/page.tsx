@@ -485,30 +485,6 @@ function InternDashboardContent() {
                   />
                </div>
 
-               <div className="p-4 bg-red-50 border-l-4 border-red-500 flex items-center gap-3">
-                  <Hand size={18} className="text-red-600 shrink-0" />
-                  <p className="text-xs font-bold text-red-600 leading-relaxed">
-                     Admin notice: Interns make sure to raise your hand whenever you come in for the day, at least once, so that your attendance can be calculated
-                  </p>
-               </div>
-
-               {isLowAttendance && attendanceData.totalTrackingDays > 0 && (
-                  <motion.div
-                     initial={{ opacity: 0, x: -20 }}
-                     animate={{ opacity: 1, x: 0 }}
-                     className="p-4 bg-amber-50 border border-amber-200 flex items-center gap-4 shadow-sm"
-                  >
-                     <div className="h-10 w-10 bg-amber-500 text-white flex items-center justify-center shrink-0 rounded-full">
-                        <AlertCircle size={20} />
-                     </div>
-                     <div className="flex-1">
-                        <h3 className="text-xs font-bold text-amber-900 uppercase tracking-tight">Low Attendance Warning</h3>
-                        <p className="text-[10px] text-amber-700 mt-1 font-medium leading-relaxed">
-                           Your current attendance is <span className="font-bold underline">{attendancePercentage}%</span>. The minimum required attendance is 75%. Please ensure regular attendance to avoid mission termination.
-                        </p>
-                     </div>
-                  </motion.div>
-               )}
                {userStatus?.offerLetterUrl && (
                   <div className="p-4 lg:p-6 border border-emerald-100 bg-white flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm hover:border-emerald-200 transition-all">
                      <div className="flex items-start lg:items-center gap-3">
