@@ -2158,6 +2158,20 @@ export default function CleedDashboard() {
                                           </div>
                                           <div className="flex items-center gap-1.5 font-bold">
                                              <button 
+                                                onClick={async () => {
+                                                   const res = await fetch("/api/intern/schedule", {
+                                                      method: "PATCH",
+                                                      headers: { "Content-Type": "application/json" },
+                                                      body: JSON.stringify({ id: schedule.id, isManualOpen: !schedule.isManualOpen })
+                                                   });
+                                                   if(res.ok) fetchData();
+                                                }}
+                                                className={`h-8 w-8 flex items-center justify-center border transition-all ${schedule.isManualOpen ? "bg-red-600 text-white border-red-600" : "bg-zinc-50 text-zinc-400 hover:text-zinc-900 border-zinc-200"}`}
+                                                title={schedule.isManualOpen ? "Close Week" : "Re-open Week (Allow Late Submissions)"}
+                                             >
+                                                <RefreshCw size={14} className={schedule.isManualOpen ? "animate-spin-slow" : ""} />
+                                             </button>
+                                             <button 
                                                 onClick={() => setEditingSchedule(schedule)}
                                                 className="h-8 w-8 flex items-center justify-center bg-zinc-50 text-zinc-400 hover:text-zinc-900 border border-zinc-200 transition-all"
                                              >
@@ -2319,6 +2333,22 @@ export default function CleedDashboard() {
                                        <label className="text-[11px] font-bold text-zinc-400">Tech Stack (comma separated)</label>
                                        <input value={Array.isArray(editingSchedule.toolsUsed) ? editingSchedule.toolsUsed.join(", ") : editingSchedule.toolsUsed} onChange={(e) => setEditingSchedule({ ...editingSchedule, toolsUsed: e.target.value })} className="w-full h-11 bg-white border border-zinc-200 px-4 text-sm font-bold outline-none focus:border-red-600 rounded-none" />
                                     </div>
+                                    <div className="space-y-1">
+                                       <label className="text-[11px] font-bold text-zinc-400">Type of Work</label>
+                                       <input required value={editingSchedule.typeOfWork} onChange={(e) => setEditingSchedule({ ...editingSchedule, typeOfWork: e.target.value })} className="w-full h-11 bg-white border border-zinc-200 px-4 text-sm font-bold outline-none focus:border-red-600 rounded-none" />
+                                    </div>
+                                    <div className="space-y-1">
+                                       <label className="text-[11px] font-bold text-zinc-400">Deployment Tools (comma separated)</label>
+                                       <input value={Array.isArray(editingSchedule.deploymentTools) ? editingSchedule.deploymentTools.join(", ") : (editingSchedule.deploymentTools || "")} onChange={(e) => setEditingSchedule({ ...editingSchedule, deploymentTools: e.target.value })} className="w-full h-11 bg-white border border-zinc-200 px-4 text-sm font-bold outline-none focus:border-red-600 rounded-none" />
+                                    </div>
+                                    <div className="md:col-span-2 space-y-1">
+                                       <label className="text-[11px] font-bold text-zinc-400">Requirements (enter each on a new line)</label>
+                                       <textarea rows={4} value={Array.isArray(editingSchedule.requirements) ? editingSchedule.requirements.join("\n") : (editingSchedule.requirements || "")} onChange={(e) => setEditingSchedule({ ...editingSchedule, requirements: e.target.value })} className="w-full bg-white border border-zinc-200 p-4 text-sm font-bold outline-none focus:border-red-600 resize-none rounded-none" />
+                                    </div>
+                                    <div className="md:col-span-2 space-y-1">
+                                       <label className="text-[11px] font-bold text-zinc-400">Outcomes (enter each on a new line)</label>
+                                       <textarea rows={4} value={Array.isArray(editingSchedule.outcomes) ? editingSchedule.outcomes.join("\n") : (editingSchedule.outcomes || "")} onChange={(e) => setEditingSchedule({ ...editingSchedule, outcomes: e.target.value })} className="w-full bg-white border border-zinc-200 p-4 text-sm font-bold outline-none focus:border-red-600 resize-none rounded-none" />
+                                     </div>
                                     <button disabled={loadingSchedules} className="md:col-span-2 mt-4 h-14 bg-zinc-900 text-white text-[12px] font-bold tracking-widest hover:bg-black transition-all flex items-center justify-center gap-3 rounded-none">
                                        {loadingSchedules ? <RefreshCw className="animate-spin" size={18} /> : "Update Schedule"}
                                     </button>

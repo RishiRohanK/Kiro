@@ -345,6 +345,7 @@ model Schedule {
   projectDocLink  String?  
   teamLead        String?  
   teamInternIds   String[] 
+  isManualOpen    Boolean  @default(false)
 
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt

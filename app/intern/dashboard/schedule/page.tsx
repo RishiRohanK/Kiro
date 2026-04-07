@@ -9,6 +9,7 @@ import {
     Clock, 
     Terminal,
     Target,
+    RefreshCw,
     Lock
 } from "lucide-react";
 
@@ -32,6 +33,7 @@ interface ScheduleItem {
     teamLead?: string;
     teamInternIds?: string[];
     teamInternNames?: string[];
+    isManualOpen: boolean;
 }
 
 export default function SchedulePage() {
@@ -74,7 +76,7 @@ export default function SchedulePage() {
         if (!selectedSchedule || !user) return;
 
         
-        if (new Date(selectedSchedule.deadline) < new Date()) {
+        if (new Date(selectedSchedule.deadline) < new Date() && !selectedSchedule.isManualOpen) {
             alert("Submission window is closed. The deadline for this module has passed.");
             return;
         }
@@ -131,7 +133,7 @@ export default function SchedulePage() {
                     <div className="grid gap-4">
                         {schedules.map((item) => {
                             const isPastDeadline = new Date(item.deadline) < new Date();
-                            const isClosed = isPastDeadline && !item.isCompleted;
+                            const isClosed = isPastDeadline && !item.isCompleted && !item.isManualOpen;
 
                             return (
                                 <div
@@ -156,6 +158,11 @@ export default function SchedulePage() {
                                                 {isClosed && (
                                                     <span className="text-[10px] bg-red-50 text-red-500 px-2 py-0.5 rounded border border-red-100 font-bold uppercase tracking-wide flex items-center gap-1">
                                                         <Lock size={10} className="text-black" /> Closed
+                                                    </span>
+                                                )}
+                                                {item.isManualOpen && !item.isCompleted && (
+                                                    <span className="text-[10px] bg-blue-50 text-blue-600 px-2 py-0.5 rounded border border-blue-100 font-bold uppercase tracking-wide flex items-center gap-1">
+                                                        <RefreshCw size={10} /> Re-opened
                                                     </span>
                                                 )}
                                                 {isPastDeadline && item.isCompleted && (
