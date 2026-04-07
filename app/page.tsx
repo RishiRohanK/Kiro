@@ -1,5 +1,4 @@
 import Navbar from "./components/home/Navbar";
-import SubNavbar from "./components/home/SubNavbar";
 import Hero from "./components/home/Hero";
 import QuickLinks from "./components/home/QuickLinks";
 import ContentExplorer from "./components/home/ContentExplorer";
@@ -11,7 +10,6 @@ export default function Home() {
   return (
     <>
       <Navbar />
-      <SubNavbar />
       <Hero />
       <QuickLinks />
       <ContentExplorer />

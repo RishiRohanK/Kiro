@@ -8,7 +8,7 @@ import { motion, AnimatePresence } from "framer-motion";
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
-  
+
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 768) setIsOpen(false);
@@ -17,7 +17,7 @@ export default function Navbar() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  
+
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
@@ -39,31 +39,31 @@ export default function Navbar() {
   return (
     <>
       <nav className="sticky top-0 z-[100] w-full border-b border-zinc-200 bg-white/95 backdrop-blur-md">
-        {}
+        { }
         <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4 sm:px-6">
 
-          {}
+          { }
           <div className="flex items-center gap-4 lg:gap-8">
             <Link href="/" className="flex items-center gap-2 sm:gap-4 transition-opacity hover:opacity-80">
-              {}
+              { }
               <img
                 src="https://ik.imagekit.io/dypkhqxip/sflogo"
                 alt="Student Forge Logo"
                 className="h-6 sm:h-8 w-auto object-contain"
               />
 
-              {}
+              { }
               <div className="h-4 sm:h-5 w-[1px] bg-zinc-200" />
 
-              {}
+              { }
               <img
-                src="https://res.cloudinary.com/dsqqrpzfl/image/upload/v1774885412/Screenshot_2026-03-30_at_21.13.11-removebg-preview_gaqcdz.png"
-                alt="Skill Grid Logo"
+                src="https://ik.imagekit.io/dypkhqxip/learngrid"
+                alt="Learn Grid Logo"
                 className="h-5 sm:h-7 w-auto object-contain"
               />
             </Link>
 
-            {}
+            { }
             <div className="hidden items-center gap-1 md:flex xl:gap-2">
               {navLinks.map((link) => (
                 <Link
@@ -77,10 +77,10 @@ export default function Navbar() {
             </div>
           </div>
 
-          {}
+          { }
           <div className="flex items-center gap-2 sm:gap-3">
             <div className="hidden items-center gap-3 md:flex">
-              {}
+              { }
               <Link
                 href="/intern/signin"
                 className="flex h-8 items-center gap-2 border border-zinc-300 bg-white px-4 text-[12px] font-semibold text-zinc-700 transition-all hover:border-zinc-800 hover:text-black active:bg-zinc-50 rounded-none shadow-sm"
@@ -89,7 +89,7 @@ export default function Navbar() {
                 Intern portal
               </Link>
 
-              {}
+              { }
               <Link
                 href="/get-started"
                 className="group flex h-8 items-center bg-black px-5 text-[12px] font-semibold text-white transition-all hover:bg-zinc-800 active:scale-[0.98] rounded-none"
@@ -99,7 +99,7 @@ export default function Navbar() {
               </Link>
             </div>
 
-            {}
+            { }
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="flex h-9 w-9 items-center justify-center border border-zinc-200 bg-zinc-50 text-black transition-colors hover:bg-zinc-100 md:hidden"
@@ -110,7 +110,7 @@ export default function Navbar() {
           </div>
         </div>
 
-        {}
+        { }
         <AnimatePresence>
           {isOpen && (
             <motion.div
@@ -120,12 +120,12 @@ export default function Navbar() {
               transition={{ duration: 0.2, ease: "easeOut" }}
               className="fixed inset-0 top-14 z-[99] md:hidden overflow-y-auto"
             >
-              {}
+              { }
               <div className="absolute inset-0 bg-white/98 backdrop-blur-xl" />
 
-              {}
+              { }
               <div className="relative flex min-h-[calc(100vh-3.5rem)] flex-col p-6">
-                {}
+                { }
                 <div className="space-y-1 mb-8">
                   <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 mb-4 px-2">Navigation</p>
                   {navLinks.map((link, idx) => (
@@ -150,15 +150,15 @@ export default function Navbar() {
                   ))}
                 </div>
 
-                {}
+                { }
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.3 }}
                   className="mt-auto space-y-3 pb-8"
                 >
-                   <div className="h-[1px] w-full bg-zinc-100 mb-6" />
-                   <Link
+                  <div className="h-[1px] w-full bg-zinc-100 mb-6" />
+                  <Link
                     href="/intern/signin"
                     onClick={() => setIsOpen(false)}
                     className="flex h-14 w-full items-center justify-center gap-3 border border-zinc-200 bg-white text-base font-bold text-zinc-700 shadow-sm active:bg-zinc-50 rounded-none bg-render"
@@ -177,7 +177,7 @@ export default function Navbar() {
                   </Link>
                 </motion.div>
 
-                {}
+                { }
                 <div className="mb-4 text-center">
                   <span className="text-[11px] font-medium text-zinc-400">© 2026 Student Forge. Forge Your Future.</span>
                 </div>

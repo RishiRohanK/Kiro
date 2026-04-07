@@ -1,9 +1,8 @@
 "use client";
 
-import { ArrowRight, GraduationCap, Building, ShieldCheck, ChevronRight, CheckCircle2 } from "lucide-react";
+import { ArrowRight, GraduationCap, CheckCircle2 } from "lucide-react";
 import Link from "next/link";
 import Navbar from "../components/home/Navbar";
-import SubNavbar from "../components/home/SubNavbar";
 import Footer from "../components/home/Footer";
 import CTA from "../components/home/CTA";
 
@@ -11,15 +10,14 @@ export default function GetStartedPage() {
   return (
     <div className="min-h-screen bg-white text-zinc-900 font-sans selection:bg-blue-100">
       
-      {}
+      {/* Navigation Terminal */}
       <Navbar />
-      <SubNavbar />
 
       <main className="w-full">
         
-        {}
-        <section className="relative bg-zinc-900 py-16 md:py-20 lg:py-24 overflow-hidden">
-          {}
+        {/* Core Protocol: Intro Hero */}
+        <section className="relative bg-zinc-900 py-10 md:py-14 lg:py-16 overflow-hidden">
+          {/* Neon Glow accent */}
           <div className="absolute top-0 right-0 w-[50%] h-full bg-blue-600/10 blur-[100px] pointer-events-none" />
           
           <div className="mx-auto max-w-7xl px-6 lg:px-10 relative z-10">
@@ -32,23 +30,23 @@ export default function GetStartedPage() {
                 <span className="text-blue-500">career moving.</span>
               </h1>
               <p className="text-[16px] md:text-[17px] text-zinc-400 leading-relaxed font-normal max-w-lg">
-                Welcome to Skill Grid by Student Forge. Your journey from academic learning to professional excellence starts here.
+                Welcome to Learn Grid by Student Forge. Your journey from academic learning to professional excellence starts here.
               </p>
             </div>
           </div>
         </section>
 
-        {}
-        <section className="bg-white py-12 md:py-16 border-b border-zinc-100">
+        {/* Mission Architecture */}
+        <section className="bg-white py-10 md:py-12 border-b border-zinc-100">
           <div className="mx-auto max-w-7xl px-6 lg:px-10">
             <div className="max-w-3xl mb-8">
               <h2 className="text-3xl md:text-5xl font-normal tracking-tight text-zinc-900 leading-[1.15] mb-6">
                 Building the <span className="text-violet-500">future</span> of <span className="text-emerald-500">engineering</span> <br />
-                with the <span className="text-blue-500">Skill Grid</span> <span className="text-orange-400">infrastructure</span>.
+                with the <span className="text-blue-500">Learn Grid</span> <span className="text-orange-400">infrastructure</span>.
               </h2>
               
               <p className="text-[16px] md:text-[17px] text-zinc-500 leading-relaxed font-normal mb-8">
-                Created by <span className="font-bold text-zinc-900">Student Forge</span>, Skill Grid is the world's most 
+                Created by <span className="font-bold text-zinc-900">Student Forge</span>, Learn Grid is the world's most 
                 complete ecosystem for professional growth. We replace disjointed learning platforms with a single, 
                 <span className="text-zinc-900 font-medium"> high-performance system</span> that integrates learning, 
                 building, and career placement directly into your workflow.
@@ -73,26 +71,26 @@ export default function GetStartedPage() {
           </div>
         </section>
 
-        {}
-        <section className="bg-zinc-50/50 py-16 md:py-20 overflow-hidden relative">
-          {}
+        {/* The Network Node */}
+        <section className="bg-zinc-50/50 py-12 md:py-16 overflow-hidden relative">
+          {/* Subtle grid background */}
           <div className="absolute inset-0 opacity-[0.03] pointer-events-none" 
                style={{ backgroundImage: `linear-gradient(#000 1px, transparent 1px), linear-gradient(90deg, #000 1px, transparent 1px)`, backgroundSize: '40px 40px' }} />
 
           <div className="mx-auto max-w-7xl px-6 lg:px-10 relative z-10">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
               
-              {}
+              {/* Left Column: Mission Details */}
               <div className="space-y-4">
                 <div className="inline-flex h-6 items-center px-3 border border-zinc-200 bg-white text-[10px] font-bold text-zinc-400 uppercase tracking-[0.2em]">
                   The Ecosystem
                 </div>
                 <h2 className="text-4xl font-medium tracking-tighter text-zinc-900 leading-none">
-                  About <br /> <span className="text-blue-600">Skill Grid.</span>
+                  About <br /> <span className="text-blue-600">Learn Grid.</span>
                 </h2>
                 <div className="space-y-4 max-w-md">
                   <p className="text-[15px] text-zinc-500 leading-relaxed font-normal">
-                    The Skill Grid is a specialized vertical infrastructure built for the next generation of engineers. 
+                    The Learn Grid is a specialized vertical infrastructure built for the next generation of engineers. 
                     It's not just a platform; it's a verifiable pipeline from learning to placement.
                   </p>
                   <div className="pt-2 grid grid-cols-2 gap-6">
@@ -108,7 +106,7 @@ export default function GetStartedPage() {
                 </div>
               </div>
 
-              {}
+              {/* Right Column: CTA card */}
               <div className="relative group">
                 <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-violet-600 opacity-20 blur-[20px] group-hover:opacity-40 transition-opacity duration-300 pointer-events-none" />
                 <Link 
@@ -125,7 +123,7 @@ export default function GetStartedPage() {
                   </div>
                   
                   <div className="space-y-3 mb-8">
-                    <h3 className="text-[24px] font-bold tracking-tighter text-zinc-900">Join the Skill Grid</h3>
+                    <h3 className="text-[24px] font-bold tracking-tighter text-zinc-900">Join the Learn Grid</h3>
                     <p className="text-[14px] text-zinc-500 leading-relaxed font-medium max-w-sm">
                       Access your dashboard, track mastery, and unlock exclusive internship opportunities.
                     </p>
@@ -144,14 +142,13 @@ export default function GetStartedPage() {
           </div>
         </section>
 
-        {}
+        {/* Action Protocol */}
         <CTA />
 
       </main>
 
-      {}
+      {/* Terminal Footer */}
       <Footer />
     </div>
   );
 }
-

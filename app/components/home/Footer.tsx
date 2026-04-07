@@ -32,8 +32,8 @@ export default function Footer() {
             </Link>
             <div className="h-4 w-[1px] bg-zinc-200" />
             <img 
-              src="https://res.cloudinary.com/dsqqrpzfl/image/upload/v1774885412/Screenshot_2026-03-30_at_21.13.11-removebg-preview_gaqcdz.png"
-              alt="Skill Grid"
+              src="https://ik.imagekit.io/dypkhqxip/learngrid"
+              alt="Learn Grid"
               className="h-6 w-auto object-contain greyscale opacity-80 hover:opacity-100 transition-opacity"
             />
           </div>

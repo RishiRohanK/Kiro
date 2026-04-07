@@ -16,20 +16,20 @@ export default function Hero() {
         }}
       />
 
-      <div className="relative z-10 mx-auto max-w-5xl px-6 py-14 md:py-20 flex flex-col items-center text-center">
+      <div className="relative z-10 mx-auto max-w-5xl px-6 py-10 md:py-14 lg:py-16 flex flex-col items-center text-center">
 
         {}
         <div className="mb-8 inline-flex items-center gap-2 border border-zinc-800 bg-black px-4 py-1.5">
           <span className="h-1.5 w-1.5 rounded-full bg-white animate-pulse" />
           <span className="text-[12px] font-medium text-white tracking-wide ">
-            Introducing Skill Grid
+            Introducing Learn Grid
           </span>
         </div>
 
         {}
         <h1 className="max-w-4xl text-5xl md:text-6xl font-normal tracking-tight text-zinc-900 leading-[1.1]">
           Your{" "}
-          <span className="text-violet-500">skill</span>{" "}
+          <span className="text-violet-500">learn</span>{" "}
           <span className="text-emerald-500">development</span>{" "}
           <span className="text-blue-500">network</span>,{" "}
           <br className="hidden sm:block" />built for the{" "}
@@ -39,7 +39,7 @@ export default function Hero() {
 
         {}
         <p className="mt-6 max-w-2xl text-[16px] md:text-[17px] leading-relaxed text-zinc-500 font-normal">
-          Skill Grid by <span className="font-semibold text-zinc-800">Student Forge</span> is a structured learning & internship ecosystem
+          Learn Grid by <span className="font-semibold text-zinc-800">Student Forge</span> is a structured learning & internship ecosystem
           where students acquire job-ready skills, build real projects, and earn
           verifiable credentials — all in one place.
         </p>
