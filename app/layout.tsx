@@ -14,15 +14,15 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Cleed Admin | Terminal",
-  description: "Secure administrative management system for Cleed operations.",
+  title: "Student Forge | Learn Grid",
+  description: "Secure high-performance learning & internship ecosystem.",
   manifest: "/manifest.json",
   icons: {
     icon: [
-      { url: "https://ik.imagekit.io/dypkhqxip/White%20Modern%20Minimalist%20Signature%20Brand%20Logo%20(2).png", type: "image/png" }
+      { url: "https://ik.imagekit.io/dypkhqxip/sf-next-logo?updatedAt=1772993490660", type: "image/png" }
     ],
-    shortcut: "https://ik.imagekit.io/dypkhqxip/White%20Modern%20Minimalist%20Signature%20Brand%20Logo%20(2).png",
-    apple: "https://ik.imagekit.io/dypkhqxip/White%20Modern%20Minimalist%20Signature%20Brand%20Logo%20(2).png",
+    shortcut: "https://ik.imagekit.io/dypkhqxip/sf-next-logo?updatedAt=1772993490660",
+    apple: "https://ik.imagekit.io/dypkhqxip/sf-next-logo?updatedAt=1772993490660",
   },
 };
 
@@ -37,11 +37,11 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-        <meta name="theme-color" content="#F5332C" />
+        <meta name="theme-color" content="#000000" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-        <meta name="apple-mobile-web-app-title" content="Cleed" />
-        <link rel="apple-touch-icon" href="https://ik.imagekit.io/dypkhqxip/White%20Modern%20Minimalist%20Signature%20Brand%20Logo%20(2).png" />
+        <meta name="apple-mobile-web-app-title" content="Student Forge" />
+        <link rel="apple-touch-icon" href="https://ik.imagekit.io/dypkhqxip/sf-next-logo?updatedAt=1772993490660" />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased selection:bg-zinc-50 selection:text-black`}
