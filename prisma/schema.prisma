@@ -85,6 +85,8 @@ model User {
   lastActive DateTime @default(now())
   college    String?
   batch      String?   @default("Batch 1")
+  failedAttempts Int     @default(0)
+  lockUntil      DateTime?
   tasks      Task[]   @relation("UserTasks")
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt

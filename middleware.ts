@@ -40,9 +40,12 @@ export function middleware(request: NextRequest) {
   rateLimitInfo.count++;
   rateLimitMap.set(ip, rateLimitInfo);
 
-  if (rateLimitInfo.count > MAX_REQUESTS && request.nextUrl.pathname.startsWith('/api')) {
+  const isSignin = pathname.includes('/signin');
+  const limit = isSignin ? 10 : MAX_REQUESTS; // Limit signin attempts to 10 per minute per IP
+  
+  if (rateLimitInfo.count > limit && request.nextUrl.pathname.startsWith('/api')) {
     return new NextResponse(
-      JSON.stringify({ error: 'Too many requests. Please try again later.' }),
+      JSON.stringify({ error: 'System policy: Too many attempts. Security block active.' }),
       { status: 429, headers: { 'Content-Type': 'application/json' } }
     );
   }
