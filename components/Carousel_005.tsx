@@ -32,18 +32,32 @@ const Carousel_005 = ({
   const css = `
   .Carousal_005 {
     width: 100%;
-    height: 440px;
-    padding-bottom: 50px !important;
+    height: 400px;
   }
   
   .Carousal_005 .swiper-slide {
     background-position: center;
     background-size: cover;
-     border-radius: 25px;
+    border-radius: 20px;
+    width: 85% !important;
+  }
+
+  .Carousal_005 .swiper-pagination {
+    bottom: 0px !important;
   }
 
   .Carousal_005 .swiper-pagination-bullet {
     background-color: #000 !important;
+    width: 6px;
+    height: 6px;
+    opacity: 0.2;
+  }
+
+  .Carousal_005 .swiper-pagination-bullet-active {
+    opacity: 1;
+    width: 20px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
   }
  
   `;
@@ -53,10 +67,10 @@ const Carousel_005 = ({
       whileInView={{ opacity: 1, translateY: 0 }}
       viewport={{ once: true }}
       transition={{
-        duration: 0.3,
-        delay: 0.2,
+        duration: 0.5,
+        ease: [0.21, 0.47, 0.32, 0.98],
       }}
-      className={cn("relative w-full max-w-4xl", className)}
+      className={cn("relative w-full mx-auto", className)}
     >
       <style>{css}</style>
 

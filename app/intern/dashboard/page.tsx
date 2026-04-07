@@ -478,11 +478,11 @@ function InternDashboardContent() {
                   </div>
                </div>
                
-               <div className="py-8 overflow-hidden">
-                  <div className="mb-6 flex items-center justify-between">
-                     <div>
-                        <h2 className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Growth & Highlights</h2>
-                        <p className="text-[10px] text-zinc-400 mt-1 font-medium">Community contributions from the Forge Academy</p>
+               <div className="mb-10">
+                  <div className="mb-4 flex items-center justify-between">
+                     <div className="flex items-center gap-2">
+                        <div className="h-4 w-1 bg-zinc-900" />
+                        <h2 className="text-[10px] font-bold text-zinc-900 uppercase tracking-widest">Digital Highlights</h2>
                      </div>
                   </div>
                   <Carousel_005 
@@ -498,7 +498,7 @@ function InternDashboardContent() {
                      autoplay 
                      showPagination 
                      loop 
-                     className="max-w-none px-0"
+                     className="max-w-none"
                   />
                </div>
                <div className="p-4 bg-red-50 border-l-4 border-red-500 flex items-center gap-3">
