@@ -3,11 +3,12 @@
 import { motion } from "framer-motion";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import React from "react";
-import { Autoplay, EffectCreative, Pagination } from "swiper/modules";
+import { Autoplay, EffectCreative, Pagination, Navigation } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/effect-creative";
 import "swiper/css/pagination";
+import "swiper/css/navigation";
 import "swiper/css/autoplay";
 
 import { cn } from "@/lib/utils";
@@ -59,27 +60,31 @@ const Carousel_005 = ({
     border-radius: 4px;
     transition: all 0.3s ease;
   }
+
+  .Carousal_005 .swiper-button-next,
+  .Carousal_005 .swiper-button-prev {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(4px);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    color: #000 !important;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+  }
+
+  .Carousal_005 .swiper-button-next:hover,
+  .Carousal_005 .swiper-button-prev:hover {
+    background: #fff;
+    transform: scale(1.1);
+  }
  
   `;
   return (
-    <motion.div
-      initial={{ opacity: 0, translateY: 20 }}
-      whileInView={{ opacity: 1, translateY: 0 }}
-      viewport={{ once: true }}
-      transition={{
-        duration: 0.5,
-        ease: [0.21, 0.47, 0.32, 0.98],
-      }}
-      className={cn("relative w-full mx-auto", className)}
-    >
+    <div className={cn("relative w-full mx-auto", className)}>
       <style>{css}</style>
 
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.3 }}
-        className="w-full"
-      >
+      <div className="w-full">
         <Swiper
           spaceBetween={spaceBetween}
           autoplay={
@@ -120,7 +125,7 @@ const Carousel_005 = ({
               translate: ["100%", 0, 0],
             },
           }}
-          modules={[EffectCreative, Pagination, Autoplay]}
+          modules={[EffectCreative, Pagination, Autoplay, Navigation]}
         >
           {images.map((image, index) => (
             <SwiperSlide key={index} className="">
@@ -131,19 +136,15 @@ const Carousel_005 = ({
               />
             </SwiperSlide>
           ))}
-          {showNavigation && (
-            <div>
-              <div className="swiper-button-next after:hidden">
-                <ChevronRightIcon className="h-6 w-6 text-white" />
-              </div>
-              <div className="swiper-button-prev after:hidden">
-                <ChevronLeftIcon className="h-6 w-6 text-white" />
-              </div>
-            </div>
-          )}
+          <div className="swiper-button-next after:hidden">
+            <ChevronRightIcon className="h-5 w-5" />
+          </div>
+          <div className="swiper-button-prev after:hidden">
+            <ChevronLeftIcon className="h-5 w-5" />
+          </div>
         </Swiper>
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   );
 };
 
