@@ -6,7 +6,7 @@ const rateLimitMap = new Map<string, { count: number; lastReset: number }>();
 const RATE_LIMIT_WINDOW = 60 * 1000; 
 const MAX_REQUESTS = 100; 
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   
   
@@ -30,20 +30,30 @@ export function middleware(request: NextRequest) {
   const ip = request.headers.get('x-forwarded-for')?.split(',')[0] || request.headers.get('x-real-ip') || '127.0.0.1';
   const now = Date.now();
   
-  
-  const rateLimitInfo = rateLimitMap.get(ip) || { count: 0, lastReset: now };
-  if (now - rateLimitInfo.lastReset > RATE_LIMIT_WINDOW) {
-    rateLimitInfo.count = 0;
-    rateLimitInfo.lastReset = now;
-  }
-  
-  rateLimitInfo.count++;
-  rateLimitMap.set(ip, rateLimitInfo);
-
+  let count = 0;
   const isSignin = pathname.includes('/signin');
-  const limit = isSignin ? 10 : MAX_REQUESTS; // Limit signin attempts to 10 per minute per IP
-  
-  if (rateLimitInfo.count > limit && request.nextUrl.pathname.startsWith('/api')) {
+  const limit = isSignin ? 10 : MAX_REQUESTS;
+
+  try {
+    const { default: redis } = await import('@/lib/redis');
+    if (redis) {
+      const key = `ratelimit:${ip}:${isSignin ? 'signin' : 'api'}`;
+      count = await redis.incr(key);
+      if (count === 1) await redis.expire(key, 60);
+    } else {
+      const rateLimitInfo = rateLimitMap.get(ip) || { count: 0, lastReset: now };
+      if (now - rateLimitInfo.lastReset > RATE_LIMIT_WINDOW) {
+        rateLimitInfo.count = 0;
+        rateLimitInfo.lastReset = now;
+      }
+      rateLimitInfo.count++;
+      rateLimitMap.set(ip, rateLimitInfo);
+      count = rateLimitInfo.count;
+    }
+  } catch (err) {
+  }
+
+  if (count > limit && pathname.startsWith('/api')) {
     return new NextResponse(
       JSON.stringify({ error: 'System policy: Too many attempts. Security block active.' }),
       { status: 429, headers: { 'Content-Type': 'application/json' } }
