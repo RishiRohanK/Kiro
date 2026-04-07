@@ -477,13 +477,12 @@ function InternDashboardContent() {
                   </div>
                </div>
 
-               <div className="w-full relative h-40 md:h-56 lg:h-64 overflow-hidden rounded-xl group border border-zinc-100 shadow-lg">
+               <div className="w-full overflow-hidden rounded-xl border border-zinc-100 shadow-sm bg-zinc-50">
                   <img
                      src="https://ik.imagekit.io/dypkhqxip/Intern%20Meetup.png"
                      alt="Program Banner"
-                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                     className="w-full h-auto block"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-tr from-zinc-900/10 via-transparent to-transparent opacity-60" />
                </div>
 
                <div className="p-4 bg-red-50 border-l-4 border-red-500 flex items-center gap-3">
