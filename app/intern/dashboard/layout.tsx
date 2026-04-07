@@ -110,9 +110,9 @@ function InternDashboardLayoutContent({
     ];
 
     return (
-        <div className="min-h-screen bg-white text-zinc-900 flex flex-col lg:flex-row font-sans overflow-x-hidden">
+        <div className="min-h-screen bg-white text-zinc-900 flex flex-col font-sans">
             {}
-            <aside className="hidden lg:flex w-64 flex-col bg-[#F4F4F5] h-screen sticky top-0 z-50 border-r border-zinc-200">
+            <aside className="hidden lg:flex fixed left-0 top-0 bottom-0 w-64 flex-col bg-[#F4F4F5] border-r border-zinc-200 z-50">
                 <div className="p-8 pb-10 flex flex-col items-start gap-4">
                     <img 
                         src="https://res.cloudinary.com/dsqqrpzfl/image/upload/v1774885412/Screenshot_2026-03-30_at_21.13.11-removebg-preview_gaqcdz.png" 
@@ -183,7 +183,7 @@ function InternDashboardLayoutContent({
             </aside>
 
             {}
-            <div className="flex-1 flex flex-col min-w-0">
+            <div className="flex-1 flex flex-col min-w-0 lg:pl-64">
                 {}
                 <header className="h-14 lg:h-12 flex items-center justify-between px-4 lg:px-8 bg-[#0055FF] sticky top-0 z-[60] text-white shadow-lg shadow-blue-500/10">
                     <div className="flex items-center gap-3">
@@ -220,7 +220,7 @@ function InternDashboardLayoutContent({
                     </div>
                 </header>
 
-                <main className="flex-1 pb-20 lg:pb-0">
+                <main className="flex-1 p-4 lg:p-0 pb-20 lg:pb-10">
                     {children}
                 </main>
 

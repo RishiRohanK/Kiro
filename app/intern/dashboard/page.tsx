@@ -62,7 +62,7 @@ interface PersonalTask {
    id: string;
    title: string;
    description: string | null;
-   status: string; 
+   status: string;
    createdAt: string;
 }
 
@@ -106,7 +106,7 @@ function InternDashboardContent() {
    const [showLetterModal, setShowLetterModal] = useState(false);
    const [showOfferLetterModal, setShowOfferLetterModal] = useState(false);
 
-   
+
    const [personalTasks, setPersonalTasks] = useState<PersonalTask[]>([]);
    const [isAddingPersonalTask, setIsAddingPersonalTask] = useState(false);
    const [newPersonalTask, setNewPersonalTask] = useState({ title: "", description: "" });
@@ -126,25 +126,25 @@ function InternDashboardContent() {
       const syncSession = async () => {
          let storedUser = localStorage.getItem("intern_user");
          let userData = storedUser ? JSON.parse(storedUser) : null;
-         
-         
+
+
          if (!userData) {
             const { data: { session } } = await supabase.auth.getSession();
             if (session?.user) {
                try {
-                  
+
                   const res = await fetch(`/api/intern/status?id=${session.user.id}`);
                   if (res.ok) {
                      const profile = await res.json();
                      userData = profile;
                      localStorage.setItem("intern_user", JSON.stringify(profile));
                   } else {
-                     
+
                      userData = { id: session.user.id, name: session.user.user_metadata.full_name || session.user.email, email: session.user.email };
                      localStorage.setItem("intern_user", JSON.stringify(userData));
                   }
                } catch (e) {
-                  
+
                   userData = { id: session.user.id, name: session.user.user_metadata.full_name || session.user.email, email: session.user.email };
                   localStorage.setItem("intern_user", JSON.stringify(userData));
                }
@@ -169,18 +169,18 @@ function InternDashboardContent() {
             fetch(`/api/intern/personal-tasks?userId=${userData.id}`)
                .then(r => r.json())
                .then(d => { if (d.success) setPersonalTasks(d.tasks); })
-               .catch(() => {});
+               .catch(() => { });
          }, 20000);
 
          const cleanup = () => {
-             clearInterval(syncInterval);
+            clearInterval(syncInterval);
          };
-         
+
          return cleanup;
       };
 
       const cleanupPromise = syncSession();
-      
+
       return () => {
          cleanupPromise.then(cb => cb && cb());
       };
@@ -188,13 +188,13 @@ function InternDashboardContent() {
 
    const [showChatSidebar, setShowChatSidebar] = useState(true);
 
-   
+
    useEffect(() => {
       if (user && !socket) {
          const newSocket = io("https://serversf.onrender.com");
          setSocket(newSocket);
-         
-         
+
+
          newSocket.on("receive_message", (msg: ChatMessage) => {
             setMessages(prev => [...prev, msg]);
          });
@@ -205,26 +205,26 @@ function InternDashboardContent() {
       }
    }, [user, socket]);
 
-   
+
    useEffect(() => {
       if (socket && schedules.length > 0 && user) {
-         
-         const teamSchedule = schedules.find(s => s.week.includes("Week 2") && s.teamInternIds?.length > 0) 
-                              || schedules.find(s => s.teamInternIds?.length > 0) 
-                              || schedules[0];
-         
-         const currentTeamId = teamSchedule.id; 
+
+         const teamSchedule = schedules.find(s => s.week.includes("Week 2") && s.teamInternIds?.length > 0)
+            || schedules.find(s => s.teamInternIds?.length > 0)
+            || schedules[0];
+
+         const currentTeamId = teamSchedule.id;
          setActiveTeamId(currentTeamId);
          socket.emit("join_team", currentTeamId);
-         
-         
+
+
          fetch(`/api/messages?teamId=${currentTeamId}`)
             .then(res => res.json())
             .then(data => {
                if (data.success) {
                   const formatted = data.messages.map((m: any) => ({
-                    ...m,
-                    content: m.content || m.text
+                     ...m,
+                     content: m.content || m.text
                   }));
                   setMessages(formatted);
                }
@@ -242,7 +242,7 @@ function InternDashboardContent() {
          const res = await fetch(`/api/intern/status?id=${id}`);
          const data = await res.json();
          setUserStatus(data);
-         
+
          const lastAckOffer = localStorage.getItem(`offer_letter_ack_${id}`);
          if (data.offerLetterUrl && data.offerLetterUrl !== lastAckOffer) {
             setShowOfferLetterModal(true);
@@ -383,7 +383,7 @@ function InternDashboardContent() {
             })
          });
          const data = await res.json();
-         console.log("Add task response:", data); 
+         console.log("Add task response:", data);
          if (data.success) {
             setPersonalTasks([data.task, ...personalTasks]);
             setNewPersonalTask({ title: "", description: "" });
@@ -458,14 +458,14 @@ function InternDashboardContent() {
                   </div>
                   <div className="p-5 border border-emerald-100 bg-emerald-50/40 shadow-sm flex flex-col justify-between h-32">
                      <div className="flex items-center justify-between"><span className="text-[10px] font-bold text-emerald-600 uppercase tracking-tight">Attendance</span><Check size={16} className="text-emerald-500" /></div>
-                      <div className="mt-auto">
+                     <div className="mt-auto">
                         <div className="flex items-baseline gap-2">
                            <p className="text-2xl font-bold text-zinc-900">{attendancePercentage}%</p>
                            <span className="text-[10px] text-emerald-500/70 font-bold">({attendanceCount}/{attendanceData.totalTrackingDays} Days)</span>
                         </div>
                         <p className="text-[10px] text-emerald-500/70 mt-1 uppercase font-bold tracking-tight">Mission Presence Ratio</p>
                         <p className="text-[8px] text-zinc-400 mt-2 italic font-medium">*Calculated relative to sessions active since your enrollment</p>
-                      </div>
+                     </div>
                   </div>
                   <div className="p-5 border border-zinc-200 bg-zinc-50 shadow-sm flex flex-col justify-between h-32">
                      <div className="flex items-center justify-between"><span className="text-[10px] font-bold text-zinc-500 uppercase tracking-tight">Status</span><FileBadge size={16} className={userStatus?.offerLetterUrl ? "text-emerald-500" : "text-zinc-300"} /></div>
@@ -476,7 +476,16 @@ function InternDashboardContent() {
                      <div className="mt-auto"><p className="text-sm font-bold text-zinc-900 uppercase tracking-tight">Today, 10:00 AM</p><p className="text-[10px] text-amber-500/70 mt-1 uppercase font-bold tracking-tight">Starting time</p></div>
                   </div>
                </div>
-                
+
+               <div className="w-full relative h-40 md:h-56 lg:h-64 overflow-hidden rounded-xl group border border-zinc-100 shadow-lg">
+                  <img
+                     src="https://ik.imagekit.io/dypkhqxip/Intern%20Meetup.png"
+                     alt="Program Banner"
+                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-tr from-zinc-900/10 via-transparent to-transparent opacity-60" />
+               </div>
+
                <div className="p-4 bg-red-50 border-l-4 border-red-500 flex items-center gap-3">
                   <Hand size={18} className="text-red-600 shrink-0" />
                   <p className="text-xs font-bold text-red-600 leading-relaxed">
@@ -485,8 +494,8 @@ function InternDashboardContent() {
                </div>
 
                {isLowAttendance && attendanceData.totalTrackingDays > 0 && (
-                  <motion.div 
-                     initial={{ opacity: 0, x: -20 }} 
+                  <motion.div
+                     initial={{ opacity: 0, x: -20 }}
                      animate={{ opacity: 1, x: 0 }}
                      className="p-4 bg-amber-50 border border-amber-200 flex items-center gap-4 shadow-sm"
                   >
@@ -504,13 +513,13 @@ function InternDashboardContent() {
                {userStatus?.offerLetterUrl && (
                   <div className="p-4 lg:p-6 border border-emerald-100 bg-white flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm hover:border-emerald-200 transition-all">
                      <div className="flex items-start lg:items-center gap-3">
-                       <div className="h-10 w-10 bg-zinc-900 text-white flex items-center justify-center shrink-0">
-                          <ShieldCheck size={20} />
-                       </div>
-                       <div>
-                          <h3 className="text-xs lg:text-sm font-bold text-zinc-900">Internship offer letter issued</h3>
-                          <p className="text-[10px] lg:text-xs text-zinc-500 mt-1 leading-relaxed">Welcome to the forge program. Your official legal documents are ready.</p>
-                       </div>
+                        <div className="h-10 w-10 bg-zinc-900 text-white flex items-center justify-center shrink-0">
+                           <ShieldCheck size={20} />
+                        </div>
+                        <div>
+                           <h3 className="text-xs lg:text-sm font-bold text-zinc-900">Internship offer letter issued</h3>
+                           <p className="text-[10px] lg:text-xs text-zinc-500 mt-1 leading-relaxed">Welcome to the forge program. Your official legal documents are ready.</p>
+                        </div>
                      </div>
                      <a href={userStatus.offerLetterUrl} target="_blank" className="w-full sm:w-auto h-10 px-6 bg-zinc-900 text-white text-[11px] font-bold flex items-center justify-center gap-2 hover:bg-black transition-all">
                         Download Document <Download size={14} />
@@ -565,7 +574,7 @@ function InternDashboardContent() {
 
          {activeTab === "kanban" && (
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6 text-left">
-               {}
+               { }
                <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
                   <div>
                      <h2 className="text-xl font-bold text-zinc-900">Agile Workspace</h2>
@@ -579,7 +588,7 @@ function InternDashboardContent() {
                   </button>
                </div>
 
-               {}
+               { }
                <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
                   {(["TODO", "IN_PROGRESS", "DONE"] as const).map((status) => {
                      const col = {
@@ -634,7 +643,7 @@ function InternDashboardContent() {
 
                      return (
                         <div key={status} className={`flex flex-col gap-3 rounded-2xl p-4 border ${col.bg} ${col.border}`}>
-                           {}
+                           { }
                            <div className={`flex items-center justify-between px-3 py-2 rounded-xl ${col.headerBg}`}>
                               <h3 className={`text-[11px] font-bold uppercase tracking-widest flex items-center gap-2 ${col.headerText}`}>
                                  <Circle size={8} fill="currentColor" className={col.dot} />
@@ -645,7 +654,7 @@ function InternDashboardContent() {
                               </span>
                            </div>
 
-                           {}
+                           { }
                            <div className="space-y-2.5 min-h-[180px]">
                               {columnTasks.map((task) => (
                                  <div
@@ -697,7 +706,7 @@ function InternDashboardContent() {
                   })}
                </div>
 
-               {}
+               { }
                <AnimatePresence>
                   {isAddingPersonalTask && (
                      <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/50 backdrop-blur-sm">
@@ -754,7 +763,7 @@ function InternDashboardContent() {
 
          {activeTab === "chat" && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="h-[calc(100vh-8rem)] lg:h-[calc(100vh-12rem)] min-h-[500px] flex bg-white border border-zinc-200 rounded-lg overflow-hidden text-left mb-6 shadow-sm relative">
-               {}
+               { }
                <aside className={`${showChatSidebar ? "flex" : "hidden"} lg:flex absolute inset-0 z-20 lg:relative lg:inset-auto w-full lg:w-64 bg-zinc-50 border-r border-zinc-200 flex-col shrink-0`}>
                   <div className="p-6 border-b border-zinc-200 bg-white flex items-center justify-between">
                      <div>
@@ -765,19 +774,19 @@ function InternDashboardContent() {
                         <ChevronRight size={18} />
                      </button>
                   </div>
-                  
+
                   <div className="flex-1 overflow-y-auto no-scrollbar py-4">
-                     {}
+                     { }
                      <div className="px-4 mb-6">
-                        <button 
+                        <button
                            onClick={() => { setSelectedUser(null); setShowChatSidebar(false); }}
                            className={`w-full flex items-center gap-3 p-3 text-xs font-bold transition-all rounded-xl mb-2 ${!selectedUser ? "bg-black text-white shadow-md" : "hover:bg-zinc-200 text-zinc-600"}`}
                         >
                            <Users size={16} /> Team Chat
                         </button>
-                        
+
                         <div className="h-px bg-zinc-200 my-4 mx-2" />
-                        
+
                         <p className="px-3 py-2 text-[10px] font-bold text-zinc-400 uppercase tracking-tight">Teammates</p>
                         <div className="space-y-1 mt-1">
                            {(() => {
@@ -797,7 +806,7 @@ function InternDashboardContent() {
                                  const peer = allInterns.find(it => it.id === peerId);
                                  if (!peer) return null;
                                  return (
-                                    <button 
+                                    <button
                                        key={i}
                                        onClick={() => { setSelectedUser(peer); setShowChatSidebar(false); }}
                                        className={`w-full flex items-center gap-3 p-3 transition-all rounded-xl ${selectedUser?.id === peer.id ? "bg-white border border-zinc-200 text-black shadow-sm" : "text-zinc-600 hover:bg-zinc-100"}`}
@@ -820,7 +829,7 @@ function InternDashboardContent() {
                      </div>
                   </div>
 
-                  {}
+                  { }
                   <div className="p-4 bg-zinc-100/50 border-t border-zinc-200 flex items-center gap-3">
                      <div className="h-9 w-9 bg-black text-white flex items-center justify-center text-xs font-bold rounded-lg">
                         {user.name[0]}
@@ -832,9 +841,9 @@ function InternDashboardContent() {
                   </div>
                </aside>
 
-               {}
+               { }
                <div className={`flex-1 flex flex-col bg-white overflow-hidden ${!showChatSidebar ? "flex" : "hidden lg:flex"}`}>
-                  {}
+                  { }
                   <div className="px-4 lg:px-8 py-4 lg:py-6 border-b border-zinc-100 flex items-center justify-between bg-white/80 backdrop-blur-md sticky top-0 z-10">
                      <div className="flex items-center gap-3 lg:gap-4 truncate">
                         <button onClick={() => setShowChatSidebar(true)} className="lg:hidden p-2 -ml-2 text-zinc-400 hover:text-black transition-colors">
@@ -855,11 +864,11 @@ function InternDashboardContent() {
                      </div>
                   </div>
 
-                  {}
+                  { }
                   <div className="flex-1 overflow-y-auto p-4 lg:p-8 space-y-6 lg:space-y-8 bg-zinc-50/30 no-scrollbar">
-                     {messages.filter(m => 
-                        selectedUser 
-                           ? (m.senderId === selectedUser.id || (m.senderId === user.id && m.targetId === selectedUser.id)) 
+                     {messages.filter(m =>
+                        selectedUser
+                           ? (m.senderId === selectedUser.id || (m.senderId === user.id && m.targetId === selectedUser.id))
                            : (!m.targetId)
                      ).length === 0 ? (
                         <div className="h-full flex flex-col items-center justify-center text-zinc-300">
@@ -867,9 +876,9 @@ function InternDashboardContent() {
                            <p className="text-xs font-bold uppercase tracking-widest opacity-40">Start a conversation</p>
                         </div>
                      ) : (
-                        messages.filter(m => 
-                           selectedUser 
-                              ? (m.senderId === selectedUser.id || (m.senderId === user.id && m.targetId === selectedUser.id)) 
+                        messages.filter(m =>
+                           selectedUser
+                              ? (m.senderId === selectedUser.id || (m.senderId === user.id && m.targetId === selectedUser.id))
                               : (!m.targetId)
                         ).map((msg, i) => {
                            const isOwn = msg.senderId === user.id;
@@ -895,10 +904,10 @@ function InternDashboardContent() {
                      <div ref={chatEndRef} />
                   </div>
 
-                  {}
+                  { }
                   <form onSubmit={handleSendMessage} className="px-4 lg:px-8 py-4 lg:py-6 bg-white border-t border-zinc-100 flex gap-2 lg:gap-4">
-                     <input 
-                        type="text" 
+                     <input
+                        type="text"
                         value={inputText}
                         onChange={(e) => setInputText(e.target.value)}
                         className="flex-1 px-4 lg:px-6 h-12 lg:h-14 bg-zinc-50 border border-zinc-200 text-xs lg:text-sm font-semibold rounded-xl lg:rounded-2xl focus:border-black focus:bg-white outline-none transition-all placeholder:text-zinc-300"
@@ -975,7 +984,7 @@ function InternDashboardContent() {
                <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/40 backdrop-blur-sm">
                   <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} className="bg-white max-w-[300px] w-full p-6 border border-zinc-100 rounded-xl shadow-xl relative text-center">
                      <button onClick={() => { setShowLetterModal(false); localStorage.setItem(`letter_ack_${user.id}`, userStatus.letterUrl); }} className="absolute top-3 right-3 text-zinc-300 hover:text-zinc-600 transition-colors"><X size={16} /></button>
-                     
+
                      <div className="mx-auto h-10 w-10 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mb-4">
                         <FileBadge size={20} />
                      </div>
@@ -1003,7 +1012,7 @@ function InternDashboardContent() {
                <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/40 backdrop-blur-sm">
                   <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} className="bg-white max-w-[300px] w-full p-8 border border-zinc-100 rounded-2xl shadow-2xl relative text-center">
                      <button onClick={() => { setShowOfferLetterModal(false); localStorage.setItem(`offer_letter_ack_${user.id}`, userStatus.offerLetterUrl); }} className="absolute top-4 right-4 text-zinc-300 hover:text-zinc-600 transition-colors"><X size={18} /></button>
-                     
+
                      <div className="mx-auto h-12 w-12 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center mb-5">
                         <ShieldCheck size={24} />
                      </div>
