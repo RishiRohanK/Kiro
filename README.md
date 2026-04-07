@@ -1,34 +1,20 @@
-<p align="center">
-  <img src="https://res.cloudinary.com/dsqqrpzfl/image/upload/v1774885412/Screenshot_2026-03-30_at_21.13.11-removebg-preview_gaqcdz.png" width="320" alt="Skill Grid Logo" />
-</p>
-
-# Skill Grid Platform | Architectural Log
-
-The Skill Grid platform is a high-fidelity architectural ecosystem designed for technical career acceleration. This repository maintains a strictly minimalist, comment-free codebase optimized for security and horizontal scale.
-
----
-
-## ⚡ Technical Update Registry (V2.2.0)
-
-### 🛡️ Institutional Security Overhaul
-- **Distributed Redis Caching**: Implemented a global rate-limiting gateway via ioredis to prevent brute-force attacks across all load-balanced nodes.
-- **28-Hour Account Lockout**: Integrated a persistent security block that triggers automatically after 5 failed password attempts.
-- **PostgreSQL Hardening (RLS)**: Deployed Row-Level Security with case-sensitive Prisma-mapped policies to eliminate PII leakages between Intern and Applicant nodes.
-- **Edge Gateway Policy**: Forced HSTS, Content-Security-Policy (CSP), and cross-origin isolation via Next.js Edge Middleware.
-
-### 📊 Administrative & Audit Suite
-- **Submission Audit Filters**: New deep-filtering logic in the CLEED dashboard to track missing Task 1 submissions for Batch 1 and 2.
-- **Automated CSV Reporting**: High-fidelity export terminal for generating missing-submission audit reports.
-- **Rescheduling Terminal**: Integrated PATCH API handlers and specialized corporate email templates for interview rescheduling.
-- **Portal Continuity**: Programmatically re-enabled Batch 2 submission deadline until April 9, 2026.
-
-### ⚙️ System Optimization
-- **Codebase Neutralization**: Stripped all code comments across .ts, .tsx, .js, and .prisma files for a clean, industrial-grade production build.
-- **Load Balancer Observability**: Deployed `/api/health` for real-time database and system telemetry.
-- **Vulnerability Remediation**: Resolved 28+ high-risk security flaws in the core dependency tree.
-
----
-
-**[platform.studentforge.in](https://platform.studentforge.in)**
-
-© 2026 Student Forge Technologies Private Limited. All platform protocols and technical assets are protected.
+* 7443813 - docs: rewrite README as a strictly minimalist V2.2.0 technical log (2026-04-07)
+* bb910ea - docs: update README with V2.2.0 institutional security and management features (2026-04-07)
+* eda5092 - security: implement v2.0.8 security overhaul with RLS policies, 28-hour lockout, and Redis rate limiting (2026-04-07)
+* 7fdd202 - security: implement 28-hour lockout and signin rate limiting (2026-04-07)
+* 8115e28 - fix: restore compatible workflow and next-pwa versions (2026-04-07)
+* 31b2ee5 - chore: remove all comments from codebase and apply security patches (2026-04-07)
+* 1a4a598 - feat: implement interview rescheduling, submission audit filters, and batch 2 deadline extension (2026-04-06)
+* 2043cb2 - style(pwa): update branding to latest minimalist logo (version 2) (2026-04-06)
+* cd67160 - style(pwa): update branding with new minimalist logo and synchronized brand-red theme colors (2026-04-06)
+* 23873ae - style(pwa): simplify initialization preloader to minimalist industrial version (2026-04-06)
+* 6bc964b - feat(pwa): persistent login and 10-second industrial red preloader for mobile terminal (2026-04-06)
+* 8f9cc31 - style(login): modernize cleed login portal with integrated branding and industrial card aesthetic (2026-04-06)
+* 3b03391 - fix(mobile): resolve white-on-white visibility issue in PWA navigation overlay (2026-04-06)
+* f8e9592 - style(admin): modernize dashboard with industrial minimalist aesthetic, simple grammar, and high-density card layouts (2026-04-06)
+* d9ac9d4 - fix: global interview modal placement and explicit date/time scheduling (2026-04-05)
+* d1077b0 - feat: improved hiring registry responsiveness and status management UI (2026-04-05)
+* e444a7f - fix: interview persistence and improved mail logging (2026-04-05)
+* fc8254f - fix: restore and optimize hiring registry navigation on desktop (2026-04-05)
+* 62330e9 - feat: added interview scheduling feature to hiring registry with professional email template (2026-04-05)
+* 8aa43c1 - feat: updated attendance logic to use calendar days since first login and cap at 100% across all portals (2026-04-05)
