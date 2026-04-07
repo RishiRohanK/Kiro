@@ -73,7 +73,7 @@ export default function SchedulePage() {
         e.preventDefault();
         if (!selectedSchedule || !user) return;
 
-        // Hard block: prevent submission if deadline has passed
+        
         if (new Date(selectedSchedule.deadline) < new Date()) {
             alert("Submission window is closed. The deadline for this module has passed.");
             return;
@@ -296,7 +296,7 @@ export default function SchedulePage() {
                                                                 <p className="text-[10px] text-red-500">Deadline has passed. This form is frozen.</p>
                                                             </div>
                                                         </div>
-                                                        {/* Frozen form - visible but disabled */}
+                                                        {}
                                                         <div className="space-y-4 pointer-events-none select-none opacity-50 grayscale">
                                                             <div>
                                                                 <label className="block text-[11px] text-zinc-500 mb-1">GitHub repository link</label>

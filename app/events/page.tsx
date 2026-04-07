@@ -88,7 +88,7 @@ export default function EventsPage() {
                 if (data.success) {
                     const formatted = data.events.map((e: any) => ({
                         ...e,
-                        attendees: e.price || "Contact for Details", // Repurpose price field if needed
+                        attendees: e.price || "Contact for Details", 
                         color: e.category === "College Events" ? "text-blue-600" : "text-emerald-500",
                         logo: e.image || ""
                     }));
@@ -118,7 +118,7 @@ export default function EventsPage() {
             <SubNavbar />
 
             <main>
-                {/* Refined India-Centric Hero */}
+                {}
                 <section className="bg-zinc-950 py-10 border-b border-white/5">
                     <div className="mx-auto max-w-7xl px-6">
                         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
@@ -152,7 +152,7 @@ export default function EventsPage() {
                     </div>
                 </section>
 
-                {/* Localized High-Density Grid */}
+                {}
                 <section className="py-8 bg-zinc-50 min-h-[600px]">
                     <div className="mx-auto max-w-7xl px-6">
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
@@ -223,7 +223,7 @@ export default function EventsPage() {
                                 </div>
                             ))}
 
-                            {/* Campus Support Pipeline */}
+                            {}
                             <div className="border border-dashed border-zinc-300 p-5 flex flex-col items-center justify-center text-center bg-zinc-50/50">
                                 <Info className="w-8 h-8 text-zinc-300 mb-4" />
                                 <h3 className="text-[11px] font-bold text-zinc-400 tracking-widest mb-2 px-4 leading-relaxed italic">More Campus Anchors Syncing</h3>

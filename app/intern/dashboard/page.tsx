@@ -62,7 +62,7 @@ interface PersonalTask {
    id: string;
    title: string;
    description: string | null;
-   status: string; // TODO, IN_PROGRESS, DONE
+   status: string; 
    createdAt: string;
 }
 
@@ -106,7 +106,7 @@ function InternDashboardContent() {
    const [showLetterModal, setShowLetterModal] = useState(false);
    const [showOfferLetterModal, setShowOfferLetterModal] = useState(false);
 
-   // Kanban State
+   
    const [personalTasks, setPersonalTasks] = useState<PersonalTask[]>([]);
    const [isAddingPersonalTask, setIsAddingPersonalTask] = useState(false);
    const [newPersonalTask, setNewPersonalTask] = useState({ title: "", description: "" });
@@ -127,24 +127,24 @@ function InternDashboardContent() {
          let storedUser = localStorage.getItem("intern_user");
          let userData = storedUser ? JSON.parse(storedUser) : null;
          
-         // If no local user, check for Supabase session (Google OAuth case)
+         
          if (!userData) {
             const { data: { session } } = await supabase.auth.getSession();
             if (session?.user) {
                try {
-                  // Fetch updated profile from our DB (which our callback just synced)
+                  
                   const res = await fetch(`/api/intern/status?id=${session.user.id}`);
                   if (res.ok) {
                      const profile = await res.json();
                      userData = profile;
                      localStorage.setItem("intern_user", JSON.stringify(profile));
                   } else {
-                     // If status fetch fails, use minimal session data
+                     
                      userData = { id: session.user.id, name: session.user.user_metadata.full_name || session.user.email, email: session.user.email };
                      localStorage.setItem("intern_user", JSON.stringify(userData));
                   }
                } catch (e) {
-                  // Fallback to session info
+                  
                   userData = { id: session.user.id, name: session.user.user_metadata.full_name || session.user.email, email: session.user.email };
                   localStorage.setItem("intern_user", JSON.stringify(userData));
                }
@@ -188,13 +188,13 @@ function InternDashboardContent() {
 
    const [showChatSidebar, setShowChatSidebar] = useState(true);
 
-   // Relay Node Initialization: Production Node Link
+   
    useEffect(() => {
       if (user && !socket) {
          const newSocket = io("https://serversf.onrender.com");
          setSocket(newSocket);
          
-         // Event: Mission Handshake Data Synchronization
+         
          newSocket.on("receive_message", (msg: ChatMessage) => {
             setMessages(prev => [...prev, msg]);
          });
@@ -205,10 +205,10 @@ function InternDashboardContent() {
       }
    }, [user, socket]);
 
-   // Historical Syncing & Team Enclave Synchronization
+   
    useEffect(() => {
       if (socket && schedules.length > 0 && user) {
-         // Focus on the specific Week 2 allocation as requested by mission protocol
+         
          const teamSchedule = schedules.find(s => s.week.includes("Week 2") && s.teamInternIds?.length > 0) 
                               || schedules.find(s => s.teamInternIds?.length > 0) 
                               || schedules[0];
@@ -217,7 +217,7 @@ function InternDashboardContent() {
          setActiveTeamId(currentTeamId);
          socket.emit("join_team", currentTeamId);
          
-         // Reconstruct historical logs
+         
          fetch(`/api/messages?teamId=${currentTeamId}`)
             .then(res => res.json())
             .then(data => {
@@ -383,7 +383,7 @@ function InternDashboardContent() {
             })
          });
          const data = await res.json();
-         console.log("Add task response:", data); // DEBUG
+         console.log("Add task response:", data); 
          if (data.success) {
             setPersonalTasks([data.task, ...personalTasks]);
             setNewPersonalTask({ title: "", description: "" });
@@ -565,7 +565,7 @@ function InternDashboardContent() {
 
          {activeTab === "kanban" && (
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6 text-left">
-               {/* Header */}
+               {}
                <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
                   <div>
                      <h2 className="text-xl font-bold text-zinc-900">Agile Workspace</h2>
@@ -579,7 +579,7 @@ function InternDashboardContent() {
                   </button>
                </div>
 
-               {/* Columns */}
+               {}
                <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
                   {(["TODO", "IN_PROGRESS", "DONE"] as const).map((status) => {
                      const col = {
@@ -634,7 +634,7 @@ function InternDashboardContent() {
 
                      return (
                         <div key={status} className={`flex flex-col gap-3 rounded-2xl p-4 border ${col.bg} ${col.border}`}>
-                           {/* Column Header */}
+                           {}
                            <div className={`flex items-center justify-between px-3 py-2 rounded-xl ${col.headerBg}`}>
                               <h3 className={`text-[11px] font-bold uppercase tracking-widest flex items-center gap-2 ${col.headerText}`}>
                                  <Circle size={8} fill="currentColor" className={col.dot} />
@@ -645,7 +645,7 @@ function InternDashboardContent() {
                               </span>
                            </div>
 
-                           {/* Cards */}
+                           {}
                            <div className="space-y-2.5 min-h-[180px]">
                               {columnTasks.map((task) => (
                                  <div
@@ -697,7 +697,7 @@ function InternDashboardContent() {
                   })}
                </div>
 
-               {/* Add Task Modal */}
+               {}
                <AnimatePresence>
                   {isAddingPersonalTask && (
                      <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/50 backdrop-blur-sm">
@@ -754,7 +754,7 @@ function InternDashboardContent() {
 
          {activeTab === "chat" && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="h-[calc(100vh-8rem)] lg:h-[calc(100vh-12rem)] min-h-[500px] flex bg-white border border-zinc-200 rounded-lg overflow-hidden text-left mb-6 shadow-sm relative">
-               {/* Simplified Sidebar: Your Team */}
+               {}
                <aside className={`${showChatSidebar ? "flex" : "hidden"} lg:flex absolute inset-0 z-20 lg:relative lg:inset-auto w-full lg:w-64 bg-zinc-50 border-r border-zinc-200 flex-col shrink-0`}>
                   <div className="p-6 border-b border-zinc-200 bg-white flex items-center justify-between">
                      <div>
@@ -767,7 +767,7 @@ function InternDashboardContent() {
                   </div>
                   
                   <div className="flex-1 overflow-y-auto no-scrollbar py-4">
-                     {/* Team Members List */}
+                     {}
                      <div className="px-4 mb-6">
                         <button 
                            onClick={() => { setSelectedUser(null); setShowChatSidebar(false); }}
@@ -820,7 +820,7 @@ function InternDashboardContent() {
                      </div>
                   </div>
 
-                  {/* Profile Section */}
+                  {}
                   <div className="p-4 bg-zinc-100/50 border-t border-zinc-200 flex items-center gap-3">
                      <div className="h-9 w-9 bg-black text-white flex items-center justify-center text-xs font-bold rounded-lg">
                         {user.name[0]}
@@ -832,9 +832,9 @@ function InternDashboardContent() {
                   </div>
                </aside>
 
-               {/* Chat Container */}
+               {}
                <div className={`flex-1 flex flex-col bg-white overflow-hidden ${!showChatSidebar ? "flex" : "hidden lg:flex"}`}>
-                  {/* Simple Header */}
+                  {}
                   <div className="px-4 lg:px-8 py-4 lg:py-6 border-b border-zinc-100 flex items-center justify-between bg-white/80 backdrop-blur-md sticky top-0 z-10">
                      <div className="flex items-center gap-3 lg:gap-4 truncate">
                         <button onClick={() => setShowChatSidebar(true)} className="lg:hidden p-2 -ml-2 text-zinc-400 hover:text-black transition-colors">
@@ -855,7 +855,7 @@ function InternDashboardContent() {
                      </div>
                   </div>
 
-                  {/* Messages Section */}
+                  {}
                   <div className="flex-1 overflow-y-auto p-4 lg:p-8 space-y-6 lg:space-y-8 bg-zinc-50/30 no-scrollbar">
                      {messages.filter(m => 
                         selectedUser 
@@ -895,7 +895,7 @@ function InternDashboardContent() {
                      <div ref={chatEndRef} />
                   </div>
 
-                  {/* Simple Input Box */}
+                  {}
                   <form onSubmit={handleSendMessage} className="px-4 lg:px-8 py-4 lg:py-6 bg-white border-t border-zinc-100 flex gap-2 lg:gap-4">
                      <input 
                         type="text" 

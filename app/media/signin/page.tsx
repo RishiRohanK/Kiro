@@ -47,7 +47,7 @@ export default function MediaSigninPage() {
 
     return (
         <div className="min-h-screen bg-white text-zinc-900 font-sans selection:bg-zinc-100 flex flex-col">
-            {/* Same Navbar as Hero section but with a Sharp Back Button */}
+            {}
             <nav className="sticky top-0 z-50 w-full border-b border-zinc-100 bg-white/95 backdrop-blur-sm">
                 <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6 sm:px-10">
                     <div className="flex items-center gap-6">
@@ -76,7 +76,7 @@ export default function MediaSigninPage() {
             </nav>
 
             <main className="flex-1 flex flex-col lg:flex-row shadow-sm">
-                {/* Left Side: Illustration Section */}
+                {}
                 <div className="hidden lg:flex lg:w-1/2 bg-zinc-50 flex-col items-center justify-center p-24 border-r border-zinc-100 relative overflow-hidden">
                     <div className="absolute top-0 left-0 w-64 h-64 bg-zinc-100/50 rounded-full blur-[100px] -ml-32 -mt-32" />
                     <div className="max-w-md w-full space-y-8 relative z-10 text-center">
@@ -95,7 +95,7 @@ export default function MediaSigninPage() {
                     </div>
                 </div>
 
-                {/* Right Side: Simple Form */}
+                {}
                 <div className="flex-1 lg:w-1/2 flex flex-col items-center justify-center p-8 lg:p-24 bg-white relative overflow-hidden">
                     <div className="w-full max-w-[400px] space-y-10 relative z-10">
                         <div className="space-y-2">

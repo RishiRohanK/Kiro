@@ -60,7 +60,7 @@ export default function HostEventPage() {
 
     return (
         <div className="min-h-screen w-full flex flex-col bg-[#050505] text-white font-sans overflow-x-hidden">
-            {/* Navbar Minimal */}
+            {}
             <nav className="w-full bg-[#92E3A9] px-12 py-3 sm:px-24 flex items-center justify-between z-50 shadow-lg sticky top-0">
                 <div className="flex items-center gap-4">
                     <Link href="/events" className="flex items-center gap-4">
@@ -79,7 +79,7 @@ export default function HostEventPage() {
             </div>
 
             <main className="flex-1 max-w-5xl mx-auto w-full p-8 md:p-16 grid grid-cols-1 lg:grid-cols-5 gap-16 text-left">
-                {/* Left Column: Form */}
+                {}
                 <div className="lg:col-span-3">
                     <div className="mb-12">
                         <h1 className="text-4xl font-black mb-2 uppercase italic tracking-tighter">Host New Mission</h1>
@@ -164,7 +164,7 @@ export default function HostEventPage() {
                     </form>
                 </div>
 
-                {/* Right Column: Preview */}
+                {}
                 <div className="lg:col-span-2 hidden lg:block">
                     <div className="sticky top-12">
                         <label className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-4 block text-center">Live Card Preview</label>

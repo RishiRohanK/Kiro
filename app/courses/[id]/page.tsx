@@ -43,7 +43,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 
   if (!course) return <div className="p-24 text-center">Course not found.</div>;
 
-  // Serialize course data to handle Date objects before passing to client component
+  
   const serializedCourse = JSON.parse(JSON.stringify(course));
 
   return <CourseDetailContent course={serializedCourse} id={id} />;

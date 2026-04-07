@@ -32,7 +32,7 @@ export default function TicketPage() {
 
     return (
         <div className="min-h-screen w-full flex flex-col bg-[#050505] text-white font-sans overflow-hidden">
-            {/* Navbar Minimal */}
+            {}
             <nav className="w-full bg-[#92E3A9] px-12 py-3 sm:px-24 flex items-center justify-between z-50 shadow-lg sticky top-0">
                 <div className="flex items-center gap-4">
                     <Link href="/events" className="flex items-center gap-4">
@@ -51,7 +51,7 @@ export default function TicketPage() {
             </div>
 
             <main className="flex-1 flex flex-col items-center justify-center p-8 relative overflow-hidden">
-                {/* Background Effects */}
+                {}
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[#92E3A9]/5 blur-[150px] rounded-full" />
 
                 <div className="max-w-xl w-full relative z-10 animate-in fade-in zoom-in duration-700">
@@ -63,9 +63,9 @@ export default function TicketPage() {
                         <p className="text-zinc-500 font-bold text-xs uppercase tracking-widest text-center">A copy has been sent to your registered email.</p>
                     </div>
 
-                    {/* Ticket Component */}
+                    {}
                     <div className="bg-zinc-900 border border-zinc-800 rounded-[3rem] overflow-hidden shadow-2xl text-left">
-                        {/* Header */}
+                        {}
                         <div className="bg-[#92E3A9] p-8 flex justify-between items-center">
                             <div className="flex flex-col">
                                 <span className="text-[10px] font-black text-black/60 uppercase tracking-widest">Mission Access</span>
@@ -76,7 +76,7 @@ export default function TicketPage() {
                             </div>
                         </div>
 
-                        {/* Content */}
+                        {}
                         <div className="p-10 space-y-8">
                             <div>
                                 <span className="text-[10px] font-black text-zinc-601 uppercase tracking-widest mb-2 block text-zinc-500">Event Identity</span>
@@ -103,7 +103,7 @@ export default function TicketPage() {
                                     <span className="text-[10px] font-black text-zinc-601 uppercase tracking-widest block text-zinc-500">Attendee Hash</span>
                                     <span className="text-lg font-mono font-black text-[#92E3A9]">{ticket.ticketId}</span>
                                 </div>
-                                {/* Static Mock QR Representation */}
+                                {}
                                 <div className="w-20 h-20 bg-white p-2 rounded-xl grid grid-cols-4 gap-1">
                                     {[...Array(16)].map((_, i) => (
                                         <div key={i} className={`rounded-sm ${Math.random() > 0.5 ? 'bg-black' : 'bg-zinc-200'}`} />
@@ -112,7 +112,7 @@ export default function TicketPage() {
                             </div>
                         </div>
 
-                        {/* Perforated Stub Line */}
+                        {}
                         <div className="flex items-center px-4 relative">
                             <div className="absolute left-0 -translate-x-1/2 w-8 h-8 bg-[#050505] rounded-full border border-zinc-900" />
                             <div className="w-full border-t-2 border-dashed border-white/10" />
@@ -124,7 +124,7 @@ export default function TicketPage() {
                         </div>
                     </div>
 
-                    {/* Actions */}
+                    {}
                     <div className="mt-12 flex gap-4 text-center">
                         <button className="flex-1 h-14 bg-zinc-900 border border-zinc-800 rounded-2xl flex items-center justify-center gap-2 font-black text-xs uppercase tracking-widest hover:bg-zinc-800 transition-all">
                             <Download className="w-4 h-4" /> Download PDF

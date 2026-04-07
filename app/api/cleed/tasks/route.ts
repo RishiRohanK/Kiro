@@ -30,12 +30,12 @@ export async function POST(req: Request) {
   }
 }
 
-// Fetch all tasks for dashboard
+
 export async function GET() {
   try {
     const tasks = await prisma.task.findMany({
       include: {
-        user: true, // Should show who it's assigned to
+        user: true, 
       },
       orderBy: {
         createdAt: "desc",

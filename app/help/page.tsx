@@ -8,7 +8,7 @@ import Footer from "../components/home/Footer";
 export default function HelpPage() {
     return (
         <div className="min-h-screen bg-white text-zinc-900 font-sans selection:bg-zinc-100 flex flex-col">
-            {/* Minimal Navbar - Sharp Edges */}
+            {}
             <nav className="sticky top-0 z-50 w-full border-b border-zinc-100 bg-white/95 backdrop-blur-sm">
                 <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-6 lg:px-10">
                     <Link href="/" className="flex items-center gap-3 transition-opacity hover:opacity-70">
@@ -23,7 +23,7 @@ export default function HelpPage() {
             </nav>
 
             <main className="w-full">
-                {/* Header Section - Sharp Black */}
+                {}
                 <div className="bg-black py-16 lg:py-24">
                     <div className="mx-auto max-w-7xl px-6 lg:px-10">
                         <Breadcrumbs items={[{ label: "Support", href: "/support" }, { label: "Quick Help" }]} />
@@ -40,7 +40,7 @@ export default function HelpPage() {
 
                 <div className="mx-auto max-w-7xl px-6 lg:px-10 py-24">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        {/* FAQ Card */}
+                        {}
                         <div className="border border-zinc-100 p-10 space-y-6 hover:border-black transition-colors group">
                             <div className="w-12 h-12 border border-zinc-900 flex items-center justify-center">
                                 <MessageSquare size={20} />
@@ -56,7 +56,7 @@ export default function HelpPage() {
                             </Link>
                         </div>
 
-                        {/* Contact Card */}
+                        {}
                         <div className="border border-zinc-100 p-10 space-y-6 hover:border-black transition-colors group text-white bg-black">
                             <div className="w-12 h-12 border border-zinc-800 flex items-center justify-center text-[#92E3A9]">
                                 <Mail size={20} />

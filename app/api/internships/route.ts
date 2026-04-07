@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 
-// Public: Retrieve Authorized Internships
+
 export async function GET() {
     try {
         const internships = await prisma.internship.findMany({

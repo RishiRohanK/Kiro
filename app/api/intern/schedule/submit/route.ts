@@ -6,7 +6,7 @@ export async function POST(req: Request) {
         const body = await req.json();
         const { scheduleId, internId, githubLink, submissionLink } = body;
 
-        // Server-side deadline enforcement
+        
         const schedule = await prisma.schedule.findUnique({ where: { id: scheduleId } });
         if (!schedule) {
             return NextResponse.json({ success: false, error: "Schedule not found" }, { status: 404 });

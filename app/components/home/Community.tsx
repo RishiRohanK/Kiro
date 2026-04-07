@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 
-// Official SVG Logos for consistency
+
 const SocialLogos = {
   Discord: () => (
     <svg viewBox="0 0 24 24" className="w-5 h-5 fill-current" xmlns="http://www.w3.org/2000/svg">
@@ -24,7 +24,7 @@ export default function Community() {
       <div className="mx-auto max-w-7xl px-6 lg:px-10">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-12">
 
-          {/* Left Side: Content */}
+          {}
           <div className="max-w-xl">
             <div className="flex items-center gap-3 mb-6">
               <div className="h-[1px] w-5 bg-blue-500" />
@@ -44,7 +44,7 @@ export default function Community() {
             </p>
           </div>
 
-          {/* Right Side: Social Actions (Sharp Edges, Compact) */}
+          {}
           <div className="flex flex-col gap-3 sm:min-w-[300px]">
             <Link
               href="/community"

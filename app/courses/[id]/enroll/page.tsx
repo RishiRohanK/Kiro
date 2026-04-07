@@ -453,7 +453,7 @@ export default function EnrollmentPage() {
 
                             {step === 2 && (
                                 <div className="space-y-8 animate-in fade-in slide-in-from-bottom-5 duration-700 max-w-xl">
-                                    {/* Compact Payment Selector */}
+                                    {}
                                     <div className="flex flex-col sm:flex-row gap-4">
                                         <div 
                                             onClick={() => setPaymentMethod("razorpay")}
@@ -482,7 +482,7 @@ export default function EnrollmentPage() {
                                         </div>
                                     </div>
 
-                                    {/* Main Checkout Box - Less Padding */}
+                                    {}
                                     <div className="border border-zinc-100 bg-white relative overflow-hidden shadow-sm">
                                         <div className="p-8 md:p-10 flex flex-col items-center justify-center w-full">
                                             {paymentMethod === "razorpay" ? (

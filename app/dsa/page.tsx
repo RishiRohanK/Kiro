@@ -8,7 +8,7 @@ import CTA from "../components/home/CTA";
 import { ArrowRight, ExternalLink, Timer, Globe, Star, ShieldCheck, Clock, Search } from "lucide-react";
 
 const companyPrepQuestions = [
-    // Beginner Level (1-20)
+    
     { id: 1, title: "Contains Duplicate", category: "Arrays", difficulty: "Easy", url: "https://leetcode.com/problems/contains-duplicate/" },
     { id: 2, title: "Valid Anagram", category: "Arrays", difficulty: "Easy", url: "https://leetcode.com/problems/valid-anagram/" },
     { id: 3, title: "Valid Palindrome", category: "Two Pointers", difficulty: "Easy", url: "https://leetcode.com/problems/valid-palindrome/" },
@@ -30,7 +30,7 @@ const companyPrepQuestions = [
     { id: 19, title: "Min Cost Climbing Stairs", category: "1-D DP", difficulty: "Easy", url: "https://leetcode.com/problems/min-cost-climbing-stairs/" },
     { id: 20, title: "Happy Number", category: "Math", difficulty: "Easy", url: "https://leetcode.com/problems/happy-number/" },
     
-    // Intermediate Level (39-106)
+    
     { id: 39, title: "Group Anagrams", category: "Arrays", difficulty: "Medium", url: "https://leetcode.com/problems/group-anagrams/" },
     { id: 40, title: "Longest Substring Without Repeating Characters", category: "Sliding Window", difficulty: "Medium", url: "https://leetcode.com/problems/longest-substring-without-repeating-characters/" },
     { id: 41, title: "Evaluate Reverse Polish Notation", category: "Stack", difficulty: "Medium", url: "https://leetcode.com/problems/evaluate-reverse-polish-notation/" },
@@ -63,7 +63,7 @@ const companyPrepQuestions = [
     { id: 68, title: "Palindromic Substrings", category: "1-D DP", difficulty: "Medium", url: "https://leetcode.com/problems/palindromic-substrings/" },
     { id: 69, title: "Best Time to Buy and Sell Stock With Cooldown", category: "2-D DP", difficulty: "Medium", url: "https://leetcode.com/problems/best-time-to-buy-and-sell-stock-with-cooldown/" },
     
-    // Advanced Level (74-106)
+    
     { id: 74, title: "Encode and Decode Strings", category: "Arrays", difficulty: "Medium", url: "https://leetcode.com/problems/encode-and-decode-strings/" },
     { id: 75, title: "3Sum", category: "Two Pointers", difficulty: "Medium", url: "https://leetcode.com/problems/3sum/" },
     { id: 76, title: "Longest Repeating Character Replacement", category: "Sliding Window", difficulty: "Medium", url: "https://leetcode.com/problems/longest-repeating-character-replacement/" },
@@ -98,7 +98,7 @@ const companyPrepQuestions = [
     { id: 105, title: "Find The Duplicate Number", category: "Linked List", difficulty: "Medium", url: "https://leetcode.com/problems/find-the-duplicate-number/" },
     { id: 106, title: "Count Good Nodes in Binary Tree", category: "Trees", difficulty: "Medium", url: "https://leetcode.com/problems/count-good-nodes-in-binary-tree/" },
     
-    // Expert Level (128-150)
+    
     { id: 128, title: "Longest Consecutive Sequence", category: "Arrays", difficulty: "Medium", url: "https://leetcode.com/problems/longest-consecutive-sequence/" },
     { id: 129, title: "Trapping Rain Water", category: "Two Pointers", difficulty: "Hard", url: "https://leetcode.com/problems/trapping-rain-water/" },
     { id: 130, title: "Largest Rectangle In Histogram", category: "Stack", difficulty: "Hard", url: "https://leetcode.com/problems/largest-rectangle-in-histogram/" },
@@ -208,7 +208,7 @@ export default function DSAPage() {
       <SubNavbar />
       
       <main>
-        {/* Condensed Shortcut Bar */}
+        {}
         <div className="sticky top-[64px] z-40 bg-zinc-900 border-b border-white/5 py-3 hidden md:block">
             <div className="mx-auto max-w-7xl px-6 lg:px-10">
                 <div className="flex items-center gap-6">
@@ -230,7 +230,7 @@ export default function DSAPage() {
             </div>
         </div>
 
-        {/* Condensed Hero Section */}
+        {}
         <section className="bg-zinc-900 py-10 md:py-12 overflow-hidden relative border-b border-white/5">
           <div className="absolute top-0 right-0 w-[50%] h-full bg-emerald-600/5 blur-[100px] pointer-events-none" />
           <div className="mx-auto max-w-7xl px-6 lg:px-10 relative z-10">
@@ -248,7 +248,7 @@ export default function DSAPage() {
           </div>
         </section>
 
-        {/* 1. Question Explorer - Internship Prep */}
+        {}
         <section ref={refs.companyPrep} className="py-10 md:py-12 bg-white scroll-mt-24">
           <div className="mx-auto max-w-7xl px-6 lg:px-10">
             <div className="mb-8 flex items-center justify-between border-b border-zinc-50 pb-4">
@@ -263,7 +263,7 @@ export default function DSAPage() {
             
             {levels.map((level) => (
               <div key={level.title} className="mb-10">
-                {/* Level Header */}
+                {}
                 <div className="flex items-center gap-4 mb-4">
                   <h3 className={`text-[12px] font-bold tracking-widest ${level.color} uppercase`}>
                     {level.title} Validations
@@ -274,7 +274,7 @@ export default function DSAPage() {
                   </span>
                 </div>
 
-                {/* Question Table - Simplified */}
+                {}
                 <div className="overflow-hidden border border-zinc-100">
                   <table className="w-full border-collapse">
                     <thead className="bg-zinc-50/50">
@@ -326,7 +326,7 @@ export default function DSAPage() {
           </div>
         </section>
 
-        {/* 2. FAANG Masterlist */}
+        {}
         <section ref={refs.faang} className="py-10 bg-zinc-50 border-y border-zinc-100 scroll-mt-24">
             <div className="mx-auto max-w-7xl px-6 lg:px-10">
                 <div className="mb-8">
@@ -355,7 +355,7 @@ export default function DSAPage() {
             </div>
         </section>
 
-        {/* 3. Study Plan Timeline */}
+        {}
         <section ref={refs.studyPlan} className="py-10 bg-white scroll-mt-24 border-b border-zinc-100">
             <div className="mx-auto max-w-7xl px-6 lg:px-10">
                 <div className="mb-8">
@@ -378,7 +378,7 @@ export default function DSAPage() {
             </div>
         </section>
 
-        {/* 4. Practice Platforms Card Grid - Simplified High-Density */}
+        {}
         <section ref={refs.platforms} className="py-10 bg-zinc-900 text-white scroll-mt-24">
             <div className="mx-auto max-w-7xl px-6 lg:px-10">
                 <div className="mb-8 flex items-center justify-between border-b border-white/5 pb-4">

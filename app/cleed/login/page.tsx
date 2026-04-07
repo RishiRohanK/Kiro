@@ -41,7 +41,7 @@ export default function CleedLoginPage() {
       });
 
       if (res.ok) {
-        // Persist session
+        
         localStorage.setItem("cleed_auth_v2", "active");
         router.push("/cleed/dashboard");
       } else {
@@ -83,7 +83,7 @@ export default function CleedLoginPage() {
         )}
       </AnimatePresence>
 
-      {/* Structural Accent */}
+      {}
       <div className="absolute top-0 left-0 w-full h-1 bg-[#F5332C]" />
       
       <motion.div 
@@ -92,7 +92,7 @@ export default function CleedLoginPage() {
         className="w-full max-w-sm"
       >
         <div className="bg-white border border-zinc-200 p-10 rounded-none shadow-sm space-y-8 relative overflow-hidden">
-          {/* Industrial Corner Mark */}
+          {}
           <div className="absolute top-0 right-0 h-4 w-4" style={{ backgroundColor: '#F5332C' }} />
 
           <div className="flex items-center gap-2">
@@ -105,7 +105,7 @@ export default function CleedLoginPage() {
               <h2 className="text-xl font-bold tracking-tight text-zinc-900">Log in</h2>
               <p className="text-zinc-500 text-[13px] font-medium leading-none mb-4">Access the administrative terminal.</p>
             </div>
-            {/* Structural Sub-line */}
+            {}
             <div className="h-[1px] w-full bg-zinc-100" />
           </div>
 

@@ -10,9 +10,9 @@ const transporter = nodemailer.createTransport({
 
 const BASE_URL = "https://platform.studentforge.in";
 
-/**
- * Simplified Minimalist Email Template
- */
+
+
+
 const getSimpleTemplate = (title: string, content: string, ctaText: string, ctaUrl: string, team: string) => `
 <!DOCTYPE html>
 <html>
@@ -134,7 +134,7 @@ export const sendTeamAssignmentEmail = async (email: string, name: string, proje
 export const sendInterviewEmail = async (email: string, name: string, position: string, timing: string) => {
     const title = "Interview Invitation";
     const content = `Hello ${name},<br/><br/>Congratulations! Your application for the <b>${position}</b> position has been shortlisted. We would like to invite you for an interview to further discuss your profile.<br/><br/><b>Interview Timing:</b> ${timing}<br/><b>Location:</b> STUDENT FORGE Corporate office in Hyderabad, Telangana<br/><b>Address:</b> HF2R+CCV, Devender Colony, Kompally, Hyderabad, Telangana 500100<br/><br/>Please confirm your availability by replying to this email. We look forward to meeting you.`;
-    const ctaUrl = "https://maps.app.goo.gl/6EGvQ1jbTURoiA1a8"; // Link to directions if possible, or just a placeholder
+    const ctaUrl = "https://maps.app.goo.gl/6EGvQ1jbTURoiA1a8"; 
     const html = getSimpleTemplate(title, content, "View Directions", ctaUrl, "HR Team");
 
     try {

@@ -57,7 +57,7 @@ export default function MediaSettingsPage() {
 
     return (
         <div className="min-h-screen bg-[#050505] text-white flex overflow-hidden font-sans">
-            {/* Sidebar */}
+            {}
             <aside className={`${sidebarOpen ? 'w-64' : 'w-20'} border-r border-zinc-900 bg-[#0A0A0A] flex flex-col transition-all duration-300 z-50`}>
                 <div className="p-6 flex items-center justify-between">
                     {sidebarOpen && (
@@ -110,9 +110,9 @@ export default function MediaSettingsPage() {
                 </div>
             </aside>
 
-            {/* Main Content */}
+            {}
             <main className="flex-1 overflow-y-auto relative">
-                {/* Top Nav */}
+                {}
                 <header className="h-20 border-b border-black/5 flex items-center justify-between px-6 bg-[#92E3A9] sticky top-0 z-40">
                     <div className="flex flex-col">
                         <h2 className="text-xs font-bold text-zinc-900/70 mb-0.5">Team Console / <span className="text-zinc-900">Settings</span></h2>
@@ -136,7 +136,7 @@ export default function MediaSettingsPage() {
                         <h1 className="text-3xl font-semibold mb-8 text-white tracking-tight">Account Settings</h1>
                         
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            {/* Profile Card */}
+                            {}
                             <div className="bg-[#0A0A0A] border border-zinc-900 rounded-3xl p-8">
                                 <div className="flex items-center gap-4 mb-8">
                                     <div className="w-16 h-16 bg-[#92E3A9] rounded-2xl flex items-center justify-center text-zinc-900">
@@ -168,7 +168,7 @@ export default function MediaSettingsPage() {
                                 </div>
                             </div>
 
-                            {/* System Access Card */}
+                            {}
                             <div className="bg-[#0A0A0A] border border-zinc-900 rounded-3xl p-8 flex flex-col">
                                 <h3 className="text-lg font-bold text-white mb-6">Security & Access</h3>
                                 

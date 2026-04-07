@@ -50,7 +50,7 @@ export default function RoadmapsPage() {
       <SubNavbar />
       
       <main>
-        {/* Simple Header */}
+        {}
         <section className="bg-zinc-900 py-10 md:py-12 border-b border-white/5 relative overflow-hidden">
           <div className="mx-auto max-w-7xl px-6 lg:px-10 relative z-10 text-left">
             <div className="max-w-2xl space-y-2">
@@ -68,7 +68,7 @@ export default function RoadmapsPage() {
           </div>
         </section>
 
-        {/* Search Bar */}
+        {}
         <section className="py-4 bg-zinc-50 border-b border-zinc-100 sticky top-[64px] z-40">
             <div className="mx-auto max-w-7xl px-6 lg:px-10">
                 <div className="relative w-full md:w-96">
@@ -84,7 +84,7 @@ export default function RoadmapsPage() {
             </div>
         </section>
 
-        {/* Simple Card Grid */}
+        {}
         <section className="py-12 md:py-20 bg-white min-h-[600px]">
             <div className="mx-auto max-w-7xl px-6 lg:px-10">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

@@ -16,25 +16,25 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: "*", // Adjust for production
+    origin: "*", 
   },
 });
 
 io.on("connection", (socket) => {
   console.log("Team-linked peer connected:", socket.id);
 
-  // Group synchronization protocol
+  
   socket.on("join_team", (teamId) => {
     socket.join(teamId);
     console.log(`Socket ${socket.id} synchronized with Team Node: ${teamId}`);
   });
 
-  // Communication relay
+  
   socket.on("send_message", async (data) => {
     const { teamId, message, senderId, senderName, targetId } = data;
 
     try {
-      // Persistence layer synchronization
+      
       const newMessage = await prisma.message.create({
         data: {
           teamId,
@@ -45,7 +45,7 @@ io.on("connection", (socket) => {
         },
       });
 
-      // Broadcast to specific team enclave (including targetId if present)
+      
       io.to(teamId).emit("receive_message", { ...newMessage, targetId });
     } catch (error) {
       console.error("Message persistence failure:", error);

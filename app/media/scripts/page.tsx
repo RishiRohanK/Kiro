@@ -75,7 +75,7 @@ export default function MediaScriptsPage() {
 
     return (
         <div className="min-h-screen bg-[#050505] text-white flex overflow-hidden font-sans">
-            {/* Sidebar */}
+            {}
             <aside className={`${sidebarOpen ? 'w-64' : 'w-20'} border-r border-zinc-900 bg-[#0A0A0A] flex flex-col transition-all duration-300 z-50`}>
                 <div className="p-6 flex items-center justify-between">
                     {sidebarOpen && (
@@ -128,9 +128,9 @@ export default function MediaScriptsPage() {
                 </div>
             </aside>
 
-            {/* Main Content */}
+            {}
             <main className="flex-1 overflow-y-auto relative">
-                {/* Top Nav */}
+                {}
                 <header className="h-20 border-b border-black/5 flex items-center justify-between px-6 bg-[#92E3A9] sticky top-0 z-40 text-zinc-900">
                     <div className="flex flex-col">
                         <h2 className="text-xs font-bold opacity-70 mb-0.5">Media Console / <span className="text-black">Script Submission</span></h2>

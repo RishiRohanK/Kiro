@@ -6,7 +6,7 @@ import SubNavbar from "../components/home/SubNavbar";
 import Footer from "../components/home/Footer";
 import { Search, Clock, Star, Users, ExternalLink, ShieldCheck } from "lucide-react";
 
-// Master Brand & Tech Logomap
+
 const techLogos: Record<string, string> = {
     "Amazon Web Services": "https://upload.wikimedia.org/wikipedia/commons/9/93/Amazon_Web_Services_Logo.svg",
     "Google Cloud": "https://upload.wikimedia.org/wikipedia/commons/5/51/Google_Cloud_logo.svg",
@@ -181,15 +181,15 @@ export default function CertificationPage() {
     const scrollContainerRef = useRef<HTMLDivElement>(null);
 
     const getLogo = (cert: any) => {
-        // Prioritize specific product/title matches first for high-impact tools
+        
         const titleMatch = Object.keys(techLogos).find(key => cert.title.toLowerCase().includes(key.toLowerCase()));
         if (titleMatch) return techLogos[titleMatch];
 
-        // Then check tags for specialized tech (like "Jira" in tags)
+        
         const techMatch = cert.tags.find((tag: string) => techLogos[tag]);
         if (techMatch) return techLogos[techMatch];
 
-        // Fallback to the corporate provider
+        
         if (techLogos[cert.provider]) return techLogos[cert.provider];
         
         return "https://upload.wikimedia.org/wikipedia/commons/a/ab/Circle-icons-cloud.svg";
@@ -211,7 +211,7 @@ export default function CertificationPage() {
             <SubNavbar />
 
             <main>
-                {/* Condensed Hero Section */}
+                {}
                 <section className="bg-zinc-900 py-10 md:py-12 border-b border-white/5 overflow-hidden relative">
                     <div className="absolute top-0 right-0 w-[50%] h-full bg-blue-600/5 blur-[100px] pointer-events-none" />
                     <div className="mx-auto max-w-7xl px-6 relative z-10">
@@ -229,7 +229,7 @@ export default function CertificationPage() {
                     </div>
                 </section>
 
-                {/* Condensed Action Bar */}
+                {}
                 <section className="sticky top-[64px] z-50 bg-white/95 backdrop-blur-md border-b border-zinc-100 py-3 shadow-sm">
                     <div className="mx-auto max-w-7xl px-6">
                         <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
@@ -262,7 +262,7 @@ export default function CertificationPage() {
                     </div>
                 </section>
 
-                {/* High-Density Simplified Grid */}
+                {}
                 <section className="py-8 md:py-10 bg-zinc-50">
                     <div className="mx-auto max-w-7xl px-6">
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">

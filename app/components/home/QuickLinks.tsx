@@ -14,12 +14,12 @@ export default function QuickLinks() {
       <div className="mx-auto max-w-7xl px-6 sm:px-10">
         <div className="flex items-center justify-between h-12 overflow-x-auto scrollbar-hide">
 
-          {/* Left Label - Neutralized Typography */}
+          {}
           <span className="shrink-0 text-[11px] font-bold text-zinc-500 pr-6 border-r border-zinc-800">
             Quick links
           </span>
 
-          {/* Links - Mission Critical Redirection */}
+          {}
           <div className="flex items-center divide-x divide-zinc-800 flex-1">
             {links.map((link) => (
               <Link
@@ -33,7 +33,7 @@ export default function QuickLinks() {
             ))}
           </div>
 
-          {/* Right: View all Hubs */}
+          {}
           <Link
             href="/courses"
             className="shrink-0 hidden sm:flex items-center gap-1.5 text-[12px] text-zinc-500 hover:text-white font-medium transition-colors pl-6 border-l border-zinc-800 h-12"

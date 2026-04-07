@@ -22,7 +22,7 @@ export default async function Page() {
     orderBy: { createdAt: "desc" }
   });
 
-  // Serialize and pass to client component
+  
   const serializedCourses = JSON.parse(JSON.stringify(courses));
 
   return <CoursesListContent initialCourses={serializedCourses} />;

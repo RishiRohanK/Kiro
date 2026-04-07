@@ -21,7 +21,7 @@ export default function CoursesListContent({ initialCourses }: CoursesListConten
 
     return (
         <div className="min-h-screen bg-white text-zinc-900 font-sans selection:bg-blue-100">
-            {/* Structured Data for Course List (ItemList) */}
+            {}
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{

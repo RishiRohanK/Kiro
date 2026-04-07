@@ -4,7 +4,7 @@ import bcrypt from "bcryptjs";
 import { Role } from "@prisma/client";
 
 export async function POST(req: Request) {
-    // 🛡️ REGISTRATION FREEZE PROTOCOL
+    
     return NextResponse.json({ error: "Registrations for Batch 2 are currently frozen. Please contact the Student Forge administration for information on next intake." }, { status: 403 });
 
     try {
@@ -14,7 +14,7 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: "Missing fields" }, { status: 400 });
         }
 
-        // Check if user already exists
+        
         const existingUser = await prisma.user.findUnique({
             where: { email },
         });
@@ -23,17 +23,17 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: "User already exists with this email." }, { status: 400 });
         }
 
-        // Hash password
+        
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        // Create user
+        
         const newUser = await prisma.user.create({
             data: {
                 name,
                 email,
                 password: hashedPassword,
                 role: Role.INTERN,
-                isApproved: false, // Manual approval required
+                isApproved: false, 
                 college,
                 batch: "Batch 2"
             },

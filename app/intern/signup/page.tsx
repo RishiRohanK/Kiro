@@ -55,16 +55,16 @@ export default function InternSignupPage() {
     return (
         <div className="min-h-screen bg-[#FAFAFA] text-zinc-900 font-sans flex items-center justify-center p-6 relative overflow-hidden">
 
-            {/* Background Decorative Images */}
+            {}
             <div className="absolute inset-0 pointer-events-none">
                 <img src="https://ik.imagekit.io/dypkhqxip/Rocket-rafiki%20(1).svg" alt="" className="absolute left-[2%] top-[10%] w-[480px] hidden lg:block" />
                 <img src="https://ik.imagekit.io/dypkhqxip/Happy%20student-bro.svg" alt="" className="absolute right-[5%] bottom-[5%] w-[420px] hidden lg:block" />
             </div>
 
-            {/* Signup Card - Sharp Edges */}
+            {}
             <div className="w-full max-w-[420px] bg-white border border-zinc-100 p-7 md:p-10 relative z-10 shadow-[0_4px_30px_-5px_rgba(0,0,0,0.03)]">
 
-                {/* Logo Section */}
+                {}
                 <div className="flex flex-col items-center mb-8">
                     <img
                         src="https://res.cloudinary.com/dsqqrpzfl/image/upload/v1774885412/Screenshot_2026-03-30_at_21.13.11-removebg-preview_gaqcdz.png"
@@ -82,7 +82,7 @@ export default function InternSignupPage() {
                     </div>
                 </div>
 
-                {/* Registration Frozen Overlay */}
+                {}
                 <div className="space-y-8 animate-in fade-in duration-700">
                     <div className="flex flex-col items-center gap-6 py-10 bg-zinc-50 border border-dashed border-zinc-200">
                         <div className="w-16 h-16 bg-white border border-zinc-100 flex items-center justify-center shadow-sm">

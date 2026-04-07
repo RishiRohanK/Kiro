@@ -46,7 +46,7 @@ export default function PaymentGatewayLayout({
     <div className="min-h-screen bg-white text-zinc-900 font-sans selection:bg-[#0055FF]/10">
       <Navbar />
       <div className="flex">
-        {/* Modern Premium Sidebar */}
+        {}
         <aside className="w-72 fixed left-0 top-[64px] bottom-0 border-r border-zinc-100 bg-white z-40 hidden lg:block">
           <div className="flex flex-col h-full py-8 px-6">
             <div className="mb-8">
@@ -89,7 +89,7 @@ export default function PaymentGatewayLayout({
           </div>
         </aside>
 
-        {/* Content Area */}
+        {}
         <main className="flex-1 lg:ml-72 min-h-[calc(100vh-64px)] overflow-x-hidden">
           <div className="mx-auto max-w-7xl px-6 py-10 lg:px-10">
             {children}

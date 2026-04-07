@@ -10,7 +10,7 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: "Email and password are required" }, { status: 400 });
         }
 
-        // Check if user exists
+        
         const user = await prisma.user.findUnique({
             where: { email },
         });
@@ -19,15 +19,15 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: "No account found with this email." }, { status: 404 });
         }
 
-        // Verify password
+        
         const isValid = await bcrypt.compare(password, user.password);
         if (!isValid) {
             return NextResponse.json({ error: "Invalid password." }, { status: 401 });
         }
 
-        // Check if the user is an intern
-        // Note: Admin might need to approve them first, or role should be INTERN
-        // But for now we just check if it's a valid user
+        
+        
+        
         const { password: _, ...userWithoutPassword } = user;
 
         return NextResponse.json({ 

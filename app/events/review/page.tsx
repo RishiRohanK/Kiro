@@ -125,7 +125,7 @@ export default function EventReviewPage() {
 
             <main className="flex-1 flex flex-col justify-center px-12 sm:px-24 py-16 max-w-[1400px] mx-auto w-full">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
-                    {/* Left: Info */}
+                    {}
                     <div className="lg:col-span-4 lg:sticky lg:top-8">
                         <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-white mb-4 leading-none text-left">
                             Shared Stories
@@ -142,7 +142,7 @@ export default function EventReviewPage() {
                         </div>
                     </div>
 
-                    {/* Right: Form */}
+                    {}
                     <div className="lg:col-span-8 bg-zinc-900/20 border border-zinc-800/50 rounded-2xl p-8 backdrop-blur-sm shadow-2xl">
                         <form onSubmit={handleSubmit} className="space-y-8">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

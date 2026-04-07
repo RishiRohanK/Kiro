@@ -51,7 +51,7 @@ export default function ContentExplorer() {
     <section className="bg-white py-16 md:py-20">
       <div className="mx-auto max-w-7xl px-6 sm:px-10">
         
-        {/* Header Section */}
+        {}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
           <div className="space-y-3">
             <div className="inline-flex h-6 items-center border border-zinc-200 bg-zinc-50 px-3 text-[10px] font-bold text-zinc-500 uppercase tracking-[0.15em]">
@@ -66,7 +66,7 @@ export default function ContentExplorer() {
           </p>
         </div>
 
-        {/* Content Grid */}
+        {}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {contentCards.map((card) => {
             return (
@@ -86,7 +86,7 @@ export default function ContentExplorer() {
                   {card.description}
                 </p>
 
-                {/* Accent line */}
+                {}
                 <div className="mt-8 h-[1px] w-full bg-current opacity-10" />
               </Link>
             );

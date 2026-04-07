@@ -22,7 +22,7 @@ export async function POST(req: Request) {
         const mailSent = await sendInterviewEmail(applicant.email, applicant.name, applicant.position, timing);
 
         if (mailSent) {
-            // Update applicant status and timing for persistence
+            
             await prisma.hiringApplication.update({
                 where: { id: applicantId },
                 data: { 

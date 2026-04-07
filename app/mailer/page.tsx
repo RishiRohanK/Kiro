@@ -136,7 +136,7 @@ export default function MailerPage() {
 
             if (list.length > 0) {
                 setStudents(list);
-                setStep(3); // Go to template selection
+                setStep(3); 
             } else {
                 alert("No valid email addresses found.");
             }
@@ -175,7 +175,7 @@ export default function MailerPage() {
     if (!isLoggedIn) {
         return (
             <div className="min-h-screen w-full flex flex-col bg-white font-sans overflow-hidden">
-                {/* Minimal Header */}
+                {}
                 <nav className="w-full border-b border-zinc-100 px-6 lg:px-10 py-4 flex items-center justify-between">
                     <Link href="/" className="flex items-center gap-3">
                          <Home size={16} />
@@ -245,7 +245,7 @@ export default function MailerPage() {
             </nav>
 
             <main className="w-full">
-                {/* Header Section */}
+                {}
                 <div className="bg-black py-10">
                     <div className="mx-auto max-w-7xl px-6 lg:px-10">
                         <Breadcrumbs items={[{ label: "Academy", href: "/" }, { label: "Mailer" }]} />
@@ -258,7 +258,7 @@ export default function MailerPage() {
 
                 <div className="mx-auto max-w-7xl px-6 lg:px-10 py-12">
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-                        {/* Progress */}
+                        {}
                         <div className="lg:col-span-3 space-y-8">
                              {[
                                 { id: 1, label: "Link Email", icon: Mail },
@@ -275,7 +275,7 @@ export default function MailerPage() {
                             ))}
                         </div>
 
-                        {/* Content */}
+                        {}
                         <div className="lg:col-span-9">
                              {step === 1 && (
                                 <div className="border border-zinc-100 p-10 space-y-8">

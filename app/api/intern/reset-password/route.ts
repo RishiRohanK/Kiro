@@ -10,7 +10,7 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: "Missing token or password" }, { status: 400 });
         }
 
-        // Find token
+        
         const resetToken = await prisma.resetToken.findUnique({
             where: { token },
         });
@@ -19,7 +19,7 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: "Invalid or expired token." }, { status: 400 });
         }
 
-        // Check expiration
+        
         if (new Date() > resetToken.expires) {
             await prisma.resetToken.delete({
                 where: { token },
@@ -27,16 +27,16 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: "Token has expired." }, { status: 400 });
         }
 
-        // Hash new password
+        
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        // Update user
+        
         await prisma.user.update({
             where: { email: resetToken.email },
             data: { password: hashedPassword },
         });
 
-        // Delete used token
+        
         await prisma.resetToken.delete({
             where: { token },
         });

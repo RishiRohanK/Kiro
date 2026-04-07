@@ -11,13 +11,13 @@ export function PWAInstallButton() {
   const [showIOSPrompt, setShowIOSPrompt] = useState(false);
 
   useEffect(() => {
-    // Check if it's iOS
+    
     const isIOSDevice = 
       /iPad|iPhone|iPod/.test(navigator.userAgent) || 
       (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
     setIsIOS(isIOSDevice);
 
-    // Check if already installed
+    
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
     if (isStandalone) {
         return;
@@ -31,7 +31,7 @@ export function PWAInstallButton() {
 
     window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
 
-    // Show prompt for iOS after a small delay if not standalone
+    
     if (isIOSDevice && !isStandalone) {
       setTimeout(() => setShowIOSPrompt(true), 3000);
     }

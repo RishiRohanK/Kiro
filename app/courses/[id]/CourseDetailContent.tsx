@@ -29,20 +29,20 @@ interface CourseDetailContentProps {
 
 export default function CourseDetailContent({ course, id }: CourseDetailContentProps) {
     const router = useRouter();
-    const [openModule, setOpenModule] = useState<number | null>(0); // Default open first module
+    const [openModule, setOpenModule] = useState<number | null>(0); 
     const [realTimeEnrolled, setRealTimeEnrolled] = useState(15);
 
     useEffect(() => {
-        // Real-time counter simulation
+        
         const interval = setInterval(() => {
             setRealTimeEnrolled(prev => prev + Math.floor(Math.random() * 2) + 1);
-        }, 15000); // Increment every 15 seconds
+        }, 15000); 
         return () => clearInterval(interval);
     }, []);
 
     return (
         <div className="min-h-screen bg-white text-zinc-900 font-sans selection:bg-zinc-100">
-            {/* Structured Data for SEO */}
+            {}
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{
@@ -97,7 +97,7 @@ export default function CourseDetailContent({ course, id }: CourseDetailContentP
                 }}
             />
 
-            {/* Minimal Navbar - Sharp Edges */}
+            {}
             <nav className="sticky top-0 z-50 w-full border-b border-zinc-100 bg-white/95 backdrop-blur-sm">
                 <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-6 lg:px-10">
                     <Link href="/" className="flex items-center gap-2 transition-opacity hover:opacity-70 group">
@@ -115,7 +115,7 @@ export default function CourseDetailContent({ course, id }: CourseDetailContentP
             </nav>
 
             <main className="w-full">
-                {/* Header Section - Sharp Black */}
+                {}
                 <div className="bg-[#0055FF] py-8 lg:py-10">
                     <div className="mx-auto max-w-7xl px-6 lg:px-10">
                         <Breadcrumbs white items={[{ label: "Academy", href: "/courses" }, { label: course.title }]} />
@@ -149,7 +149,7 @@ export default function CourseDetailContent({ course, id }: CourseDetailContentP
                                 </div>
                             </div>
 
-                            {/* Minimal Search Bar in Header */}
+                            {}
                             <div className="relative w-full lg:w-80 group">
                                  <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-white/40" strokeWidth={1.5} />
                                  <input 
@@ -162,12 +162,12 @@ export default function CourseDetailContent({ course, id }: CourseDetailContentP
                     </div>
                 </div>
 
-                {/* Content Grid */}
+                {}
                 <div className="mx-auto max-w-7xl px-6 lg:px-10 py-16">
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
-                        {/* Main Content Side */}
+                        {}
                         <div className="lg:col-span-8 space-y-16">
-                            {/* Overview */}
+                            {}
                             <section>
                                 <h2 className="text-[20px] font-bold tracking-tight mb-6 flex items-center gap-3">
                                     Course Overview
@@ -186,7 +186,7 @@ export default function CourseDetailContent({ course, id }: CourseDetailContentP
                                 </div>
                             </section>
 
-                            {/* Curriculum - Interactive Accordion */}
+                            {}
                             <section>
                                 <h2 className="text-[20px] font-bold tracking-tight mb-8 flex items-center gap-3">
                                     Course Syllabus
@@ -234,7 +234,7 @@ export default function CourseDetailContent({ course, id }: CourseDetailContentP
                                             </div>
                                         ))
                                     ) : (
-                                        /* Fallback for courses without curriculum data */
+                                        
                                         [1, 2, 3, 4].map((m, idx) => (
                                             <div key={idx} className="border-b border-zinc-50 last:border-0">
                                                 <button 
@@ -265,7 +265,7 @@ export default function CourseDetailContent({ course, id }: CourseDetailContentP
                                 </div>
                             </section>
 
-                            {/* Requirements */}
+                            {}
                             <section>
                                 <h2 className="text-[20px] font-bold tracking-tight mb-6 flex items-center gap-3">
                                     Prerequisites
@@ -282,7 +282,7 @@ export default function CourseDetailContent({ course, id }: CourseDetailContentP
                             </section>
                         </div>
 
-                        {/* Sidebar */}
+                        {}
                         <aside className="lg:col-span-4 space-y-8 h-fit lg:sticky lg:top-24">
                             <div className="border border-zinc-100 bg-white shadow-sm overflow-hidden">
                                 <div className="aspect-video relative bg-zinc-50 border-b border-zinc-100 flex items-center justify-center">
@@ -324,7 +324,7 @@ export default function CourseDetailContent({ course, id }: CourseDetailContentP
                                 </div>
                             </div>
 
-                            {/* Instructor Card */}
+                            {}
                             <div className="p-8 border border-zinc-100">
                                 <h4 className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest mb-6">Instructor</h4>
                                 <div className="flex items-center gap-4 mb-4">

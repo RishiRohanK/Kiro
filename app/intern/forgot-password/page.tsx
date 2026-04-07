@@ -39,15 +39,15 @@ export default function InternForgotPasswordPage() {
     return (
         <div className="min-h-screen bg-[#FAFAFA] text-zinc-900 font-sans flex items-center justify-center p-6 relative overflow-hidden">
 
-            {/* Background Decorative Images */}
+            {}
             <div className="absolute inset-0 pointer-events-none">
                 <img src="https://ik.imagekit.io/dypkhqxip/Forgot%20password-bro.svg" alt="" className="absolute right-[5%] bottom-[5%] w-[420px] hidden lg:block" />
             </div>
 
-            {/* Forgot Password Card - Sharp Edges */}
+            {}
             <div className="w-full max-w-[400px] bg-white border border-zinc-100 p-7 md:p-10 relative z-10 shadow-[0_4px_30px_-5px_rgba(0,0,0,0.03)]">
 
-                {/* Logo Section */}
+                {}
                 <div className="flex flex-col items-center mb-8">
                     <img
                         src="https://res.cloudinary.com/dsqqrpzfl/image/upload/v1774885412/Screenshot_2026-03-30_at_21.13.11-removebg-preview_gaqcdz.png"

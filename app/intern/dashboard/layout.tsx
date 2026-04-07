@@ -60,11 +60,11 @@ function InternDashboardLayoutContent({
                     body: JSON.stringify({ userId: user.id })
                 });
             } catch (err) {
-                // Ignore silent errors
+                
             }
         };
-        sendPulse(); // Initial
-        const interval = setInterval(sendPulse, 30000); // Every 30s
+        sendPulse(); 
+        const interval = setInterval(sendPulse, 30000); 
         return () => clearInterval(interval);
     }, [user]);
 
@@ -85,7 +85,7 @@ function InternDashboardLayoutContent({
             const data = await res.json();
             if (data.success) {
                 setHandRaised(data.handRaised);
-                // Update local storage too
+                
                 const updatedUser = { ...user, handRaised: data.handRaised };
                 localStorage.setItem("intern_user", JSON.stringify(updatedUser));
                 setUser(updatedUser);
@@ -111,7 +111,7 @@ function InternDashboardLayoutContent({
 
     return (
         <div className="min-h-screen bg-white text-zinc-900 flex flex-col lg:flex-row font-sans overflow-x-hidden">
-            {/* Desktop Side Navigation */}
+            {}
             <aside className="hidden lg:flex w-64 flex-col bg-[#F4F4F5] h-screen sticky top-0 z-50 border-r border-zinc-200">
                 <div className="p-8 pb-10 flex flex-col items-start gap-4">
                     <img 
@@ -182,9 +182,9 @@ function InternDashboardLayoutContent({
                 </div>
             </aside>
 
-            {/* Main Content Area */}
+            {}
             <div className="flex-1 flex flex-col min-w-0">
-                {/* Header Navigation */}
+                {}
                 <header className="h-14 lg:h-12 flex items-center justify-between px-4 lg:px-8 bg-[#0055FF] sticky top-0 z-[60] text-white shadow-lg shadow-blue-500/10">
                     <div className="flex items-center gap-3">
                         <button 
@@ -224,7 +224,7 @@ function InternDashboardLayoutContent({
                     {children}
                 </main>
 
-                {/* Mobile Bottom Navigation (Edge-to-Edge Dark) */}
+                {}
                 <nav className="fixed bottom-0 left-0 right-0 h-16 bg-black border-t border-white/10 lg:hidden flex items-center justify-around px-2 z-50 pb-safe shadow-[0_-4px_16px_rgba(0,0,0,0.2)]">
                     {navItems.filter(i => i.mobile).map((item) => {
                         const itemUrl = new URL(item.slug, "http://localhost");
@@ -249,7 +249,7 @@ function InternDashboardLayoutContent({
                     })}
                 </nav>
 
-                {/* Mobile Side Drawer */}
+                {}
                 <AnimatePresence>
                     {isMobileMenuOpen && (
                         <>

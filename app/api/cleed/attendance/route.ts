@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
-    const dateStr = searchParams.get("date"); // YYYY-MM-DD
+    const dateStr = searchParams.get("date"); 
     
     if (!dateStr) {
       return NextResponse.json({ error: "Temporal coordinate required" }, { status: 400 });

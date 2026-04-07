@@ -13,7 +13,7 @@ export async function GET(req: Request) {
     const messages = await prisma.message.findMany({
       where: { teamId },
       orderBy: { createdAt: "asc" },
-      take: 100 // Optimization to prevent mission-critical overhead
+      take: 100 
     });
 
     return NextResponse.json({ success: true, messages });

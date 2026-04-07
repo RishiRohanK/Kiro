@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 
-// Dashboard: Fetch All Idea Pitches (Pending & Approved)
+
 export async function GET() {
     try {
         const ideas = await prisma.idea.findMany({
@@ -21,7 +21,7 @@ export async function GET() {
     }
 }
 
-// Dashboard: Authorization Protocol (Approve/Delete)
+
 export async function PATCH(req: Request) {
     try {
         const body = await req.json();

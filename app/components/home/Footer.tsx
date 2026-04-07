@@ -13,7 +13,7 @@ export default function Footer() {
   return (
     <footer className="relative w-full bg-zinc-50 py-16 md:py-24 border-t border-zinc-200 overflow-hidden">
       
-      {/* High-Fidelity Watermark Background Sync - Enhanced Visibility */}
+      {}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden">
         <div className="flex items-center gap-4 text-6xl md:text-8xl lg:text-[160px] font-black opacity-[0.06] whitespace-nowrap leading-none select-none">
           <span className="text-violet-900 lowercase">learn.</span>
@@ -24,7 +24,7 @@ export default function Footer() {
 
       <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-col items-center justify-between gap-12 px-6 lg:px-10 md:flex-row">
         
-        {/* Branding & Status - Synchronized Node */}
+        {}
         <div className="flex items-center gap-6">
           <div className="flex items-center gap-4">
             <Link href="/" className="text-[15px] font-bold text-zinc-900 tracking-tighter hover:text-indigo-600 transition-colors">
@@ -46,7 +46,7 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Legal & Navigation - Consolidated Layout */}
+        {}
         <div className="flex flex-col md:flex-row items-center gap-8 md:ml-auto">
           <span className="text-[11px] text-zinc-500 font-medium">
             © 2026 Student Forge Technologies Private Limited

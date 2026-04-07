@@ -65,7 +65,7 @@ export default function AmbassadorPage() {
             <SubNavbar />
 
             <main>
-                {/* Hero Section - High-Speed Architecture */}
+                {}
                 <section className="bg-zinc-900 py-12 md:py-16 border-b border-white/5 overflow-hidden relative text-left">
                     <div className="absolute top-0 right-0 w-[50%] h-full bg-orange-600/5 blur-[100px] pointer-events-none" />
                     <div className="mx-auto max-w-7xl px-6 relative z-10">
@@ -111,7 +111,7 @@ export default function AmbassadorPage() {
                     </div>
                 </section>
 
-                {/* Benefits Grid - High-Density */}
+                {}
                 <section className="py-10 md:py-12 bg-zinc-50 border-b border-zinc-100">
                     <div className="mx-auto max-w-7xl px-6 lg:px-10">
                         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
@@ -149,7 +149,7 @@ export default function AmbassadorPage() {
                     </div>
                 </section>
 
-                {/* Responsibilities Architecture */}
+                {}
                 <section className="py-12 md:py-16 bg-white">
                     <div className="mx-auto max-w-7xl px-6 lg:px-10 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
                         <div className="space-y-8">
@@ -186,7 +186,7 @@ export default function AmbassadorPage() {
                     </div>
                 </section>
 
-                {/* Application Architecture */}
+                {}
                 <section id="apply-form" className="py-16 lg:py-20 bg-zinc-900 text-white border-t border-white/5 relative overflow-hidden">
                     <div className="absolute bottom-0 left-0 w-full h-full bg-orange-600/5 blur-[120px] pointer-events-none" />
                     <div className="mx-auto max-w-3xl px-6 relative z-10">
@@ -223,7 +223,7 @@ export default function AmbassadorPage() {
                         ) : (
                             <form onSubmit={handleSubmit} className="space-y-6">
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    {/* Full Name */}
+                                    {}
                                     <div className="space-y-1.5">
                                         <label className="text-[10px] font-bold text-zinc-500">Full name</label>
                                         <div className="relative">
@@ -237,7 +237,7 @@ export default function AmbassadorPage() {
                                         </div>
                                     </div>
 
-                                    {/* Email */}
+                                    {}
                                     <div className="space-y-1.5">
                                         <label className="text-[10px] font-bold text-zinc-500">Communication node</label>
                                         <div className="relative">
@@ -251,7 +251,7 @@ export default function AmbassadorPage() {
                                         </div>
                                     </div>
 
-                                    {/* College */}
+                                    {}
                                     <div className="space-y-1.5">
                                         <label className="text-[10px] font-bold text-zinc-500">Academic institution</label>
                                         <div className="relative">
@@ -265,7 +265,7 @@ export default function AmbassadorPage() {
                                         </div>
                                     </div>
 
-                                    {/* Year of Study */}
+                                    {}
                                     <div className="space-y-1.5">
                                         <label className="text-[10px] font-bold text-zinc-500">Strategic tier</label>
                                         <div className="relative">
@@ -284,7 +284,7 @@ export default function AmbassadorPage() {
                                     </div>
                                 </div>
 
-                                {/* LinkedIn */}
+                                {}
                                 <div className="space-y-1.5">
                                     <label className="text-[10px] font-bold text-zinc-500">Professional identity link</label>
                                     <input
@@ -296,7 +296,7 @@ export default function AmbassadorPage() {
                                     />
                                 </div>
 
-                                {/* Motivation */}
+                                {}
                                 <div className="space-y-1.5">
                                     <label className="text-[10px] font-bold text-zinc-500">Mission statement</label>
                                     <textarea
@@ -308,7 +308,7 @@ export default function AmbassadorPage() {
                                     ></textarea>
                                 </div>
 
-                                {/* Submit Button */}
+                                {}
                                 <button
                                     type="submit"
                                     disabled={submitting}

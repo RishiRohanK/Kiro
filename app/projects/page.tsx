@@ -79,7 +79,7 @@ export default function ProjectsPage() {
       <SubNavbar />
       
       <main>
-        {/* Hero Section */}
+        {}
         <section className="bg-zinc-900 py-16 md:py-20 lg:py-24 overflow-hidden relative border-b border-white/5">
           <div className="absolute top-0 right-0 w-[50%] h-full bg-orange-600/10 blur-[100px] pointer-events-none" />
           <div className="mx-auto max-w-7xl px-6 lg:px-10 relative z-10">
@@ -104,7 +104,7 @@ export default function ProjectsPage() {
           </div>
         </section>
 
-        {/* Board Search - Clean White Board */}
+        {}
         <section className="py-20 bg-white min-h-[600px]">
             <div className="mx-auto max-w-7xl px-6 lg:px-10">
                 <div className="mb-16 flex flex-col md:flex-row items-center justify-between gap-8 py-8 border-b border-zinc-100">
@@ -177,12 +177,12 @@ export default function ProjectsPage() {
                                 </button>
                             </div>
 
-                            {/* Corner Ribbon Detail */}
+                            {}
                             <div className="absolute top-0 right-0 w-12 h-12 bg-zinc-100 transform rotate-45 translate-x-6 -translate-y-6 group-hover:bg-zinc-900 transition-colors" />
                         </div>
                     ))}
                     
-                    {/* Submission Board Card */}
+                    {}
                     <div className="border border-dashed border-zinc-200 p-12 text-center group cursor-pointer hover:bg-zinc-50 transition-colors flex flex-col justify-center min-h-[450px]">
                         <div className="mx-auto w-16 h-16 bg-zinc-50 border border-zinc-200 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-white transition-all text-zinc-300 group-hover:text-orange-500 border-dashed">
                             <Bookmark size={24} />

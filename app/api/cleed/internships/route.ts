@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 
-// Admin: Manage Internships
+
 export async function GET() {
     try {
         const internships = await prisma.internship.findMany({
@@ -38,7 +38,7 @@ export async function POST(req: Request) {
                 submitterName,
                 submitterCompany,
                 submitterMobile,
-                // Default to false unless explicitly set (like from Admin dashboard)
+                
                 isApproved: isApproved === true ? true : false
             }
         });
@@ -50,7 +50,7 @@ export async function POST(req: Request) {
     }
 }
 
-// Update Mission Approval
+
 export async function PATCH(req: Request) {
     try {
         const body = await req.json();
@@ -68,7 +68,7 @@ export async function PATCH(req: Request) {
     }
 }
 
-// Delete Mission
+
 export async function DELETE(req: Request) {
     try {
         const { searchParams } = new URL(req.url);

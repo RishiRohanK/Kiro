@@ -38,9 +38,9 @@ export default function MediaDashboard() {
         }
         const parsed = JSON.parse(storedUser);
         
-        // Strict check: Must be MEDIA_TEAM and must be APPROVED
+        
         if (parsed.role !== "MEDIA_TEAM" || !parsed.isApproved) {
-            localStorage.removeItem("media_user"); // Clear invalid/unapproved session
+            localStorage.removeItem("media_user"); 
             router.push("/media/signin?error=pending");
             return;
         }
@@ -63,7 +63,7 @@ export default function MediaDashboard() {
 
     return (
         <div className="min-h-screen bg-[#050505] text-white flex overflow-hidden font-sans">
-            {/* Sidebar */}
+            {}
             <aside className={`${sidebarOpen ? 'w-64' : 'w-20'} border-r border-zinc-900 bg-[#0A0A0A] flex flex-col transition-all duration-300 z-50`}>
                 <div className="p-6 flex items-center justify-between">
                     {sidebarOpen && (
@@ -116,9 +116,9 @@ export default function MediaDashboard() {
                 </div>
             </aside>
 
-            {/* Main Content */}
+            {}
             <main className="flex-1 overflow-y-auto relative">
-                {/* Top Nav */}
+                {}
                 <header className="h-20 border-b border-black/5 flex items-center justify-between px-6 bg-[#92E3A9] sticky top-0 z-40">
                     <div className="flex flex-col">
                         <h2 className="text-xs font-bold text-zinc-900/70 mb-0.5">Team Console / <span className="text-zinc-900">Overview</span></h2>
@@ -139,7 +139,7 @@ export default function MediaDashboard() {
 
                 <div className="p-6 sm:p-10 w-full">
                     <div className="relative rounded-[2rem] bg-gradient-to-br from-[#111111] to-[#0A0A0A] border border-zinc-800 p-10 overflow-hidden shadow-2xl">
-                        {/* Abstract background blobs */}
+                        {}
                         <div className="absolute top-0 right-0 w-64 h-64 bg-[#92E3A9]/5 rounded-full blur-[100px] -mr-32 -mt-32" />
                         <div className="absolute bottom-0 left-0 w-64 h-64 bg-zinc-500/5 rounded-full blur-[100px] -ml-32 -mb-32" />
 

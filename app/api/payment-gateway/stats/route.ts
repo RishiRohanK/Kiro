@@ -3,7 +3,7 @@ import prisma from "@/lib/prisma";
 
 export async function GET() {
   try {
-    // Fetch all enrollments
+    
     const enrollments = await prisma.courseEnrollment.findMany({
       include: {
         course: {
@@ -18,14 +18,14 @@ export async function GET() {
       },
     });
 
-    // Fetch all failed transactions
+    
     const failedTransactions = await prisma.failedTransaction.findMany({
       orderBy: {
         createdAt: "desc",
       },
     });
 
-    // Count occurrences of each razorpayOrderId / referenceId
+    
     const orderCounts: Record<string, number> = {};
     enrollments.forEach((e: any) => {
       const orderId = e.razorpayOrderId || e.referenceId || "none";
@@ -34,7 +34,7 @@ export async function GET() {
       }
     });
 
-    // Map enrollment data
+    
     const enrollmentData = enrollments.map(e => ({
       status: e.status,
       amount: e.amount,
@@ -45,7 +45,7 @@ export async function GET() {
       type: "enrollment"
     }));
 
-    // Map failed transaction data
+    
     const failedData = failedTransactions.map((f: any) => ({
       status: "failed",
       amount: f.amount || "0",
@@ -56,7 +56,7 @@ export async function GET() {
       type: "failed"
     }));
 
-    // Combine and sort by timestamp
+    
     const data = [...enrollmentData, ...failedData].sort((a, b) => 
       new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
     );
@@ -69,6 +69,6 @@ export async function GET() {
       { status: 500 }
     );
   } finally {
-    // Connection managed by singleton
+    
   }
 }

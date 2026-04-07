@@ -11,15 +11,15 @@ export default function GetStartedPage() {
   return (
     <div className="min-h-screen bg-white text-zinc-900 font-sans selection:bg-blue-100">
       
-      {/* 1. Global Navigation */}
+      {}
       <Navbar />
       <SubNavbar />
 
       <main className="w-full">
         
-        {/* 2. Hero Section - Compact Height */}
+        {}
         <section className="relative bg-zinc-900 py-16 md:py-20 lg:py-24 overflow-hidden">
-          {/* Animated Background Accent */}
+          {}
           <div className="absolute top-0 right-0 w-[50%] h-full bg-blue-600/10 blur-[100px] pointer-events-none" />
           
           <div className="mx-auto max-w-7xl px-6 lg:px-10 relative z-10">
@@ -38,7 +38,7 @@ export default function GetStartedPage() {
           </div>
         </section>
 
-        {/* 3. Description / Intro Section - Compact Padding */}
+        {}
         <section className="bg-white py-12 md:py-16 border-b border-zinc-100">
           <div className="mx-auto max-w-7xl px-6 lg:px-10">
             <div className="max-w-3xl mb-8">
@@ -73,16 +73,16 @@ export default function GetStartedPage() {
           </div>
         </section>
 
-        {/* 4. About Skill Grid - Focused Intern Entry - Compact Padding */}
+        {}
         <section className="bg-zinc-50/50 py-16 md:py-20 overflow-hidden relative">
-          {/* Subtle Grid Pattern Overlay */}
+          {}
           <div className="absolute inset-0 opacity-[0.03] pointer-events-none" 
                style={{ backgroundImage: `linear-gradient(#000 1px, transparent 1px), linear-gradient(90deg, #000 1px, transparent 1px)`, backgroundSize: '40px 40px' }} />
 
           <div className="mx-auto max-w-7xl px-6 lg:px-10 relative z-10">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
               
-              {/* About Content */}
+              {}
               <div className="space-y-4">
                 <div className="inline-flex h-6 items-center px-3 border border-zinc-200 bg-white text-[10px] font-bold text-zinc-400 uppercase tracking-[0.2em]">
                   The Ecosystem
@@ -108,7 +108,7 @@ export default function GetStartedPage() {
                 </div>
               </div>
 
-              {/* Single Feature: Intern Portal */}
+              {}
               <div className="relative group">
                 <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-violet-600 opacity-20 blur-[20px] group-hover:opacity-40 transition-opacity duration-300 pointer-events-none" />
                 <Link 
@@ -144,12 +144,12 @@ export default function GetStartedPage() {
           </div>
         </section>
 
-        {/* 5. Final CTA */}
+        {}
         <CTA />
 
       </main>
 
-      {/* 6. Footer */}
+      {}
       <Footer />
     </div>
   );

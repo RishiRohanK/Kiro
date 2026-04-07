@@ -12,7 +12,7 @@ export default function TemplatesPage() {
 
     return (
         <div className="min-h-screen w-full flex flex-col bg-[#050505] font-sans overflow-hidden">
-            {/* Navbar Minimal */}
+            {}
             <nav className="w-full bg-[#92E3A9] px-12 py-3 sm:px-24 flex items-center justify-between z-50 shadow-lg">
                 <div className="flex items-center gap-4">
                     <Link href="/" className="flex items-center gap-4">

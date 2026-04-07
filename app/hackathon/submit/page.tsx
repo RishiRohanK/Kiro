@@ -102,7 +102,7 @@ export default function HackathonSubmissionPage() {
 
     return (
         <div className="min-h-screen bg-white text-zinc-900 font-sans selection:bg-zinc-100">
-            {/* Nav - Sharp Edges */}
+            {}
             <nav className="sticky top-0 z-50 w-full border-b border-zinc-100 bg-white/95 backdrop-blur-sm">
                 <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-6 lg:px-10">
                     <Link href="/" className="flex items-center gap-3 transition-opacity hover:opacity-70 group">
@@ -117,7 +117,7 @@ export default function HackathonSubmissionPage() {
             </nav>
 
             <main className="w-full">
-                {/* Header - Sharp Black */}
+                {}
                 <div className="bg-black py-12 lg:py-16">
                     <div className="mx-auto max-w-7xl px-6 lg:px-10">
                         <Breadcrumbs items={[{ label: "Academy", href: "/" }, { label: "Projects", href: "/projects" }, { label: "Submit" }]} />
@@ -132,7 +132,7 @@ export default function HackathonSubmissionPage() {
 
                 <div className="mx-auto max-w-7xl px-6 lg:px-10 py-16 md:py-24">
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
-                        {/* Info */}
+                        {}
                         <div className="lg:col-span-4 space-y-12">
                             <div className="space-y-4">
                                 <h2 className="text-[12px] font-bold uppercase tracking-widest text-zinc-400">How it works</h2>
@@ -153,7 +153,7 @@ export default function HackathonSubmissionPage() {
                             </div>
                         </div>
 
-                        {/* Form Area */}
+                        {}
                         <div className="lg:col-span-8">
                             <form onSubmit={handleSubmit} className="space-y-10">
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-10">

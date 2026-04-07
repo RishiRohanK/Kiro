@@ -18,7 +18,7 @@ export const getRazorpayInstance = () => {
     });
 };
 
-// Also keep the existing export for now if it is used, but ensure it's updated
+
 export const razorpay = new Razorpay({
   key_id: (process.env.RAZORPAY_KEY_ID || "rzp_test_placeholder").trim(),
   key_secret: (process.env.RAZORPAY_KEY_SECRET || "razor_secret_placeholder").trim(),

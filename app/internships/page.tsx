@@ -53,7 +53,7 @@ export default function InternshipsPage() {
       <SubNavbar />
       
       <main>
-        {/* Condensed Hero Section */}
+        {}
         <section className="bg-zinc-900 py-10 md:py-12 overflow-hidden relative border-b border-white/5">
           <div className="absolute top-0 right-0 w-[50%] h-full bg-blue-600/5 blur-[100px] pointer-events-none" />
           <div className="mx-auto max-w-7xl px-6 lg:px-10 relative z-10 text-left">
@@ -82,7 +82,7 @@ export default function InternshipsPage() {
           </div>
         </section>
 
-        {/* Search & Filter Bar */}
+        {}
         <section className="py-4 bg-zinc-50 border-b border-zinc-100 sticky top-[64px] z-40">
             <div className="mx-auto max-w-7xl px-6 lg:px-10">
                 <div className="flex flex-col md:flex-row items-center justify-between gap-4">
@@ -107,7 +107,7 @@ export default function InternshipsPage() {
             </div>
         </section>
 
-        {/* High-Density Opportunity Registry */}
+        {}
         <section className="py-12 md:py-20 bg-white min-h-[600px]">
             <div className="mx-auto max-w-7xl px-6 lg:px-10">
                 {isLoading ? (

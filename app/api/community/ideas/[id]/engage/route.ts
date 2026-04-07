@@ -7,7 +7,7 @@ export async function PATCH(
 ) {
   try {
     const { id: ideaId } = await params;
-    const { type } = await req.json(); // "like" or "share"
+    const { type } = await req.json(); 
 
     if (type === "like") {
       const idea = await prisma.idea.update({

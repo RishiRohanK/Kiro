@@ -19,7 +19,7 @@ export async function GET() {
     ]);
 
     const internsWithAttendance = interns.map(intern => {
-      // Use Set to count only unique present days
+      
       const presentCount = new Set(intern.attendances
         .filter(a => a.status === 'PRESENT' || a.status === 'LATE')
         .map(a => new Date(a.date).toDateString())
@@ -31,7 +31,7 @@ export async function GET() {
       const today = new Date();
       today.setHours(0, 0, 0, 0);
 
-      // Total calendar days from creation until today inclusive
+      
       const diffTime = Math.abs(today.getTime() - internCreationDate.getTime());
       const relevantDaysCount = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
 
@@ -62,7 +62,7 @@ export async function DELETE(req: Request) {
       return NextResponse.json({ error: "Intern ID is required parameter" }, { status: 400 });
     }
 
-    // Safely remove the user inside a comprehensive transaction layer
+    
     await prisma.$transaction([
       prisma.attendance.deleteMany({ where: { userId: id } }),
       prisma.personalTask.deleteMany({ where: { userId: id } }),

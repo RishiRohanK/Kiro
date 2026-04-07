@@ -1,5 +1,5 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+
 
 generator client {
   provider = "prisma-client-js"
@@ -125,7 +125,7 @@ model Task {
   batch           String?  @default("Batch 1")
   title           String
   description     String
-  attachmentUrl   String?  // PDF Link or other resource
+  attachmentUrl   String?  
   assignedRole    Role     @default(INTERN)
   assignedToId    String?  
   user            User?    @relation("UserTasks", fields: [assignedToId], references: [id])
@@ -139,7 +139,7 @@ model Script {
   title       String
   content     String
   submittedBy String
-  status      String   @default("pending") // pending, reviewed, approved
+  status      String   @default("pending") 
   createdAt   DateTime @default(now())
 }
 
@@ -159,42 +159,42 @@ model Course {
   thumbnail       String?
   videoUrl        String?
   price           String?
-  level           String   @default("Beginner") // Beginner, Intermediate, Advanced
+  level           String   @default("Beginner") 
   
-  // Section 2: Overview
+  
   description     String
-  outcomes        String[] // Array of strings (What You Will Learn)
-  skills          String[] // Skills You'll Gain
-  targetAudience  String[] // Who This Course Is For
+  outcomes        String[] 
+  skills          String[] 
+  targetAudience  String[] 
   
-  // Section 3 & 4: Curriculum & Timeline 
-  // Structure: [{ moduleTitle: string, lessons: [{ title: string, duration: string, type: string, preview: boolean }] }]
+  
+  
   curriculum      Json?    
-  // Structure: { totalDuration: string, weeklyPlan: [{ week: string, topic: string }], studyTimePerWeek: string, scheduleType: string }
+  
   timeline        Json?    
   
-  // Section 5: Requirements
+  
   requirements    String[]
   
-  // Section 6: Assignments
+  
   projectsCount      Int     @default(0)
   hasRealWorldProjects Boolean @default(true)
   hasCapstone        Boolean @default(false)
   practiceExercises  String?
   
-  // Section 7: Certification
+  
   hasCertificate      Boolean @default(true)
   isShareableLinkedIn Boolean @default(true)
   issuerName          String?
   
-  // Section 10: What's Included
+  
   totalHours           String?
   lecturesCount        Int     @default(0)
   downloadableResources Int     @default(0)
   access              String  @default("Lifetime")
   
-  // Section 11: FAQs
-  // Structure: [{ question: string, answer: string }]
+  
+  
   faqs                Json?   
 
   createdAt           DateTime @default(now())
@@ -207,7 +207,7 @@ model CourseEnrollment {
   course          Course   @relation(fields: [courseId], references: [id])
   courseId        String
   
-  // Step 1: Personal Details
+  
   name            String
   phone           String
   email           String
@@ -216,22 +216,22 @@ model CourseEnrollment {
   year            String
   whyJoin         String
   
-  // Step 2 & 3: Payment Details
-  paymentMethod   String   @default("MANUAL_UPI") // RAZORPAY, MANUAL_UPI
+  
+  paymentMethod   String   @default("MANUAL_UPI") 
   amount          String
   
-  // Manual UPI Specific
-  referenceId     String?  @unique // UTR / Ref No
-  transactionId   String?  // Internal or Manual ID
+  
+  referenceId     String?  @unique 
+  transactionId   String?  
   bankName        String?
   accountName     String?
   
-  // Razorpay Specific
+  
   razorpayOrderId    String?  @unique
   razorpayPaymentId  String?  @unique
   razorpaySignature  String?
   
-  status          String   @default("pending") // pending, verified, rejected, captured
+  status          String   @default("pending") 
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 }
@@ -243,7 +243,7 @@ model Project {
   teamMembers     String[]
   githubRepo      String
   submissionDate  DateTime @default(now())
-  status          String   @default("live") // default to live as requested "every submitted project must be shown"
+  status          String   @default("live") 
   hackathonName   String   @default("HACK FORGE Hackathon 2026")
 }
 
@@ -252,8 +252,8 @@ model HiringApplication {
   name        String
   email       String
   phone       String
-  position    String   // Marketing Lead, UI/UX Designer, etc.
-  resumeLink  String   // e.g., Drive link
+  position    String   
+  resumeLink  String   
   status      String   @default("pending")
   interviewTiming String?
   createdAt   DateTime @default(now())
@@ -291,8 +291,8 @@ model Idea {
   usp         String?
   outcomes    String?
   developer   String?
-  name        String?  // Submitter Name
-  subline     String?  // Short Tagline
+  name        String?  
+  subline     String?  
   likes       Int      @default(0)
   shares      Int      @default(0)
   isApproved  Boolean  @default(false)
@@ -316,33 +316,33 @@ model Mentorship {
   date        String
   time        String
   topic       String
-  status      String   @default("pending") // pending, scheduled, completed, rejected
+  status      String   @default("pending") 
   createdAt   DateTime @default(now())
 }
 
 model Schedule {
   id              String   @id @default(cuid())
-  batch           String   @default("Batch 1") // e.g., "Batch 1", "Batch 2"
-  week            String   // e.g., "Week 1"
-  typeOfWork      String   // e.g., "Frontend Development"
-  toolsUsed       String[] // Array of strings
-  deploymentTools String[] // New field
-  requirements    String[] // New field
+  batch           String   @default("Batch 1") 
+  week            String   
+  typeOfWork      String   
+  toolsUsed       String[] 
+  deploymentTools String[] 
+  requirements    String[] 
   description     String
-  outcomes        String[] // Array of strings
+  outcomes        String[] 
   deadline        DateTime
-  submissionLink  String?  // Link for interns to submit their work
-  githubLink      String?  // Final GitHub link submission
+  submissionLink  String?  
+  githubLink      String?  
   isCompleted     Boolean  @default(false)
   
-  // Team and Project Details
-  teamAllocation  String?  // e.g., "Team 01, Team 05"
-  mentorName      String?  // e.g., "Rohan Kalapa"
-  mentorEmail     String?  // New field
-  projectName     String?  // e.g., "E-commerce Engine"
-  projectDocLink  String?  // e.g., "https://docs..."
-  teamLead        String?  // e.g., "Intern A"
-  teamInternIds   String[] // Array of assigned intern IDs
+  
+  teamAllocation  String?  
+  mentorName      String?  
+  mentorEmail     String?  
+  projectName     String?  
+  projectDocLink  String?  
+  teamLead        String?  
+  teamInternIds   String[] 
 
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
@@ -368,7 +368,7 @@ model PersonalTask {
   user        User     @relation("UserPersonalTasks", fields: [userId], references: [id], onDelete: Cascade)
   title       String
   description String?
-  status      String   @default("TODO") // TODO, IN_PROGRESS, DONE
+  status      String   @default("TODO") 
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
@@ -387,7 +387,7 @@ model Internship {
   applyLink   String
   isApproved  Boolean  @default(false)
   
-  // Submitter Context
+  
   submitterName    String?
   submitterCompany String?
   submitterMobile  String?
@@ -401,7 +401,7 @@ model Message {
   teamId    String
   senderId  String
   senderName String?
-  targetId  String?  // Optional recipient ID for private mission signals
+  targetId  String?  
   content   String
   createdAt DateTime @default(now())
 }

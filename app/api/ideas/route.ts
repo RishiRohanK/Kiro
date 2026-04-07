@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 
-// Public: Submit Idea Pitch
+
 export async function POST(req: Request) {
     try {
         const body = await req.json();
@@ -21,7 +21,7 @@ export async function POST(req: Request) {
                 developer: developer || name,
                 name,
                 subline: subline || "New Idea Pitch",
-                isApproved: false // Initial state: Awaiting cleavage approval
+                isApproved: false 
             }
         });
 
@@ -32,7 +32,7 @@ export async function POST(req: Request) {
     }
 }
 
-// Public: Fetch Approved Ideas
+
 export async function GET() {
     try {
         const pitches = await prisma.idea.findMany({

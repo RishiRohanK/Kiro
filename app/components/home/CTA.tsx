@@ -6,7 +6,7 @@ import { ArrowRight } from "lucide-react";
 export default function CTA() {
   return (
     <section className="relative w-full bg-white py-10 md:py-14 overflow-hidden border-t border-zinc-100">
-      {/* Dynamic Grid Pattern Background - Hero Sync */}
+      {}
       <div 
         className="absolute inset-0 z-0 pointer-events-none" 
         style={{ 
@@ -16,13 +16,13 @@ export default function CTA() {
         }} 
       />
       
-      {/* Subtle Gradient Glow */}
+      {}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-blue-600/5 rounded-full blur-[100px] pointer-events-none" />
       
       <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-10">
         <div className="max-w-4xl mx-auto text-center space-y-6">
           
-          {/* Mission Badge */}
+          {}
           <div className="mb-4 inline-flex items-center gap-2 border border-zinc-800 bg-black px-4 py-1.5 ">
             <span className="h-1.5 w-1.5 rounded-full bg-white animate-pulse" />
             <span className="text-[12px] font-medium text-white tracking-wide">

@@ -15,7 +15,7 @@ export async function POST(req: Request) {
 
     const razorpay = getRazorpayInstance();
     const order = await razorpay.orders.create({
-      amount: Math.round(Number(amount) * 100), // INR → paise
+      amount: Math.round(Number(amount) * 100), 
       currency: "INR",
       receipt: `rcpt_${Date.now()}`,
       notes: {

@@ -6,7 +6,7 @@ import SubNavbar from "../components/home/SubNavbar";
 import Footer from "../components/home/Footer";
 import { Search, Globe, Star, Zap, ExternalLink, Cpu, Sparkles, Brain, Code2, Terminal, Layout, Database, Box, Shield, Share2 } from "lucide-react";
 
-// Master Tool Logomap
+
 const toolLogos: Record<string, string> = {
   "Cursor AI": "https://img.icons8.com/color/512/cursor-ai.png",
   "v0 by Vercel": "https://v0.dev/favicon.ico",
@@ -157,7 +157,7 @@ export default function ToolsPage() {
       <SubNavbar />
 
       <main>
-        {/* Condensed Hero Section */}
+        {}
         <section className="bg-zinc-900 py-6 md:py-8 border-b border-white/5 overflow-hidden relative">
           <div className="absolute top-0 right-0 w-[50%] h-full bg-violet-600/5 blur-[100px] pointer-events-none" />
           <div className="mx-auto max-w-7xl px-6 relative z-10 text-left">
@@ -175,7 +175,7 @@ export default function ToolsPage() {
           </div>
         </section>
 
-        {/* Condensed Action Bar */}
+        {}
         <section className="sticky top-[56px] z-50 bg-white/95 backdrop-blur-md border-b border-zinc-100 py-2 shadow-sm">
           <div className="mx-auto max-w-7xl px-6">
             <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
@@ -208,7 +208,7 @@ export default function ToolsPage() {
           </div>
         </section>
 
-        {/* High-Density Simplified Grid */}
+        {}
         <section className="py-6 md:py-8 bg-zinc-50 min-h-[800px]">
           <div className="mx-auto max-w-7xl px-6">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">

@@ -43,9 +43,9 @@ export async function GET(req: Request) {
     const relevantTrackingDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
 
     return NextResponse.json({ 
-       history: allInternAttendances.slice(0, 30), // Still return short history for UI display
+       history: allInternAttendances.slice(0, 30), 
        totalTrackingDays: relevantTrackingDays,
-       presentCount: presentCount // Added to help UI calculation
+       presentCount: presentCount 
     });
   } catch (error) {
     console.error("Attendance Retrieval error:", error);

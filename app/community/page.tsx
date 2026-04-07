@@ -125,7 +125,7 @@ export default function CommunityPage() {
       <SubNavbar />
       
       <main className="w-full">
-        {/* Unified Hero Section */}
+        {}
         <section className="bg-zinc-900 py-12 md:py-16 border-b border-white/5 overflow-hidden relative text-left">
           <div className="absolute top-0 right-0 w-[50%] h-full bg-indigo-600/5 blur-[120px] pointer-events-none" />
           <div className="mx-auto max-w-7xl px-6 relative z-10">
@@ -143,7 +143,7 @@ export default function CommunityPage() {
           </div>
         </section>
 
-        {/* High-Density Toolbar */}
+        {}
         <section className="sticky top-[56px] z-40 bg-white/95 backdrop-blur-md border-b border-zinc-100 py-3 shadow-sm">
            <div className="mx-auto max-w-7xl px-6 lg:px-10 flex flex-col md:flex-row gap-4 items-center justify-between">
               <div className="relative w-full md:w-80">
@@ -172,7 +172,7 @@ export default function CommunityPage() {
            </div>
         </section>
 
-        {/* Idea Grid - Higher Density */}
+        {}
         <section className="py-12 md:py-16 bg-zinc-50 min-h-[600px]">
           <div className="mx-auto max-w-7xl px-6 lg:px-10">
             {filteredIdeas.length === 0 ? (
@@ -236,7 +236,7 @@ export default function CommunityPage() {
         </section>
       </main>
 
-      {/* Share Idea Modal - Terminal Inspired */}
+      {}
       <AnimatePresence>
         {isModalOpen && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">

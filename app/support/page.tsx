@@ -51,7 +51,7 @@ export default function SupportPage() {
 
     return (
         <div className="min-h-screen bg-white text-zinc-900 font-sans selection:bg-zinc-100">
-            {/* Minimal Navbar - Sharp Edges */}
+            {}
             <nav className="sticky top-0 z-50 w-full border-b border-zinc-100 bg-white/95 backdrop-blur-sm">
                 <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-6 lg:px-10">
                     <Link href="/" className="flex items-center gap-3 transition-opacity hover:opacity-70">
@@ -66,7 +66,7 @@ export default function SupportPage() {
             </nav>
 
             <main className="w-full">
-                {/* Header Section - Sharp Black */}
+                {}
                 <div className="bg-black py-12 lg:py-16">
                     <div className="mx-auto max-w-7xl px-6 lg:px-10">
                         <Breadcrumbs items={[{ label: "Academy", href: "/" }, { label: "Support" }]} />
@@ -81,7 +81,7 @@ export default function SupportPage() {
 
                 <div className="mx-auto max-w-7xl px-6 lg:px-10 py-16 md:py-24">
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-20">
-                        {/* Info Side */}
+                        {}
                         <div className="lg:col-span-4 space-y-12">
                             <div className="p-8 border border-zinc-100 space-y-10 shadow-sm">
                                 <div className="space-y-6">
@@ -114,7 +114,7 @@ export default function SupportPage() {
                             </div>
                         </div>
 
-                        {/* Form Side */}
+                        {}
                         <div className="lg:col-span-8">
                             <form onSubmit={handleSubmit} className="space-y-10">
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-10">

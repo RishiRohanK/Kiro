@@ -27,7 +27,7 @@ export default function PaymentGatewayLogin() {
 
       const data = await res.json();
       if (data.success) {
-        localStorage.setItem("pg_admin_token", "true"); // Simple auth for demo
+        localStorage.setItem("pg_admin_token", "true"); 
         router.push("/payment-gateway/dashboard");
       } else {
         setError(data.message || "Invalid credentials");

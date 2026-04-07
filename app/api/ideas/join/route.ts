@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 
-// Public: Join a Project Collective
+
 export async function POST(req: Request) {
     try {
         const { ideaId, name, email } = await req.json();

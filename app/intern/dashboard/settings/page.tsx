@@ -16,13 +16,13 @@ export default function InternSettings() {
 
     return (
         <div className="p-4 lg:p-12 max-w-4xl mx-auto space-y-10 pb-24 lg:pb-12">
-            {/* Header */}
+            {}
             <div>
                 <h1 className="text-2xl lg:text-3xl font-bold tracking-tight text-zinc-900">Settings</h1>
                 <p className="text-zinc-500 text-[11px] lg:text-sm mt-1">Manage your account preferences and security.</p>
             </div>
 
-            {/* Profile Section */}
+            {}
             <section className="space-y-6">
                 <div className="flex items-center gap-2 pb-2 border-b border-zinc-100">
                     <User size={16} className="text-[#0055FF]" />
@@ -41,7 +41,7 @@ export default function InternSettings() {
                 </div>
             </section>
 
-            {/* Security Section */}
+            {}
             <section className="space-y-6">
                 <div className="flex items-center gap-2 pb-2 border-b border-zinc-100">
                     <Shield size={16} className="text-[#0055FF]" />
@@ -64,7 +64,7 @@ export default function InternSettings() {
                 </div>
             </section>
 
-            {/* Preferences Section */}
+            {}
             <section className="space-y-6">
                 <div className="flex items-center gap-2 pb-2 border-b border-zinc-100">
                     <Bell size={16} className="text-[#0055FF]" />

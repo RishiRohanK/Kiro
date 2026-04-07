@@ -15,7 +15,7 @@ export default function FailedTransactionsPage() {
       const res = await fetch("/api/payment-gateway/stats");
       const json = await res.json();
       if (json.success) {
-        // Filter ONLY failed transactions
+        
         const failed = json.data.filter((t: any) => 
           t.status.toLowerCase() === "failed" || 
           t.status.toLowerCase() === "rejected"

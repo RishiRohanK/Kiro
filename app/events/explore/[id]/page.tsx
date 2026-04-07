@@ -60,13 +60,13 @@ export default function EventDetailPage() {
     const handleBookNow = () => {
         setIsBooking(true);
         setTimeout(() => {
-            // Save the ticket info to localStorage for the ticket page
+            
             localStorage.setItem('forge_last_ticket', JSON.stringify({
                 eventTitle: event.title,
                 eventDate: event.date,
                 eventLocation: event.location,
                 ticketId: `FRG-${Math.random().toString(36).substr(2, 9).toUpperCase()}`,
-                userName: "Forge Builder" // Mock user name
+                userName: "Forge Builder" 
             }));
             router.push('/events/ticket');
         }, 2000);
@@ -80,7 +80,7 @@ export default function EventDetailPage() {
 
     return (
         <div className="min-h-screen w-full flex flex-col bg-[#050505] text-white font-sans overflow-x-hidden">
-            {/* Navbar Minimal */}
+            {}
             <nav className="w-full bg-[#92E3A9] px-12 py-3 sm:px-24 flex items-center justify-between z-50 shadow-lg sticky top-0">
                 <div className="flex items-center gap-4">
                     <Link href="/events" className="flex items-center gap-4">
@@ -98,7 +98,7 @@ export default function EventDetailPage() {
                 <Breadcrumbs items={[{ label: "Events", href: "/events" }, { label: "Explore", href: "/events/explore" }, { label: "Details" }]} />
             </div>
 
-            {/* Header / Hero */}
+            {}
             <div className="h-[60vh] w-full relative">
                 <img src={event.image} className="w-full h-full object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/40 to-black/20" />
@@ -136,9 +136,9 @@ export default function EventDetailPage() {
                 </div>
             </div>
 
-            {/* Content Section */}
+            {}
             <main className="max-w-[1400px] mx-auto w-full p-8 md:p-12 grid grid-cols-1 lg:grid-cols-3 gap-16 text-left">
-                {/* Left: Detailed Text */}
+                {}
                 <div className="lg:col-span-2 space-y-12">
                     <section>
                         <h3 className="text-[10px] font-black text-[#92E3A9] uppercase tracking-[0.3em] mb-6">Mission Briefing</h3>
@@ -165,7 +165,7 @@ export default function EventDetailPage() {
                     </div>
                 </div>
 
-                {/* Right: Booking Card */}
+                {}
                 <div className="lg:col-span-1">
                     <div className="sticky top-24 p-8 rounded-3xl bg-white text-black shadow-[0_0_80px_rgba(255,255,255,0.1)]">
                         <div className="flex justify-between items-start mb-8">

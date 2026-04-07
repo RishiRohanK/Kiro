@@ -60,7 +60,7 @@ export default function PostInternshipPage() {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-8 text-left">
-            {/* Mission Details */}
+            {}
             <div className="space-y-4">
                <h3 className="text-[12px] font-bold text-black uppercase tracking-widest border-b border-zinc-100 pb-2">1. Internship Details</h3>
                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -105,7 +105,7 @@ export default function PostInternshipPage() {
                </div>
             </div>
 
-            {/* Submitter Details */}
+            {}
             <div className="space-y-4 pt-4">
                <h3 className="text-[12px] font-bold text-black uppercase tracking-widest border-b border-zinc-100 pb-2">2. Submitter information</h3>
                <div className="space-y-1">

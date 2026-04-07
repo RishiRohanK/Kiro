@@ -25,7 +25,7 @@ export async function POST(req: Request) {
       .digest("hex");
 
     if (generatedSignature === razorpay_signature) {
-      // ✅ PAYMENT VERIFIED - SAVE TO DB
+      
       const enrollment = await prisma.courseEnrollment.create({
         data: {
           courseId,
@@ -52,7 +52,7 @@ export async function POST(req: Request) {
     } else {
       console.warn("Razorpay Signature Mismatch");
       
-      // ❌ LOG FAILED TRANSACTION
+      
       await prisma.failedTransaction.create({
         data: {
           courseId,

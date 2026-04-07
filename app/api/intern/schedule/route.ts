@@ -27,7 +27,7 @@ export async function GET(req: Request) {
             }
         });
 
-        // Resolve intern names for teamInternIds
+        
         const allInternIds = Array.from(new Set(schedules.flatMap((s: any) => s.teamInternIds || [])));
         const internNamesMap: Record<string, string> = {};
         
@@ -74,7 +74,7 @@ export async function POST(req: Request) {
             projectName,
             projectDocLink,
             teamLead,
-            teamInternIds = [] // Received from admin selection
+            teamInternIds = [] 
         } = body;
 
         const schedule = await prisma.schedule.create({
@@ -97,7 +97,7 @@ export async function POST(req: Request) {
             } as any
         });
 
-        // Notify Interns via Email
+        
         if (teamInternIds.length > 0) {
             const interns = await prisma.user.findMany({
                 where: { id: { in: teamInternIds } },

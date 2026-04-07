@@ -7,12 +7,12 @@ export async function POST(req: Request) {
         const course = await prisma.course.create({
             data: {
                 ...body,
-                // Ensure array fields are handled
+                
                 outcomes: body.outcomes || [],
                 skills: body.skills || [],
                 targetAudience: body.targetAudience || [],
                 requirements: body.requirements || [],
-                // Ensure floats/ints are parsed if coming as strings
+                
                 rating: parseFloat(body.rating) || 0,
                 ratingCount: parseInt(body.ratingCount) || 0,
                 enrolledCount: parseInt(body.enrolledCount) || 0,

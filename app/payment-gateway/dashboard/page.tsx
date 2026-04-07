@@ -15,8 +15,8 @@ export default function AllTransactionsPage() {
       const res = await fetch("/api/payment-gateway/stats");
       const json = await res.json();
       if (json.success) {
-        // Filter out explicitly failed transactions for the main page if needed,
-        // or just show everything as it is "All Transactions"
+        
+        
         setData(json.data);
       } else {
         setError(json.message || "Failed to load data");

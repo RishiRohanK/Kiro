@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 
-// Public: Increment Likes for an Idea
+
 export async function PATCH(req: Request) {
     try {
         const { ideaId } = await req.json();

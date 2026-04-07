@@ -10,7 +10,7 @@ export async function POST(req: Request) {
             return NextResponse.json({ success: false, error: "Missing required fields" }, { status: 400 });
         }
 
-        // Standardizing the contact creation with verified Prisma Client
+        
         const contact = await prisma.contact.create({
             data: {
                 name,
@@ -29,7 +29,7 @@ export async function POST(req: Request) {
 
 export async function GET() {
     try {
-        // Fetching with explicit ordering to ensure latest transmissions appear first
+        
         const contacts = await prisma.contact.findMany({
             orderBy: { createdAt: 'desc' }
         });

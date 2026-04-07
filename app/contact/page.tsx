@@ -44,7 +44,7 @@ export default function ContactPage() {
 
     return (
         <div className="min-h-screen bg-white text-zinc-900 font-sans selection:bg-zinc-100">
-            {/* Minimal Navbar - Sharp Edges */}
+            {}
             <nav className="sticky top-0 z-50 w-full border-b border-zinc-100 bg-white/95 backdrop-blur-sm">
                 <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-6 lg:px-10">
                     <Link href="/" className="flex items-center gap-3 transition-opacity hover:opacity-70">
@@ -62,7 +62,7 @@ export default function ContactPage() {
             </nav>
 
             <main className="w-full">
-                {/* Header Section - Sharp Black */}
+                {}
                 <div className="bg-black py-12 lg:py-16">
                     <div className="mx-auto max-w-7xl px-6 lg:px-10">
                         <Breadcrumbs items={[{ label: "Academy", href: "/" }, { label: "Contact Us" }]} />
@@ -77,7 +77,7 @@ export default function ContactPage() {
 
                 <div className="mx-auto max-w-7xl px-6 lg:px-10 py-16 md:py-24">
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
-                        {/* Info Side */}
+                        {}
                         <div className="lg:col-span-4 space-y-12">
                             <div className="space-y-6">
                                 <h3 className="text-[14px] font-medium uppercase tracking-widest text-zinc-400">Where to find us</h3>
@@ -107,7 +107,7 @@ export default function ContactPage() {
                             </div>
                         </div>
 
-                        {/* Form Side */}
+                        {}
                         <div className="lg:col-span-8">
                             {status && (
                                 <div className={`mb-10 p-4 border flex items-center gap-3 ${

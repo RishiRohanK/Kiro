@@ -21,7 +21,7 @@ export async function POST(req: Request) {
             amount
         } = body;
 
-        // Create enrollment record
+        
         const enrollment = await prisma.courseEnrollment.create({
             data: {
                 courseId,

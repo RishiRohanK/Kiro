@@ -30,7 +30,7 @@ export async function POST(req: Request) {
                 teamLeader,
                 teamMembers,
                 githubRepo,
-                status: "live", // As requested, every submitted project must be shown
+                status: "live", 
             },
         });
 

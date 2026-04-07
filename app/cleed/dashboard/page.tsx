@@ -150,17 +150,17 @@ export default function CleedDashboard() {
    const [internships, setInternships] = useState<InternshipItem[]>([]);
    const [isLoading, setIsLoading] = useState(true);
 
-   // Selection
+   
    const [selectedIntern, setSelectedIntern] = useState<Intern | null>(null);
    const [isAuthorizing, setIsAuthorizing] = useState<string | null>(null);
    const [internBatchFilter, setInternBatchFilter] = useState("All");
 
-   // Attendance Protocol States
+   
    const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
    const [currentAttendance, setCurrentAttendance] = useState<any[]>([]);
    const [markingId, setMarkingId] = useState<string | null>(null);
 
-   // Forms
+   
    const [taskData, setTaskData] = useState({ title: "", description: "", attachmentUrl: "", batch: "Batch 2" });
    const [letterUrl, setLetterUrl] = useState("");
    const [offerLetterUrl, setOfferLetterUrl] = useState("");
@@ -195,8 +195,8 @@ export default function CleedDashboard() {
    const [loadingSchedules, setLoadingSchedules] = useState(false);
    const [editingSchedule, setEditingSchedule] = useState<any>(null);
    const [batchFilter, setBatchFilter] = useState("Batch 1");
-   const [submissionFilter, setSubmissionFilter] = useState("all"); // "all", "missing_task1_batch1", "missing_task1_batch2"
-   // Events Data
+   const [submissionFilter, setSubmissionFilter] = useState("all"); 
+   
    const [eventData, setEventData] = useState({
       title: "",
       description: "",
@@ -261,7 +261,7 @@ export default function CleedDashboard() {
       }
    };
 
-   // Mobile Menu
+   
    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
    useEffect(() => {
@@ -408,7 +408,7 @@ export default function CleedDashboard() {
    };
 
    const fetchData = async () => {
-      // Individual mission trackers - don't let one failure neutralize the dashboard
+      
       const fetchInterns = async () => {
          try {
             const res = await fetch("/api/cleed/interns");
@@ -483,7 +483,7 @@ export default function CleedDashboard() {
       if (!intern.lastActive) return false;
       const lastActive = new Date(intern.lastActive).getTime();
       const now = new Date().getTime();
-      return (now - lastActive) < (5 * 60 * 1000); // 5 minutes
+      return (now - lastActive) < (5 * 60 * 1000); 
    }).length;
 
    const handlePostTask = async (e: React.FormEvent) => {
@@ -828,8 +828,8 @@ export default function CleedDashboard() {
 
    return (
       <div className="min-h-screen bg-[#F5F7FA] font-sans text-zinc-900 pb-20 md:pb-0">
-         {/* ... existing code ... */}
-         {/* Mobile Nav Top Bar - Clean Sync */}
+         {}
+         {}
          <div className="md:hidden fixed top-0 left-0 right-0 h-16 bg-white z-[60] flex items-center justify-between px-6 pt-[env(safe-area-inset-top)] box-content border-b border-zinc-100 shadow-sm group">
             <div className="flex items-center gap-2">
                <span className="text-xl font-black text-zinc-900 tracking-tighter uppercase leading-none select-none">Cleed</span>
@@ -843,7 +843,7 @@ export default function CleedDashboard() {
             </button>
          </div>
 
-         {/* Mobile Menu Overlay - Full Industrial Command Hub */}
+         {}
          <AnimatePresence>
             {isMobileMenuOpen && (
                <motion.div
@@ -856,7 +856,7 @@ export default function CleedDashboard() {
                   <div className="grid grid-cols-2 gap-3">
                      {[
                         { id: "overview", icon: LayoutDashboard, label: "Home" },
-                        { id: "events", icon: LayoutDashboard, label: "Events" }, // Using LayoutDashboard since Globe is more for Ideas
+                        { id: "events", icon: LayoutDashboard, label: "Events" }, 
                         { id: "ideas", icon: Globe, label: "Ideas" },
                         { id: "interns", icon: Users, label: "Interns" },
                         { id: "authorizations", icon: ShieldCheck, label: "Approvals" },
@@ -891,7 +891,7 @@ export default function CleedDashboard() {
             )}
          </AnimatePresence>
 
-          {/* Desktop Sidebar - Premium Red Theme */}
+          {}
           <aside className="hidden md:flex fixed left-0 top-0 h-full w-20 lg:w-[260px] border-r border-red-700 z-50 flex-col pt-[env(safe-area-inset-top)]" style={{ backgroundColor: '#F5332C' }}>
              <div className="p-8 pb-4 flex items-center justify-start gap-2">
                 <span className="text-2xl font-black text-white tracking-tighter uppercase leading-none select-none">Cleed</span>
@@ -998,7 +998,7 @@ export default function CleedDashboard() {
              </div>
           </aside>
 
-         {/* Main Content */}
+         {}
          <main className="md:pl-20 lg:pl-64 min-h-screen pt-[calc(4rem+env(safe-area-inset-top))] md:pt-0">
             <header className="h-14 border-b border-zinc-200 flex items-center justify-between px-6 md:px-8 sticky top-[calc(4rem+env(safe-area-inset-top))] md:top-0 z-40" style={{ backgroundColor: '#CCC8B9' }}>
                <div className="flex items-center gap-2 overflow-hidden">
@@ -1022,7 +1022,7 @@ export default function CleedDashboard() {
             </header>
 
             <div className="p-4 md:p-8 lg:p-12 max-w-7xl mx-auto space-y-8 pb-[env(safe-area-inset-bottom,20px)]">
-               {/* Post Opportunity Tab */}
+               {}
                {activeTab === "internships" && (
                   <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-8">
                      <div className="grid md:grid-cols-2 gap-8 text-left">
@@ -1128,10 +1128,10 @@ export default function CleedDashboard() {
                   </motion.div>
                )}
 
-               {/* Overview Tab UI */}
+               {}
                {activeTab === "overview" && (
                   <div className="space-y-10 animate-in fade-in duration-500 text-left">
-                     {/* Simplified Greeting Section */}
+                     {}
                      <div className="border-b border-zinc-200 pb-5 flex items-center justify-between">
                         <h1 className="text-3xl font-light tracking-tighter text-zinc-900 leading-tight">
                            {(() => {
@@ -1158,7 +1158,7 @@ export default function CleedDashboard() {
                         )}
                      </div>
 
-                     {/* Standardized Stat Cards - Matching Submission Page Style */}
+                     {}
                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                         {[
                            { label: "Total interns", value: interns.length, color: "text-zinc-900", bg: "bg-white" },
@@ -1173,7 +1173,7 @@ export default function CleedDashboard() {
                         ))}
                      </div>
 
-                     {/* Recent Onboarding - Matching Submission Card Style */}
+                     {}
                      <div className="space-y-4">
                         <div className="flex items-center justify-between border-b border-zinc-200 pb-2">
                            <h2 className="text-[11px] font-bold text-zinc-400">Recent Onboarding</h2>
@@ -1219,7 +1219,7 @@ export default function CleedDashboard() {
 
 
 
-                {/* Intern Registry Tab */}
+                {}
                 {activeTab === "interns" && (
                    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-8 text-left">
                       <div className="space-y-6">
@@ -1316,7 +1316,7 @@ export default function CleedDashboard() {
                       </div>
                    </motion.div>
                 )}
-               {/* Dispatch Task - High-Speed Allocation Terminal */}
+               {}
                {activeTab === "assign" && (
                   <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-12">
                      <div className="max-w-2xl bg-white border border-zinc-100 p-8">
@@ -1357,10 +1357,10 @@ export default function CleedDashboard() {
                   </motion.div>
                )}
 
-               {/* Issuance Hub - Professional Certification node */}
+               {}
                {activeTab === "certification" && (
                   <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-12">
-                        {/* Offer Letter */}
+                        {}
                         <div className="max-w-2xl mx-auto bg-white border border-zinc-100 p-8">
                            <div className="space-y-2 mb-8">
                               <h2 className="text-xl font-bold tracking-tight text-zinc-900 line-clamp-1">Offer letter issuance</h2>
@@ -1411,7 +1411,7 @@ export default function CleedDashboard() {
                   )}
                </AnimatePresence>
 
-               {/* Mentorship Sessions - Professional Guidance registry */}
+               {}
                {activeTab === "mentorship" && (
                   <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-8 text-left">
                      <div className="bg-white border border-zinc-100 p-8">
@@ -1440,7 +1440,7 @@ export default function CleedDashboard() {
                   </motion.div>
                )}
 
-               {/* Authorizations Tab */}
+               {}
                {activeTab === "authorizations" && (
                   <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-12">
                      <div className="bg-white border border-zinc-100 shadow-sm p-8 text-left">
@@ -1507,7 +1507,7 @@ export default function CleedDashboard() {
                   </motion.div>
                )}
 
-               {/* Schedule Dispatch - Weekly mission protocol */}
+               {}
                {activeTab === "schedule" && (
                   <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-12">
                      <div className="max-w-4xl bg-white border border-zinc-100 p-8 text-left">
@@ -1631,7 +1631,7 @@ export default function CleedDashboard() {
                   </motion.div>
                )}
 
-               {/* Hiring Applications Registry Hub */}
+               {}
                {activeTab === "hiring" && (
                   <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-8">
                      <div className="space-y-6">
@@ -1743,7 +1743,7 @@ export default function CleedDashboard() {
                   </motion.div>
                )}
 
-               {/* Intern Submissions Hub */}
+               {}
                {activeTab === "submissions" && (
                   <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-8 text-left">
                      <div className="space-y-6">
@@ -1760,7 +1760,7 @@ export default function CleedDashboard() {
                            </div>
                         ) : (
                            <div className="space-y-6">
-                              {/* Submission Filter Controls */}
+                              {}
                               <div className="flex flex-wrap items-center gap-3 border-b border-zinc-100 pb-6">
                                  <button 
                                     onClick={() => setSubmissionFilter("all")}
@@ -1830,11 +1830,11 @@ export default function CleedDashboard() {
                                     </div>
                                  )
                               ) : (
-                                 // Missing Submissions Logic
+                                 
                                  (() => {
                                     const targetBatch = submissionFilter === "missing_task1_batch1" ? "Batch 1" : "Batch 2";
                                     const missingInterns = interns.filter(intern => {
-                                       // Ensure batch matches exactly (case insensitive)
+                                       
                                        if (!intern.batch || intern.batch.toLowerCase() !== targetBatch.toLowerCase()) return false;
                                        if (!intern.isApproved) return false;
                                        
@@ -1842,7 +1842,7 @@ export default function CleedDashboard() {
                                           const isSameIntern = String(sub.internId) === String(intern.id);
                                           if (!isSameIntern) return false;
 
-                                          // Very broad check for "Task 1" or "Week 1"
+                                          
                                           const scheduleTitle = (sub.schedule?.projectName || "").toLowerCase();
                                           const scheduleWeek = (sub.schedule?.week || "").toLowerCase();
                                           const scheduleWork = (sub.schedule?.typeOfWork || "").toLowerCase();
@@ -1920,7 +1920,7 @@ export default function CleedDashboard() {
                   </motion.div>
                )}
 
-               {/* Events Manager Terminal */}
+               {}
                {activeTab === "events" && (
                   <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-12">
                      <div className="grid lg:grid-cols-12 gap-12 text-left">
@@ -1981,7 +1981,7 @@ export default function CleedDashboard() {
                   </motion.div>
                )}
 
-               {/* Ideation Control Terminal */}
+               {}
                {activeTab === "ideas" && (
                   <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-8">
                      <div className="bg-white border border-zinc-100 p-8 text-left">
@@ -2018,7 +2018,7 @@ export default function CleedDashboard() {
                   </motion.div>
                )}
 
-               {/* Attendance Protocol Node */}
+               {}
                {activeTab === "attendance" && (
                   <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-8 text-left">
                      <div className="space-y-6">

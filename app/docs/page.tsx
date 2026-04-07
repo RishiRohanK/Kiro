@@ -74,7 +74,7 @@ export default function DocsPage() {
             <SubNavbar />
 
             <main className="w-full flex-1">
-                {/* High-Fidelity Header */}
+                {}
                 <div className="bg-zinc-900 py-12 md:py-16 overflow-hidden relative">
                     <div className="absolute top-0 right-0 w-[50%] h-full bg-blue-600/5 blur-[100px] pointer-events-none" />
                     <div className="mx-auto max-w-7xl px-6 lg:px-10 relative z-10">
@@ -96,7 +96,7 @@ export default function DocsPage() {
                 <div className="mx-auto max-w-7xl px-6 lg:px-10 py-12 md:py-16">
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24">
                         
-                        {/* High-Density Sidebar */}
+                        {}
                         <aside className="lg:col-span-3 lg:sticky lg:top-32 h-fit space-y-8">
                             <div className="space-y-4">
                                 <h3 className="text-[11px] font-bold text-zinc-400">Navigation nodes</h3>
@@ -115,7 +115,7 @@ export default function DocsPage() {
                             </div>
                         </aside>
 
-                        {/* Typography-Focused Content */}
+                        {}
                         <div className="lg:col-span-9 space-y-16">
                             {docSections.map((section) => (
                                 <section key={section.id} id={section.id} className="space-y-8 scroll-mt-32">
@@ -143,7 +143,7 @@ export default function DocsPage() {
                                 </section>
                             ))}
 
-                            {/* Additional Info / Footer Link */}
+                            {}
                             <div className="pt-16 border-t border-zinc-100">
                                 <div className="space-y-6 max-w-2xl">
                                     <h4 className="text-[18px] font-bold text-zinc-900 tracking-tight">Technical synchronization incomplete?</h4>

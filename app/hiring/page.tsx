@@ -67,7 +67,7 @@ export default function HiringPage() {
             <main className="max-w-6xl mx-auto px-6 py-20 md:py-32">
                 <div className="border border-zinc-200 overflow-hidden">
                     <div className="grid grid-cols-1 lg:grid-cols-2">
-                        {/* Form Section */}
+                        {}
                         <div className="p-8 md:p-16 border-b lg:border-b-0 lg:border-r border-zinc-200 bg-white">
                             {!success ? (
                                 <div className="space-y-12">
@@ -161,7 +161,7 @@ export default function HiringPage() {
                             )}
                         </div>
 
-                        {/* Banner Section */}
+                        {}
                         <div className="bg-zinc-50 flex items-center justify-center p-0">
                             <img
                                 src="https://ik.imagekit.io/dypkhqxip/Hiring%20(1).png"

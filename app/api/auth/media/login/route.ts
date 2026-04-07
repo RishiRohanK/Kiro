@@ -28,8 +28,8 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Waiting for CTO approval" }, { status: 403 });
     }
 
-    // Normally we'd use JWT or sessions here, but for this request, we'll just return user info
-    // For local dev, simpler is often better if sessions aren't specified.
+    
+    
     return NextResponse.json({
       id: user.id,
       name: user.name,

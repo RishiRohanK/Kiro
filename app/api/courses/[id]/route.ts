@@ -19,19 +19,19 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
         const { id } = await params;
         const body = await req.json();
         
-        // Remove id and timestamps from body to avoid Prasad update errors
+        
         const { id: _, createdAt, updatedAt, ...updateData } = body;
 
         const course = await prisma.course.update({
             where: { id: id },
             data: {
                 ...updateData,
-                // Ensure arrays are preserved correctly
+                
                 outcomes: updateData.outcomes || [],
                 skills: updateData.skills || [],
                 targetAudience: updateData.targetAudience || [],
                 requirements: updateData.requirements || [],
-                // Ensure numeric fields are correctly typed
+                
                 rating: parseFloat(updateData.rating) || 0,
                 ratingCount: parseInt(updateData.ratingCount) || 0,
                 enrolledCount: parseInt(updateData.enrolledCount) || 0,

@@ -12,13 +12,13 @@ export async function POST(req: Request) {
 
     console.log("Protocol Initiation: Internship Offer Letter Issuance for intern:", internId);
     
-    // Update Database
+    
     const user = await prisma.user.update({
       where: { id: internId },
       data: { offerLetterUrl } as any,
     });
 
-    // Send Notification Email
+    
     await sendOfferLetterEmail(user.email, user.name);
 
     return NextResponse.json({ success: true, user });

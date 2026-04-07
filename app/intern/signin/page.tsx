@@ -53,16 +53,16 @@ export default function InternSigninPage() {
     return (
         <div className="min-h-screen bg-[#FAFAFA] text-zinc-900 font-sans flex items-center justify-center p-6 relative overflow-hidden">
 
-            {/* Background Decorative Images */}
+            {}
             <div className="absolute inset-0 pointer-events-none">
                 <img src="https://ik.imagekit.io/dypkhqxip/Rocket-rafiki%20(1).svg" alt="" className="absolute left-[2%] top-[10%] w-[480px] hidden lg:block !shadow-none !drop-shadow-none filter-none" />
                 <img src="https://ik.imagekit.io/dypkhqxip/Happy%20student-bro.svg" alt="" className="absolute right-[5%] bottom-[5%] w-[420px] hidden lg:block !shadow-none !drop-shadow-none filter-none" />
             </div>
 
-            {/* Login Card - Sharp Edges */}
+            {}
             <div className="w-full max-w-[400px] bg-white border border-zinc-100 p-7 md:p-9 relative z-10 shadow-[0_4px_20px_-2px_rgba(0,0,0,0.05)]">
 
-                {/* Logo Section */}
+                {}
                 <div className="flex flex-col items-center mb-6">
                     <img
                         src="https://res.cloudinary.com/dsqqrpzfl/image/upload/v1774885412/Screenshot_2026-03-30_at_21.13.11-removebg-preview_gaqcdz.png"
@@ -80,7 +80,7 @@ export default function InternSigninPage() {
                     </div>
                 </div>
 
-                {/* Form Section */}
+                {}
                 <form onSubmit={handleSignin} className="space-y-4">
                     <div className="space-y-1.5">
                         <label className="text-[12px] font-bold text-zinc-700 ml-1">
@@ -146,14 +146,14 @@ export default function InternSigninPage() {
                     </button>
                 </form>
 
-                {/* Divider */}
+                {}
                 <div className="relative flex items-center my-6">
                     <div className="flex-grow border-t border-zinc-100"></div>
                     <span className="flex-shrink mx-3 text-[10px] font-bold text-zinc-300 uppercase tracking-widest">Continue with</span>
                     <div className="flex-grow border-t border-zinc-100"></div>
                 </div>
 
-                {/* Social Login */}
+                {}
                 <div className="flex flex-col gap-3">
                     <button
                         onClick={signInWithGoogle}

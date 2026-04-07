@@ -6,7 +6,7 @@ import SubNavbar from "../components/home/SubNavbar";
 import Footer from "../components/home/Footer";
 import { Search, ExternalLink, BookOpen, Globe, Code2, Cpu, Zap, Library, GraduationCap, Box, Star } from "lucide-react";
 
-// Master Documentation Registry (Expanded)
+
 const resources = [
   { name: "Python Docs", provider: "Python Software Foundation", description: "The definitive guide to Python programming and standard library.", url: "https://docs.python.org/3/", tags: ["Language", "Python"], category: "Programming", rating: 4.9, level: "Fundamental" },
   { name: "MDN JavaScript", provider: "Mozilla", description: "Comprehensive web technical developer guide for JavaScript.", url: "https://developer.mozilla.org/en-US/docs/Web/JavaScript", tags: ["Language", "JavaScript", "Web"], category: "Programming", rating: 4.8, level: "Core" },
@@ -30,7 +30,7 @@ const resources = [
 
 const categories = ["All", "Programming", "Frontend", "Backend", "Database", "DevOps", "Cloud"];
 
-// Master Tech Logomap for Resources
+
 const resourceLogos: Record<string, string> = {
   "Python Docs": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg",
   "MDN JavaScript": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg",
@@ -78,7 +78,7 @@ export default function ResourcesPage() {
       <SubNavbar />
 
       <main>
-        {/* Condensed Hero Section */}
+        {}
         <section className="bg-zinc-900 py-6 md:py-8 border-b border-white/5 overflow-hidden relative text-left">
           <div className="absolute top-0 right-0 w-[50%] h-full bg-blue-600/5 blur-[100px] pointer-events-none" />
           <div className="mx-auto max-w-7xl px-6 relative z-10">
@@ -96,7 +96,7 @@ export default function ResourcesPage() {
           </div>
         </section>
 
-        {/* Condensed Action Bar */}
+        {}
         <section className="sticky top-[56px] z-50 bg-white/95 backdrop-blur-md border-b border-zinc-100 py-2 shadow-sm">
           <div className="mx-auto max-w-7xl px-6">
             <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
@@ -129,7 +129,7 @@ export default function ResourcesPage() {
           </div>
         </section>
 
-        {/* High-Density Simplified Grid */}
+        {}
         <section className="py-6 md:py-8 bg-zinc-50 min-h-[800px]">
           <div className="mx-auto max-w-7xl px-6">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
