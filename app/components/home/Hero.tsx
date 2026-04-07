@@ -19,7 +19,7 @@ export default function Hero() {
       <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-10 py-8 lg:py-12">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
           
-          {/* Left Column: Learning Propositions (Restored 2-Line Configuration) */}
+          {/* Left Column: Learning Propositions (2-Line Configuration with SF Colors) */}
           <div className="col-span-1 lg:col-span-5 flex flex-col items-start text-left">
             <div className="mb-6 inline-flex items-center gap-2 border border-zinc-800 bg-black px-3 py-1">
               <span className="h-1.5 w-1.5 rounded-full bg-white animate-pulse" />
@@ -29,8 +29,8 @@ export default function Hero() {
             </div>
 
             <h1 className="max-w-xl text-4xl md:text-5xl lg:text-6xl font-normal tracking-tight text-zinc-900 leading-[1.05] mb-8">
-              Your <span className="text-violet-500">learn network</span>, <br />
-              built for the <span className="text-blue-500 text-sharp">real world</span>.
+              Your <span className="text-violet-500">learn</span> <span className="text-emerald-500">development</span> <span className="text-blue-500">network</span>, <br />
+              built for the <span className="text-orange-400">real</span> <span className="text-pink-500">world</span>.
             </h1>
 
             <p className="max-w-md text-[16px] md:text-[17px] leading-relaxed text-zinc-500 font-normal mb-8">
