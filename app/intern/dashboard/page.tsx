@@ -46,6 +46,7 @@ import {
    MoreVertical
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import Carousel_005 from "@/components/Carousel_005";
 import { io } from "socket.io-client";
 import { supabase } from "@/lib/supabase";
 
@@ -477,6 +478,29 @@ function InternDashboardContent() {
                   </div>
                </div>
                
+               <div className="py-8 overflow-hidden">
+                  <div className="mb-6 flex items-center justify-between">
+                     <div>
+                        <h2 className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Growth & Highlights</h2>
+                        <p className="text-[10px] text-zinc-400 mt-1 font-medium">Community contributions from the Forge Academy</p>
+                     </div>
+                  </div>
+                  <Carousel_005 
+                     images={[
+                        { src: "/images/x.com/13.jpeg", alt: "Illustration 1" },
+                        { src: "/images/x.com/32.jpeg", alt: "Illustration 2" },
+                        { src: "/images/x.com/20.jpeg", alt: "Illustration 3" },
+                        { src: "/images/x.com/21.jpeg", alt: "Illustration 4" },
+                        { src: "/images/x.com/19.jpeg", alt: "Illustration 5" },
+                        { src: "/images/x.com/1.jpeg", alt: "Illustration 6" },
+                        { src: "/images/x.com/2.jpeg", alt: "Illustration 7" }
+                     ]} 
+                     autoplay 
+                     showPagination 
+                     loop 
+                     className="max-w-none px-0"
+                  />
+               </div>
                <div className="p-4 bg-red-50 border-l-4 border-red-500 flex items-center gap-3">
                   <Hand size={18} className="text-red-600 shrink-0" />
                   <p className="text-xs font-bold text-red-600 leading-relaxed">
