@@ -46,7 +46,6 @@ import {
    MoreVertical
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import Carousel_005 from "@/components/Carousel_005";
 import { io } from "socket.io-client";
 import { supabase } from "@/lib/supabase";
 
@@ -477,30 +476,7 @@ function InternDashboardContent() {
                      <div className="mt-auto"><p className="text-sm font-bold text-zinc-900 uppercase tracking-tight">Today, 10:00 AM</p><p className="text-[10px] text-amber-500/70 mt-1 uppercase font-bold tracking-tight">Starting time</p></div>
                   </div>
                </div>
-               
-               <div className="mb-10">
-                  <div className="mb-4 flex items-center justify-between">
-                     <div className="flex items-center gap-2">
-                        <div className="h-4 w-1 bg-zinc-900" />
-                        <h2 className="text-[10px] font-bold text-zinc-900 uppercase tracking-widest">Digital Highlights</h2>
-                     </div>
-                  </div>
-                  <Carousel_005 
-                     images={[
-                        { src: "/images/x.com/13.jpeg", alt: "Illustration 1" },
-                        { src: "/images/x.com/32.jpeg", alt: "Illustration 2" },
-                        { src: "/images/x.com/20.jpeg", alt: "Illustration 3" },
-                        { src: "/images/x.com/21.jpeg", alt: "Illustration 4" },
-                        { src: "/images/x.com/19.jpeg", alt: "Illustration 5" },
-                        { src: "/images/x.com/1.jpeg", alt: "Illustration 6" },
-                        { src: "/images/x.com/2.jpeg", alt: "Illustration 7" }
-                     ]} 
-                     autoplay 
-                     showPagination 
-                     loop 
-                     className="max-w-none"
-                  />
-               </div>
+                
                <div className="p-4 bg-red-50 border-l-4 border-red-500 flex items-center gap-3">
                   <Hand size={18} className="text-red-600 shrink-0" />
                   <p className="text-xs font-bold text-red-600 leading-relaxed">
