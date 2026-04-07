@@ -456,15 +456,20 @@ function InternDashboardContent() {
                      <div className="flex items-center justify-between"><span className="text-[10px] font-bold text-blue-600 uppercase tracking-tight">Assignments</span><Briefcase size={16} className="text-blue-500" /></div>
                      <div className="mt-auto"><p className="text-2xl font-bold text-zinc-900">{tasks.filter(t => t.status === 'pending').length}</p><p className="text-[10px] text-blue-500/70 mt-1 uppercase font-bold tracking-tight">Pending tasks</p></div>
                   </div>
-                  <div className="p-5 border border-emerald-100 bg-emerald-50/40 shadow-sm flex flex-col justify-between h-32">
-                     <div className="flex items-center justify-between"><span className="text-[10px] font-bold text-emerald-600 uppercase tracking-tight">Attendance</span><Check size={16} className="text-emerald-500" /></div>
-                     <div className="mt-auto">
+                  <div className="p-5 border border-emerald-100 bg-emerald-50/40 shadow-sm flex flex-col justify-between h-32 relative overflow-hidden group">
+                     <div className="flex items-center justify-between z-10"><span className="text-[10px] font-bold text-emerald-600 uppercase tracking-tight">Attendance</span><Check size={16} className="text-emerald-500" /></div>
+                     <div className="mt-auto z-10">
                         <div className="flex items-baseline gap-2">
                            <p className="text-2xl font-bold text-zinc-900">{attendancePercentage}%</p>
                            <span className="text-[10px] text-emerald-500/70 font-bold">({attendanceCount}/{attendanceData.totalTrackingDays} Days)</span>
                         </div>
-                        <p className="text-[10px] text-emerald-500/70 mt-1 uppercase font-bold tracking-tight">Mission Presence Ratio</p>
-                        <p className="text-[8px] text-zinc-400 mt-2 italic font-medium">*Calculated relative to sessions active since your enrollment</p>
+                        <div className="w-full h-1 bg-emerald-100 mt-2 rounded-full overflow-hidden">
+                           <div className="h-full bg-emerald-500 transition-all duration-1000" style={{ width: `${attendancePercentage}%` }} />
+                        </div>
+                        <p className="text-[9px] text-emerald-500/70 mt-1 uppercase font-bold tracking-tight">Mission Presence Ratio</p>
+                     </div>
+                     <div className="absolute -right-4 -bottom-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                        <Activity size={80} className="text-emerald-900" />
                      </div>
                   </div>
                   <div className="p-5 border border-zinc-200 bg-zinc-50 shadow-sm flex flex-col justify-between h-32">
@@ -921,9 +926,32 @@ function InternDashboardContent() {
 
          {activeTab === "attendance" && (
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6 text-left">
-               <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-zinc-100">
-                  <div className="max-w-xl"><h1 className="text-xl font-bold text-zinc-900 mb-2">Attendance logs</h1><p className="text-zinc-500 text-sm leading-relaxed">Check your presence record and overall attendance percentage for this internship.</p></div>
-                  <div className="p-6 bg-[#0055FF] text-white flex flex-col justify-center min-w-[200px]"><div className="text-center md:text-left"><h4 className="text-xs font-semibold opacity-60 mb-1">Attendance rate</h4><p className="text-3xl font-bold">{attendancePercentage}%</p></div></div>
+               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="p-8 bg-[#0055FF] text-white flex flex-col justify-center rounded-sm shadow-xl shadow-blue-500/10">
+                     <h4 className="text-[10px] font-bold uppercase tracking-widest opacity-60 mb-2">Current Attendance Rate</h4>
+                     <p className="text-4xl font-black">{attendancePercentage}%</p>
+                     <div className="w-full h-1.5 bg-white/20 mt-4 rounded-full overflow-hidden">
+                        <div className="h-full bg-white transition-all duration-1000" style={{ width: `${attendancePercentage}%` }} />
+                     </div>
+                  </div>
+                  <div className="p-8 bg-white border border-zinc-100 flex flex-col justify-center rounded-sm">
+                     <h4 className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 mb-2">Session Breakdown</h4>
+                     <div className="flex items-end gap-1">
+                        <p className="text-3xl font-bold text-zinc-900">{attendanceCount}</p>
+                        <p className="text-sm font-bold text-zinc-400 pb-1">/ {attendanceData.totalTrackingDays} Days</p>
+                     </div>
+                     <p className="text-[10px] font-bold text-emerald-600 mt-2 uppercase tracking-tight">Total Present Days</p>
+                  </div>
+                  <div className="p-8 bg-white border border-zinc-100 flex flex-col justify-center rounded-sm">
+                     <h4 className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 mb-2">Minimum Threshold</h4>
+                     <div className="flex items-baseline gap-2">
+                        <p className="text-3xl font-bold text-zinc-900">75%</p>
+                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${isLowAttendance ? 'bg-red-50 text-red-600' : 'bg-emerald-50 text-emerald-600'}`}>
+                           {isLowAttendance ? 'Critical' : 'Good Standing'}
+                        </span>
+                     </div>
+                     <p className="text-[10px] font-bold text-zinc-400 mt-2 uppercase tracking-tight">Required for certification</p>
+                  </div>
                </div>
                <div className="bg-white border border-zinc-100 overflow-hidden shadow-sm">
                   <table className="w-full text-left border-collapse">
