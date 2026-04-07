@@ -6,74 +6,66 @@ import { ArrowRight } from "lucide-react";
 export default function Hero() {
   return (
     <section className="relative w-full border-b border-zinc-100 bg-white overflow-hidden">
-      {/* Structural Grid Background */}
+      {/* Structural Grid Background - Subtly present */}
       <div
         className="absolute inset-0 z-0 pointer-events-none"
         style={{
           backgroundImage: `linear-gradient(to right, #d4d4d8 1px, transparent 1px), linear-gradient(to bottom, #d4d4d8 1px, transparent 1px)`,
           backgroundSize: '40px 40px',
-          opacity: 0.4,
+          opacity: 0.3,
         }}
       />
 
-      <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-10 py-10 md:py-14 lg:py-20">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+      <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-10 py-8 lg:py-12">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
           
-          {/* Left Column: Learning Propositions */}
-          <div className="flex flex-col items-start text-left">
-            <div className="mb-8 inline-flex items-center gap-2 border border-zinc-800 bg-black px-4 py-1.5">
+          {/* Left Column: Mission (Lighter & Smoother) */}
+          <div className="col-span-1 lg:col-span-5 flex flex-col items-start text-left">
+            <div className="mb-6 inline-flex items-center gap-2 border border-zinc-900 bg-black px-3 py-1 mt-0">
               <span className="h-1.5 w-1.5 rounded-full bg-white animate-pulse" />
-              <span className="text-[12px] font-medium text-white tracking-wide ">
-                Introducing Learn Grid
+              <span className="text-[10px] font-bold text-white tracking-widest uppercase">
+                Architecture v2.0
               </span>
             </div>
 
-            <h1 className="max-w-4xl text-5xl md:text-6xl lg:text-7xl font-normal tracking-tight text-zinc-900 leading-[1.05]">
-              Your{" "}
-              <span className="text-violet-500">learn</span>{" "}
-              <span className="text-emerald-500">development</span>{" "}
-              <br className="hidden lg:block" />
-              <span className="text-blue-500">network</span>, built for 
-              <br className="hidden lg:block" /> the{" "}
-              <span className="text-orange-400">real</span>{" "}
-              <span className="text-pink-500">world</span>.
+            <h1 className="max-w-xl text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-zinc-900 leading-[1.1] mb-6">
+              Forge your <br />
+              <span className="text-[#0055FF]">learn network</span>.
             </h1>
 
-            <p className="mt-8 max-w-xl text-[16px] md:text-[17px] leading-relaxed text-zinc-500 font-normal">
-              Learn Grid by <span className="font-semibold text-zinc-800">Student Forge</span> is a structured learning & internship ecosystem
-              where students acquire job-ready skills, build real projects, and earn
-              verifiable credentials — all in one place.
+            <p className="max-w-md text-[15px] md:text-[16px] leading-relaxed text-zinc-500 font-medium">
+              Learn Grid by <span className="font-bold text-zinc-800">Student Forge</span> is a specialized vertical infrastructure for professional growth.
             </p>
 
-            <div className="mt-10 flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+            <div className="mt-8 flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
               <Link
                 href="/get-started"
-                className="flex h-12 items-center justify-center gap-2 bg-blue-600 px-10 text-[14px] text-white font-medium transition-all hover:bg-blue-700 active:scale-[0.98] rounded-none shadow-lg shadow-blue-500/10"
+                className="flex h-11 items-center justify-center gap-2 bg-[#0055FF] px-8 text-[13px] text-white font-bold transition-all hover:bg-blue-700 active:scale-[0.98] rounded-none shadow-xl shadow-blue-500/10"
               >
-                Get started free
-                <ArrowRight className="h-4 w-4" />
+                Join Now
+                <ArrowRight className="h-3.5 w-3.5" />
               </Link>
 
               <Link
                 href="/courses"
-                className="flex h-12 items-center justify-center border border-zinc-200 bg-white px-10 text-[14px] text-zinc-900 font-medium transition-all hover:border-zinc-800 active:scale-[0.98] rounded-none"
+                className="flex h-11 items-center justify-center border border-zinc-200 bg-white px-8 text-[13px] text-zinc-900 font-bold transition-all hover:border-zinc-800 active:scale-[0.98] rounded-none"
               >
-                Explore courses
+                Explore
               </Link>
             </div>
 
-            <p className="mt-10 text-[13px] text-zinc-400 font-normal border-t border-zinc-100 pt-6 w-full lg:w-fit">
-              Trusted by <span className="text-zinc-700 font-medium">500+ students</span> across India · Powered by Student Forge
+            <p className="mt-8 text-[11px] text-zinc-400 font-bold uppercase tracking-widest border-t border-zinc-100 pt-6">
+              Batch 2 · 500+ Active nodes
             </p>
           </div>
 
-          {/* Right Column: Visual Component */}
-          <div className="relative group lg:block hidden animate-in fade-in slide-in-from-right-8 duration-1000">
-             <div className="absolute -inset-4 bg-gradient-to-r from-blue-50 to-violet-50 opacity-50 blur-[40px] pointer-events-none" />
+          {/* Right Column: High-Density Visual (Largest presence) */}
+          <div className="col-span-1 lg:col-span-7 relative group lg:block hidden animate-in fade-in slide-in-from-right-12 duration-1000">
+             <div className="absolute -inset-10 bg-gradient-to-r from-blue-50 to-transparent opacity-40 blur-[50px] pointer-events-none" />
              <img 
                 src="https://ik.imagekit.io/dypkhqxip/bgimage.png" 
                 alt="Student Forge Learn Grid Architecture" 
-                className="relative w-full h-auto object-contain transform group-hover:scale-[1.02] transition-transform duration-700" 
+                className="relative w-full h-auto scale-110 lg:scale-[1.25] object-contain origin-left transform hover:scale-[1.28] transition-transform duration-1000" 
              />
           </div>
 
