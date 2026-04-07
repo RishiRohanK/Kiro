@@ -17,19 +17,19 @@ export default function Hero() {
       />
 
       <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-10 py-8 lg:py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14 items-center">
           
-          {/* Left Column: Learning Propositions (2-Line Configuration with SF Colors) */}
-          <div className="col-span-1 lg:col-span-5 flex flex-col items-start text-left">
+          {/* Left Column: Learning Propositions (Hard-Fixed 2-Line Configuration) */}
+          <div className="flex flex-col items-start text-left">
             <div className="mb-6 inline-flex items-center gap-2 border border-zinc-800 bg-black px-3 py-1">
               <span className="h-1.5 w-1.5 rounded-full bg-white animate-pulse" />
-              <span className="text-[10px] font-bold text-white tracking-widest uppercase">
+              <span className="text-[10px] font-bold text-white tracking-widest uppercase leading-none">
                 Introducing Learn Grid
               </span>
             </div>
 
-            <h1 className="max-w-xl text-4xl md:text-5xl lg:text-6xl font-normal tracking-tight text-zinc-900 leading-[1.05] mb-8">
-              Your <span className="text-violet-500">learn</span> <span className="text-emerald-500">development</span> <span className="text-blue-500">network</span>, <br />
+            <h1 className="max-w-3xl text-4xl md:text-5xl lg:text-5xl font-normal tracking-tight text-zinc-900 leading-[1.1] mb-8">
+              Your <span className="text-violet-500">learn</span> <span className="text-emerald-500">development</span> <span className="text-blue-500">network</span>, <br className="hidden md:block" />
               built for the <span className="text-orange-400">real</span> <span className="text-pink-500">world</span>.
             </h1>
 
@@ -49,7 +49,7 @@ export default function Hero() {
 
               <Link
                 href="/courses"
-                className="flex h-11 items-center justify-center border border-zinc-200 bg-white px-10 text-[13px] text-zinc-900 font-bold transition-all hover:border-zinc-800 active:scale-[0.98] rounded-none"
+                className="flex h-11 items-center justify-center border border-zinc-200 bg-white px-10 text-[13px] text-zinc-900 font-bold transition-all hover:border-zinc-800 active:scale-[0.98] rounded-none advocacy-node"
               >
                 Explore courses
               </Link>
@@ -60,13 +60,13 @@ export default function Hero() {
             </p>
           </div>
 
-          {/* Right Column: Visual Component (Maximum presence) */}
-          <div className="col-span-1 lg:col-span-7 relative group lg:block hidden animate-in fade-in slide-in-from-right-12 duration-1000">
+          {/* Right Column: Visual Component (High-Resolution Balance) */}
+          <div className="relative group lg:block hidden animate-in fade-in slide-in-from-right-12 duration-1000">
              <div className="absolute -inset-10 bg-gradient-to-r from-blue-50 to-transparent opacity-40 blur-[50px] pointer-events-none" />
              <img 
                 src="https://ik.imagekit.io/dypkhqxip/bgimage.png" 
                 alt="Student Forge Learn Grid Architecture" 
-                className="relative w-full h-auto scale-110 lg:scale-[1.25] object-contain origin-left transform hover:scale-[1.28] transition-transform duration-1000" 
+                className="relative w-full h-auto scale-110 lg:scale-[1.15] object-contain origin-left transform hover:scale-[1.18] transition-transform duration-1000" 
              />
           </div>
 
