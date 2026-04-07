@@ -4,7 +4,17 @@ import bcrypt from "bcryptjs";
 
 export async function POST(req: Request) {
     try {
-        const { email, password } = await req.json();
+        const { email, password, security_token, verification, v_sum } = await req.json();
+
+        // 1. Honeypot check (Bots fill this)
+        if (security_token) {
+            return NextResponse.json({ error: "Security violation detected. Please refresh." }, { status: 403 });
+        }
+
+        // 2. Arithmetic Verification
+        if (verification !== v_sum) {
+            return NextResponse.json({ error: "Security verification failed. Are you human?" }, { status: 400 });
+        }
 
         if (!email || !password) {
             return NextResponse.json({ error: "Email and password are required" }, { status: 400 });

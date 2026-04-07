@@ -13,6 +13,12 @@ export default function InternSigninPage() {
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
+    
+    // Security Verification State
+    const [honeypot, setHoneypot] = useState("");
+    const [num1] = useState(Math.floor(Math.random() * 9) + 1);
+    const [num2] = useState(Math.floor(Math.random() * 9) + 1);
+    const [verificationAnswer, setVerificationAnswer] = useState("");
 
     const signInWithGoogle = async () => {
         const { error } = await supabase.auth.signInWithOAuth({
@@ -32,7 +38,13 @@ export default function InternSigninPage() {
         try {
             const res = await fetch("/api/intern/signin", {
                 method: "POST",
-                body: JSON.stringify({ email, password }),
+                body: JSON.stringify({ 
+                    email, 
+                    password,
+                    security_token: honeypot, // Honeypot field
+                    verification: verificationAnswer,
+                    v_sum: (num1 + num2).toString()
+                }),
                 headers: { "Content-Type": "application/json" },
             });
 
@@ -128,6 +140,30 @@ export default function InternSigninPage() {
                         >
                             Forgot Password?
                         </Link>
+                    </div>
+
+                    {/* Integrated Bot Protection */}
+                    <input 
+                        type="text" 
+                        name="username_field" 
+                        value={honeypot} 
+                        onChange={(e) => setHoneypot(e.target.value)} 
+                        className="hidden" 
+                        autoComplete="off"
+                    />
+
+                    <div className="space-y-1.5 pt-2">
+                        <label className="text-[12px] font-bold text-zinc-700 ml-1">
+                            Security: What is {num1} + {num2}?
+                        </label>
+                        <input
+                            required
+                            type="text"
+                            value={verificationAnswer}
+                            onChange={(e) => setVerificationAnswer(e.target.value)}
+                            className="w-full h-[40px] bg-[#F4F4F5] px-4 text-[13px] font-medium outline-none transition-all focus:bg-white border border-zinc-100 placeholder:text-zinc-400"
+                            placeholder="Enter result"
+                        />
                     </div>
 
                     {error && (
