@@ -138,13 +138,13 @@ export default function Navbar() {
                       <Link
                         href={link.href}
                         onClick={() => setIsOpen(false)}
-                        className="group flex items-center gap-4 p-4 text-base font-semibold text-zinc-900 border border-transparent rounded-lg hover:border-zinc-100 hover:bg-zinc-50 transition-all active:scale-[0.98]"
+                        className="group flex items-center gap-4 py-4 px-3 text-sm font-bold text-zinc-900 border-b border-zinc-100/50 hover:bg-zinc-50 transition-all"
                       >
-                        <div className="flex h-10 w-10 items-center justify-center rounded-md bg-zinc-100 text-zinc-600 group-hover:bg-black group-hover:text-white transition-colors duration-300">
-                          <link.icon className="h-5 w-5" />
+                        <div className="flex h-10 w-10 items-center justify-center rounded-sm bg-zinc-50 text-zinc-500 group-hover:bg-black group-hover:text-white transition-all duration-300">
+                          <link.icon className="h-4 w-4" />
                         </div>
-                        <span>{link.name}</span>
-                        <ArrowRight className="ml-auto h-4 w-4 text-zinc-300 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-[-10px] group-hover:translate-x-0" />
+                        <span className="uppercase tracking-tight text-[11px] font-bold">{link.name}</span>
+                        <ArrowRight className="ml-auto h-3 w-3 text-zinc-300 transform translate-x-1 group-hover:translate-x-0 transition-all opacity-0 group-hover:opacity-100" />
                       </Link>
                     </motion.div>
                   ))}
