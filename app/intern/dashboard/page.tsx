@@ -48,6 +48,13 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import { io } from "socket.io-client";
 import { supabase } from "@/lib/supabase";
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Autoplay, Pagination, Navigation, EffectFade } from 'swiper/modules';
+
+import 'swiper/css';
+import 'swiper/css/pagination';
+import 'swiper/css/navigation';
+import 'swiper/css/effect-fade';
 
 interface Task {
    id: string;
@@ -482,12 +489,66 @@ function InternDashboardContent() {
                   </div>
                </div>
 
-               <div className="w-full overflow-hidden rounded-xl border border-zinc-100 shadow-sm bg-zinc-50">
-                  <img
-                     src="https://ik.imagekit.io/dypkhqxip/Intern%20Meetup.png"
-                     alt="Program Banner"
-                     className="w-full h-auto block"
-                  />
+               <div className="w-full overflow-hidden rounded-xl border border-zinc-100 shadow-sm bg-zinc-50 relative group">
+                  <Swiper
+                     modules={[Autoplay, Pagination, Navigation, EffectFade]}
+                     effect="fade"
+                     fadeEffect={{ crossFade: true }}
+                     speed={1000}
+                     autoHeight={true}
+                     autoplay={{
+                        delay: 5000,
+                        disableOnInteraction: false,
+                     }}
+                     pagination={{
+                        clickable: true,
+                        bulletClass: 'swiper-pagination-bullet !bg-zinc-400 !opacity-50',
+                        bulletActiveClass: 'swiper-pagination-bullet-active !bg-black !opacity-100',
+                     }}
+                     navigation={{
+                        nextEl: '.swiper-button-next-custom',
+                        prevEl: '.swiper-button-prev-custom',
+                     }}
+                     className="w-full"
+                  >
+                     <SwiperSlide>
+                        <img
+                           src="https://ik.imagekit.io/dypkhqxip/Intern%20Meetup.png"
+                           alt="Meetup Banner"
+                           className="w-full h-auto block"
+                        />
+                     </SwiperSlide>
+                     <SwiperSlide>
+                        <img
+                           src="https://ik.imagekit.io/dypkhqxip/Coming%20soon.png"
+                           alt="Programs Banner"
+                           className="w-full h-auto block"
+                        />
+                     </SwiperSlide>
+
+                     {/* Custom Navigation */}
+                     <button className="swiper-button-prev-custom absolute left-4 top-1/2 -translate-y-1/2 z-20 h-10 w-10 bg-white/80 backdrop-blur-md border border-zinc-100 opacity-0 group-hover:opacity-100 transition-all hover:bg-white flex items-center justify-center rounded-full shadow-lg">
+                        <ChevronLeft size={20} className="text-zinc-900" />
+                     </button>
+                     <button className="swiper-button-next-custom absolute right-4 top-1/2 -translate-y-1/2 z-20 h-10 w-10 bg-white/80 backdrop-blur-md border border-zinc-100 opacity-0 group-hover:opacity-100 transition-all hover:bg-white flex items-center justify-center rounded-full shadow-lg">
+                        <ChevronRight size={20} className="text-zinc-900" />
+                     </button>
+                  </Swiper>
+
+                  <style jsx global>{`
+                     .swiper-pagination-bullet {
+                        width: 6px !important;
+                        height: 6px !important;
+                        transition: all 0.3s ease !important;
+                     }
+                     .swiper-pagination-bullet-active {
+                        width: 24px !important;
+                        border-radius: 4px !important;
+                     }
+                     .swiper-pagination {
+                        bottom: 16px !important;
+                     }
+                  `}</style>
                </div>
 
                {userStatus?.offerLetterUrl && (
