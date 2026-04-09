@@ -43,7 +43,8 @@ import {
    Plus,
    Trash2,
    Kanban as KanbanIcon,
-   MoreVertical
+   MoreVertical,
+   FileText as FileTextIcon
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { io } from "socket.io-client";
@@ -127,6 +128,8 @@ function InternDashboardContent() {
    const [activeTeamId, setActiveTeamId] = useState<string | null>(null);
    const [selectedUser, setSelectedUser] = useState<any>(null);
    const [allInterns, setAllInterns] = useState<any[]>([]);
+   const [reports, setReports] = useState<any[]>([]);
+   const [loadingReports, setLoadingReports] = useState(false);
    const chatEndRef = useRef<HTMLDivElement>(null);
 
    useEffect(() => {
@@ -167,12 +170,14 @@ function InternDashboardContent() {
          fetchTasks(userData.id, userData.batch);
          fetchStatus(userData.id);
          fetchAttendance(userData.id);
+         fetchReports(userData.id);
          const syncInterval = setInterval(() => {
             fetchTasks(userData.id, userData.batch);
             fetchStatus(userData.id);
             fetchAttendance(userData.id);
             fetchSchedules(userData.id, userData.batch);
             fetchAllInterns();
+            fetchReports(userData.id);
             fetch(`/api/intern/personal-tasks?userId=${userData.id}`)
                .then(r => r.json())
                .then(d => { if (d.success) setPersonalTasks(d.tasks); })
@@ -296,6 +301,21 @@ function InternDashboardContent() {
          console.error("Attendance retrieval offline");
       }
    };
+
+    const fetchReports = async (internId: string) => {
+        setLoadingReports(true);
+        try {
+            const res = await fetch(`/api/intern/reports?internId=${internId}`);
+            const data = await res.json();
+            if (data.success) {
+                setReports(data.reports);
+            }
+        } catch (e) {
+            console.error("Failed to load reports");
+        } finally {
+            setLoadingReports(false);
+        }
+    };
 
    const fetchAllInterns = async () => {
       try {
@@ -1027,6 +1047,77 @@ function InternDashboardContent() {
                         ))}
                      </tbody>
                   </table>
+               </div>
+            </motion.div>
+         )}
+
+         {activeTab === "reports" && (
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6 max-w-4xl text-left">
+               <header className="pb-6">
+                  <h1 className="text-xl font-semibold tracking-tight text-zinc-900">Academic Progress</h1>
+                  <p className="text-zinc-500 text-sm mt-1">Detailed evaluation of your weekly submissions and performance.</p>
+               </header>
+
+               <div className="grid grid-cols-1 gap-4">
+                  {loadingReports ? (
+                     <div className="py-20 flex flex-col items-center justify-center gap-3 bg-zinc-50 rounded-xl border border-zinc-100">
+                        <RefreshCw className="animate-spin text-zinc-300" size={24} />
+                        <p className="text-zinc-400 text-xs">Loading performance data...</p>
+                     </div>
+                  ) : reports.length > 0 ? (
+                     reports.map((report) => (
+                        <div key={report.id} className="bg-white border border-zinc-200 rounded-xl p-6 flex flex-col md:flex-row md:items-center justify-between gap-6 hover:shadow-md hover:border-blue-200 transition-all group">
+                           <div className="flex-1 space-y-3">
+                              <div className="flex items-center gap-3">
+                                 <span className="text-[11px] font-medium px-2 py-0.5 bg-blue-50 text-blue-600 rounded-full border border-blue-100">
+                                    {report.schedule.week}
+                                 </span>
+                                 <span className="text-zinc-300">•</span>
+                                 <span className="text-[11px] text-zinc-400 font-medium">
+                                    Reviewed on {new Date(report.reviewedAt).toLocaleDateString()}
+                                 </span>
+                              </div>
+                              
+                              <div>
+                                 <h3 className="text-base font-semibold text-zinc-900 leading-tight">
+                                    {report.schedule.typeOfWork}
+                                 </h3>
+                                 <div className="mt-2 p-4 bg-zinc-50 rounded-lg border border-zinc-100 italic relative">
+                                    <p className="text-xs text-zinc-600 leading-relaxed">
+                                       "{report.review || "Standard evaluation completed. Overall performance remains consistent."}"
+                                    </p>
+                                 </div>
+                              </div>
+                           </div>
+
+                           <div className="flex items-center gap-6 shrink-0 md:pl-6 md:border-l border-zinc-100 min-w-[120px] justify-end">
+                              <div className="text-right">
+                                 <div className="flex items-baseline justify-end gap-1">
+                                    <span className="text-3xl font-bold text-zinc-900 leading-none">
+                                       {report.marks}
+                                    </span>
+                                    <span className="text-sm font-semibold text-zinc-400">/ 100</span>
+                                 </div>
+                                 <p className="text-[10px] text-zinc-400 font-bold uppercase tracking-wider mt-1">Final Score</p>
+                                 <div className="w-20 h-1.5 bg-zinc-100 rounded-full mt-2 overflow-hidden">
+                                    <div 
+                                       className={`h-full transition-all duration-1000 ${Number(report.marks) >= 75 ? 'bg-emerald-500' : 'bg-amber-500'}`}
+                                       style={{ width: `${report.marks}%` }}
+                                    />
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                     ))
+                  ) : (
+                     <div className="py-24 flex flex-col items-center justify-center text-center bg-zinc-50 border border-zinc-200 border-dashed rounded-2xl">
+                        <div className="h-16 w-16 bg-white rounded-2xl border border-zinc-200 flex items-center justify-center mb-4 shadow-sm">
+                           <FileTextIcon size={24} className="text-zinc-200" />
+                        </div>
+                        <h4 className="text-lg font-semibold text-zinc-900">No reports available</h4>
+                        <p className="text-sm text-zinc-500 max-w-sm mt-1">Your weekly evaluations will appear here once the technical review process is complete.</p>
+                     </div>
+                  )}
                </div>
             </motion.div>
          )}

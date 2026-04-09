@@ -82,6 +82,14 @@ model User {
   handRaised Boolean  @default(false)
   letterUrl  String?
   offerLetterUrl String?
+  profileImage   String?
+  employeeId     String?
+  phoneNumber    String?
+  department     String?
+  reportingManager String?
+  location       String?   @default("Remote")
+  joiningDate    DateTime? @default(now())
+  employmentType String?   @default("Full-time")
   lastActive DateTime @default(now())
   college    String?
   batch      String?   @default("Batch 1")
@@ -96,9 +104,17 @@ model User {
 }
 
 enum Role {
-  MEDIA_TEAM
-  CTO
   CEO
+  CTO
+  CFO
+  CMO
+  COO
+  CSO
+  TECHNICAL_TEAM
+  MARKETING_TEAM
+  UI_UX_DEPARTMENT
+  CLEED_TEAM
+  MEDIA_TEAM
   INTERN
 }
 
@@ -360,6 +376,11 @@ model ScheduleSubmission {
   internId        String
   githubLink      String
   submissionLink  String
+  marks           String?
+  review          String?
+  reviewedBy      String?
+  reviewedAt      DateTime?
+  status          String   @default("SUBMITTED") 
   createdAt       DateTime @default(now())
 
   @@unique([scheduleId, internId])

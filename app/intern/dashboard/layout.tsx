@@ -15,6 +15,7 @@ import {
     Hand,
     MessageSquare,
     FileBadge,
+    FileText,
     Kanban,
     X
 } from "lucide-react"; 
@@ -101,6 +102,7 @@ function InternDashboardLayoutContent({
 
     const navItems = [
         { name: "Overview", icon: LayoutDashboard, slug: "/intern/dashboard", isNew: false, mobile: true },
+        { name: "Reports", icon: FileText, slug: "/intern/dashboard?view=reports", isNew: true, mobile: true },
         { name: "Kanban", icon: Kanban, slug: "/intern/dashboard?view=kanban", isNew: true, mobile: true },
         { name: "Group Chat", icon: MessageSquare, slug: "/intern/dashboard?view=chat", isNew: true, mobile: true },
         { name: "Roadmap", icon: Calendar, slug: "/intern/dashboard/schedule", isNew: false, mobile: true },

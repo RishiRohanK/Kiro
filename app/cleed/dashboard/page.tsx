@@ -38,7 +38,10 @@ import {
    Trash2,
    Check,
    Settings,
-   RefreshCw
+   RefreshCw,
+   LogOut,
+   Eye,
+   Edit
 } from "lucide-react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
@@ -148,19 +151,20 @@ export default function CleedDashboard() {
    const [events, setEvents] = useState<EventItem[]>([]);
    const [ideas, setIdeas] = useState<IdeaItem[]>([]);
    const [internships, setInternships] = useState<InternshipItem[]>([]);
+   const [employees, setEmployees] = useState<any[]>([]);
    const [isLoading, setIsLoading] = useState(true);
 
-   
+
    const [selectedIntern, setSelectedIntern] = useState<Intern | null>(null);
    const [isAuthorizing, setIsAuthorizing] = useState<string | null>(null);
    const [internBatchFilter, setInternBatchFilter] = useState("All");
 
-   
+
    const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
    const [currentAttendance, setCurrentAttendance] = useState<any[]>([]);
    const [markingId, setMarkingId] = useState<string | null>(null);
 
-   
+
    const [taskData, setTaskData] = useState({ title: "", description: "", attachmentUrl: "", batch: "Batch 2" });
    const [letterUrl, setLetterUrl] = useState("");
    const [offerLetterUrl, setOfferLetterUrl] = useState("");
@@ -195,8 +199,8 @@ export default function CleedDashboard() {
    const [loadingSchedules, setLoadingSchedules] = useState(false);
    const [editingSchedule, setEditingSchedule] = useState<any>(null);
    const [batchFilter, setBatchFilter] = useState("Batch 1");
-   const [submissionFilter, setSubmissionFilter] = useState("all"); 
-   
+   const [submissionFilter, setSubmissionFilter] = useState("all");
+
    const [eventData, setEventData] = useState({
       title: "",
       description: "",
@@ -222,6 +226,18 @@ export default function CleedDashboard() {
    });
    const [sendingInternship, setSendingInternship] = useState(false);
    const [internshipSuccess, setInternshipSuccess] = useState(false);
+
+   const [employeeData, setEmployeeData] = useState({
+      name: "",
+      email: "",
+      password: "",
+      role: "MEDIA_TEAM" as any,
+      batch: "Batch 1"
+   });
+   const [sendingEmployee, setSendingEmployee] = useState(false);
+   const [employeeSuccess, setEmployeeSuccess] = useState(false);
+   const [editingEmployeeId, setEditingEmployeeId] = useState<string | null>(null);
+   const [editEmployeeData, setEditEmployeeData] = useState<any>({});
 
    // Interview Schedule State
    const [isInterviewModalOpen, setIsInterviewModalOpen] = useState(false);
@@ -251,7 +267,7 @@ export default function CleedDashboard() {
                setIsInterviewModalOpen(false);
                setInterviewSuccess(false);
                setInterviewTiming("");
-               fetchData(); // Refresh list to see updated status
+               fetchData();
             }, 2000);
          }
       } catch (error) {
@@ -261,7 +277,7 @@ export default function CleedDashboard() {
       }
    };
 
-   
+
    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
    useEffect(() => {
@@ -408,7 +424,7 @@ export default function CleedDashboard() {
    };
 
    const fetchData = async () => {
-      
+
       const fetchInterns = async () => {
          try {
             const res = await fetch("/api/cleed/interns");
@@ -465,6 +481,14 @@ export default function CleedDashboard() {
          } catch (err) { console.error("Internships fetch failure"); }
       };
 
+      const fetchEmployees = async () => {
+         try {
+            const res = await fetch("/api/cleed/employees");
+            const data = await res.json();
+            if (data.success) setEmployees(data.employees);
+         } catch (err) { console.error("Employees fetch failure"); }
+      };
+
       await Promise.allSettled([
          fetchInterns(),
          fetchTasks(),
@@ -473,6 +497,7 @@ export default function CleedDashboard() {
          fetchEvents(),
          fetchIdeas(),
          fetchInternships(),
+         fetchEmployees(),
          fetchAllSchedules(),
          fetchSubmissions()
       ]);
@@ -483,7 +508,7 @@ export default function CleedDashboard() {
       if (!intern.lastActive) return false;
       const lastActive = new Date(intern.lastActive).getTime();
       const now = new Date().getTime();
-      return (now - lastActive) < (5 * 60 * 1000); 
+      return (now - lastActive) < (5 * 60 * 1000);
    }).length;
 
    const handlePostTask = async (e: React.FormEvent) => {
@@ -796,8 +821,67 @@ export default function CleedDashboard() {
          }
       } catch (err) {
          console.error("Internship registry failure.");
+      }
+   };
+
+   const handleUpdateEmployee = async (e: React.FormEvent) => {
+      e.preventDefault();
+      if (!editingEmployeeId) return;
+      try {
+         const res = await fetch("/api/cleed/employees", {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ id: editingEmployeeId, ...editEmployeeData })
+         });
+         if (res.ok) {
+            setEditingEmployeeId(null);
+            const empRes = await fetch("/api/cleed/employees");
+            const empData = await empRes.json();
+            if (empData.success) setEmployees(empData.employees);
+         }
+      } catch (err) {
+         console.error("Employee update failure.");
+      }
+   };
+
+   const handlePostEmployee = async (e: React.FormEvent) => {
+      e.preventDefault();
+      setSendingEmployee(true);
+      try {
+         const res = await fetch("/api/cleed/employees", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(employeeData)
+         });
+         const data = await res.json();
+         if (res.ok) {
+            setEmployeeSuccess(true);
+            setEmployeeData({ name: "", email: "", password: "", role: "MEDIA_TEAM" as any, batch: "Batch 1" });
+            setTimeout(() => setEmployeeSuccess(false), 3000);
+            const empRes = await fetch("/api/cleed/employees");
+            const empData = await empRes.json();
+            if (empData.success) setEmployees(empData.employees);
+         } else {
+            alert(data.error || "Failed to create employee");
+         }
+      } catch (err) {
+         console.error("Employee registry failure.");
       } finally {
-         setSendingInternship(false);
+         setSendingEmployee(false);
+      }
+   };
+
+   const handleDeleteEmployee = async (id: string) => {
+      if (!confirm("Are you sure you want to remove this employee?")) return;
+      try {
+         const res = await fetch(`/api/cleed/employees?id=${id}`, { method: "DELETE" });
+         if (res.ok) {
+            const empRes = await fetch("/api/cleed/employees");
+            const empData = await empRes.json();
+            if (empData.success) setEmployees(empData.employees);
+         }
+      } catch (err) {
+         console.error("Employee deletion failed");
       }
    };
 
@@ -828,8 +912,8 @@ export default function CleedDashboard() {
 
    return (
       <div className="min-h-screen bg-[#F5F7FA] font-sans text-zinc-900 pb-20 md:pb-0">
-         {}
-         {}
+         { }
+         { }
          <div className="md:hidden fixed top-0 left-0 right-0 h-16 bg-white z-[60] flex items-center justify-between px-6 pt-[env(safe-area-inset-top)] box-content border-b border-zinc-100 shadow-sm group">
             <div className="flex items-center gap-2">
                <span className="text-xl font-black text-zinc-900 tracking-tighter uppercase leading-none select-none">Cleed</span>
@@ -843,7 +927,7 @@ export default function CleedDashboard() {
             </button>
          </div>
 
-         {}
+         { }
          <AnimatePresence>
             {isMobileMenuOpen && (
                <motion.div
@@ -856,7 +940,7 @@ export default function CleedDashboard() {
                   <div className="grid grid-cols-2 gap-3">
                      {[
                         { id: "overview", icon: LayoutDashboard, label: "Home" },
-                        { id: "events", icon: LayoutDashboard, label: "Events" }, 
+                        { id: "events", icon: LayoutDashboard, label: "Events" },
                         { id: "ideas", icon: Globe, label: "Ideas" },
                         { id: "interns", icon: Users, label: "Interns" },
                         { id: "authorizations", icon: ShieldCheck, label: "Approvals" },
@@ -875,8 +959,8 @@ export default function CleedDashboard() {
                            key={item.id}
                            onClick={() => { setActiveTab(item.id); setIsMobileMenuOpen(false); }}
                            className={`h-24 border flex flex-col items-center justify-center gap-2.5 transition-all rounded-none ${activeTab === item.id
-                                 ? "bg-white/20 text-white border-white border-l-4 -ml-[1px]"
-                                 : "bg-white/5 text-white/80 border-white/10"
+                              ? "bg-white/20 text-white border-white border-l-4 -ml-[1px]"
+                              : "bg-white/5 text-white/80 border-white/10"
                               }`}
                         >
                            <item.icon size={20} strokeWidth={activeTab === item.id ? 2.5 : 2} />
@@ -891,121 +975,122 @@ export default function CleedDashboard() {
             )}
          </AnimatePresence>
 
-          {}
-          <aside className="hidden md:flex fixed left-0 top-0 h-full w-20 lg:w-[260px] border-r border-red-700 z-50 flex-col pt-[env(safe-area-inset-top)]" style={{ backgroundColor: '#F5332C' }}>
-             <div className="p-8 pb-4 flex items-center justify-start gap-2">
-                <span className="text-2xl font-black text-white tracking-tighter uppercase leading-none select-none">Cleed</span>
-                <div className="h-1.5 w-1.5 bg-white rounded-none" />
-             </div>
+         { }
+         <aside className="hidden md:flex fixed left-0 top-0 h-full w-20 lg:w-[260px] border-r border-red-700 z-50 flex-col pt-[env(safe-area-inset-top)]" style={{ backgroundColor: '#F5332C' }}>
+            <div className="p-8 pb-4 flex items-center justify-start gap-2">
+               <span className="text-2xl font-black text-white tracking-tighter uppercase leading-none select-none">Cleed</span>
+               <div className="h-1.5 w-1.5 bg-white rounded-none" />
+            </div>
 
-             <nav className="flex-1 mt-6 px-3 overflow-y-auto space-y-4 custom-scrollbar pb-8">
-                
-                <details open className="group">
-                   <summary className="hidden lg:flex items-center justify-between text-[11px] font-bold text-white/60 uppercase tracking-widest px-3 py-2 cursor-pointer hover:text-white transition-colors select-none list-none [&::-webkit-details-marker]:hidden">
-                      Hub
-                      <ChevronDown size={14} className="group-open:rotate-180 transition-transform text-white/40" />
-                   </summary>
-                   <div className="mt-1 space-y-1 ml-2 border-l border-white/10 pl-2">
-                      {[
+            <nav className="flex-1 mt-6 px-3 overflow-y-auto space-y-4 custom-scrollbar pb-8">
+
+               <details open className="group">
+                  <summary className="hidden lg:flex items-center justify-between text-[11px] font-bold text-white/60 uppercase tracking-widest px-3 py-2 cursor-pointer hover:text-white transition-colors select-none list-none [&::-webkit-details-marker]:hidden">
+                     Hub
+                     <ChevronDown size={14} className="group-open:rotate-180 transition-transform text-white/40" />
+                  </summary>
+                  <div className="mt-1 space-y-1 ml-2 border-l border-white/10 pl-2">
+                     {[
                         { id: "overview", icon: LayoutDashboard, label: "Home" },
                         { id: "events", icon: LayoutDashboard, label: "Events" },
                         { id: "ideas", icon: Globe, label: "Ideas" }
-                      ].map((item) => (
+                     ].map((item) => (
                         <button
                            key={item.id}
                            onClick={() => setActiveTab(item.id)}
                            className={`w-full h-10 flex items-center px-3 gap-3 transition-all rounded-none ${activeTab === item.id
-                                 ? "bg-white/10 text-white font-bold border-l-2 border-white -ml-[9px] pl-[10px]"
-                                 : "text-white/70 hover:text-white hover:bg-white/5"
+                              ? "bg-white/10 text-white font-bold border-l-2 border-white -ml-[9px] pl-[10px]"
+                              : "text-white/70 hover:text-white hover:bg-white/5"
                               }`}
                         >
                            <item.icon size={16} strokeWidth={activeTab === item.id ? 2.5 : 2} />
                            <span className={`hidden lg:block text-[13px]`}>{item.label}</span>
                         </button>
-                      ))}
-                   </div>
-                </details>
+                     ))}
+                  </div>
+               </details>
 
-                <details open className="group">
-                   <summary className="hidden lg:flex items-center justify-between text-[11px] font-bold text-white/60 uppercase tracking-widest px-3 py-2 cursor-pointer hover:text-white transition-colors select-none list-none [&::-webkit-details-marker]:hidden">
-                      Registry
-                      <ChevronDown size={14} className="group-open:rotate-180 transition-transform text-white/40" />
-                   </summary>
-                   <div className="mt-1 space-y-1 ml-2 border-l border-white/10 pl-2">
-                      {[
-                         { id: "interns", icon: Users, label: "Interns" },
-                         { id: "authorizations", icon: ShieldCheck, label: "Approvals" },
-                         { id: "hiring", icon: Briefcase, label: "Hiring" },
-                         { id: "internships", icon: Briefcase, label: "Programs" },
-                         { id: "certification", icon: FileBadge, label: "Certificates" },
-                         { id: "attendance", icon: CalendarCheck, label: "Attendance" },
-                      ].map((item) => (
+               <details open className="group">
+                  <summary className="hidden lg:flex items-center justify-between text-[11px] font-bold text-white/60 uppercase tracking-widest px-3 py-2 cursor-pointer hover:text-white transition-colors select-none list-none [&::-webkit-details-marker]:hidden">
+                     Registry
+                     <ChevronDown size={14} className="group-open:rotate-180 transition-transform text-white/40" />
+                  </summary>
+                  <div className="mt-1 space-y-1 ml-2 border-l border-white/10 pl-2">
+                     {[
+                        { id: "interns", icon: Users, label: "Interns" },
+                        { id: "authorizations", icon: ShieldCheck, label: "Approvals" },
+                        { id: "hiring", icon: Briefcase, label: "Hiring" },
+                        { id: "internships", icon: Briefcase, label: "Programs" },
+                        { id: "employees", icon: ShieldCheck, label: "Employees" },
+                        { id: "certification", icon: FileBadge, label: "Certificates" },
+                        { id: "attendance", icon: CalendarCheck, label: "Attendance" },
+                     ].map((item) => (
                         <button
                            key={item.id}
                            onClick={() => setActiveTab(item.id)}
                            className={`w-full h-10 flex items-center px-3 gap-3 transition-all rounded-none ${activeTab === item.id
-                                 ? "bg-white/10 text-white font-bold border-l-2 border-white -ml-[9px] pl-[10px]"
-                                 : "text-white/70 hover:text-white hover:bg-white/5"
+                              ? "bg-white/10 text-white font-bold border-l-2 border-white -ml-[9px] pl-[10px]"
+                              : "text-white/70 hover:text-white hover:bg-white/5"
                               }`}
                         >
                            <item.icon size={16} strokeWidth={activeTab === item.id ? 2.5 : 2} />
                            <span className={`hidden lg:block text-[13px]`}>{item.label}</span>
                         </button>
-                      ))}
-                   </div>
-                </details>
+                     ))}
+                  </div>
+               </details>
 
-                <details open className="group">
-                   <summary className="hidden lg:flex items-center justify-between text-[11px] font-bold text-white/60 uppercase tracking-widest px-3 py-2 cursor-pointer hover:text-white transition-colors select-none list-none [&::-webkit-details-marker]:hidden">
-                      Tracking
-                      <ChevronDown size={14} className="group-open:rotate-180 transition-transform text-white/40" />
-                   </summary>
-                   <div className="mt-1 space-y-1 ml-2 border-l border-white/10 pl-2">
-                      {[
+               <details open className="group">
+                  <summary className="hidden lg:flex items-center justify-between text-[11px] font-bold text-white/60 uppercase tracking-widest px-3 py-2 cursor-pointer hover:text-white transition-colors select-none list-none [&::-webkit-details-marker]:hidden">
+                     Tracking
+                     <ChevronDown size={14} className="group-open:rotate-180 transition-transform text-white/40" />
+                  </summary>
+                  <div className="mt-1 space-y-1 ml-2 border-l border-white/10 pl-2">
+                     {[
                         { id: "schedule", icon: Calendar, label: "Daily Plan" },
                         { id: "manage_schedules", icon: Settings, label: "Manage" },
                         { id: "assign", icon: Send, label: "Assign" },
                         { id: "submissions", icon: ExternalLink, label: "Audit" },
                         { id: "mentorship", icon: Users, label: "Mentors" },
                         { id: "history", icon: History, label: "Log" }
-                      ].map((item) => (
+                     ].map((item) => (
                         <button
                            key={item.id}
                            onClick={() => setActiveTab(item.id)}
                            className={`w-full h-10 flex items-center px-3 gap-3 transition-all rounded-none ${activeTab === item.id
-                                 ? "bg-white/10 text-white font-bold border-l-2 border-white -ml-[9px] pl-[10px]"
-                                 : "text-white/70 hover:text-white hover:bg-white/5"
+                              ? "bg-white/10 text-white font-bold border-l-2 border-white -ml-[9px] pl-[10px]"
+                              : "text-white/70 hover:text-white hover:bg-white/5"
                               }`}
                         >
                            <item.icon size={16} strokeWidth={activeTab === item.id ? 2.5 : 2} />
                            <span className={`hidden lg:block text-[13px]`}>{item.label}</span>
                         </button>
-                      ))}
-                   </div>
-                </details>
-             </nav>
+                     ))}
+                  </div>
+               </details>
+            </nav>
 
-             <div className="p-5 border-t border-white/10">
-                <div className="flex items-center gap-3">
-                   <div className="h-8 w-8 bg-white/10 flex items-center justify-center text-white rounded-none">
-                      <Users size={16} />
-                   </div>
-                   <div className="hidden lg:block text-left overflow-hidden">
-                      <p className="text-[12px] text-white font-bold truncate">Dashboard Admin</p>
-                      <p className="text-[10px] text-white/50 truncate uppercase tracking-widest leading-none mt-1">Operator</p>
-                   </div>
-                </div>
-             </div>
-          </aside>
+            <div className="p-5 border-t border-white/10">
+               <div className="flex items-center gap-3">
+                  <div className="h-8 w-8 bg-white/10 flex items-center justify-center text-white rounded-none">
+                     <Users size={16} />
+                  </div>
+                  <div className="hidden lg:block text-left overflow-hidden">
+                     <p className="text-[12px] text-white font-bold truncate">Dashboard Admin</p>
+                     <p className="text-[10px] text-white/50 truncate uppercase tracking-widest leading-none mt-1">Operator</p>
+                  </div>
+               </div>
+            </div>
+         </aside>
 
-         {}
+         { }
          <main className="md:pl-20 lg:pl-64 min-h-screen pt-[calc(4rem+env(safe-area-inset-top))] md:pt-0">
             <header className="h-14 border-b border-zinc-200 flex items-center justify-between px-6 md:px-8 sticky top-[calc(4rem+env(safe-area-inset-top))] md:top-0 z-40" style={{ backgroundColor: '#CCC8B9' }}>
                <div className="flex items-center gap-2 overflow-hidden">
                   <span className="text-zinc-900 text-[10px] md:text-[11px] font-bold uppercase tracking-tight whitespace-nowrap">Home</span>
                   <ChevronRight size={10} className="text-zinc-700 flex-shrink-0" />
                   <span className="text-zinc-950 font-bold text-[11px] truncate uppercase tracking-tight">
-                     {activeTab === "internships" ? "Internships" : activeTab === "interns" ? "Intern List" : activeTab === "assign" ? "Tasks" : activeTab === "certification" ? "Certificates" : activeTab === "authorizations" ? "Approvals" : activeTab === "mentorship" ? "Mentors" : activeTab === "schedule" ? "Schedules" : activeTab === "hiring" ? "Hiring" : activeTab === "submissions" ? "Submissions" : activeTab === "events" ? "Events" : activeTab === "ideas" ? "Ideas" : activeTab === "attendance" ? "Attendance" : "Log"}
+                     {activeTab === "internships" ? "Internships" : activeTab === "employees" ? "Employees" : activeTab === "interns" ? "Intern List" : activeTab === "assign" ? "Tasks" : activeTab === "certification" ? "Certificates" : activeTab === "authorizations" ? "Approvals" : activeTab === "mentorship" ? "Mentors" : activeTab === "schedule" ? "Schedules" : activeTab === "hiring" ? "Hiring" : activeTab === "submissions" ? "Submissions" : activeTab === "events" ? "Events" : activeTab === "ideas" ? "Ideas" : activeTab === "attendance" ? "Attendance" : "Log"}
                   </span>
                </div>
 
@@ -1022,7 +1107,7 @@ export default function CleedDashboard() {
             </header>
 
             <div className="p-4 md:p-8 lg:p-12 max-w-7xl mx-auto space-y-8 pb-[env(safe-area-inset-bottom,20px)]">
-               {}
+               { }
                {activeTab === "internships" && (
                   <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-8">
                      <div className="grid md:grid-cols-2 gap-8 text-left">
@@ -1128,10 +1213,167 @@ export default function CleedDashboard() {
                   </motion.div>
                )}
 
-               {}
+               {activeTab === "employees" && (
+                  <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-8">
+                     <div className="grid md:grid-cols-2 gap-8 text-left">
+                        <div className="space-y-6">
+                           <h2 className="text-2xl font-bold tracking-tighter text-zinc-900">Add Employee</h2>
+                           <form onSubmit={handlePostEmployee} className="space-y-4">
+                              <div className="space-y-1">
+                                 <label className="text-[11px] font-bold text-zinc-400">Full Name</label>
+                                 <input required value={employeeData.name} onChange={(e) => setEmployeeData({ ...employeeData, name: e.target.value })} className="w-full h-10 bg-white border border-zinc-200 px-4 text-sm font-bold outline-none focus:border-red-600 rounded-none" placeholder="e.g., John Doe" />
+                              </div>
+                              <div className="space-y-1">
+                                 <label className="text-[11px] font-bold text-zinc-400">Email Address</label>
+                                 <input required type="email" value={employeeData.email} onChange={(e) => setEmployeeData({ ...employeeData, email: e.target.value })} className="w-full h-10 bg-white border border-zinc-200 px-4 text-sm font-bold outline-none focus:border-red-600 rounded-none" placeholder="john@example.com" />
+                              </div>
+                              <div className="space-y-1">
+                                 <label className="text-[11px] font-bold text-zinc-400">Password</label>
+                                 <input required type="password" value={employeeData.password} onChange={(e) => setEmployeeData({ ...employeeData, password: e.target.value })} className="w-full h-10 bg-white border border-zinc-200 px-4 text-sm font-bold outline-none focus:border-red-600 rounded-none" placeholder="••••••••" />
+                              </div>
+                              <div className="space-y-1">
+                                 <label className="text-[11px] font-bold text-zinc-400">Role</label>
+                                 <select value={employeeData.role} onChange={(e) => setEmployeeData({ ...employeeData, role: e.target.value as any })} className="w-full h-10 bg-white border border-zinc-200 px-4 text-sm font-bold outline-none focus:border-red-600 rounded-none">
+                                    <option value="CEO">CEO</option>
+                                    <option value="CTO">CTO</option>
+                                    <option value="CFO">CFO</option>
+                                    <option value="CMO">CMO</option>
+                                    <option value="COO">COO</option>
+                                    <option value="CSO">CSO</option>
+                                    <option value="TECHNICAL_TEAM">Technical Team</option>
+                                    <option value="MARKETING_TEAM">Marketing Team</option>
+                                    <option value="UI_UX_DEPARTMENT">UI/UX Department</option>
+                                    <option value="CLEED_TEAM">Cleed Team</option>
+                                    <option value="MEDIA_TEAM">Media Team</option>
+                                 </select>
+                              </div>
+                              <div className="space-y-1">
+                                 <label className="text-[11px] font-bold text-zinc-400">Allocate Batch</label>
+                                 <select value={employeeData.batch} onChange={(e) => setEmployeeData({ ...employeeData, batch: e.target.value })} className="w-full h-10 bg-white border border-zinc-200 px-4 text-sm font-bold outline-none focus:border-red-600 rounded-none">
+                                    <option value="Batch 1">Batch 1</option>
+                                    <option value="Batch 2">Batch 2</option>
+                                    <option value="Batch 3">Batch 3</option>
+                                    <option value="All">All Batches</option>
+                                 </select>
+                              </div>
+                              <button disabled={sendingEmployee} className="w-full h-12 bg-black text-white text-[11px] font-bold tracking-widest hover:bg-zinc-800 transition-all rounded-none shadow-sm disabled:opacity-50">
+                                 {sendingEmployee ? "Adding..." : "Add Employee"}
+                              </button>
+                              {employeeSuccess && <p className="text-emerald-600 text-[10px] font-bold text-center">Employee added successfully.</p>}
+                           </form>
+                        </div>
+                        <div className="space-y-6">
+                           <h2 className="text-2xl font-bold tracking-tighter text-zinc-900 text-left">Active Employees</h2>
+                           <div className="space-y-3 max-h-[600px] overflow-y-auto pr-2 no-scrollbar">
+                              {employees.map((emp) => (
+                                 <div key={emp.id} className="bg-white border border-zinc-200 p-6 flex flex-col gap-4 group transition-all rounded-none hover:border-zinc-400">
+                                    <div className="flex items-start justify-between">
+                                       <div className="space-y-1 overflow-hidden">
+                                          <h4 className="text-[14px] font-bold leading-tight truncate">{emp.name}</h4>
+                                          <p className="text-[11px] font-medium text-zinc-500">{emp.email}</p>
+                                          <div className="flex items-center gap-2 mt-2">
+                                             <span className="bg-zinc-100 text-zinc-600 text-[9px] font-bold px-1.5 py-0.5 border border-zinc-200 uppercase tracking-widest">{emp.role.replace('_', ' ')}</span>
+                                             {emp.employeeId && <span className="text-[9px] font-bold text-zinc-400 uppercase tracking-widest leading-none mt-1">{emp.employeeId}</span>}
+                                          </div>
+                                       </div>
+                                       <div className="flex items-center gap-1.5">
+                                          <button
+                                             onClick={() => {
+                                                setEditingEmployeeId(emp.id);
+                                                setEditEmployeeData({
+                                                   name: emp.name,
+                                                   email: emp.email,
+                                                   role: emp.role,
+                                                   employeeId: emp.employeeId || "",
+                                                   phoneNumber: emp.phoneNumber || "",
+                                                   department: emp.department || "",
+                                                   reportingManager: emp.reportingManager || "",
+                                                   location: emp.location || "Remote",
+                                                   employmentType: emp.employmentType || "Full-time"
+                                                });
+                                             }}
+                                             className="h-8 w-8 text-zinc-400 hover:text-zinc-900 hover:bg-zinc-100 flex items-center justify-center transition-all bg-white border border-zinc-200 rounded-none"
+                                          >
+                                             <Edit size={13} />
+                                          </button>
+                                          <button
+                                             onClick={() => handleDeleteEmployee(emp.id)}
+                                             className="h-8 w-8 text-[#F5332C] hover:bg-red-50 flex items-center justify-center transition-all bg-white border border-zinc-200 rounded-none"
+                                          >
+                                             <Trash2 size={13} />
+                                          </button>
+                                       </div>
+                                    </div>
+
+                                    {editingEmployeeId === emp.id && (
+                                       <form
+                                          onSubmit={handleUpdateEmployee}
+                                          className="mt-4 pt-4 border-t border-zinc-100 grid grid-cols-2 gap-x-4 gap-y-3"
+                                       >
+                                          <div className="col-span-2 space-y-1">
+                                             <label className="text-[10px] font-bold text-zinc-400">Full Name</label>
+                                             <input required value={editEmployeeData.name} onChange={(e) => setEditEmployeeData({ ...editEmployeeData, name: e.target.value })} className="w-full h-8 bg-zinc-50 border border-zinc-200 px-3 text-[11px] font-bold outline-none focus:border-red-600 rounded-none" />
+                                          </div>
+                                          <div className="space-y-1">
+                                             <label className="text-[10px] font-bold text-zinc-400">Email</label>
+                                             <input required type="email" value={editEmployeeData.email} onChange={(e) => setEditEmployeeData({ ...editEmployeeData, email: e.target.value })} className="w-full h-8 bg-zinc-50 border border-zinc-200 px-3 text-[11px] font-bold outline-none focus:border-red-600 rounded-none" />
+                                          </div>
+                                          <div className="space-y-1">
+                                             <label className="text-[10px] font-bold text-zinc-400">Employee ID</label>
+                                             <input value={editEmployeeData.employeeId} onChange={(e) => setEditEmployeeData({ ...editEmployeeData, employeeId: e.target.value })} className="w-full h-8 bg-zinc-50 border border-zinc-200 px-3 text-[11px] font-bold outline-none focus:border-red-600 rounded-none" />
+                                          </div>
+                                          <div className="space-y-1">
+                                             <label className="text-[10px] font-bold text-zinc-400">Phone</label>
+                                             <input value={editEmployeeData.phoneNumber} onChange={(e) => setEditEmployeeData({ ...editEmployeeData, phoneNumber: e.target.value })} className="w-full h-8 bg-zinc-50 border border-zinc-200 px-3 text-[11px] font-bold outline-none focus:border-red-600 rounded-none" />
+                                          </div>
+                                          <div className="space-y-1">
+                                             <label className="text-[10px] font-bold text-zinc-400">Department</label>
+                                             <input value={editEmployeeData.department} onChange={(e) => setEditEmployeeData({ ...editEmployeeData, department: e.target.value })} className="w-full h-8 bg-zinc-50 border border-zinc-200 px-3 text-[11px] font-bold outline-none focus:border-red-600 rounded-none" />
+                                          </div>
+                                          <div className="space-y-1">
+                                             <label className="text-[10px] font-bold text-zinc-400">Location</label>
+                                             <select value={editEmployeeData.location} onChange={(e) => setEditEmployeeData({ ...editEmployeeData, location: e.target.value })} className="w-full h-8 bg-zinc-50 border border-zinc-200 px-3 text-[11px] font-bold outline-none focus:border-red-600 rounded-none">
+                                                <option value="Remote">Remote</option>
+                                                <option value="Office">Office</option>
+                                             </select>
+                                          </div>
+                                          <div className="space-y-1">
+                                             <label className="text-[10px] font-bold text-zinc-400">Employment</label>
+                                             <select value={editEmployeeData.employmentType} onChange={(e) => setEditEmployeeData({ ...editEmployeeData, employmentType: e.target.value })} className="w-full h-8 bg-zinc-50 border border-zinc-200 px-3 text-[11px] font-bold outline-none focus:border-red-600 rounded-none">
+                                                <option value="Full-time">Full-time</option>
+                                                <option value="Intern">Intern</option>
+                                             </select>
+                                          </div>
+                                          <div className="col-span-2 space-y-1">
+                                             <label className="text-[10px] font-bold text-zinc-400">Allocated Batch</label>
+                                             <select value={editEmployeeData.batch} onChange={(e) => setEditEmployeeData({...editEmployeeData, batch: e.target.value})} className="w-full h-8 bg-zinc-50 border border-zinc-200 px-3 text-[11px] font-bold outline-none focus:border-red-600 rounded-none">
+                                                <option value="Batch 1">Batch 1</option>
+                                                <option value="Batch 2">Batch 2</option>
+                                                <option value="Batch 3">Batch 3</option>
+                                                <option value="All">All Batches</option>
+                                             </select>
+                                          </div>
+                                          <div className="col-span-2 flex gap-2 pt-2">
+                                             <button type="submit" className="flex-1 h-9 bg-black text-white text-[10px] font-bold uppercase tracking-widest hover:bg-zinc-800">Save</button>
+                                             <button type="button" onClick={() => setEditingEmployeeId(null)} className="h-9 px-4 border border-zinc-200 text-zinc-400 text-[10px] font-bold uppercase hover:bg-zinc-50 transition-all">Cancel</button>
+                                          </div>
+                                       </form>
+                                    )}
+                                 </div>
+                              ))}
+                              {employees.length === 0 && (
+                                 <p className="text-zinc-400 text-sm italic py-10 text-center border border-dashed border-zinc-200">No employees registered.</p>
+                              )}
+                           </div>
+                        </div>
+                     </div>
+                  </motion.div>
+               )}
+
+               { }
                {activeTab === "overview" && (
                   <div className="space-y-10 animate-in fade-in duration-500 text-left">
-                     {}
+                     { }
                      <div className="border-b border-zinc-200 pb-5 flex items-center justify-between">
                         <h1 className="text-3xl font-light tracking-tighter text-zinc-900 leading-tight">
                            {(() => {
@@ -1143,7 +1385,7 @@ export default function CleedDashboard() {
                         </h1>
 
                         {raisedHandsCount > 0 && (
-                           <div 
+                           <div
                               onClick={() => setActiveTab("interns")}
                               className="px-3 py-1.5 bg-white border border-red-100 flex items-center gap-3 cursor-pointer hover:bg-red-50 transition-colors rounded-none"
                            >
@@ -1158,7 +1400,7 @@ export default function CleedDashboard() {
                         )}
                      </div>
 
-                     {}
+                     { }
                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                         {[
                            { label: "Total interns", value: interns.length, color: "text-zinc-900", bg: "bg-white" },
@@ -1173,7 +1415,7 @@ export default function CleedDashboard() {
                         ))}
                      </div>
 
-                     {}
+                     { }
                      <div className="space-y-4">
                         <div className="flex items-center justify-between border-b border-zinc-200 pb-2">
                            <h2 className="text-[11px] font-bold text-zinc-400">Recent Onboarding</h2>
@@ -1219,104 +1461,104 @@ export default function CleedDashboard() {
 
 
 
-                {}
-                {activeTab === "interns" && (
-                   <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-8 text-left">
-                      <div className="space-y-6">
-                         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-zinc-200 pb-6">
-                            <div className="space-y-1">
-                               <h2 className="text-2xl font-bold tracking-tighter text-zinc-900">Interns</h2>
-                               <p className="text-[12px] text-zinc-500 font-medium tracking-tight">View and manage all intern records, approvals, and performance metrics.</p>
-                            </div>
-                            <div className="flex flex-wrap items-center gap-2 font-bold">
-                               {raisedHandsCount > 0 && (
-                                  <button 
-                                     onClick={handleLowerAllSignals}
-                                     className="bg-black text-white px-4 h-9 text-[10px] tracking-widest transition-all active:scale-95 flex items-center gap-2 rounded-none"
-                                  >
-                                     <Hand size={12} /> Clear Flags
-                                  </button>
-                               )}
-                               <div className="px-3 h-9 bg-zinc-50 border border-zinc-200 text-zinc-900 text-[10px] flex items-center">
-                                  {interns.filter(i => i.isApproved).length} Approved
-                               </div>
-                               <div className="px-3 h-9 bg-red-50 border border-red-100 text-red-700 text-[10px] flex items-center">
-                                  {interns.filter(i => !i.isApproved).length} Review
-                               </div>
-                            </div>
-                         </div>
+               { }
+               {activeTab === "interns" && (
+                  <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-8 text-left">
+                     <div className="space-y-6">
+                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-zinc-200 pb-6">
+                           <div className="space-y-1">
+                              <h2 className="text-2xl font-bold tracking-tighter text-zinc-900">Interns</h2>
+                              <p className="text-[12px] text-zinc-500 font-medium tracking-tight">View and manage all intern records, approvals, and performance metrics.</p>
+                           </div>
+                           <div className="flex flex-wrap items-center gap-2 font-bold">
+                              {raisedHandsCount > 0 && (
+                                 <button
+                                    onClick={handleLowerAllSignals}
+                                    className="bg-black text-white px-4 h-9 text-[10px] tracking-widest transition-all active:scale-95 flex items-center gap-2 rounded-none"
+                                 >
+                                    <Hand size={12} /> Clear Flags
+                                 </button>
+                              )}
+                              <div className="px-3 h-9 bg-zinc-50 border border-zinc-200 text-zinc-900 text-[10px] flex items-center">
+                                 {interns.filter(i => i.isApproved).length} Approved
+                              </div>
+                              <div className="px-3 h-9 bg-red-50 border border-red-100 text-red-700 text-[10px] flex items-center">
+                                 {interns.filter(i => !i.isApproved).length} Review
+                              </div>
+                           </div>
+                        </div>
 
-                         <div className="space-y-3">
-                            {interns.length === 0 ? (
-                               <div className="py-24 text-center bg-zinc-50 border border-zinc-200">
-                                  <p className="text-[13px] text-zinc-400 font-bold">No intern records found.</p>
-                               </div>
-                            ) : (
-                               [...interns].sort((a,b) => (b.handRaised ? 1 : 0) - (a.handRaised ? 1 : 0)).map((intern) => (
-                                  <div key={intern.id} className={`p-5 bg-white border flex flex-col md:flex-row md:items-center justify-between gap-6 hover:border-zinc-400 transition-all rounded-none ${intern.handRaised ? "border-l-4 border-red-600 bg-red-50/10" : "border-zinc-200"}`}>
-                                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 flex-1 gap-6 md:gap-12">
-                                        <div className="flex flex-col">
-                                           <div className="flex items-center gap-2 mb-1">
-                                              <span className="text-[9px] font-bold text-zinc-400">Intern</span>
-                                              {intern.handRaised && <div className="h-1.5 w-1.5 bg-red-600 animate-ping" />}
-                                           </div>
-                                           <h4 className="text-[14px] font-bold text-zinc-900 leading-none truncate">{intern.name}</h4>
-                                           <p className="text-[10px] text-zinc-500 font-medium mt-1">{intern.email}</p>
-                                        </div>
+                        <div className="space-y-3">
+                           {interns.length === 0 ? (
+                              <div className="py-24 text-center bg-zinc-50 border border-zinc-200">
+                                 <p className="text-[13px] text-zinc-400 font-bold">No intern records found.</p>
+                              </div>
+                           ) : (
+                              [...interns].sort((a, b) => (b.handRaised ? 1 : 0) - (a.handRaised ? 1 : 0)).map((intern) => (
+                                 <div key={intern.id} className={`p-5 bg-white border flex flex-col md:flex-row md:items-center justify-between gap-6 hover:border-zinc-400 transition-all rounded-none ${intern.handRaised ? "border-l-4 border-red-600 bg-red-50/10" : "border-zinc-200"}`}>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 flex-1 gap-6 md:gap-12">
+                                       <div className="flex flex-col">
+                                          <div className="flex items-center gap-2 mb-1">
+                                             <span className="text-[9px] font-bold text-zinc-400">Intern</span>
+                                             {intern.handRaised && <div className="h-1.5 w-1.5 bg-red-600 animate-ping" />}
+                                          </div>
+                                          <h4 className="text-[14px] font-bold text-zinc-900 leading-none truncate">{intern.name}</h4>
+                                          <p className="text-[10px] text-zinc-500 font-medium mt-1">{intern.email}</p>
+                                       </div>
 
-                                        <div className="flex flex-col">
-                                           <span className="text-[9px] font-bold text-zinc-400 mb-1">Institution</span>
-                                           <h4 className="text-[13px] font-bold text-zinc-900 leading-none truncate">{intern.college || 'Undeclared'}</h4>
-                                           <p className="text-[10px] text-red-600 font-bold mt-1">{intern.branch || 'General branch'}</p>
-                                        </div>
+                                       <div className="flex flex-col">
+                                          <span className="text-[9px] font-bold text-zinc-400 mb-1">Institution</span>
+                                          <h4 className="text-[13px] font-bold text-zinc-900 leading-none truncate">{intern.college || 'Undeclared'}</h4>
+                                          <p className="text-[10px] text-red-600 font-bold mt-1">{intern.branch || 'General branch'}</p>
+                                       </div>
 
-                                        <div className="flex items-center gap-8 lg:justify-start">
-                                           <div className="flex flex-col">
-                                              <span className="text-[9px] font-bold text-zinc-400 mb-1">Standing</span>
-                                              <div className={`px-1.5 py-0.5 text-[9px] font-bold border w-fit ${intern.isApproved ? 'bg-emerald-50 border-emerald-100 text-emerald-700' : 'bg-red-50 border-red-100 text-red-700'}`}>
-                                                 {intern.isApproved ? 'Approved' : 'Review'}
-                                              </div>
-                                           </div>
-                                           {intern.isApproved && (
-                                              <div className="flex flex-col border-l border-zinc-100 pl-8">
-                                                 <span className="text-[9px] font-bold text-zinc-400 mb-1">Performance</span>
-                                                 <p className="text-[11px] font-bold text-zinc-900 tabular-nums">
-                                                    {intern.attendancePercentage ?? 0}%·{intern.presentCount ?? 0}d
-                                                 </p>
-                                              </div>
-                                           )}
-                                        </div>
-                                     </div>
+                                       <div className="flex items-center gap-8 lg:justify-start">
+                                          <div className="flex flex-col">
+                                             <span className="text-[9px] font-bold text-zinc-400 mb-1">Standing</span>
+                                             <div className={`px-1.5 py-0.5 text-[9px] font-bold border w-fit ${intern.isApproved ? 'bg-emerald-50 border-emerald-100 text-emerald-700' : 'bg-red-50 border-red-100 text-red-700'}`}>
+                                                {intern.isApproved ? 'Approved' : 'Review'}
+                                             </div>
+                                          </div>
+                                          {intern.isApproved && (
+                                             <div className="flex flex-col border-l border-zinc-100 pl-8">
+                                                <span className="text-[9px] font-bold text-zinc-400 mb-1">Performance</span>
+                                                <p className="text-[11px] font-bold text-zinc-900 tabular-nums">
+                                                   {intern.attendancePercentage ?? 0}%·{intern.presentCount ?? 0}d
+                                                </p>
+                                             </div>
+                                          )}
+                                       </div>
+                                    </div>
 
-                                     <div className="flex items-center gap-3 md:border-l md:border-zinc-100 md:pl-6 font-bold">
-                                        {!intern.isApproved ? (
-                                           <button onClick={() => handleApprove(intern.id)} className="h-9 px-6 bg-zinc-900 text-white text-[10px] tracking-widest hover:bg-black transition-all rounded-none">
-                                              Approve
-                                           </button>
-                                        ) : (
-                                           <div className="flex items-center gap-2">
-                                              {intern.githubLink && (
-                                                 <a href={intern.githubLink} target="_blank" className="h-9 w-9 flex items-center justify-center bg-zinc-50 border border-zinc-200 text-zinc-400 hover:text-zinc-950 transition-colors rounded-none">
-                                                    <Github size={14} />
-                                                 </a>
-                                              )}
-                                              <button className="h-9 w-9 flex items-center justify-center bg-zinc-50 border border-zinc-200 text-zinc-400 hover:text-zinc-950 transition-colors rounded-none">
-                                                 <Mail size={14} />
-                                              </button>
-                                           </div>
-                                        )}
-                                        <button onClick={() => handleDeleteIntern(intern.id)} className="h-9 w-9 flex items-center justify-center border border-zinc-200 text-[#F5332C] hover:bg-red-50 transition-colors rounded-none bg-zinc-50/50">
-                                           <Trash2 size={14} />
-                                        </button>
-                                     </div>
-                                  </div>
-                               ))
-                            )}
-                         </div>
-                      </div>
-                   </motion.div>
-                )}
-               {}
+                                    <div className="flex items-center gap-3 md:border-l md:border-zinc-100 md:pl-6 font-bold">
+                                       {!intern.isApproved ? (
+                                          <button onClick={() => handleApprove(intern.id)} className="h-9 px-6 bg-zinc-900 text-white text-[10px] tracking-widest hover:bg-black transition-all rounded-none">
+                                             Approve
+                                          </button>
+                                       ) : (
+                                          <div className="flex items-center gap-2">
+                                             {intern.githubLink && (
+                                                <a href={intern.githubLink} target="_blank" className="h-9 w-9 flex items-center justify-center bg-zinc-50 border border-zinc-200 text-zinc-400 hover:text-zinc-950 transition-colors rounded-none">
+                                                   <Github size={14} />
+                                                </a>
+                                             )}
+                                             <button className="h-9 w-9 flex items-center justify-center bg-zinc-50 border border-zinc-200 text-zinc-400 hover:text-zinc-950 transition-colors rounded-none">
+                                                <Mail size={14} />
+                                             </button>
+                                          </div>
+                                       )}
+                                       <button onClick={() => handleDeleteIntern(intern.id)} className="h-9 w-9 flex items-center justify-center border border-zinc-200 text-[#F5332C] hover:bg-red-50 transition-colors rounded-none bg-zinc-50/50">
+                                          <Trash2 size={14} />
+                                       </button>
+                                    </div>
+                                 </div>
+                              ))
+                           )}
+                        </div>
+                     </div>
+                  </motion.div>
+               )}
+               { }
                {activeTab === "assign" && (
                   <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-12">
                      <div className="max-w-2xl bg-white border border-zinc-100 p-8">
@@ -1327,7 +1569,7 @@ export default function CleedDashboard() {
                         <form onSubmit={handlePostTask} className="space-y-6">
                            <div className="space-y-1">
                               <label className="text-[11px] font-bold text-zinc-400">Target identity</label>
-                              <select 
+                              <select
                                  className="w-full h-11 bg-zinc-50 border border-zinc-100 px-4 text-sm font-bold outline-none focus:border-blue-600"
                                  onChange={(e) => {
                                     const intern = interns.find(i => i.id === e.target.value);
@@ -1357,42 +1599,42 @@ export default function CleedDashboard() {
                   </motion.div>
                )}
 
-               {}
+               { }
                {activeTab === "certification" && (
                   <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-12">
-                        {}
-                        <div className="max-w-2xl mx-auto bg-white border border-zinc-100 p-8">
-                           <div className="space-y-2 mb-8">
-                              <h2 className="text-xl font-bold tracking-tight text-zinc-900 line-clamp-1">Offer letter issuance</h2>
-                              <p className="text-[12px] text-zinc-500 font-medium">Dispatch official offer documents to newly onboarded interns. This will also send an automated notification email.</p>
-                           </div>
-                           <form onSubmit={handleSendOfferLetter} className="space-y-6">
-                              <div className="space-y-1">
-                                 <label className="text-[11px] font-bold text-zinc-400">Target intern</label>
-                                 <select 
-                                    className="w-full h-11 bg-zinc-50 border border-zinc-100 px-4 text-sm font-bold outline-none focus:border-blue-600"
-                                    onChange={(e) => {
-                                       const intern = interns.find(i => i.id === e.target.value);
-                                       if (intern) setSelectedIntern(intern);
-                                    }}
-                                 >
-                                    <option value="">Select a student...</option>
-                                    {interns.filter(i => i.isApproved).map(i => (
-                                       <option key={i.id} value={i.id}>
-                                          {i.name} {i.offerLetterUrl ? "✓ Offer Issued" : ""}
-                                       </option>
-                                    ))}
-                                 </select>
-                              </div>
-                              <div className="space-y-1">
-                                 <label className="text-[11px] font-bold text-zinc-400">Document link (PDF/Image)</label>
-                                 <input required value={offerLetterUrl} onChange={(e) => setOfferLetterUrl(e.target.value)} className="w-full h-11 bg-white border border-zinc-100 px-4 text-sm font-bold outline-none focus:border-blue-600" placeholder="https://res.cloudinary.com/..." />
-                              </div>
-                              <button disabled={sendingOfferLetter || !selectedIntern} className="w-full h-14 bg-zinc-900 text-white text-[13px] font-bold hover:bg-blue-600 transition-all disabled:opacity-50">
-                                 {sendingOfferLetter ? "Dispatching offer..." : "Issue offer letter"}
-                              </button>
-                           </form>
+                     { }
+                     <div className="max-w-2xl mx-auto bg-white border border-zinc-100 p-8">
+                        <div className="space-y-2 mb-8">
+                           <h2 className="text-xl font-bold tracking-tight text-zinc-900 line-clamp-1">Offer letter issuance</h2>
+                           <p className="text-[12px] text-zinc-500 font-medium">Dispatch official offer documents to newly onboarded interns. This will also send an automated notification email.</p>
                         </div>
+                        <form onSubmit={handleSendOfferLetter} className="space-y-6">
+                           <div className="space-y-1">
+                              <label className="text-[11px] font-bold text-zinc-400">Target intern</label>
+                              <select
+                                 className="w-full h-11 bg-zinc-50 border border-zinc-100 px-4 text-sm font-bold outline-none focus:border-blue-600"
+                                 onChange={(e) => {
+                                    const intern = interns.find(i => i.id === e.target.value);
+                                    if (intern) setSelectedIntern(intern);
+                                 }}
+                              >
+                                 <option value="">Select a student...</option>
+                                 {interns.filter(i => i.isApproved).map(i => (
+                                    <option key={i.id} value={i.id}>
+                                       {i.name} {i.offerLetterUrl ? "✓ Offer Issued" : ""}
+                                    </option>
+                                 ))}
+                              </select>
+                           </div>
+                           <div className="space-y-1">
+                              <label className="text-[11px] font-bold text-zinc-400">Document link (PDF/Image)</label>
+                              <input required value={offerLetterUrl} onChange={(e) => setOfferLetterUrl(e.target.value)} className="w-full h-11 bg-white border border-zinc-100 px-4 text-sm font-bold outline-none focus:border-blue-600" placeholder="https://res.cloudinary.com/..." />
+                           </div>
+                           <button disabled={sendingOfferLetter || !selectedIntern} className="w-full h-14 bg-zinc-900 text-white text-[13px] font-bold hover:bg-blue-600 transition-all disabled:opacity-50">
+                              {sendingOfferLetter ? "Dispatching offer..." : "Issue offer letter"}
+                           </button>
+                        </form>
+                     </div>
                   </motion.div>
                )}
 
@@ -1411,7 +1653,7 @@ export default function CleedDashboard() {
                   )}
                </AnimatePresence>
 
-               {}
+               { }
                {activeTab === "mentorship" && (
                   <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-8 text-left">
                      <div className="bg-white border border-zinc-100 p-8">
@@ -1440,7 +1682,7 @@ export default function CleedDashboard() {
                   </motion.div>
                )}
 
-               {}
+               { }
                {activeTab === "authorizations" && (
                   <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-12">
                      <div className="bg-white border border-zinc-100 shadow-sm p-8 text-left">
@@ -1489,7 +1731,7 @@ export default function CleedDashboard() {
                                              </div>
                                           </td>
                                           <td className="px-8 py-5 text-right">
-                                             <button 
+                                             <button
                                                 onClick={() => handleApprove(intern.id)}
                                                 disabled={isAuthorizing === intern.id}
                                                 className="h-8 px-5 bg-black text-white text-[11px] font-bold hover:bg-emerald-600 transition-all disabled:opacity-50 uppercase tracking-widest"
@@ -1507,7 +1749,7 @@ export default function CleedDashboard() {
                   </motion.div>
                )}
 
-               {}
+               { }
                {activeTab === "schedule" && (
                   <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-12">
                      <div className="max-w-4xl bg-white border border-zinc-100 p-8 text-left">
@@ -1593,8 +1835,8 @@ export default function CleedDashboard() {
                                  <label className="text-[11px] font-bold text-zinc-400 uppercase tracking-tighter block">Select team interns (Form Team)</label>
                                  <div className="flex items-center gap-2">
                                     <span className="text-[10px] font-bold text-zinc-400 uppercase">Filter by:</span>
-                                    <select 
-                                       value={internBatchFilter} 
+                                    <select
+                                       value={internBatchFilter}
                                        onChange={(e) => setInternBatchFilter(e.target.value)}
                                        className="h-8 bg-zinc-50 border border-zinc-100 px-3 text-[10px] font-bold outline-none focus:border-blue-600 rounded uppercase tracking-widest cursor-pointer"
                                     >
@@ -1609,21 +1851,21 @@ export default function CleedDashboard() {
                                     .filter(i => i.isApproved)
                                     .filter(i => internBatchFilter === "All" || i.batch === internBatchFilter)
                                     .map((intern: any) => (
-                                    <label key={intern.id} className={`flex flex-col p-4 border transition-all cursor-pointer rounded relative ${scheduleData.teamInternIds.includes(intern.id) ? 'bg-zinc-900 border-zinc-900 shadow-md' : 'bg-white border-zinc-100 hover:border-blue-200'}`}>
-                                       <input 
-                                          type="checkbox" 
-                                          checked={scheduleData.teamInternIds.includes(intern.id)}
-                                          onChange={(e) => {
-                                             const ids = e.target.checked 
-                                                ? [...scheduleData.teamInternIds, intern.id]
-                                                : scheduleData.teamInternIds.filter((id: any) => id !== intern.id);
-                                             setScheduleData({ ...scheduleData, teamInternIds: ids });
-                                          }}
-                                          className="absolute top-2 right-2 h-3 w-3 accent-blue-600 cursor-pointer"
-                                       />
-                                       <p className={`text-[11px] font-bold truncate pr-3 ${scheduleData.teamInternIds.includes(intern.id) ? 'text-white' : 'text-zinc-900'}`}>{intern.name}</p>
-                                    </label>
-                                 ))}
+                                       <label key={intern.id} className={`flex flex-col p-4 border transition-all cursor-pointer rounded relative ${scheduleData.teamInternIds.includes(intern.id) ? 'bg-zinc-900 border-zinc-900 shadow-md' : 'bg-white border-zinc-100 hover:border-blue-200'}`}>
+                                          <input
+                                             type="checkbox"
+                                             checked={scheduleData.teamInternIds.includes(intern.id)}
+                                             onChange={(e) => {
+                                                const ids = e.target.checked
+                                                   ? [...scheduleData.teamInternIds, intern.id]
+                                                   : scheduleData.teamInternIds.filter((id: any) => id !== intern.id);
+                                                setScheduleData({ ...scheduleData, teamInternIds: ids });
+                                             }}
+                                             className="absolute top-2 right-2 h-3 w-3 accent-blue-600 cursor-pointer"
+                                          />
+                                          <p className={`text-[11px] font-bold truncate pr-3 ${scheduleData.teamInternIds.includes(intern.id) ? 'text-white' : 'text-zinc-900'}`}>{intern.name}</p>
+                                       </label>
+                                    ))}
                               </div>
                            </div>
                         </form>
@@ -1631,7 +1873,7 @@ export default function CleedDashboard() {
                   </motion.div>
                )}
 
-               {}
+               { }
                {activeTab === "hiring" && (
                   <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-8">
                      <div className="space-y-6">
@@ -1644,7 +1886,7 @@ export default function CleedDashboard() {
                               <Download size={14} /> Export Candidates
                            </button>
                         </div>
-                        
+
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                            {hiringApplications.length === 0 ? (
                               <div className="col-span-full py-24 text-center bg-zinc-50 border border-zinc-200">
@@ -1663,7 +1905,7 @@ export default function CleedDashboard() {
                                              {app.status.replace("_", " ")}
                                           </div>
                                        </div>
-                                       
+
                                        <div className="space-y-2 text-zinc-600">
                                           <div className="flex items-center gap-3">
                                              <Mail size={12} className="text-zinc-400" />
@@ -1690,50 +1932,50 @@ export default function CleedDashboard() {
                                     </div>
 
                                     <div className="pt-4 border-t border-zinc-50 space-y-3">
-                                        <div className="flex gap-2">
-                                           <button 
-                                              onClick={() => {
-                                                 setSelectedApplicant(app);
-                                                 setIsInterviewModalOpen(true);
-                                                 if (app.interviewTiming) setInterviewTiming(app.interviewTiming);
-                                              }}
-                                              className="h-9 px-4 bg-zinc-100 border border-zinc-200 text-zinc-900 text-[10px] font-bold hover:bg-zinc-200 transition-all flex items-center justify-center gap-2 flex-1"
-                                           >
-                                              <Calendar size={12} />
-                                              {app.status === "interview_scheduled" ? "Reschedule" : "Interview"}
-                                           </button>
-                                           
-                                           <div className="relative group/status flex-1">
-                                              <button className="h-9 w-full px-4 bg-zinc-900 text-white text-[10px] font-bold hover:bg-zinc-800 transition-all flex items-center justify-center gap-2">
-                                                 Status
-                                                 <ChevronDown size={12} />
-                                              </button>
-                                              <div className="absolute bottom-full left-0 w-full bg-white border border-zinc-200 shadow-xl opacity-0 invisible group-hover/status:opacity-100 group-hover/status:visible transition-all z-20">
-                                                 {['pending', 'interview_scheduled', 'offered', 'rejected'].map((s) => (
-                                                    <button 
-                                                       key={s}
-                                                       onClick={async () => {
-                                                          try {
-                                                             await fetch("/api/hiring", {
-                                                                method: "PATCH",
-                                                                headers: { "Content-Type": "application/json" },
-                                                                body: JSON.stringify({ id: app.id, status: s })
-                                                             });
-                                                             fetchData();
-                                                          } catch (err) { console.error("Status update fail"); }
-                                                       }}
-                                                       className={`w-full text-left px-3 py-2.5 text-[10px] font-bold border-b border-zinc-50 last:border-0 hover:bg-zinc-50 ${app.status === s ? 'text-red-600 bg-red-50/20' : 'text-zinc-600'}`}
-                                                    >
-                                                       {s.replace("_", " ")}
-                                                    </button>
-                                                 ))}
-                                              </div>
-                                           </div>
-                                        </div>
-                                        <button onClick={() => handleDeleteHiringApplication(app.id)} className="h-9 w-full flex items-center justify-center border border-zinc-100 text-[#F5332C] hover:bg-red-50 transition-colors">
-                                           <Trash2 size={13} />
-                                           <span className="ml-2 text-[10px] font-bold">Delete</span>
-                                        </button>
+                                       <div className="flex gap-2">
+                                          <button
+                                             onClick={() => {
+                                                setSelectedApplicant(app);
+                                                setIsInterviewModalOpen(true);
+                                                if (app.interviewTiming) setInterviewTiming(app.interviewTiming);
+                                             }}
+                                             className="h-9 px-4 bg-zinc-100 border border-zinc-200 text-zinc-900 text-[10px] font-bold hover:bg-zinc-200 transition-all flex items-center justify-center gap-2 flex-1"
+                                          >
+                                             <Calendar size={12} />
+                                             {app.status === "interview_scheduled" ? "Reschedule" : "Interview"}
+                                          </button>
+
+                                          <div className="relative group/status flex-1">
+                                             <button className="h-9 w-full px-4 bg-zinc-900 text-white text-[10px] font-bold hover:bg-zinc-800 transition-all flex items-center justify-center gap-2">
+                                                Status
+                                                <ChevronDown size={12} />
+                                             </button>
+                                             <div className="absolute bottom-full left-0 w-full bg-white border border-zinc-200 shadow-xl opacity-0 invisible group-hover/status:opacity-100 group-hover/status:visible transition-all z-20">
+                                                {['pending', 'interview_scheduled', 'offered', 'rejected'].map((s) => (
+                                                   <button
+                                                      key={s}
+                                                      onClick={async () => {
+                                                         try {
+                                                            await fetch("/api/hiring", {
+                                                               method: "PATCH",
+                                                               headers: { "Content-Type": "application/json" },
+                                                               body: JSON.stringify({ id: app.id, status: s })
+                                                            });
+                                                            fetchData();
+                                                         } catch (err) { console.error("Status update fail"); }
+                                                      }}
+                                                      className={`w-full text-left px-3 py-2.5 text-[10px] font-bold border-b border-zinc-50 last:border-0 hover:bg-zinc-50 ${app.status === s ? 'text-red-600 bg-red-50/20' : 'text-zinc-600'}`}
+                                                   >
+                                                      {s.replace("_", " ")}
+                                                   </button>
+                                                ))}
+                                             </div>
+                                          </div>
+                                       </div>
+                                       <button onClick={() => handleDeleteHiringApplication(app.id)} className="h-9 w-full flex items-center justify-center border border-zinc-100 text-[#F5332C] hover:bg-red-50 transition-colors">
+                                          <Trash2 size={13} />
+                                          <span className="ml-2 text-[10px] font-bold">Delete</span>
+                                       </button>
                                     </div>
                                  </div>
                               ))
@@ -1743,7 +1985,7 @@ export default function CleedDashboard() {
                   </motion.div>
                )}
 
-               {}
+               { }
                {activeTab === "submissions" && (
                   <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-8 text-left">
                      <div className="space-y-6">
@@ -1760,21 +2002,21 @@ export default function CleedDashboard() {
                            </div>
                         ) : (
                            <div className="space-y-6">
-                              {}
+                              { }
                               <div className="flex flex-wrap items-center gap-3 border-b border-zinc-100 pb-6">
-                                 <button 
+                                 <button
                                     onClick={() => setSubmissionFilter("all")}
                                     className={`h-9 px-5 text-[10px] font-bold tracking-widest border transition-all flex items-center gap-2 ${submissionFilter === "all" ? "bg-zinc-900 text-white border-zinc-900" : "bg-white text-zinc-500 border-zinc-200 hover:border-zinc-400"}`}
                                  >
                                     ALL SUBMISSIONS
                                  </button>
-                                 <button 
+                                 <button
                                     onClick={() => setSubmissionFilter("missing_task1_batch1")}
                                     className={`h-9 px-5 text-[10px] font-bold tracking-widest border transition-all flex items-center gap-2 ${submissionFilter === "missing_task1_batch1" ? "bg-red-600 text-white border-red-600" : "bg-white text-zinc-500 border-zinc-200 hover:border-zinc-400"}`}
                                  >
                                     <AlertCircle size={13} /> MISSING TASK 1 (BATCH 1)
                                  </button>
-                                 <button 
+                                 <button
                                     onClick={() => setSubmissionFilter("missing_task1_batch2")}
                                     className={`h-9 px-5 text-[10px] font-bold tracking-widest border transition-all flex items-center gap-2 ${submissionFilter === "missing_task1_batch2" ? "bg-red-600 text-white border-red-600" : "bg-white text-zinc-500 border-zinc-200 hover:border-zinc-400"}`}
                                  >
@@ -1830,34 +2072,34 @@ export default function CleedDashboard() {
                                     </div>
                                  )
                               ) : (
-                                 
+
                                  (() => {
                                     const targetBatch = submissionFilter === "missing_task1_batch1" ? "Batch 1" : "Batch 2";
                                     const missingInterns = interns.filter(intern => {
-                                       
+
                                        if (!intern.batch || intern.batch.toLowerCase() !== targetBatch.toLowerCase()) return false;
                                        if (!intern.isApproved) return false;
-                                       
+
                                        const hasSubmitted = submissions.some(sub => {
                                           const isSameIntern = String(sub.internId) === String(intern.id);
                                           if (!isSameIntern) return false;
 
-                                          
+
                                           const scheduleTitle = (sub.schedule?.projectName || "").toLowerCase();
                                           const scheduleWeek = (sub.schedule?.week || "").toLowerCase();
                                           const scheduleWork = (sub.schedule?.typeOfWork || "").toLowerCase();
                                           const scheduleMainTitle = (sub.schedule?.title || "").toLowerCase();
 
-                                          return scheduleWeek.includes("1") || 
-                                                 scheduleWeek.includes("one") ||
-                                                 scheduleTitle.includes("task 1") || 
-                                                 scheduleTitle.includes("week 1") ||
-                                                 scheduleMainTitle.includes("task 1") ||
-                                                 scheduleMainTitle.includes("week 1") ||
-                                                 scheduleWork.includes("task 1") ||
-                                                 scheduleWork.includes("week 1") ||
-                                                 (scheduleWeek === "1") ||
-                                                 (scheduleTitle.includes("task") && scheduleTitle.includes("1"));
+                                          return scheduleWeek.includes("1") ||
+                                             scheduleWeek.includes("one") ||
+                                             scheduleTitle.includes("task 1") ||
+                                             scheduleTitle.includes("week 1") ||
+                                             scheduleMainTitle.includes("task 1") ||
+                                             scheduleMainTitle.includes("week 1") ||
+                                             scheduleWork.includes("task 1") ||
+                                             scheduleWork.includes("week 1") ||
+                                             (scheduleWeek === "1") ||
+                                             (scheduleTitle.includes("task") && scheduleTitle.includes("1"));
                                        });
 
                                        return !hasSubmitted;
@@ -1875,14 +2117,14 @@ export default function CleedDashboard() {
                                                    <p className="text-[10px] text-zinc-500 font-bold">{missingInterns.length} students pending Task 1</p>
                                                 </div>
                                              </div>
-                                             <button 
+                                             <button
                                                 onClick={() => downloadMissingCsv(missingInterns, targetBatch)}
                                                 className="h-10 px-6 bg-zinc-900 text-white text-[10px] font-bold tracking-widest hover:bg-black transition-all rounded-none flex items-center gap-2"
                                              >
                                                 <Download size={14} /> DOWNLOAD CSV
                                              </button>
                                           </div>
-                                          
+
                                           {missingInterns.length === 0 ? (
                                              <div className="py-24 text-center bg-zinc-50 border border-zinc-200">
                                                 <CheckCircle2 className="mx-auto mb-4 text-emerald-500" size={32} />
@@ -1920,7 +2162,7 @@ export default function CleedDashboard() {
                   </motion.div>
                )}
 
-               {}
+               { }
                {activeTab === "events" && (
                   <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-12">
                      <div className="grid lg:grid-cols-12 gap-12 text-left">
@@ -1981,7 +2223,7 @@ export default function CleedDashboard() {
                   </motion.div>
                )}
 
-               {}
+               { }
                {activeTab === "ideas" && (
                   <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-8">
                      <div className="bg-white border border-zinc-100 p-8 text-left">
@@ -2004,7 +2246,7 @@ export default function CleedDashboard() {
                                  <p className="text-[12px] text-zinc-500 line-clamp-3 mb-6 h-12 leading-relaxed">{idea.description}</p>
                                  <div className="mt-auto pt-4 border-t border-zinc-50 flex items-center justify-between">
                                     <span className="text-[10px] font-bold text-zinc-400">{new Date(idea.createdAt).toLocaleDateString()}</span>
-                                    <button 
+                                    <button
                                        onClick={() => handleApproveIdea(idea.id, !idea.isApproved)}
                                        className={`h-8 px-4 text-[10px] font-bold transition-all ${idea.isApproved ? 'bg-zinc-100 text-zinc-500' : 'bg-blue-600 text-white hover:bg-blue-700'}`}
                                     >
@@ -2018,7 +2260,7 @@ export default function CleedDashboard() {
                   </motion.div>
                )}
 
-               {}
+               { }
                {activeTab === "attendance" && (
                   <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-8 text-left">
                      <div className="space-y-6">
@@ -2059,7 +2301,7 @@ export default function CleedDashboard() {
                                              </div>
                                           )}
                                        </div>
-                                       
+
                                        <div className="flex items-center gap-2">
                                           <span className={`text-[10px] font-bold px-1.5 py-0.5 ${intern.attendancePercentage && intern.attendancePercentage < 75 ? 'bg-red-50 text-red-600 border border-red-100' : 'bg-zinc-50 text-zinc-600 border border-zinc-100'}`}>
                                              {intern.attendancePercentage ?? 0}% Attendance
@@ -2071,14 +2313,14 @@ export default function CleedDashboard() {
                                     </div>
 
                                     <div className="flex items-center gap-2 pt-6">
-                                       <button 
+                                       <button
                                           onClick={() => handleMarkAttendance(intern.id, "PRESENT", record?.workSummary || "")}
                                           disabled={markingId === intern.id}
                                           className={`flex-1 h-9 text-[11px] font-bold transition-all ${record?.status === "PRESENT" ? "bg-emerald-600 text-white" : "bg-zinc-50 text-zinc-400 hover:bg-emerald-50 hover:text-emerald-600"}`}
                                        >
                                           Present
                                        </button>
-                                       <button 
+                                       <button
                                           onClick={() => handleMarkAttendance(intern.id, "ABSENT", record?.workSummary || "")}
                                           disabled={markingId === intern.id}
                                           className={`flex-1 h-9 text-[11px] font-bold transition-all ${record?.status === "ABSENT" ? "bg-red-600 text-white" : "bg-zinc-50 text-zinc-400 hover:bg-red-50 hover:text-red-600"}`}
@@ -2125,15 +2367,15 @@ export default function CleedDashboard() {
                               <p className="text-[12px] text-zinc-500 font-medium tracking-tight">Manage project timelines, team assignments, and delivery deadlines.</p>
                            </div>
                            <div className="flex items-center gap-2">
-                              <select 
-                                 value={batchFilter} 
+                              <select
+                                 value={batchFilter}
                                  onChange={(e) => setBatchFilter(e.target.value)}
                                  className="h-9 bg-zinc-50 border border-zinc-200 px-3 text-[10px] font-bold outline-none focus:border-red-600 rounded-none cursor-pointer"
                               >
                                  <option value="Batch 1">Batch 1</option>
                                  <option value="Batch 2">Batch 2</option>
                               </select>
-                              <button 
+                              <button
                                  onClick={() => { fetchData(); }}
                                  className="h-9 px-3 border border-zinc-200 bg-white hover:bg-zinc-50 transition-all rounded-none"
                               >
@@ -2157,31 +2399,31 @@ export default function CleedDashboard() {
                                              <span className="text-[10px] font-bold bg-red-50 text-red-600 px-2 py-0.5 border border-red-100">{schedule.batch}</span>
                                           </div>
                                           <div className="flex items-center gap-1.5 font-bold">
-                                             <button 
+                                             <button
                                                 onClick={async () => {
                                                    const res = await fetch("/api/intern/schedule", {
                                                       method: "PATCH",
                                                       headers: { "Content-Type": "application/json" },
                                                       body: JSON.stringify({ id: schedule.id, isManualOpen: !schedule.isManualOpen })
                                                    });
-                                                   if(res.ok) fetchData();
+                                                   if (res.ok) fetchData();
                                                 }}
                                                 className={`h-8 w-8 flex items-center justify-center border transition-all ${schedule.isManualOpen ? "bg-red-600 text-white border-red-600" : "bg-zinc-50 text-zinc-400 hover:text-zinc-900 border-zinc-200"}`}
                                                 title={schedule.isManualOpen ? "Close Week" : "Re-open Week (Allow Late Submissions)"}
                                              >
                                                 <RefreshCw size={14} className={schedule.isManualOpen ? "animate-spin-slow" : ""} />
                                              </button>
-                                             <button 
+                                             <button
                                                 onClick={() => setEditingSchedule(schedule)}
                                                 className="h-8 w-8 flex items-center justify-center bg-zinc-50 text-zinc-400 hover:text-zinc-900 border border-zinc-200 transition-all"
                                              >
                                                 <FileText size={14} />
                                              </button>
-                                             <button 
+                                             <button
                                                 onClick={async () => {
-                                                   if(confirm("Permanently delete this schedule?")) {
+                                                   if (confirm("Permanently delete this schedule?")) {
                                                       const res = await fetch(`/api/intern/schedule?id=${schedule.id}`, { method: "DELETE" });
-                                                      if(res.ok) fetchData();
+                                                      if (res.ok) fetchData();
                                                    }
                                                 }}
                                                 className="h-8 w-8 flex items-center justify-center bg-zinc-50 text-[#F5332C] hover:bg-red-50 border border-zinc-200 transition-all"
@@ -2252,7 +2494,7 @@ export default function CleedDashboard() {
                      <AnimatePresence>
                         {editingSchedule && (
                            <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/40 backdrop-blur-sm">
-                              <motion.div 
+                              <motion.div
                                  initial={{ opacity: 0, scale: 0.95 }}
                                  animate={{ opacity: 1, scale: 1 }}
                                  exit={{ opacity: 0, scale: 0.95 }}
@@ -2265,7 +2507,7 @@ export default function CleedDashboard() {
                                     <p className="text-[12px] text-zinc-500 font-medium">Modify project parameters for {editingSchedule.week}.</p>
                                  </div>
 
-                                 <form 
+                                 <form
                                     onSubmit={async (e) => {
                                        e.preventDefault();
                                        setLoadingSchedules(true);
@@ -2348,7 +2590,7 @@ export default function CleedDashboard() {
                                     <div className="md:col-span-2 space-y-1">
                                        <label className="text-[11px] font-bold text-zinc-400">Outcomes (enter each on a new line)</label>
                                        <textarea rows={4} value={Array.isArray(editingSchedule.outcomes) ? editingSchedule.outcomes.join("\n") : (editingSchedule.outcomes || "")} onChange={(e) => setEditingSchedule({ ...editingSchedule, outcomes: e.target.value })} className="w-full bg-white border border-zinc-200 p-4 text-sm font-bold outline-none focus:border-red-600 resize-none rounded-none" />
-                                     </div>
+                                    </div>
                                     <button disabled={loadingSchedules} className="md:col-span-2 mt-4 h-14 bg-zinc-900 text-white text-[12px] font-bold tracking-widest hover:bg-black transition-all flex items-center justify-center gap-3 rounded-none">
                                        {loadingSchedules ? <RefreshCw className="animate-spin" size={18} /> : "Update Schedule"}
                                     </button>
@@ -2365,13 +2607,13 @@ export default function CleedDashboard() {
          <AnimatePresence>
             {isInterviewModalOpen && selectedApplicant && (
                <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/40 backdrop-blur-sm">
-                  <motion.div 
+                  <motion.div
                      initial={{ opacity: 0, scale: 0.95 }}
                      animate={{ opacity: 1, scale: 1 }}
                      exit={{ opacity: 0, scale: 0.95 }}
                      className="bg-white max-w-lg w-full p-6 md:p-10 border border-zinc-100 shadow-2xl relative text-left"
                   >
-                     <button 
+                     <button
                         onClick={() => setIsInterviewModalOpen(false)}
                         className="absolute top-6 right-6 text-zinc-300 hover:text-black transition-colors"
                      >
@@ -2392,8 +2634,8 @@ export default function CleedDashboard() {
                                  <Calendar size={12} />
                                  Date
                               </label>
-                              <input 
-                                 required 
+                              <input
+                                 required
                                  type="date"
                                  value={interviewTiming.split(' at ')[0] || ""}
                                  onChange={(e) => {
@@ -2408,8 +2650,8 @@ export default function CleedDashboard() {
                                  <Clock size={12} />
                                  Time
                               </label>
-                              <input 
-                                 required 
+                              <input
+                                 required
                                  type="time"
                                  value={interviewTiming.split(' at ')[1] || ""}
                                  onChange={(e) => {
@@ -2434,12 +2676,12 @@ export default function CleedDashboard() {
                            <p>HF2R+CCV, Devender Colony, Kompally, Hyderabad, Telangana 500100</p>
                         </div>
 
-                        <button 
-                           disabled={isSendingInterview || !interviewTiming.includes(' at ')} 
+                        <button
+                           disabled={isSendingInterview || !interviewTiming.includes(' at ')}
                            className="w-full h-14 bg-blue-600 text-white text-[13px] font-bold hover:bg-blue-700 transition-all flex items-center justify-center gap-3 disabled:opacity-50"
                         >
-                           {isSendingInterview ? <RefreshCw className="animate-spin" size={18} /> : 
-                            selectedApplicant?.status === "interview_scheduled" ? "Confirm & Send Reschedule Notice" : "Confirm & Send Invitation"}
+                           {isSendingInterview ? <RefreshCw className="animate-spin" size={18} /> :
+                              selectedApplicant?.status === "interview_scheduled" ? "Confirm & Send Reschedule Notice" : "Confirm & Send Invitation"}
                         </button>
                         {interviewSuccess && (
                            <p className="text-emerald-600 text-[11px] font-bold text-center animate-pulse">
