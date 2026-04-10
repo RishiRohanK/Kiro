@@ -72,6 +72,9 @@ interface HiringApplication {
    phone: string;
    position: string;
    resumeLink: string;
+   college?: string;
+   portfolioLink?: string;
+   yearOfStudy?: string;
    status: string;
    interviewTiming?: string;
    createdAt: string;
@@ -343,13 +346,16 @@ export default function CleedDashboard() {
    const downloadHiringCsv = () => {
       if (hiringApplications.length === 0) return;
 
-      const headers = ["ID", "Name", "Email", "Phone", "Position", "Resume Link", "Status", "Created At"];
+      const headers = ["ID", "Name", "Email", "Phone", "Position", "College", "Year", "Portfolio", "Resume Link", "Status", "Created At"];
       const rows = hiringApplications.map(i => [
          i.id,
          i.name,
          i.email,
          i.phone,
          i.position,
+         i.college || "N/A",
+         i.yearOfStudy || "N/A",
+         i.portfolioLink || "N/A",
          i.resumeLink,
          i.status,
          new Date(i.createdAt).toLocaleString()
@@ -1922,6 +1928,21 @@ export default function CleedDashboard() {
                                                 <ExternalLink size={10} />
                                              </a>
                                           </div>
+                                          {app.college && (
+                                             <div className="flex items-center gap-3">
+                                                <Building2 size={12} className="text-zinc-400" />
+                                                <span className="text-[11px] font-medium truncate">{app.college} {app.yearOfStudy ? `(${app.yearOfStudy})` : ""}</span>
+                                             </div>
+                                          )}
+                                          {app.portfolioLink && (
+                                             <div className="flex items-center gap-3">
+                                                <Globe size={12} className="text-zinc-400" />
+                                                <a href={app.portfolioLink} target="_blank" className="text-[11px] font-bold text-zinc-900 hover:text-red-600 border-b border-zinc-200 flex items-center gap-1 transition-colors truncate max-w-full">
+                                                   Portfolio
+                                                   <ExternalLink size={10} />
+                                                </a>
+                                             </div>
+                                          )}
                                           {app.interviewTiming && (
                                              <div className="flex items-center gap-3 text-red-600 bg-red-50/50 p-2 border border-red-100/50">
                                                 <Clock size={12} />

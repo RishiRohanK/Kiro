@@ -266,15 +266,18 @@ model Project {
 }
 
 model HiringApplication {
-  id          String   @id @default(cuid())
-  name        String
-  email       String
-  phone       String
-  position    String   
-  resumeLink  String   
-  status      String   @default("pending")
+  id              String   @id @default(cuid())
+  name            String
+  email           String
+  phone           String
+  position        String   
+  resumeLink      String   
+  college         String?
+  portfolioLink   String?
+  yearOfStudy     String?
+  status          String   @default("pending")
   interviewTiming String?
-  createdAt   DateTime @default(now())
+  createdAt       DateTime @default(now())
 }
 
 

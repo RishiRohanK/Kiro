@@ -3,7 +3,7 @@ import prisma from "@/lib/prisma";
 
 export async function POST(req: Request) {
     try {
-        const { name, email, phone, position, resumeLink } = await req.json();
+        const { name, email, phone, position, resumeLink, college, portfolioLink, yearOfStudy } = await req.json();
 
         if (!name || !email || !phone || !position || !resumeLink) {
             return NextResponse.json({ error: "Mission critical parameters missing." }, { status: 400 });
@@ -16,6 +16,9 @@ export async function POST(req: Request) {
                 phone,
                 position,
                 resumeLink,
+                college,
+                portfolioLink,
+                yearOfStudy,
                 status: "pending"
             }
         });
