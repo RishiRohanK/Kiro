@@ -50,10 +50,25 @@ export async function POST(req: Request) {
 export async function PATCH(req: Request) {
   try {
     const payload = await req.json();
-    const { userId, status, score: clientScore, violations, answers, questionMapping } = payload;
+    const { userId, status, score: clientScore, violations, answers, questionMapping, typedExitKey } = payload;
     
     if (!userId) {
       return NextResponse.json({ error: "userId is required" }, { status: 400 });
+    }
+
+    const globalStatus = await prisma.examStatus.findUnique({
+      where: { id: "global_exam_state" }
+    });
+
+    if (!globalStatus) {
+      return NextResponse.json({ error: "Global Configuration not found." }, { status: 404 });
+    }
+
+    // Security Exit Key Check for Submission
+    if (status === "SUBMITTED") {
+        if (!typedExitKey || typedExitKey !== globalStatus.exitKey) {
+            return NextResponse.json({ error: "Invalid Security Exit Key" }, { status: 403 });
+        }
     }
 
     let finalScore = clientScore;

@@ -11,13 +11,12 @@ export async function GET() {
       const newStatus = await prisma.examStatus.create({
         data: { id: "global_exam_state", isActive: false, exitKey: "000000" },
       });
-      return NextResponse.json({ isActive: newStatus.isActive });
+      return NextResponse.json(newStatus);
     }
 
-    // Never return exitKey to GET (interns use this)
-    return NextResponse.json({ isActive: status.isActive });
+    return NextResponse.json(status);
   } catch (error) {
-    return NextResponse.json({ error: "Failed to fetch exam status" }, { status: 500 });
+    return NextResponse.json({ error: "Failed to fetch admin exam status" }, { status: 500 });
   }
 }
 

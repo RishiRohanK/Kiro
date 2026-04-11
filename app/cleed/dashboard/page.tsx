@@ -252,6 +252,7 @@ export default function CleedDashboard() {
 
    // Exam Control State
    const [examIsActive, setExamIsActive] = useState(false);
+   const [globalExitKey, setGlobalExitKey] = useState("000000");
    const [isUpdatingExam, setIsUpdatingExam] = useState(false);
    const [examSessions, setExamSessions] = useState<any[]>([]);
 
@@ -503,9 +504,12 @@ export default function CleedDashboard() {
 
       const fetchExamStatus = async () => {
          try {
-            const res = await fetch("/api/exams/status");
+            const res = await fetch("/api/cleed/exams/status");
             const data = await res.json();
-            if (data.id) setExamIsActive(data.isActive);
+            if (data.id) {
+                setExamIsActive(data.isActive);
+                if (data.exitKey) setGlobalExitKey(data.exitKey);
+            }
          } catch (err) { console.error("Exam status fetch failure"); }
       };
 
@@ -827,7 +831,7 @@ export default function CleedDashboard() {
    const toggleExamStatus = async () => {
       setIsUpdatingExam(true);
       try {
-         const res = await fetch("/api/exams/status", {
+         const res = await fetch("/api/cleed/exams/status", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ isActive: !examIsActive })
@@ -1442,6 +1446,28 @@ export default function CleedDashboard() {
                               >
                                  {isUpdatingExam ? '...' : examIsActive ? 'Stop Test' : 'Start Test'}
                               </button>
+                              
+                              {examIsActive && (
+                                 <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 text-center rounded w-full max-w-sm">
+                                    <p className="text-[10px] text-yellow-700 font-bold uppercase tracking-widest mb-2">Global Exit Key</p>
+                                    <p className="text-3xl font-black text-yellow-800 tracking-[0.2em]">{globalExitKey}</p>
+                                    <p className="text-[9px] text-yellow-600 font-bold uppercase mt-2 italic">Provide to candidates for exam exit</p>
+                                    <button 
+                                       onClick={async () => {
+                                          const newKey = Math.floor(100000 + Math.random() * 900000).toString();
+                                          await fetch("/api/cleed/exams/status", {
+                                             method: "POST",
+                                             headers: { "Content-Type": "application/json" },
+                                             body: JSON.stringify({ exitKey: newKey })
+                                          });
+                                          setGlobalExitKey(newKey);
+                                       }}
+                                       className="mt-3 text-[10px] font-bold text-yellow-800 hover:text-yellow-900 border-b border-yellow-800"
+                                    >
+                                       Regenerate Key
+                                    </button>
+                                 </div>
+                              )}
                            </div>
                         </div>
 

@@ -77,18 +77,29 @@ export default function ExamPanelPage() {
     setShowExitModal(true);
   }, []);
 
-  const verifyExitKey = () => {
-    const realKey = localStorage.getItem("exam_exit_key");
-    if (exitKeyInput === realKey) {
-        localStorage.setItem("exam_submission", JSON.stringify({
-            answers,
-            status,
-            shuffledQuestions,
-            violations: violationsRef.current
-        }));
-        router.push("/exams/review");
-    } else {
-        alert("Invalid Assessment Key. Please check the key you noted at the start.");
+  const verifyExitKey = async () => {
+    try {
+        const res = await fetch("/api/exams/verify-exit", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ key: exitKeyInput })
+        });
+        const data = await res.json();
+        
+        if (data.success) {
+            localStorage.setItem("exam_submission", JSON.stringify({
+                answers,
+                status,
+                shuffledQuestions,
+                violations: violationsRef.current,
+                exitKey: exitKeyInput // Store the key to pass it later for final submit
+            }));
+            router.push("/exams/review");
+        } else {
+            alert(data.error || "Invalid Assessment Key.");
+        }
+    } catch (e) {
+        alert("Server error verifying key.");
     }
   };
    

@@ -39,7 +39,8 @@ export default function ExamReviewPage() {
           status: "SUBMITTED",
           violations: submission.violations,
           answers: submission.answers,
-          questionMapping: submission.shuffledQuestions
+          questionMapping: submission.shuffledQuestions,
+          typedExitKey: submission.exitKey
         })
       });
       

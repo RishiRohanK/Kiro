@@ -437,6 +437,7 @@ model Message {
 model ExamStatus {
   id        String   @id @default("global_exam_state")
   isActive  Boolean  @default(false)
+  exitKey   String   @default("000000")
   startedAt DateTime?
   updatedAt DateTime @updatedAt
 }

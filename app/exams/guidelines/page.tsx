@@ -11,7 +11,7 @@ export default function ExamGuidelinesPage() {
   const [examActive, setExamActive] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  const [sessionKey, setSessionKey] = useState("");
+  const [loading, setLoading] = useState(true);
 
   const checkExamStatus = useCallback(async () => {
     try {
@@ -34,14 +34,6 @@ export default function ExamGuidelinesPage() {
     
     const u = JSON.parse(storedUser);
     setUser(u);
-
-    // Generate or retrieve the 6-digit key
-    let key = localStorage.getItem("exam_exit_key");
-    if (!key) {
-      key = Math.floor(100000 + Math.random() * 900000).toString();
-      localStorage.setItem("exam_exit_key", key);
-    }
-    setSessionKey(key);
 
     checkExamStatus();
     const interval = setInterval(checkExamStatus, 15000); 
@@ -107,13 +99,6 @@ export default function ExamGuidelinesPage() {
       <main className="flex-1 p-6 md:p-10 bg-gray-50/50 overflow-y-auto custom-scrollbar">
         <div className="max-w-4xl mx-auto space-y-10">
           
-          {/* Session Unlock Key - Important */}
-          <div className="bg-yellow-50 border-2 border-yellow-200 p-8 text-center rounded shadow-sm">
-             <p className="text-[10px] text-yellow-700 font-bold uppercase tracking-widest mb-4">Assessment Finish Key (Required to Exit)</p>
-             <div className="text-5xl font-black text-yellow-800 tracking-[0.2em] select-none">{sessionKey}</div>
-             <p className="text-[10px] text-yellow-600 font-bold mt-4 uppercase italic">Note down this 6-digit key. You will need it to finish the exam.</p>
-          </div>
-
           {/* Candidate Table */}
           <div className="bg-white border border-gray-300">
              <div className="bg-gray-100 p-3 border-b border-gray-300 font-semibold text-blue-800 text-sm">
