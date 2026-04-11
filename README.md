@@ -1,86 +1,87 @@
-# STUDENT FORGE | Learn Grid Ecosystem
-**Version 2.5.0 (Enterprise Assessment Overhaul)**
+# STUDENT FORGE | LEARN GRID ECOSYSTEM
+**VERSION 2.5.0 (ENTERPRISE ASSESSMENT OVERHAUL)**
 
-STUDENT FORGE is a secure, high-fidelity internship and learning management ecosystem built for scale and integrity. The platform features an industrial-grade examination terminal, advanced performance analytics, and a centralized administrative command center.
+STUDENT FORGE is a secure, high-fidelity internship and learning management ecosystem. The platform implements an industrial-grade examination terminal, performance analytics, and a centralized administrative command center.
 
 ---
 
-## 🚀 Key Modules
+## CORE SYSTEM ARCHITECTURE
 
-### 1. Secure Examination Terminal (`/exams`)
-An industrial-standard assessment engine configured to JEE Mains protocols.
-- **Marking Scheme**: +3 for correct answers, -1 for negative marking.
-- **Session Integrity**:
-  - Mandatory Full-screen enforcement.
-  - Real-time Violation logging (Tab switching, Key-blocking: F5, F12, Ctrl+T).
-  - Standalone Review Terminal for final candidate verification.
-- **Server-Side Scoring**: Anti-cheat scoring logic executed strictly on the server to prevent payload manipulation.
+### 1. SECURE EXAMINATION TERMINAL (/EXAMS)
+An industrial-standard assessment engine synchronized with JEE Mains protocols.
+- **Marking Standard**: +3 for correct nodes, -1 for negative evaluations.
+- **Session Integrity Protocol**:
+  - Mandatory Full-screen enforcement via DOM API.
+  - Real-time Violation logging (Focus manipulation detection).
+  - Standalone Review Terminal for candidate verification state management.
+- **Server-Side Evaluation**: scoring logic executed strictly on the backend to prevent client-side intercept manipulation.
 
-### 2. Intern Performance Reports (`/intern/dashboard/reports`)
+### 2. INTERN PERFORMANCE ANALYTICS (/INTERN/DASHBOARD/REPORTS)
 High-density diagnostic reporting for candidates.
-- **Scale**: Performance metrics based on 150-mark standard.
-- **Visualization**: Graphical representation of intern growth and accuracy.
-- **Automated Feedback**: Diagnostic commentary based on assessment nodes.
+- **Metric Scale**: Quantitative performance evaluation based on 150-mark standard.
+- **Visualization**: Graphical representation of intern trajectory and accuracy nodes.
+- **Automated Feedback**: Diagnostic commentary based on assessment data nodes.
 
-### 3. CLEED Command Center (`/cleed/dashboard`)
-The administrative heart of the ecosystem.
-- **Live Monitoring**: Real-time tracking of active exam sessions and violation counts.
-- **Unified Management**: Centralized control over interns, tasks, and scheduling.
-- **Hiring Registry**: Advanced portal for talent acquisition and interview orchestration.
-
----
-
-## 🛠 Tech Stack
-
-- **Core Framework**: Next.js 16.2.0 (Turbopack Powered)
-- **Database Engine**: PostgreSQL with Prisma ORM
-- **Security Layer**: 
-  - Dynamic Client Refresh (Preventing stale state).
-  - Encrypted Local Storage Bridges for session transitions.
-  - SMTP-based Secure Recovery.
-- **UI/UX**: 
-  - Tailwind CSS (Minimalist Industrial Aesthetic).
-  - Lenis (Unified Smooth Scroll with selective exclusion via `data-lenis-prevent`).
-  - Lucide React (Standardized Iconography).
+### 3. CLEED COMMAND CENTER (/CLEED/DASHBOARD)
+The administrative central unit of the ecosystem.
+- **Live Monitoring**: Real-time observability of active sessions and violation counts.
+- **Unified Management**: Centralized control over interns, scheduled tasks, and timelines.
+- **Hiring Registry**: Operational portal for recruitment and interview orchestration.
 
 ---
 
-## 🏗 Installation & Deployment
+## DETAILED TECHNOLOGY STACK BREAKDOWN
 
-### Development Environment
+| Layer | Technology | Specification |
+| :--- | :--- | :--- |
+| **Core Framework** | Next.js 16.2.0 | Turbopack compilation engine with file-based routing |
+| **Runtime Environment** | Node.js | Asynchronous event-driven JavaScript runtime |
+| **Database Engine** | PostgreSQL | Relational database with strictly typed schemas |
+| **ORM / Data Access** | Prisma 7.6.0 | Type-safe database client and automated migration node |
+| **Styling Architecture** | Tailwind CSS | Utility-first CSS framework for industrial aesthetics |
+| **Scroll Interpolation** | Lenis | Unified smooth scroll with `data-lenis-prevent` isolation |
+| **Iconography Node** | Lucide React | SVG-based performance iconography terminal |
+| **API Protocol** | REST / JSON | Stateless communication between frontend and backend |
+| **Security Layer** | JWT / SMTP | Token-based authentication and secure mail relays |
+
+---
+
+## INSTALLATION AND DEPLOYMENT PROTOCOL
+
+### DEVELOPMENT ENVIRONMENT
 ```bash
-# Install dependencies
+# REQUISITE: Node node_modules installation
 npm install
 
-# Generate Prisma Client
+# PRISMA CLIENT REGENERATION
 npx prisma generate
 
-# Run with Turbopack
+# EXECUTION VIA TURBOPACK
 npm run dev
 ```
 
-### Production Build
+### PRODUCTION BUILD
 ```bash
-# Secure build with pre-generation
+# OPTIMIZED PRODUCTION COMPILE
 npm run build
 
-# Start production server
+# START PRODUCTION SERVER NODE
 npm run start
 ```
 
 ---
 
-## 🔒 Security Protocol (Zero-Trust)
-STUDENT FORGE operates on a zero-trust architecture for assessment data. All `CORRECT_ANSWERS` are isolated in the backend environment, ensuring that the frontend only receives question text, never the evaluation keys.
+## ZERO-TRUST SECURITY MODEL
+STUDENT FORGE operates on a zero-trust architecture for assessment data. All evaluation nodes (`CORRECT_ANSWERS`) are isolated within the backend environment, ensuring the client layer only processes question text and never the evaluation keys.
 
 ---
 
-### 📅 Release Log (V2.5.0)
-- **Implemented standalone Review Page** for optimized assessment exit flows.
-- **Upgraded to +3 / -1 Marking Standard** across all diagnostic tools.
-- **Resolved Lenis Scrolling Conflicts** in independent UI regions.
-- **Forced Dynamic Prisma Client Refresh** to prevent hot-reload stale states.
+### VERSION LOG (V2.5.0)
+- IMPLEMENTED STANDALONE REVIEW TERMINAL FOR OPTIMIZED ASSESSMENT EXIT FLOWS.
+- UPGRADED TO +3 / -1 MARKING STANDARD ACROSS ALL DIAGNOSTIC LAYERS.
+- RESOLVED LENIS SCROLLING CONFLICTS IN INDEPENDENT UI REGIONS via DATA-LENIS-PREVENT.
+- FORCED DYNAMIC PRISMA CLIENT REFRESH TO PREVENT STALE SESSION STATES IN DEV.
 
 ---
-**Student Forge Technologies Private Limited © 2026**
-*Minimalist Industrial Standard | Engineered for Integrity*
+**STUDENT FORGE TECHNOLOGIES PRIVATE LIMITED © 2026**
+*MINIMALIST INDUSTRIAL STANDARD | ENGINEERED FOR INTEGRITY*
