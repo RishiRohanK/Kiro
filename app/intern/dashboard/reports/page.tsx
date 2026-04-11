@@ -64,7 +64,7 @@ export default function InternReportsPage() {
             <span className="text-[10px] font-black text-zinc-300 uppercase">Score Node</span>
           </div>
           <h3 className="text-3xl font-black text-zinc-800">
-            {session?.score !== null ? `${session?.score} / 50` : 'N/A'}
+            {session?.score !== null ? `${session?.score} / 150` : 'N/A'}
           </h3>
           <p className="text-[10px] text-zinc-400 font-bold uppercase mt-2">Final Correct Nodes</p>
         </div>
@@ -122,7 +122,7 @@ export default function InternReportsPage() {
                 <div>
                    <p className="text-[10px] font-bold text-zinc-400 uppercase mb-2">Result Percentage</p>
                    <p className="text-sm font-black text-blue-600">
-                      {session.score !== null ? `${((session.score / 50) * 100).toFixed(1)}%` : '0.0%'}
+                      {session.score !== null ? `${((session.score / 150) * 100).toFixed(1)}%` : '0.0%'}
                    </p>
                 </div>
               </div>
@@ -135,8 +135,8 @@ export default function InternReportsPage() {
                     <div>
                        <p className="text-xs font-bold text-blue-800 uppercase">Intern Performance Comment</p>
                        <p className="text-[11px] text-blue-600 font-bold mt-1">
-                          {session.score >= 35 ? "Excellent performance in Full Stack Concepts." : 
-                           session.score >= 25 ? "Good attempt. Focus on advanced Cloud & DevOps nodes." :
+                          {session.score >= 105 ? "Excellent performance in Full Stack Concepts." : 
+                           session.score >= 75 ? "Good attempt. Focus on advanced Cloud & DevOps nodes." :
                            "Requires improvement. Review the core MERN architecture guides."}
                        </p>
                     </div>

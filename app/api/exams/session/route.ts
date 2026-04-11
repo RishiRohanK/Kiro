@@ -59,11 +59,13 @@ export async function PATCH(req: Request) {
       // Object.entries(answers) where key is currentIdx and value is optionIdx
       Object.entries(answers).forEach(([idxStr, chosenOpt]: [string, any]) => {
         const idx = parseInt(idxStr);
-        const originalQuestion = questionMapping[idx]; // The actual question object from the shuffled list
-        if (originalQuestion) {
+        const originalQuestion = questionMapping[idx]; 
+        if (originalQuestion && chosenOpt !== undefined) {
           const correctOpt = (CORRECT_ANSWERS as any)[originalQuestion.id];
           if (chosenOpt === correctOpt) {
-            calcScore += 1;
+            calcScore += 3;
+          } else {
+            calcScore -= 1;
           }
         }
       });

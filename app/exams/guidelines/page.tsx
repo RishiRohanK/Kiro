@@ -117,6 +117,7 @@ export default function ExamGuidelinesPage() {
              <div className="p-6 md:p-8 space-y-6 text-sm text-gray-600 leading-relaxed">
                 <ul className="list-decimal pl-5 space-y-4">
                    <li>Total time is 60 minutes for 50 questions.</li>
+                   <li>Marking Scheme: <strong>+3</strong> for correct and <strong>-1</strong> for wrong answers.</li>
                    <li>The exam will run in full screen. Do not exit it.</li>
                    <li>Do not change tabs or open other applications.</li>
                    <li>Keys like F5, F12, and Ctrl keys are blocked.</li>

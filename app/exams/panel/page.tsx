@@ -246,8 +246,8 @@ export default function ExamPanelPage() {
            <div className="bg-gray-100 p-4 border-b-2 border-gray-300 flex justify-between items-center shrink-0">
               <span className="text-blue-800 font-black text-xs uppercase tracking-tighter">Question No: {currentIdx + 1}</span>
               <div className="flex items-center gap-6 text-[10px] text-gray-500 font-black uppercase">
-                 <span className="bg-white px-3 py-1 border border-gray-200 text-green-700">Marks: +1.0</span>
-                 <span className="bg-white px-3 py-1 border border-gray-200 text-red-600">Negative: 0.0</span>
+                 <span className="bg-white px-3 py-1 border border-gray-200 text-green-700">Correct: +3.0</span>
+                 <span className="bg-white px-3 py-1 border border-gray-200 text-red-600">Negative: -1.0</span>
               </div>
            </div>
 
