@@ -8,7 +8,8 @@ import {
   CheckCircle2,
   ChevronLeft,
   ChevronRight,
-  Loader2
+  Loader2,
+  AlertTriangle
 } from "lucide-react";
 
 const QUESTIONS_DATA = [
@@ -79,6 +80,7 @@ export default function ExamPanelPage() {
   const [status, setStatus] = useState<Record<number, string>>({});
   const [timeLeft, setTimeLeft] = useState(3600);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
   const [violations, setViolations] = useState(0);
   
   // Shuffled questions
@@ -118,6 +120,7 @@ export default function ExamPanelPage() {
 
     syncSession("SUBMITTED", finalScore, violationsRef.current);
     setIsSubmitted(true);
+    setShowConfirm(false);
 
     if (typeof document !== "undefined" && document.exitFullscreen) {
         document.exitFullscreen().catch(() => {});
@@ -146,7 +149,7 @@ export default function ExamPanelPage() {
       const forbidden = ["F5", "F11", "F12"];
       if (forbidden.includes(e.key) || (e.ctrlKey && ["r", "w", "t", "n"].includes(e.key.toLowerCase()))) {
         e.preventDefault();
-        handleSubmit(); // Auto-submit on forbidden keys as per policy
+        handleSubmit(); 
       }
     };
 
@@ -191,17 +194,28 @@ export default function ExamPanelPage() {
   };
 
   const handleSaveNext = () => {
+    const newStatus = { ...status };
     if (answers[currentIdx] === undefined) {
-        setStatus({ ...status, [currentIdx]: 'not_answered' });
+        newStatus[currentIdx] = 'not_answered';
     } else {
-        setStatus({ ...status, [currentIdx]: 'answered' });
+        newStatus[currentIdx] = 'answered';
     }
-    if (currentIdx < questions.length - 1) setCurrentIdx(prev => prev + 1);
+    setStatus(newStatus);
+    
+    if (currentIdx < questions.length - 1) {
+        setCurrentIdx(prev => prev + 1);
+    } else {
+        setShowConfirm(true);
+    }
   };
 
   const handleMarkReview = () => {
     setStatus({ ...status, [currentIdx]: 'marked_for_review' });
-    if (currentIdx < questions.length - 1) setCurrentIdx(prev => prev + 1);
+    if (currentIdx < questions.length - 1) {
+        setCurrentIdx(prev => prev + 1);
+    } else {
+        setShowConfirm(true);
+    }
   };
 
   const handleClear = () => {
@@ -209,154 +223,171 @@ export default function ExamPanelPage() {
     setStatus({ ...status, [currentIdx]: 'not_answered' });
   };
 
-  if (!user) return <div className="p-20 text-center"><Loader2 className="animate-spin mx-auto" /></div>;
+  if (!user) return <div className="p-20 text-center"><Loader2 className="animate-spin mx-auto text-blue-700" /></div>;
 
   if (isSubmitted) {
     return (
         <div className="min-h-screen bg-white flex flex-col items-center justify-center p-10 font-sans">
             <CheckCircle2 size={80} className="text-blue-600 mb-6" />
-            <h1 className="text-3xl font-bold text-blue-900 mb-4">Exam Completed</h1>
+            <h1 className="text-3xl font-bold text-blue-900 mb-2">Exam Completed</h1>
             <p className="text-gray-500 mb-10 text-lg">Thanks for attempting the exam I given.</p>
             <button 
                 onClick={() => { localStorage.removeItem("intern_user"); router.push("/exams"); }}
-                className="bg-blue-600 text-white px-10 py-3 font-bold hover:bg-blue-700 active:scale-95 transition"
+                className="bg-blue-600 text-white px-12 py-4 font-bold hover:bg-blue-700 active:scale-95 transition shadow-lg"
             >
-                Secure Logout
+                Secure Exit
             </button>
         </div>
     );
   }
 
   const q = questions[currentIdx];
+  const summary = {
+    answered: Object.values(status).filter(s => s === 'answered').length,
+    marked: Object.values(status).filter(s => s === 'marked_for_review').length,
+    not_answered: questions.length - Object.values(status).filter(s => s === 'answered').length - Object.values(status).filter(s => s === 'marked_for_review').length
+  };
 
   return (
-    <div className="min-h-screen bg-[#f0f2f5] flex flex-col font-sans select-none relative">
+    <div className="h-screen bg-[#f8f9fa] flex flex-col font-sans select-none relative overflow-hidden">
       
-      {/* 10 CROSS WATERMARKS */}
-      <div className="absolute inset-0 pointer-events-none z-0 opacity-[0.03] select-none flex flex-col justify-around rotate-[-25deg] scale-150 overflow-hidden">
-          {[...Array(10)].map((_, i) => (
-              <div key={i} className="flex justify-around text-4xl font-black tracking-[1em] whitespace-nowrap">
+      {/* IMPROVED DIAGONAL WATERMARKS */}
+      <div className="absolute inset-0 pointer-events-none z-0 opacity-[0.04] select-none flex flex-col justify-around rotate-[-30deg] scale-125">
+          {[...Array(12)].map((_, i) => (
+              <div key={i} className="flex justify-around text-5xl font-black tracking-[1.5em] whitespace-nowrap py-10">
+                  <span>STUDENT FORGE</span>
                   <span>STUDENT FORGE</span>
                   <span>STUDENT FORGE</span>
               </div>
           ))}
       </div>
 
-      {/* Header - Government Style */}
-      <header className="bg-blue-700 text-white px-6 py-3 flex justify-between items-center shadow-md relative z-10">
-        <div>
-           <h1 className="text-lg font-bold">Full Stack Development Exam 2026</h1>
-           <p className="text-[10px] opacity-80 uppercase tracking-widest">Student Forge Technologies Private Limited</p>
+      {/* Header - Industrial Style */}
+      <header className="h-16 bg-blue-700 text-white px-8 flex justify-between items-center shadow-lg relative z-20">
+        <div className="flex flex-col">
+           <h1 className="text-base font-bold tracking-tight">Full Stack Development Exam 2026</h1>
+           <p className="text-[9px] opacity-70 uppercase font-black">Student Forge Technologies Pvt Ltd</p>
         </div>
-        <div className="bg-blue-800 px-4 py-2 border border-blue-500 text-sm flex items-center gap-3">
-           <Timer size={16} className="text-blue-300" />
-           <span className="font-bold">Time Left: {formatTime(timeLeft)}</span>
+        <div className="flex items-center gap-6">
+            <div className="bg-blue-800 px-5 py-2 border border-blue-500/50 flex items-center gap-3 rounded-none">
+               <Timer size={18} className="text-blue-200" />
+               <span className="font-mono font-black text-lg">{formatTime(timeLeft)}</span>
+            </div>
+            <button 
+                onClick={() => setShowConfirm(true)}
+                className="bg-red-600 hover:bg-red-700 h-10 px-6 text-[11px] font-black uppercase tracking-widest transition-all shadow-lg hidden md:block"
+            >
+                Final Submit
+            </button>
         </div>
       </header>
 
-      {/* Main Content Area */}
-      <main className="flex-1 flex flex-col md:flex-row relative z-10">
+      {/* Main Content Area - FIXED HEIGHTS FOR SCROLLING */}
+      <main className="flex-1 flex overflow-hidden relative z-10">
         
         {/* Left Side: Question Area */}
         <div className="flex-1 flex flex-col border-r border-gray-300 bg-white">
            
-           <div className="bg-gray-100 p-3 border-b border-gray-300 flex justify-between items-center">
-              <span className="text-blue-800 font-bold text-xs uppercase">Question No: {currentIdx + 1}</span>
-              <div className="flex items-center gap-4 text-[10px] text-gray-500 font-bold">
-                 <span className="bg-white px-2 py-0.5 border border-gray-200">Type: MCQ</span>
-                 <span className="bg-white px-2 py-0.5 border border-gray-200 text-green-600">Marks: +1.0</span>
-                 <span className="bg-white px-2 py-0.5 border border-gray-200 text-red-600">Neg: 0.0</span>
+           <div className="bg-gray-50 p-4 border-b border-gray-300 flex justify-between items-center shrink-0">
+              <span className="text-blue-800 font-black text-xs uppercase tracking-tighter">Item Node: {currentIdx + 1} of 50</span>
+              <div className="flex items-center gap-5 text-[10px] text-gray-400 font-black uppercase">
+                 <span className="flex items-center gap-1"><div className="w-2 h-2 rounded-full bg-green-500" /> Correct: +1.0</span>
+                 <span className="flex items-center gap-1"><div className="w-2 h-2 rounded-full bg-red-500" /> Negative: 0.0</span>
               </div>
            </div>
 
-           <div className="flex-1 p-8 md:p-12 overflow-y-auto max-h-[calc(100vh-250px)]">
-              <h2 className="text-lg font-bold text-gray-800 mb-10 leading-relaxed">
-                 {q.question}
-              </h2>
+           <div className="flex-1 p-10 md:p-14 overflow-y-auto scroll-smooth custom-scrollbar">
+              <div className="max-w-4xl mx-auto space-y-12">
+                  <h2 className="text-xl md:text-2xl font-bold text-gray-800 leading-relaxed border-b border-gray-100 pb-10">
+                     {q.question}
+                  </h2>
 
-              <div className="space-y-4">
-                 {q.options.map((opt, idx) => (
-                    <label 
-                       key={idx}
-                       className={`flex items-center gap-4 p-4 border transition-all cursor-pointer group ${
-                          answers[currentIdx] === idx ? 'border-blue-600 bg-blue-50 shadow-sm' : 'border-gray-200 hover:bg-gray-50'
-                       }`}
-                    >
-                       <input 
-                          type="radio" 
-                          name="quiz"
-                          className="h-5 w-5 accent-blue-700"
-                          checked={answers[currentIdx] === idx}
-                          onChange={() => setAnswers({ ...answers, [currentIdx]: idx })}
-                       />
-                       <span className="text-sm font-medium text-gray-700 leading-none">
-                          <span className="mr-4 text-gray-400 font-bold">{String.fromCharCode(65 + idx)}.</span>
-                          {opt}
-                       </span>
-                    </label>
-                 ))}
+                  <div className="grid grid-cols-1 gap-5">
+                    {q.options.map((opt, idx) => (
+                        <label 
+                           key={idx}
+                           className={`flex items-start gap-6 p-6 border-2 transition-all cursor-pointer group rounded-none ${
+                              answers[currentIdx] === idx ? 'border-blue-600 bg-blue-50/50 shadow-md ring-1 ring-blue-600' : 'border-gray-100 hover:border-gray-300 hover:bg-gray-50/50'
+                           }`}
+                        >
+                           <div className={`mt-1 h-6 w-6 rounded-full border-2 flex items-center justify-center shrink-0 transition-all ${
+                               answers[currentIdx] === idx ? 'border-blue-700 bg-blue-700' : 'border-gray-300 group-hover:border-gray-400'
+                           }`}>
+                               {answers[currentIdx] === idx && <div className="h-2 w-2 bg-white rounded-full" />}
+                           </div>
+                           <div className="flex-1">
+                               <p className="text-sm md:text-base font-bold text-gray-700 leading-tight">
+                                  <span className="text-gray-400 mr-4 font-black">{String.fromCharCode(65 + idx)}.</span>
+                                  {opt}
+                               </p>
+                           </div>
+                           <input 
+                              type="radio" 
+                              name="quiz"
+                              className="hidden"
+                              checked={answers[currentIdx] === idx}
+                              onChange={() => setAnswers({ ...answers, [currentIdx]: idx })}
+                           />
+                        </label>
+                    ))}
+                  </div>
               </div>
            </div>
 
-           {/* Footer Buttons - Government Style */}
-           <div className="bg-gray-100 p-4 border-t border-gray-300 flex flex-wrap justify-between gap-4">
-              <div className="flex gap-2">
+           {/* Footer Buttons - Industrial Fixed Bottom */}
+           <div className="bg-gray-100 p-5 border-t border-gray-300 flex flex-wrap justify-between gap-4 shrink-0 shadow-[0_-4px_10px_rgba(0,0,0,0.03)]">
+              <div className="flex gap-3">
                  <button 
                     onClick={handleMarkReview}
-                    className="bg-purple-600 text-white px-4 py-2 text-xs font-bold uppercase hover:bg-purple-700 shadow"
-                 > Mark for Review & Next </button>
+                    className="bg-purple-600 text-white px-6 h-12 text-[11px] font-black uppercase tracking-widest hover:bg-purple-700 transition-all shadow"
+                 > Mark for Review </button>
                  <button 
                     onClick={handleClear}
-                    className="bg-white border border-gray-300 text-gray-600 px-4 py-2 text-xs font-bold uppercase hover:bg-gray-50 shadow"
-                 > Clear Response </button>
+                    className="bg-white border border-gray-300 text-gray-500 px-6 h-12 text-[11px] font-black uppercase tracking-widest hover:bg-gray-50 transition-all shadow"
+                 > Clear Entry </button>
               </div>
-              <div className="flex gap-2">
-                 <button 
-                    onClick={handleSubmit}
-                    className="bg-green-600 text-white px-8 py-2 text-xs font-bold uppercase hover:bg-green-700 shadow"
-                 > Submit </button>
+              <div className="flex gap-3">
                  <button 
                     onClick={handleSaveNext}
-                    className="bg-blue-700 text-white px-8 py-2 text-xs font-bold uppercase hover:bg-blue-800 shadow"
-                 > Save & Next </button>
+                    className="bg-blue-700 text-white px-10 h-12 text-[11px] font-black uppercase tracking-widest hover:bg-blue-800 transition-all shadow-xl"
+                 >
+                    {currentIdx === 49 ? "Finish Exam" : "Save and Next"}
+                 </button>
               </div>
            </div>
-
         </div>
 
-        {/* Right Side: Sidebar Panel */}
-        <div className="w-full md:w-80 bg-gray-50 flex flex-col border-l border-gray-300">
+        {/* Right Side: Sidebar Panel - SCROLLABLE PALETTE */}
+        <div className="w-full md:w-80 bg-[#f8f9fa] flex flex-col border-l border-gray-300 shrink-0">
            
-           {/* Candidate Profile Box */}
-           <div className="p-6 bg-white border-b border-gray-200">
-              <div className="flex items-center gap-4">
-                 <div className="h-12 w-12 bg-gray-100 border border-gray-300 flex items-center justify-center text-gray-400">
-                    <User size={24} />
-                 </div>
-                 <div className="overflow-hidden">
-                    <p className="text-xs font-bold text-gray-800 truncate">{user.name}</p>
-                    <p className="text-[10px] text-gray-400 font-bold uppercase">Candidate</p>
-                 </div>
+           {/* Candidate Node */}
+           <div className="p-8 bg-white border-b border-gray-200 flex items-center gap-4">
+              <div className="h-14 w-14 bg-blue-50 border-2 border-blue-100 flex items-center justify-center text-blue-600 rounded-none transform rotate-3">
+                 <User size={28} />
+              </div>
+              <div className="overflow-hidden">
+                 <p className="text-sm font-black text-gray-800 truncate">{user.name}</p>
+                 <p className="text-[10px] text-gray-400 font-black uppercase tracking-widest">Assessment Node</p>
               </div>
            </div>
 
-           {/* Question Palette */}
-           <div className="flex-1 p-6 overflow-y-auto">
-              <p className="text-[10px] font-bold text-gray-400 uppercase mb-4 tracking-widest">Question Palette</p>
-              <div className="grid grid-cols-5 gap-2">
+           {/* Question Palette - SCROLLABLE */}
+           <div className="flex-1 overflow-y-auto p-8 custom-scrollbar">
+              <p className="text-[10px] font-black text-gray-400 uppercase mb-6 tracking-widest border-b border-gray-100 pb-2">Entry Grid (1 - 50)</p>
+              <div className="grid grid-cols-4 gap-3">
                  {questions.map((_, i) => {
                     const s = status[i];
                     return (
                         <button 
                            key={i}
                            onClick={() => setCurrentIdx(i)}
-                           className={`h-9 w-9 text-[10px] font-bold border transition-all flex items-center justify-center relative ${
-                               currentIdx === i ? 'ring-2 ring-blue-700 ring-offset-1' : ''
+                           className={`h-10 w-10 text-[11px] font-black flex items-center justify-center transition-all border-2 ${
+                               currentIdx === i ? 'scale-110 shadow-lg border-blue-700' : 'border-transparent'
                            }`}
                            style={{
                               backgroundColor: s === 'answered' ? COLORS.answered : s === 'not_answered' ? COLORS.not_answered : s === 'marked_for_review' ? COLORS.marked_for_review : '#fff',
-                              color: s ? '#fff' : '#444',
-                              borderColor: s ? 'transparent' : '#ddd'
+                              color: s ? '#fff' : '#ced4da',
+                              boxShadow: currentIdx === i ? '0 0 10px rgba(26,95,122,0.2)' : 'none'
                            }}
                         >
                            {i + 1}
@@ -366,23 +397,23 @@ export default function ExamPanelPage() {
               </div>
            </div>
 
-           {/* Legend */}
-           <div className="p-6 bg-white border-t border-gray-300 text-[9px] font-bold uppercase space-y-3">
-              <div className="flex items-center gap-3">
-                 <div className="h-4 w-4 bg-white border border-gray-300" />
+           {/* Legend - Fixed Bottom of Sidebar */}
+           <div className="p-8 bg-white border-t border-gray-300 text-[10px] font-black uppercase space-y-4 shrink-0">
+              <div className="flex items-center gap-4">
+                 <div className="h-4 w-4 bg-white border-2 border-gray-200" />
                  <span className="text-gray-400">Not Visited</span>
               </div>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-4">
                  <div className="h-4 w-4 bg-[#ee7033]" />
                  <span className="text-gray-400">Not Answered</span>
               </div>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-4">
                  <div className="h-4 w-4 bg-[#2d8e36]" />
-                 <span className="text-gray-400">Answered</span>
+                 <span className="text-gray-400">Answered Node</span>
               </div>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-4">
                  <div className="h-4 w-4 bg-[#7355a6]" />
-                 <span className="text-gray-400">Marked for Review</span>
+                 <span className="text-gray-400">Review Priority</span>
               </div>
            </div>
 
@@ -390,19 +421,80 @@ export default function ExamPanelPage() {
 
       </main>
 
-      {/* Footer Details */}
-      <footer className="bg-gray-100 p-2 border-t border-gray-300 flex justify-between px-6 items-center flex-wrap gap-2 relative z-10">
+      {/* FOOTER NAV */}
+      <footer className="h-10 bg-gray-200 border-t border-gray-300 flex justify-between px-8 items-center shrink-0 relative z-20">
          <div className="flex gap-4">
-             <button onClick={() => currentIdx > 0 && setCurrentIdx(prev => prev - 1)} className="text-[10px] font-bold text-blue-800 hover:underline flex items-center gap-1">
-                 <ChevronLeft size={12} /> BACK
+             <button onClick={() => currentIdx > 0 && setCurrentIdx(prev => prev - 1)} className="text-[10px] font-black text-blue-800 hover:text-blue-900 flex items-center gap-2 uppercase tracking-widest">
+                 <ChevronLeft size={14} /> Back
              </button>
-             <button onClick={() => currentIdx < 49 && setCurrentIdx(prev => prev + 1)} className="text-[10px] font-bold text-blue-800 hover:underline flex items-center gap-1">
-                 NEXT <ChevronRight size={12} />
+             <button onClick={() => currentIdx < 49 && setCurrentIdx(prev => prev + 1)} className="text-[10px] font-black text-blue-800 hover:text-blue-900 flex items-center gap-2 uppercase tracking-widest">
+                 Next <ChevronRight size={14} />
              </button>
          </div>
-         <p className="text-[9px] text-gray-400 font-bold uppercase">Student Forge - Assessment Node v2.0</p>
+         <p className="text-[9px] text-gray-500 font-bold uppercase tracking-[0.3em]">Student Forge System Terminal</p>
       </footer>
 
+      {/* CONFIRMATION OVERLAY */}
+      {showConfirm && (
+          <div className="absolute inset-0 z-[100] bg-black/60 flex items-center justify-center p-6 backdrop-blur-sm">
+             <div className="bg-white max-w-lg w-full p-10 border-t-4 border-blue-700 shadow-2xl">
+                <div className="flex items-center gap-4 mb-8">
+                    <div className="h-12 w-12 bg-blue-50 text-blue-700 flex items-center justify-center">
+                        <AlertTriangle size={32} />
+                    </div>
+                    <div>
+                        <h3 className="text-xl font-bold text-gray-900 leading-tight">Exam Review & Submit</h3>
+                        <p className="text-xs text-gray-400 font-black uppercase tracking-widest">Final Validation Node</p>
+                    </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4 mb-10">
+                    <div className="p-4 bg-gray-50 border-l-4 border-green-500">
+                        <p className="text-[10px] text-gray-400 font-black uppercase mb-1">Answered</p>
+                        <p className="text-2xl font-black text-green-700">{summary.answered}</p>
+                    </div>
+                    <div className="p-4 bg-gray-50 border-l-4 border-purple-500">
+                        <p className="text-[10px] text-gray-400 font-black uppercase mb-1">Marked Review</p>
+                        <p className="text-2xl font-black text-purple-700">{summary.marked}</p>
+                    </div>
+                    <div className="p-4 bg-gray-50 border-l-4 border-orange-500 col-span-2">
+                        <p className="text-[10px] text-gray-400 font-black uppercase mb-1">Not Entered / Current</p>
+                        <p className="text-2xl font-black text-orange-700">{summary.not_answered}</p>
+                    </div>
+                </div>
+
+                <p className="text-xs text-gray-500 leading-relaxed font-medium mb-10 text-center">
+                   Once submitted, you cannot change any answers. The system will record your final response node.
+                </p>
+
+                <div className="flex gap-4">
+                    <button 
+                        onClick={() => setShowConfirm(false)}
+                        className="flex-1 h-14 border-2 border-gray-200 text-gray-600 font-black uppercase text-xs tracking-widest hover:bg-gray-50 transition-all"
+                    > Back to Exam </button>
+                    <button 
+                        onClick={handleSubmit}
+                        className="flex-1 h-14 bg-green-600 text-white font-black uppercase text-xs tracking-widest hover:bg-green-700 transition-all shadow-xl"
+                    > Submit My Results </button>
+                </div>
+             </div>
+          </div>
+      )}
+
+      <style jsx global>{`
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: #f1f1f1;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: #dee2e6;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: #ced4da;
+        }
+      `}</style>
     </div>
   );
 }
