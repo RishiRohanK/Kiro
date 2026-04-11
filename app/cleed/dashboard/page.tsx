@@ -1497,7 +1497,7 @@ export default function CleedDashboard() {
                                           </span>
                                        </td>
                                        <td className="px-6 py-4 text-xs font-bold text-zinc-900 border-r border-zinc-50">
-                                          {session.score !== null ? `${session.score} / 5` : '--'}
+                                          {session.score !== null ? `${session.score} / 50` : '--'}
                                        </td>
                                        <td className="px-6 py-4 text-xs font-bold">
                                           <span className={session.violations > 0 ? 'text-red-600' : 'text-zinc-400'}>

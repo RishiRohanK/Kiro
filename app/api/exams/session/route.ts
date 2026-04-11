@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { CORRECT_ANSWERS } from "@/lib/exam-questions";
 
 export async function GET() {
   try {
@@ -48,13 +49,32 @@ export async function POST(req: Request) {
 
 export async function PATCH(req: Request) {
   try {
-    const { userId, status, score, violations } = await req.json();
+    const { userId, status, score: clientScore, violations, answers, questionMapping } = await req.json();
+
+    let finalScore = clientScore;
+
+    // Server-side scoring logic to prevent cheating
+    if (status === "SUBMITTED" && answers && questionMapping) {
+      let calcScore = 0;
+      // Object.entries(answers) where key is currentIdx and value is optionIdx
+      Object.entries(answers).forEach(([idxStr, chosenOpt]: [string, any]) => {
+        const idx = parseInt(idxStr);
+        const originalQuestion = questionMapping[idx]; // The actual question object from the shuffled list
+        if (originalQuestion) {
+          const correctOpt = (CORRECT_ANSWERS as any)[originalQuestion.id];
+          if (chosenOpt === correctOpt) {
+            calcScore += 1;
+          }
+        }
+      });
+      finalScore = calcScore;
+    }
 
     const session = await prisma.examSession.update({
       where: { userId },
       data: { 
         status, 
-        score, 
+        score: finalScore, 
         violations,
         updatedAt: new Date()
       },
@@ -62,6 +82,7 @@ export async function PATCH(req: Request) {
 
     return NextResponse.json(session);
   } catch (error) {
+    console.error(error);
     return NextResponse.json({ error: "Failed to update exam session" }, { status: 500 });
   }
 }

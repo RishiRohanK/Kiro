@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 
@@ -11,6 +11,13 @@ export default function ExamLoginPage() {
   const [mathAnswer, setMathAnswer] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    // Keep high security: disable right click
+    const handleContext = (e: MouseEvent) => e.preventDefault();
+    document.addEventListener("contextmenu", handleContext);
+    return () => document.removeEventListener("contextmenu", handleContext);
+  }, []);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -53,7 +60,7 @@ export default function ExamLoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 font-sans flex flex-col">
+    <div className="min-h-screen bg-gray-50 font-sans flex flex-col select-none">
       
       {/* Exam Details Header */}
       <header className="bg-blue-700 text-white p-6 shadow-md">
@@ -79,7 +86,7 @@ export default function ExamLoginPage() {
 
            <form onSubmit={handleLogin} className="p-8">
               
-              {/* Government Style Form Content */}
+              {/* Government Style Grid Form */}
               <div className="border border-gray-200 divide-y divide-gray-200">
                  
                  <div className="grid grid-cols-1 md:grid-cols-12">
@@ -91,7 +98,7 @@ export default function ExamLoginPage() {
                             type="email" 
                             required
                             placeholder="Enter your email"
-                            className="w-full h-10 px-3 border border-gray-300 focus:border-blue-600 outline-none text-sm transition-all"
+                            className="w-full h-10 px-3 border border-gray-300 focus:border-blue-600 outline-none text-sm"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                         />
@@ -107,7 +114,7 @@ export default function ExamLoginPage() {
                             type="password" 
                             required
                             placeholder="Enter password"
-                            className="w-full h-10 px-3 border border-gray-300 focus:border-blue-600 outline-none text-sm transition-all"
+                            className="w-full h-10 px-3 border border-gray-300 focus:border-blue-600 outline-none text-sm"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                         />
@@ -123,7 +130,7 @@ export default function ExamLoginPage() {
                             type="number" 
                             required
                             placeholder="Type result"
-                            className="w-full h-10 px-3 border border-gray-300 focus:border-blue-600 outline-none text-sm transition-all"
+                            className="w-full h-10 px-3 border border-gray-300 focus:border-blue-600 outline-none text-sm"
                             value={mathAnswer}
                             onChange={(e) => setMathAnswer(e.target.value)}
                         />
@@ -142,9 +149,9 @@ export default function ExamLoginPage() {
                  <button 
                     type="button"
                     onClick={handleReset}
-                    className="h-10 px-12 border border-gray-300 bg-gray-50 text-gray-600 text-[11px] font-bold hover:bg-gray-100 uppercase"
+                    className="h-10 px-12 border border-gray-300 bg-gray-50 text-gray-600 text-[11px] font-bold uppercase hover:bg-gray-100"
                  >
-                    Reset
+                    Clear Form
                  </button>
                  <button 
                     type="submit"
