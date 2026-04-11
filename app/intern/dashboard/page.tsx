@@ -44,7 +44,8 @@ import {
    Trash2,
    Kanban as KanbanIcon,
    MoreVertical,
-   FileText as FileTextIcon
+   FileText as FileTextIcon,
+   Shield
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { io } from "socket.io-client";
