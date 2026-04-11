@@ -101,6 +101,7 @@ model User {
   attendances Attendance[] @relation("UserAttendances")
   scheduleSubmissions ScheduleSubmission[] @relation("InternSubmissions")
   personalTasks PersonalTask[] @relation("UserPersonalTasks")
+  examSessions ExamSession[] @relation("UserExamSessions")
 }
 
 enum Role {
@@ -431,4 +432,24 @@ model Message {
   targetId  String?  
   content   String
   createdAt DateTime @default(now())
+}
+
+model ExamStatus {
+  id        String   @id @default("global_exam_state")
+  isActive  Boolean  @default(false)
+  startedAt DateTime?
+  updatedAt DateTime @updatedAt
+}
+
+model ExamSession {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation("UserExamSessions", fields: [userId], references: [id], onDelete: Cascade)
+  startedAt  DateTime @default(now())
+  status     String   @default("STARTED") // STARTED, SUBMITTED, DISQUALIFIED
+  score      Int?
+  violations Int      @default(0)
+  updatedAt  DateTime @updatedAt
+
+  @@unique([userId])
 }

@@ -249,6 +249,11 @@ export default function CleedDashboard() {
    const [isSendingInterview, setIsSendingInterview] = useState(false);
    const [interviewSuccess, setInterviewSuccess] = useState(false);
 
+   // Exam Control State
+   const [examIsActive, setExamIsActive] = useState(false);
+   const [isUpdatingExam, setIsUpdatingExam] = useState(false);
+   const [examSessions, setExamSessions] = useState<any[]>([]);
+
    const handleScheduleInterview = async (e: React.FormEvent) => {
       e.preventDefault();
       if (!selectedApplicant || !interviewTiming) return;
@@ -495,6 +500,22 @@ export default function CleedDashboard() {
          } catch (err) { console.error("Employees fetch failure"); }
       };
 
+      const fetchExamStatus = async () => {
+         try {
+            const res = await fetch("/api/exams/status");
+            const data = await res.json();
+            if (data.id) setExamIsActive(data.isActive);
+         } catch (err) { console.error("Exam status fetch failure"); }
+      };
+
+      const fetchExamSessions = async () => {
+         try {
+            const res = await fetch("/api/exams/session");
+            const data = await res.json();
+            if (Array.isArray(data)) setExamSessions(data);
+         } catch (err) { console.error("Exam sessions fetch failure"); }
+      };
+
       await Promise.allSettled([
          fetchInterns(),
          fetchTasks(),
@@ -505,7 +526,9 @@ export default function CleedDashboard() {
          fetchInternships(),
          fetchEmployees(),
          fetchAllSchedules(),
-         fetchSubmissions()
+         fetchSubmissions(),
+         fetchExamStatus(),
+         fetchExamSessions()
       ]);
       setIsLoading(false);
    };
@@ -800,6 +823,24 @@ export default function CleedDashboard() {
       }
    };
 
+   const toggleExamStatus = async () => {
+      setIsUpdatingExam(true);
+      try {
+         const res = await fetch("/api/exams/status", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ isActive: !examIsActive })
+         });
+         if (res.ok) {
+            setExamIsActive(!examIsActive);
+         }
+      } catch (err) {
+         console.error("Exam status update failure");
+      } finally {
+         setIsUpdatingExam(false);
+      }
+   };
+
    const handleDeleteEvent = async (eventId: string) => {
       if (!confirm("Confirm removal of this event anchor?")) return;
       try {
@@ -1029,6 +1070,7 @@ export default function CleedDashboard() {
                         { id: "internships", icon: Briefcase, label: "Programs" },
                         { id: "employees", icon: ShieldCheck, label: "Employees" },
                         { id: "certification", icon: FileBadge, label: "Certificates" },
+                        { id: "exams", icon: FileText, label: "Exams" },
                         { id: "attendance", icon: CalendarCheck, label: "Attendance" },
                      ].map((item) => (
                         <button
@@ -1376,7 +1418,110 @@ export default function CleedDashboard() {
                   </motion.div>
                )}
 
-               { }
+                 {activeTab === "exams" && (
+                  <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-12">
+                     <div className="max-w-2xl mx-auto text-center space-y-6 pt-16">
+                        <div className="space-y-4">
+                           <h2 className="text-3xl font-bold tracking-tight text-zinc-900 uppercase">Start the Test</h2>
+                           <p className="text-zinc-500 font-bold">Use the button below to start or stop the exam for everyone.</p>
+                        </div>
+
+                        <div className={`p-8 border border-zinc-200 transition-all ${examIsActive ? 'bg-blue-50' : 'bg-white'}`}>
+                           <div className="flex flex-col items-center gap-6">
+                              <div className="space-y-1">
+                                 <p className={`text-[11px] font-bold uppercase tracking-widest ${examIsActive ? 'text-blue-600' : 'text-zinc-400'}`}>
+                                    Status: {examIsActive ? 'Now Running' : 'Stopped'}
+                                 </p>
+                              </div>
+
+                              <button 
+                                 disabled={isUpdatingExam}
+                                 onClick={toggleExamStatus}
+                                 className={`h-14 px-12 text-xs font-bold uppercase tracking-widest transition-all ${examIsActive ? 'bg-red-600 text-white' : 'bg-blue-600 text-white'}`}
+                              >
+                                 {isUpdatingExam ? '...' : examIsActive ? 'Stop Test' : 'Start Test'}
+                              </button>
+                           </div>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4 text-left">
+                           <div className="p-4 bg-white border border-zinc-100">
+                              <p className="text-[10px] font-bold text-zinc-400 uppercase mb-1">Rule Check</p>
+                              <p className="text-[11px] text-zinc-600 font-bold">Lock full screen and block keys when running.</p>
+                           </div>
+                           <div className="p-4 bg-white border border-zinc-100">
+                              <p className="text-[10px] font-bold text-zinc-400 uppercase mb-1">Live Sync</p>
+                              <p className="text-[11px] text-zinc-600 font-bold">Data is updated every few seconds.</p>
+                           </div>
+                        </div>
+                     </div>
+
+                     <div className="bg-white border border-zinc-200">
+                        <div className="p-5 border-b border-zinc-100 flex items-center justify-between">
+                           <div>
+                              <h3 className="text-xs font-bold uppercase tracking-widest text-zinc-800">Live Results</h3>
+                              <p className="text-[10px] text-zinc-400 font-bold uppercase">See student scores and rules breaking here</p>
+                           </div>
+                           <div className="h-1.5 w-1.5 bg-green-500 animate-pulse" />
+                        </div>
+                        <div className="overflow-x-auto">
+                           <table className="w-full text-left">
+                              <thead>
+                                 <tr className="bg-zinc-50 border-b border-zinc-100">
+                                    <th className="px-6 py-4 text-[10px] font-bold uppercase text-zinc-400">Intern</th>
+                                    <th className="px-6 py-4 text-[10px] font-bold uppercase text-zinc-400">Started At</th>
+                                    <th className="px-6 py-4 text-[10px] font-bold uppercase text-zinc-400">Status</th>
+                                    <th className="px-6 py-4 text-[10px] font-bold uppercase text-zinc-400">Score</th>
+                                    <th className="px-6 py-4 text-[10px] font-bold uppercase text-zinc-400">Errors</th>
+                                    <th className="px-6 py-4 text-[10px] font-bold uppercase text-zinc-400 text-right">Last Sync</th>
+                                 </tr>
+                              </thead>
+                              <tbody className="divide-y divide-zinc-50">
+                                 {examSessions.map((session) => (
+                                    <tr key={session.id} className="hover:bg-zinc-50 transition-colors">
+                                       <td className="px-6 py-4">
+                                          <div className="font-bold text-xs">{session.user?.name}</div>
+                                          <div className="text-[10px] text-zinc-400">{session.user?.email}</div>
+                                       </td>
+                                       <td className="px-6 py-4 text-xs font-medium">
+                                          {new Date(session.startedAt).toLocaleTimeString()}
+                                       </td>
+                                       <td className="px-6 py-4">
+                                          <span className={`px-2 py-1 text-[9px] font-bold uppercase ${
+                                             session.status === 'SUBMITTED' ? 'bg-green-100 text-green-700' :
+                                             session.status === 'DISQUALIFIED' ? 'bg-red-100 text-red-700' :
+                                             'bg-blue-100 text-blue-700'
+                                          }`}>
+                                             {session.status}
+                                          </span>
+                                       </td>
+                                       <td className="px-6 py-4 text-xs font-bold text-zinc-900 border-r border-zinc-50">
+                                          {session.score !== null ? `${session.score} / 5` : '--'}
+                                       </td>
+                                       <td className="px-6 py-4 text-xs font-bold">
+                                          <span className={session.violations > 0 ? 'text-red-600' : 'text-zinc-400'}>
+                                             {session.violations}
+                                          </span>
+                                       </td>
+                                       <td className="px-6 py-4 text-right text-[10px] font-bold text-zinc-400">
+                                          {Math.floor((new Date().getTime() - new Date(session.updatedAt).getTime()) / 1000)}s ago
+                                       </td>
+                                    </tr>
+                                 ))}
+                                 {examSessions.length === 0 && (
+                                    <tr>
+                                       <td colSpan={6} className="px-6 py-12 text-center text-zinc-400 text-xs italic">
+                                          No active exam sessions found. Ensure the global node is active.
+                                       </td>
+                                    </tr>
+                                 )}
+                              </tbody>
+                           </table>
+                        </div>
+                     </div>
+                  </motion.div>
+               )}
+
                {activeTab === "overview" && (
                   <div className="space-y-10 animate-in fade-in duration-500 text-left">
                      { }

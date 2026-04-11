@@ -478,7 +478,7 @@ function InternDashboardContent() {
                   <p className="text-zinc-400 text-[10px] lg:text-xs font-semibold uppercase tracking-widest bg-zinc-50 px-2 py-1 border border-zinc-100 sm:border-none sm:bg-transparent sm:p-0">Session Active</p>
                </div>
 
-               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
                   <div className="p-5 border border-blue-100 bg-blue-50/40 shadow-sm flex flex-col justify-between h-32">
                      <div className="flex items-center justify-between"><span className="text-[10px] font-bold text-blue-600 uppercase tracking-tight">Assignments</span><Briefcase size={16} className="text-blue-500" /></div>
                      <div className="mt-auto"><p className="text-2xl font-bold text-zinc-900">{tasks.filter(t => t.status === 'pending').length}</p><p className="text-[10px] text-blue-500/70 mt-1 uppercase font-bold tracking-tight">Pending tasks</p></div>
@@ -507,6 +507,13 @@ function InternDashboardContent() {
                      <div className="flex items-center justify-between"><span className="text-[10px] font-bold text-amber-600 uppercase tracking-tight">Next shift</span><Calendar size={16} className="text-amber-500" /></div>
                      <div className="mt-auto"><p className="text-sm font-bold text-zinc-900 uppercase tracking-tight">Today, 10:00 AM</p><p className="text-[10px] text-amber-500/70 mt-1 uppercase font-bold tracking-tight">Starting time</p></div>
                   </div>
+                  <Link href="/exams" className="p-5 border border-zinc-900 bg-zinc-900 text-white shadow-lg flex flex-col justify-between h-32 hover:scale-[1.02] transition-transform group">
+                     <div className="flex items-center justify-between"><span className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Exams Portal</span><Shield size={16} className="text-white animate-pulse" /></div>
+                     <div className="mt-auto">
+                        <p className="text-sm font-bold uppercase tracking-tight group-hover:underline">Access Terminal</p>
+                        <p className="text-[10px] text-zinc-500 mt-1 uppercase font-bold tracking-tight">Technical Assessment</p>
+                     </div>
+                  </Link>
                </div>
 
                <div className="w-full overflow-hidden rounded-xl border border-zinc-100 shadow-sm bg-zinc-50 relative group">
