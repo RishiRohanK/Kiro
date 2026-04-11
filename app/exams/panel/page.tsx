@@ -220,7 +220,7 @@ export default function ExamPanelPage() {
               </div>
            </div>
 
-           <div className="flex-1 p-10 md:p-14 overflow-y-auto custom-scrollbar">
+           <div className="flex-1 p-10 md:p-14 overflow-y-auto custom-scrollbar" data-lenis-prevent>
               <div className="max-w-4xl mx-auto">
                   <h2 className="text-xl font-bold text-gray-800 border-b pb-6 mb-8 leading-relaxed">
                      {q.question}
@@ -269,7 +269,7 @@ export default function ExamPanelPage() {
               <p className="text-[10px] text-gray-400 font-bold">Candidate</p>
            </div>
 
-           <div className="flex-1 overflow-y-auto p-5 custom-scrollbar">
+           <div className="flex-1 overflow-y-auto p-5 custom-scrollbar" data-lenis-prevent>
               <p className="text-[10px] font-bold text-gray-500 uppercase mb-3 pb-1 border-b">Question Grid (1-50)</p>
               <div className="grid grid-cols-4 gap-2">
                  {shuffledQuestions.map((_, i) => {
