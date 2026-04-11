@@ -11,7 +11,7 @@ export default function ExamGuidelinesPage() {
   const [examActive, setExamActive] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  const [loading, setLoading] = useState(true);
+
 
   const checkExamStatus = useCallback(async () => {
     try {
