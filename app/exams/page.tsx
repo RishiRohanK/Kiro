@@ -71,7 +71,7 @@ export default function ExamLoginPage() {
           </div>
           <div className="bg-blue-800 p-3 border border-blue-500 rounded text-xs">
             <p className="font-bold">Date: 12-04-2026</p>
-            <p className="mt-1 font-bold">Time: 10:00 AM to 11:00 AM</p>
+            <p className="mt-1 font-bold">Time: 10:45 AM to 11:45 AM</p>
           </div>
         </div>
       </header>

@@ -83,7 +83,7 @@ export default function ExamGuidelinesPage() {
         <div className="max-w-4xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center">
           <div>
             <h1 className="text-xl font-bold">Full Stack Development Exam</h1>
-            <p className="text-xs opacity-70">12-04-2026 | 10:00 AM to 11:00 AM</p>
+            <p className="text-xs opacity-70">12-04-2026 | 10:45 AM to 11:45 AM</p>
           </div>
         </div>
       </header>
@@ -92,6 +92,47 @@ export default function ExamGuidelinesPage() {
       <main className="flex-1 p-6 md:p-10">
         <div className="max-w-4xl mx-auto space-y-8">
           
+          {/* Syllabus Section */}
+          <div className="border border-gray-200">
+             <div className="bg-gray-50 p-3 border-b border-gray-200 font-bold text-blue-800 text-xs uppercase">
+                Examination Syllabus
+             </div>
+             <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                   <h4 className="text-[10px] font-black text-zinc-400 uppercase mb-2">Module 1: MERN Architecture</h4>
+                   <ul className="text-[11px] text-zinc-600 space-y-1 font-bold">
+                      <li>• React Hooks & Concurrent Rendering</li>
+                      <li>• Next.js File-based Routing & SSR</li>
+                      <li>• Node.js Event Loop & Microtasks</li>
+                      <li>• MongoDB Schema & Aggregation</li>
+                   </ul>
+                </div>
+                <div>
+                   <h4 className="text-[10px] font-black text-zinc-400 uppercase mb-2">Module 2: Cloud & Deployment</h4>
+                   <ul className="text-[11px] text-zinc-600 space-y-1 font-bold">
+                      <li>• AWS S3, Lambda & CloudFront CDN</li>
+                      <li>• Docker Containerization & Images</li>
+                      <li>• Kubernetes Pods & Orchestration</li>
+                      <li>• CI/CD Pipelines with Turborepo</li>
+                   </ul>
+                </div>
+                <div>
+                   <h4 className="text-[10px] font-black text-zinc-400 uppercase mb-2">Module 3: Advanced Protocols</h4>
+                   <ul className="text-[11px] text-zinc-600 space-y-1 font-bold">
+                      <li>• Real-time RTC & Socket Signaling</li>
+                      <li>• Type-safe APIs with TRPC</li>
+                      <li>• TypeScript Inference & Interfaces</li>
+                      <li>• JWT & OAuth Security Nodes</li>
+                   </ul>
+                </div>
+                <div className="bg-blue-50/50 p-4 border border-blue-100 flex items-center justify-center text-center">
+                   <p className="text-[10px] text-blue-700 font-bold uppercase leading-relaxed">
+                      Total Questions: 50 | Total Marks: 150<br/>
+                      Duration: 60 Minutes
+                   </p>
+                </div>
+             </div>
+          </div>
           {/* Simple Details Table */}
           <div className="border border-gray-200">
              <div className="bg-gray-50 p-3 border-b border-gray-200 font-bold text-blue-800 text-xs uppercase">

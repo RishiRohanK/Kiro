@@ -61,17 +61,24 @@ export default function ExamPanelPage() {
     }
   }, [shuffledQuestions]);
 
-  const handleSubmit = useCallback(() => {
+  const handleSubmit = useCallback(async () => {
     if (isSubmittedRef.current) return;
     isSubmittedRef.current = true;
-    syncSession("SUBMITTED", null, violationsRef.current, answers);
+    await syncSession("SUBMITTED", null, violationsRef.current, answers);
     setIsSubmitted(true);
     setShowConfirm(false);
-
-    if (typeof document !== "undefined" && document.exitFullscreen) {
-        document.exitFullscreen().catch(() => {});
-    }
+    if (typeof document !== "undefined" && document.exitFullscreen) document.exitFullscreen().catch(() => {});
   }, [answers, syncSession]);
+
+  const handleGoToReview = useCallback(() => {
+    localStorage.setItem("exam_submission", JSON.stringify({
+        answers,
+        status,
+        shuffledQuestions,
+        violations: violationsRef.current
+    }));
+    router.push("/exams/review");
+  }, [answers, status, shuffledQuestions, router]);
 
   useEffect(() => {
     const storedUser = localStorage.getItem("intern_user");
@@ -140,13 +147,13 @@ export default function ExamPanelPage() {
     }
     setStatus(newStatus);
     if (currentIdx < shuffledQuestions.length - 1) setCurrentIdx(prev => prev + 1);
-    else setShowConfirm(true);
+    else handleGoToReview();
   };
 
   const handleMarkReview = () => {
     setStatus({ ...status, [currentIdx]: 'marked_for_review' });
     if (currentIdx < shuffledQuestions.length - 1) setCurrentIdx(prev => prev + 1);
-    else setShowConfirm(true);
+    else handleGoToReview();
   };
 
   const handleClear = () => {
@@ -196,7 +203,7 @@ export default function ExamPanelPage() {
       {/* Header - Simple Simple Look */}
       <header className="h-16 bg-blue-700 text-white px-8 flex justify-between items-center shadow-md relative z-20">
         <div>
-           <h1 className="text-lg font-bold">Full Stack Exam</h1>
+           <h1 className="text-lg font-bold">Full Stack Exam (10:45 AM - 11:45 AM)</h1>
            <p className="text-[10px] font-bold opacity-70">Student Forge Technologies</p>
         </div>
         <div className="flex items-center gap-6">
@@ -252,7 +259,7 @@ export default function ExamPanelPage() {
                  <button onClick={handleClear} className="bg-white border border-gray-300 text-gray-600 px-5 py-2 text-[10px] font-bold uppercase">Clear Answer</button>
               </div>
               <div className="flex gap-3">
-                 <button onClick={() => setShowConfirm(true)} className="bg-red-600 text-white px-6 py-2 text-[10px] font-bold uppercase shadow">Submit</button>
+                 <button onClick={handleGoToReview} className="bg-red-600 text-white px-6 py-2 text-[10px] font-bold uppercase shadow">Submit / Review</button>
                  <button onClick={handleSaveNext} className="bg-blue-700 text-white px-8 py-2 text-[10px] font-bold uppercase shadow">Save and Next</button>
               </div>
            </div>
@@ -304,27 +311,6 @@ export default function ExamPanelPage() {
          <p className="text-[9px] text-gray-500 font-bold uppercase">Assessment Terminal</p>
       </footer>
 
-      {/* Confirmation Summary - Simple Simple English */}
-      {showConfirm && (
-          <div className="absolute inset-0 z-[100] bg-black/60 flex items-center justify-center p-6 backdrop-blur-sm">
-             <div className="bg-white max-w-xl w-full p-10 border border-gray-300 shadow-2xl">
-                <h3 className="text-xl font-bold text-blue-800 border-b pb-4 mb-8 uppercase text-center">Summary</h3>
-                <table className="w-full border text-sm mb-10">
-                   <tbody className="font-bold text-gray-700">
-                      <tr><td className="p-4 border-b border-r bg-gray-50 uppercase text-[10px]">Total Nodes</td><td className="p-4 border-b text-center text-lg">{shuffledQuestions.length}</td></tr>
-                      <tr><td className="p-4 border-b border-r text-green-700 uppercase text-[10px]">Answered</td><td className="p-4 border-b text-center text-lg text-green-700">{summary.answered}</td></tr>
-                      <tr><td className="p-4 border-b border-r text-purple-700 uppercase text-[10px]">Review Marked</td><td className="p-4 border-b text-center text-lg text-purple-700">{summary.marked}</td></tr>
-                      <tr><td className="p-4 border-r text-orange-700 uppercase text-[10px]">Not Answered</td><td className="p-4 text-center text-lg text-orange-700">{summary.not_answered}</td></tr>
-                   </tbody>
-                </table>
-                <p className="text-[10px] text-gray-500 font-bold mb-10 text-center uppercase tracking-tight">Do you want to submit? Changes are not allowed after this.</p>
-                <div className="flex gap-6">
-                    <button onClick={() => setShowConfirm(false)} className="flex-1 h-12 border bg-gray-50 text-gray-600 font-bold uppercase text-[10px]">No, Go Back</button>
-                    <button onClick={handleSubmit} className="flex-1 h-12 bg-blue-700 text-white font-bold uppercase text-[10px] shadow-lg">Yes, Submit</button>
-                </div>
-             </div>
-          </div>
-      )}
 
       <style jsx global>{`
         .custom-scrollbar::-webkit-scrollbar { width: 4px; }
