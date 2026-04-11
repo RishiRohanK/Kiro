@@ -56,17 +56,17 @@ export async function PATCH(req: Request) {
       return NextResponse.json({ error: "userId is required" }, { status: 400 });
     }
 
-    const globalStatus = await prisma.examStatus.findUnique({
-      where: { id: "global_exam_state" }
+    const globalSecurity = await prisma.examSecurity.findUnique({
+      where: { id: "global_exam_security" }
     });
 
-    if (!globalStatus) {
-      return NextResponse.json({ error: "Global Configuration not found." }, { status: 404 });
+    if (!globalSecurity) {
+      return NextResponse.json({ error: "Global Security Node not found." }, { status: 404 });
     }
 
     // Security Exit Key Check for Submission
     if (status === "SUBMITTED") {
-        if (!typedExitKey || typedExitKey !== globalStatus.exitKey) {
+        if (!typedExitKey || typedExitKey !== globalSecurity.exitKey) {
             return NextResponse.json({ error: "Invalid Security Exit Key" }, { status: 403 });
         }
     }

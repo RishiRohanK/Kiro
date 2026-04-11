@@ -7,14 +7,28 @@ export async function GET() {
       where: { id: "global_exam_state" },
     });
     
+    // Also fetch security to give admin dashboard the exit key
+    let security = await prisma.examSecurity.findUnique({
+      where: { id: "global_exam_security" },
+    });
+    
     if (!status) {
-      const newStatus = await prisma.examStatus.create({
-        data: { id: "global_exam_state", isActive: false, exitKey: "000000" },
+      await prisma.examStatus.create({
+        data: { id: "global_exam_state", isActive: false },
       });
-      return NextResponse.json(newStatus);
     }
 
-    return NextResponse.json(status);
+    if (!security) {
+      security = await prisma.examSecurity.create({
+        data: { id: "global_exam_security", exitKey: "000000" },
+      });
+    }
+
+    return NextResponse.json({ 
+        id: "global_exam_state",
+        isActive: status ? status.isActive : false,
+        exitKey: security.exitKey
+    });
   } catch (error) {
     return NextResponse.json({ error: "Failed to fetch admin exam status" }, { status: 500 });
   }
@@ -24,27 +38,23 @@ export async function POST(req: Request) {
   try {
     const { isActive, exitKey } = await req.json();
 
-    const data: any = {};
     if (isActive !== undefined) {
-        data.isActive = isActive;
-        data.startedAt = isActive ? new Date() : null;
+        await prisma.examStatus.upsert({
+          where: { id: "global_exam_state" },
+          update: { isActive, startedAt: isActive ? new Date() : null },
+          create: { id: "global_exam_state", isActive, startedAt: isActive ? new Date() : null },
+        });
     }
+
     if (exitKey !== undefined) {
-        data.exitKey = exitKey;
+        await prisma.examSecurity.upsert({
+          where: { id: "global_exam_security" },
+          update: { exitKey },
+          create: { id: "global_exam_security", exitKey },
+        });
     }
 
-    const status = await prisma.examStatus.upsert({
-      where: { id: "global_exam_state" },
-      update: data,
-      create: { 
-        id: "global_exam_state", 
-        isActive: isActive ?? false,
-        exitKey: exitKey ?? "000000",
-        startedAt: isActive ? new Date() : null
-      },
-    });
-
-    return NextResponse.json(status);
+    return NextResponse.json({ success: true });
   } catch (error) {
     return NextResponse.json({ error: "Failed to update exam status" }, { status: 500 });
   }

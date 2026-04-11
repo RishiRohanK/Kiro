@@ -5,15 +5,15 @@ export async function POST(req: Request) {
   try {
     const { key } = await req.json();
 
-    const status = await prisma.examStatus.findUnique({
-      where: { id: "global_exam_state" },
+    const security = await prisma.examSecurity.findUnique({
+      where: { id: "global_exam_security" },
     });
 
-    if (!status) {
-        return NextResponse.json({ success: false, error: "Global status node not found." }, { status: 404 });
+    if (!security) {
+        return NextResponse.json({ success: false, error: "Global security node not found." }, { status: 404 });
     }
 
-    if (status.exitKey !== key) {
+    if (security.exitKey !== key) {
         return NextResponse.json({ success: false, error: "Invalid exit key." }, { status: 403 });
     }
 
