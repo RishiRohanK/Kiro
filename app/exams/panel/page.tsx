@@ -40,7 +40,7 @@ export default function ExamPanelPage() {
     const u = JSON.parse(storedUser);
 
     try {
-      await fetch("/api/exams/session", {
+      const res = await fetch("/api/exams/session", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -52,8 +52,12 @@ export default function ExamPanelPage() {
           questionMapping: shuffledQuestions
         })
       });
+      if (!res.ok) {
+        const errorData = await res.json();
+        console.error("Sync Error Details:", errorData);
+      }
     } catch (err) {
-      console.error("Sync error");
+      console.error("Fetch Network error:", err);
     }
   }, [shuffledQuestions]);
 

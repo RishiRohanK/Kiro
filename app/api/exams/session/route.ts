@@ -49,18 +49,22 @@ export async function POST(req: Request) {
 
 export async function PATCH(req: Request) {
   try {
-    const { userId, status, score: clientScore, violations, answers, questionMapping } = await req.json();
+    const payload = await req.json();
+    const { userId, status, score: clientScore, violations, answers, questionMapping } = payload;
+    
+    if (!userId) {
+      return NextResponse.json({ error: "userId is required" }, { status: 400 });
+    }
 
     let finalScore = clientScore;
 
     // Server-side scoring logic to prevent cheating
     if (status === "SUBMITTED" && answers && questionMapping) {
       let calcScore = 0;
-      // Object.entries(answers) where key is currentIdx and value is optionIdx
       Object.entries(answers).forEach(([idxStr, chosenOpt]: [string, any]) => {
         const idx = parseInt(idxStr);
-        const originalQuestion = questionMapping[idx]; 
-        if (originalQuestion && chosenOpt !== undefined) {
+        const originalQuestion = (questionMapping as any)[idx]; 
+        if (originalQuestion && chosenOpt !== undefined && chosenOpt !== null) {
           const correctOpt = (CORRECT_ANSWERS as any)[originalQuestion.id];
           if (chosenOpt === correctOpt) {
             calcScore += 3;
@@ -72,19 +76,23 @@ export async function PATCH(req: Request) {
       finalScore = calcScore;
     }
 
+    // Ensure violations is a number
+    const finalViolations = typeof violations === 'number' ? violations : 0;
+
     const session = await prisma.examSession.update({
       where: { userId },
       data: { 
         status, 
         score: finalScore, 
-        violations,
+        violations: finalViolations,
         updatedAt: new Date()
       },
     });
 
+    console.log("Session updated successfully");
     return NextResponse.json(session);
-  } catch (error) {
-    console.error(error);
-    return NextResponse.json({ error: "Failed to update exam session" }, { status: 500 });
+  } catch (error: any) {
+    console.error("PATCH /api/exams/session Error:", error.message, error);
+    return NextResponse.json({ error: "Failed to update exam session", details: error.message }, { status: 500 });
   }
 }
