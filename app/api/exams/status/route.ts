@@ -17,6 +17,7 @@ export async function GET() {
     // Never return exitKey to GET (interns use this)
     return NextResponse.json({ isActive: status.isActive });
   } catch (error) {
+    console.error("GET ExamStatus Error:", error);
     return NextResponse.json({ error: "Failed to fetch exam status" }, { status: 500 });
   }
 }
