@@ -70,16 +70,28 @@ export default function ExamPanelPage() {
     if (typeof document !== "undefined" && document.exitFullscreen) document.exitFullscreen().catch(() => {});
   }, [answers, syncSession]);
 
-  const handleGoToReview = useCallback(() => {
-    localStorage.setItem("exam_submission", JSON.stringify({
-        answers,
-        status,
-        shuffledQuestions,
-        violations: violationsRef.current
-    }));
-    router.push("/exams/review");
-  }, [answers, status, shuffledQuestions, router]);
+  const [showExitModal, setShowExitModal] = useState(false);
+  const [exitKeyInput, setExitKeyInput] = useState("");
 
+  const handleGoToReview = useCallback(() => {
+    setShowExitModal(true);
+  }, []);
+
+  const verifyExitKey = () => {
+    const realKey = localStorage.getItem("exam_exit_key");
+    if (exitKeyInput === realKey) {
+        localStorage.setItem("exam_submission", JSON.stringify({
+            answers,
+            status,
+            shuffledQuestions,
+            violations: violationsRef.current
+        }));
+        router.push("/exams/review");
+    } else {
+        alert("Invalid Assessment Key. Please check the key you noted at the start.");
+    }
+  };
+   
   useEffect(() => {
     const storedUser = localStorage.getItem("intern_user");
     if (!storedUser) {
@@ -311,6 +323,31 @@ export default function ExamPanelPage() {
          <p className="text-[9px] text-gray-500 font-bold uppercase">Assessment Terminal</p>
       </footer>
 
+
+      {/* Exit Verification Modal */}
+      {showExitModal && (
+          <div className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-md flex items-center justify-center p-6">
+             <div className="bg-white max-w-md w-full p-10 border border-gray-300 shadow-2xl rounded">
+                <h3 className="text-xl font-bold text-blue-900 border-b pb-4 mb-6 uppercase text-center tracking-tight">Security Check</h3>
+                <p className="text-xs text-center text-gray-500 font-bold mb-8 uppercase tracking-widest">Type your 6-digit Unlock Key to exit</p>
+                
+                <input 
+                   type="text" 
+                   maxLength={6}
+                   value={exitKeyInput}
+                   onChange={(e) => setExitKeyInput(e.target.value)}
+                   className="w-full h-16 text-center text-3xl font-black tracking-[0.5em] bg-gray-50 border-2 border-zinc-200 outline-none focus:border-blue-700 transition-all rounded mb-8"
+                   placeholder="------"
+                />
+
+                <div className="flex gap-4">
+                    <button onClick={() => setShowExitModal(false)} className="flex-1 h-12 bg-gray-100 text-gray-600 font-bold uppercase text-[10px] rounded hover:bg-gray-200">Cancel</button>
+                    <button onClick={verifyExitKey} className="flex-1 h-12 bg-blue-700 text-white font-bold uppercase text-[10px] rounded shadow-lg hover:bg-blue-800 tracking-widest">Verify & Finish</button>
+                </div>
+                <p className="mt-6 text-[9px] text-gray-400 text-center font-bold uppercase italic">Note: If you have lost your key, contact the admin immediately.</p>
+             </div>
+          </div>
+      )}
 
       <style jsx global>{`
         .custom-scrollbar::-webkit-scrollbar { width: 4px; }
