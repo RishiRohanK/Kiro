@@ -2,17 +2,12 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { 
-  User, 
-  ArrowRight, 
-  Loader2,
-  AlertCircle
-} from "lucide-react";
-import { motion } from "framer-motion";
+import { Loader2 } from "lucide-react";
 
 export default function ExamLoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [mathAnswer, setMathAnswer] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -23,7 +18,7 @@ export default function ExamLoginPage() {
     setError("");
 
     if (mathAnswer !== "12") {
-        setError("Math answer is wrong.");
+        setError("Security pin is wrong.");
         setLoading(false);
         return;
     }
@@ -32,7 +27,7 @@ export default function ExamLoginPage() {
       const res = await fetch("/api/exams/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, password }),
       });
 
       const data = await res.json();
@@ -41,90 +36,134 @@ export default function ExamLoginPage() {
         localStorage.setItem("intern_user", JSON.stringify(data.user));
         router.push("/exams/guidelines");
       } else {
-        setError(data.error || "Login data not found.");
+        setError(data.error || "Login fail. Please check details.");
       }
     } catch (err) {
-      setError("Server connection failed.");
+      setError("Server connection fail.");
     } finally {
       setLoading(false);
     }
   };
 
+  const handleReset = () => {
+    setEmail("");
+    setPassword("");
+    setMathAnswer("");
+    setError("");
+  };
+
   return (
-    <div className="min-h-screen bg-white font-sans flex items-center justify-center p-6">
+    <div className="min-h-screen bg-gray-50 font-sans flex flex-col">
       
-      <motion.div 
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="max-w-md w-full border border-gray-100 p-10 bg-white"
-      >
-        <div className="space-y-4 mb-10 text-center">
-            <h1 className="text-3xl font-black uppercase tracking-tight text-blue-900 leading-none">Exam Login</h1>
-            <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">Student Forge Tech</p>
+      {/* Exam Details Header */}
+      <header className="bg-blue-700 text-white p-6 shadow-md">
+        <div className="max-w-5xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+          <div>
+            <h1 className="text-xl font-bold uppercase tracking-tight">Full Stack Development Exam</h1>
+            <p className="text-xs opacity-70 mt-1">Student Forge Technologies Private Limited</p>
+          </div>
+          <div className="bg-blue-800 p-3 border border-blue-500 rounded text-xs">
+            <p className="font-bold">Date: 12-04-2026</p>
+            <p className="mt-1 font-bold">Time: 10:00 AM to 11:00 AM</p>
+          </div>
         </div>
+      </header>
 
-        <form onSubmit={handleLogin} className="space-y-8">
-            <div className="space-y-1">
-                <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Office Email</label>
-                <div className="relative group">
-                    <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 transition-colors group-focus-within:text-blue-600">
-                        <User size={16} />
+      {/* Main Content Area */}
+      <main className="flex-1 flex items-center justify-center p-4">
+        <div className="w-full max-w-2xl bg-white border border-gray-300 shadow-sm">
+           
+           <div className="bg-gray-100 p-3 border-b border-gray-300">
+              <h2 className="text-blue-800 font-bold text-center text-sm uppercase">Candidate Sign In</h2>
+           </div>
+
+           <form onSubmit={handleLogin} className="p-8">
+              
+              {/* Government Style Form Content */}
+              <div className="border border-gray-200 divide-y divide-gray-200">
+                 
+                 <div className="grid grid-cols-1 md:grid-cols-12">
+                    <label className="md:col-span-4 bg-gray-50 p-4 text-xs font-bold text-gray-600 flex items-center border-r border-gray-200">
+                      Email address
+                    </label>
+                    <div className="md:col-span-8 p-3 flex items-center">
+                        <input 
+                            type="email" 
+                            required
+                            placeholder="Enter your email"
+                            className="w-full h-10 px-3 border border-gray-300 focus:border-blue-600 outline-none text-sm transition-all"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                        />
                     </div>
-                    <input 
-                        type="email" 
-                        required
-                        placeholder="intern@studentforge.com"
-                        className="w-full h-14 pl-12 pr-4 bg-gray-50 border border-transparent focus:border-blue-600 focus:bg-white outline-none transition-all text-sm font-bold"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                    />
-                </div>
-            </div>
+                 </div>
 
-            <div className="space-y-1">
-                <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Solve: 5 + 7</label>
-                <input 
-                    type="number" 
-                    required
-                    placeholder="Type your answer"
-                    className="w-full h-14 px-4 bg-gray-50 border border-transparent focus:border-blue-600 focus:bg-white outline-none transition-all text-sm font-bold"
-                    value={mathAnswer}
-                    onChange={(e) => setMathAnswer(e.target.value)}
-                />
-            </div>
+                 <div className="grid grid-cols-1 md:grid-cols-12">
+                    <label className="md:col-span-4 bg-gray-50 p-4 text-xs font-bold text-gray-600 flex items-center border-r border-gray-200">
+                      Password
+                    </label>
+                    <div className="md:col-span-8 p-3 flex items-center">
+                        <input 
+                            type="password" 
+                            required
+                            placeholder="Enter password"
+                            className="w-full h-10 px-3 border border-gray-300 focus:border-blue-600 outline-none text-sm transition-all"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
+                    </div>
+                 </div>
 
-            {error && (
-                <motion.div 
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className="p-4 bg-red-50 border border-red-100 flex items-center gap-3 text-red-600"
-                >
-                    <AlertCircle size={14} />
-                    <span className="text-[10px] font-bold uppercase tracking-widest">{error}</span>
-                </motion.div>
-            )}
+                 <div className="grid grid-cols-1 md:grid-cols-12">
+                    <label className="md:col-span-4 bg-gray-50 p-4 text-xs font-bold text-gray-600 flex items-center border-r border-gray-200">
+                      Security Check (5+7)
+                    </label>
+                    <div className="md:col-span-8 p-3 flex items-center">
+                        <input 
+                            type="number" 
+                            required
+                            placeholder="Type result"
+                            className="w-full h-10 px-3 border border-gray-300 focus:border-blue-600 outline-none text-sm transition-all"
+                            value={mathAnswer}
+                            onChange={(e) => setMathAnswer(e.target.value)}
+                        />
+                    </div>
+                 </div>
 
-            <button 
-                type="submit"
-                disabled={loading}
-                className="w-full h-16 bg-blue-600 text-white font-bold hover:bg-blue-700 shadow-xl flex items-center justify-center gap-3 transition-all active:scale-95 group uppercase text-xs tracking-[0.2em]"
-            >
-                {loading ? (
-                    <Loader2 className="animate-spin" size={20} />
-                ) : (
-                    <>
-                        Log In Now
-                        <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-                    </>
-                )}
-            </button>
-        </form>
+              </div>
 
-        <p className="mt-12 text-[10px] text-center text-gray-300 font-bold uppercase tracking-widest leading-loose">
-            Forgot details? Ask your mentor.
-        </p>
+              {error && (
+                 <div className="mt-4 p-2 bg-red-50 border border-red-200 text-center">
+                    <p className="text-[10px] text-red-600 font-bold uppercase">{error}</p>
+                 </div>
+              )}
 
-      </motion.div>
+              <div className="flex justify-center gap-6 mt-10">
+                 <button 
+                    type="button"
+                    onClick={handleReset}
+                    className="h-10 px-12 border border-gray-300 bg-gray-50 text-gray-600 text-[11px] font-bold hover:bg-gray-100 uppercase"
+                 >
+                    Reset
+                 </button>
+                 <button 
+                    type="submit"
+                    disabled={loading}
+                    className="h-10 px-12 bg-blue-700 text-white text-[11px] font-bold hover:bg-blue-800 uppercase shadow-md"
+                 >
+                    {loading ? <Loader2 className="animate-spin" size={16} /> : "Login"}
+                 </button>
+              </div>
+
+           </form>
+
+        </div>
+      </main>
+
+      {/* Simple Gray Footer */}
+      <footer className="p-8 text-center text-xs text-gray-500 bg-gray-200 border-t border-gray-300">
+        Student Forge Technologies Private Limited © 2026
+      </footer>
 
     </div>
   );
