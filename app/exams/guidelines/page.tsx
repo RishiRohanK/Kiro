@@ -2,7 +2,15 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { Loader2 } from "lucide-react";
+import { 
+  Loader2, 
+  ChevronRight, 
+  ShieldCheck, 
+  Clock, 
+  ClipboardList,
+  User,
+  AlertCircle
+} from "lucide-react";
 
 export default function ExamGuidelinesPage() {
   const router = useRouter();
@@ -38,7 +46,7 @@ export default function ExamGuidelinesPage() {
 
   const startExam = async () => {
     if (!hasAgreed) {
-        alert("Please click the check box to agree.");
+        alert("Please click the checkbox to agree.");
         return;
     }
 
@@ -76,136 +84,177 @@ export default function ExamGuidelinesPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white font-sans flex flex-col">
+    <div className="min-h-screen bg-zinc-50 font-sans flex flex-col select-none">
       
-      {/* Simple Header */}
-      <header className="bg-blue-700 text-white p-6">
-        <div className="max-w-4xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center">
-          <div>
-            <h1 className="text-xl font-bold">Full Stack Development Exam</h1>
-            <p className="text-xs opacity-70">12-04-2026 | 10:45 AM to 11:45 AM</p>
+      {/* Industrial Top Section */}
+      <div className="h-64 bg-blue-700 relative overflow-hidden shrink-0">
+          <div className="absolute inset-0 opacity-10">
+              <div className="grid grid-cols-6 gap-4 p-8">
+                  {[...Array(24)].map((_, i) => (
+                      <div key={i} className="h-20 border border-white/20 rounded-lg" />
+                  ))}
+              </div>
           </div>
-        </div>
-      </header>
-
-      {/* Main Container */}
-      <main className="flex-1 p-6 md:p-10">
-        <div className="max-w-4xl mx-auto space-y-8">
           
-          {/* Syllabus Section */}
-          <div className="border border-gray-200">
-             <div className="bg-gray-50 p-3 border-b border-gray-200 font-bold text-blue-800 text-xs uppercase">
-                Examination Syllabus
-             </div>
-             <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                   <h4 className="text-[10px] font-black text-zinc-400 uppercase mb-2">Module 1: MERN Architecture</h4>
-                   <ul className="text-[11px] text-zinc-600 space-y-1 font-bold">
-                      <li>• React Hooks & Concurrent Rendering</li>
-                      <li>• Next.js File-based Routing & SSR</li>
-                      <li>• Node.js Event Loop & Microtasks</li>
-                      <li>• MongoDB Schema & Aggregation</li>
-                   </ul>
-                </div>
-                <div>
-                   <h4 className="text-[10px] font-black text-zinc-400 uppercase mb-2">Module 2: Cloud & Deployment</h4>
-                   <ul className="text-[11px] text-zinc-600 space-y-1 font-bold">
-                      <li>• AWS S3, Lambda & CloudFront CDN</li>
-                      <li>• Docker Containerization & Images</li>
-                      <li>• Kubernetes Pods & Orchestration</li>
-                      <li>• CI/CD Pipelines with Turborepo</li>
-                   </ul>
-                </div>
-                <div>
-                   <h4 className="text-[10px] font-black text-zinc-400 uppercase mb-2">Module 3: Advanced Protocols</h4>
-                   <ul className="text-[11px] text-zinc-600 space-y-1 font-bold">
-                      <li>• Real-time RTC & Socket Signaling</li>
-                      <li>• Type-safe APIs with TRPC</li>
-                      <li>• TypeScript Inference & Interfaces</li>
-                      <li>• JWT & OAuth Security Nodes</li>
-                   </ul>
-                </div>
-                <div className="bg-blue-50/50 p-4 border border-blue-100 flex items-center justify-center text-center">
-                   <p className="text-[10px] text-blue-700 font-bold uppercase leading-relaxed">
-                      Total Questions: 50 | Total Marks: 150<br/>
-                      Duration: 60 Minutes
-                   </p>
-                </div>
-             </div>
-          </div>
-          {/* Simple Details Table */}
-          <div className="border border-gray-200">
-             <div className="bg-gray-50 p-3 border-b border-gray-200 font-bold text-blue-800 text-xs uppercase">
-                Candidate Details
-             </div>
-             <div className="grid grid-cols-1 md:grid-cols-2 divide-x divide-gray-200 divide-y md:divide-y-0">
-                <div className="p-4">
-                   <p className="text-[10px] text-gray-400 font-bold uppercase">Name</p>
-                   <p className="text-sm font-bold text-gray-700">{user.name}</p>
-                </div>
-                <div className="p-4">
-                   <p className="text-[10px] text-gray-400 font-bold uppercase">Intern ID</p>
-                   <p className="text-sm font-bold text-gray-700">SF-{user.id?.slice(-8)}</p>
-                </div>
-             </div>
-          </div>
+          <header className="relative z-10 h-full flex items-center justify-center">
+              <div className="max-w-6xl w-full px-8 flex flex-col md:flex-row justify-between items-center text-white">
+                  <div className="text-center md:text-left">
+                     <div className="flex items-center gap-3 justify-center md:justify-start mb-2">
+                        <ShieldCheck className="text-blue-200" size={24} />
+                        <span className="text-[10px] font-black uppercase tracking-[0.3em] opacity-80">Secure Terminal Node</span>
+                     </div>
+                     <h1 className="text-4xl font-black uppercase tracking-tighter leading-none mb-2">Full Stack Development</h1>
+                     <p className="text-xs font-bold opacity-60 uppercase tracking-widest">Assessment Schedule: 12-04-2026 | 10:45 AM - 11:45 AM</p>
+                  </div>
+                  <div className="mt-8 md:mt-0 bg-blue-800/50 backdrop-blur-md border border-white/10 p-6 rounded-xl flex items-center gap-6 shadow-2xl">
+                      <div className="h-12 w-12 bg-white flex items-center justify-center rounded-lg shadow-inner">
+                         <User className="text-blue-700" size={24} />
+                      </div>
+                      <div>
+                         <p className="text-[10px] font-black uppercase tracking-widest opacity-60">Authentication ID</p>
+                         <p className="text-lg font-black uppercase tracking-tight leading-none">{user.name}</p>
+                         <p className="text-[10px] font-bold mt-1 opacity-40">SF-{user.id?.slice(-8)}</p>
+                      </div>
+                  </div>
+              </div>
+          </header>
+      </div>
 
-          {/* Simple Instructions Section */}
-          <div className="border border-gray-200">
-             <div className="bg-gray-50 p-3 border-b border-gray-200 font-bold text-blue-800 text-xs uppercase">
-                Instructions
-             </div>
-             <div className="p-6 md:p-8 space-y-6 text-sm text-gray-600 leading-relaxed">
-                <ul className="list-decimal pl-5 space-y-4">
-                   <li>Total time is 60 minutes for 50 questions.</li>
-                   <li>Marking Scheme: <strong>+3</strong> for correct and <strong>-1</strong> for wrong answers.</li>
-                   <li>The exam will run in full screen. Do not exit it.</li>
-                   <li>Do not change tabs or open other applications.</li>
-                   <li>Keys like F5, F12, and Ctrl keys are blocked.</li>
-                   <li>Click "Save and Next" after every question.</li>
-                   <li>Breaking any rules will stop your exam immediately.</li>
-                </ul>
-             </div>
+      <main className="flex-1 -mt-16 relative z-20 px-4 pb-20 overflow-y-auto custom-scrollbar">
+          <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8">
+              
+              {/* Left Column: Syllabus & Modules */}
+              <div className="lg:col-span-4 space-y-6">
+                 <div className="bg-white border-b-4 border-blue-700 p-8 shadow-xl">
+                    <div className="flex items-center gap-3 mb-8">
+                       <ClipboardList className="text-blue-700" size={20} />
+                       <h3 className="text-sm font-black uppercase tracking-widest text-zinc-800">Syllabus Overview</h3>
+                    </div>
+                    
+                    <div className="space-y-8">
+                       {[
+                         { title: "MERN Stack", items: ["React Hooks & Context", "Next.js SSR/Static Nodes"] },
+                         { title: "Cloud Systems", items: ["AWS Infrastructure", "Docker & Kubernetes"] },
+                         { title: "API Protocols", items: ["TRPC Type-safety", "JSON-REST Architecture"] }
+                       ].map((mod, i) => (
+                          <div key={i} className="group">
+                             <h4 className="text-[10px] font-black text-blue-700 uppercase mb-3 flex items-center gap-2">
+                                <span className="h-1 w-1 bg-blue-700 rounded-full" />
+                                {mod.title}
+                             </h4>
+                             <ul className="space-y-2 border-l-2 border-zinc-100 pl-4">
+                                {mod.items.map((item, j) => (
+                                   <li key={j} className="text-xs font-bold text-zinc-500 hover:text-blue-700 transition-colors cursor-default">• {item}</li>
+                                ))}
+                             </ul>
+                          </div>
+                       ))}
+                    </div>
+                 </div>
+
+                 <div className="bg-zinc-900 p-8 text-white shadow-xl">
+                    <div className="flex items-center gap-3 mb-4">
+                       <Clock className="text-blue-400" size={20} />
+                       <p className="text-[10px] font-black uppercase tracking-widest text-blue-400">Time Constraints</p>
+                    </div>
+                    <div className="space-y-1">
+                       <p className="text-3xl font-black">60m</p>
+                       <p className="text-[10px] font-bold opacity-40 uppercase">Total Duration Window</p>
+                    </div>
+                 </div>
+              </div>
+
+              {/* Right Column: Rules & Initiation */}
+              <div className="lg:col-span-8 space-y-8">
+                 <div className="bg-white p-10 shadow-xl border-l-[12px] border-blue-700">
+                    <div className="flex items-center gap-4 mb-10 pb-6 border-b border-zinc-100">
+                       <AlertCircle className="text-zinc-800" size={28} />
+                       <div>
+                          <h2 className="text-2xl font-black text-zinc-800 uppercase tracking-tighter">Initiation Protocol</h2>
+                          <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">System Readiness Checklist</p>
+                       </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8">
+                       {[
+                          "Full-screen session will be enforced dynamically.",
+                          "Window/Tab switching triggers disqualification nodes.",
+                          "Assessment marking standard is fixed (+3 / -1).",
+                          "Real-time monitoring of DOM API violations is active.",
+                          "Encryption keys for answers remain isolated in backend.",
+                          "Browser hardware keys (F5, F12) are internally blocked."
+                       ].map((rule, i) => (
+                          <div key={i} className="flex gap-4 group">
+                             <div className="h-6 w-6 rounded-full bg-zinc-100 flex items-center justify-center shrink-0 border border-zinc-200 group-hover:bg-blue-700 group-hover:text-white transition-all">
+                                <span className="text-[10px] font-black">{i + 1}</span>
+                             </div>
+                             <p className="text-xs font-bold text-zinc-600 leading-relaxed uppercase tracking-tight">{rule}</p>
+                          </div>
+                       ))}
+                    </div>
+
+                    <div className="mt-16 pt-8 border-t border-zinc-100">
+                       <div className="flex flex-col items-center justify-center space-y-8">
+                          <label className="flex items-center gap-6 group cursor-pointer">
+                             <div className={`h-8 w-8 rounded-lg border-2 transition-all flex items-center justify-center ${hasAgreed ? 'bg-blue-700 border-blue-700 text-white' : 'bg-white border-zinc-200'}`}>
+                                {hasAgreed && <ShieldCheck size={20} />}
+                             </div>
+                             <input 
+                                type="checkbox" 
+                                className="hidden"
+                                checked={hasAgreed}
+                                onChange={(e) => setHasAgreed(e.target.checked)}
+                             />
+                             <div>
+                                <p className="text-sm font-black text-zinc-800 uppercase tracking-tight">Accept Terms</p>
+                                <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">I certify readiness for this assessment.</p>
+                             </div>
+                          </label>
+
+                          <div className="text-center w-full max-w-sm">
+                             <button 
+                                onClick={startExam}
+                                disabled={!hasAgreed || !examActive}
+                                className={`w-full group h-16 rounded-xl flex items-center justify-center gap-4 transition-all ${
+                                    (hasAgreed && examActive)
+                                    ? 'bg-blue-700 text-white shadow-[0_20px_50px_rgba(29,78,216,0.3)] hover:scale-[1.02]' 
+                                    : 'bg-zinc-100 text-zinc-300 border-2 border-zinc-200 cursor-not-allowed'
+                                }`}
+                             >
+                                <span className="text-xs font-black uppercase tracking-[0.2em]">{examActive ? 'Initialize Module' : 'System Locked'}</span>
+                                {examActive && <ChevronRight className="group-hover:translate-x-1 transition-transform" size={18} />}
+                             </button>
+                             {!examActive && (
+                                <p className="text-[10px] text-zinc-400 font-bold uppercase mt-4 tracking-tighter">Terminal will synchronize at 10:45 AM.</p>
+                             )}
+                          </div>
+                       </div>
+                    </div>
+                 </div>
+
+                 <div className="grid grid-cols-2 gap-6 pb-20">
+                    <div className="bg-white p-6 border border-zinc-200 text-center">
+                       <p className="text-lg font-black text-zinc-800">150</p>
+                       <p className="text-[10px] font-black text-zinc-400 uppercase tracking-widest">Total Mark Scaling</p>
+                    </div>
+                    <div className="bg-white p-6 border border-zinc-200 text-center">
+                       <p className="text-lg font-black text-zinc-800">50</p>
+                       <p className="text-[10px] font-black text-zinc-400 uppercase tracking-widest">Assessment Logic Nodes</p>
+                    </div>
+                 </div>
+              </div>
+
           </div>
-
-          {/* Agreement and Start */}
-          <div className="space-y-6 pt-6 flex flex-col items-center">
-             <label className="flex items-center gap-4 cursor-pointer">
-                <input 
-                   type="checkbox" 
-                   className="h-5 w-5 accent-blue-700"
-                   checked={hasAgreed}
-                   onChange={(e) => setHasAgreed(e.target.checked)}
-                />
-                <span className="text-sm font-bold text-gray-600">I have read the rules and I am ready.</span>
-             </label>
-
-             <div className="text-center space-y-4">
-                <button 
-                   onClick={startExam}
-                   disabled={!hasAgreed || !examActive}
-                   className={`h-12 px-16 text-xs font-bold uppercase tracking-widest transition-all ${
-                       (hasAgreed && examActive)
-                       ? 'bg-blue-700 text-white shadow-lg' 
-                       : 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                   }`}
-                >
-                   {examActive ? 'Start Exam' : 'Wait for Admin'}
-                </button>
-                {!examActive && (
-                   <p className="text-[10px] text-yellow-600 font-bold uppercase">Test is not active yet.</p>
-                )}
-             </div>
-          </div>
-
-        </div>
       </main>
 
-      {/* Simple Footer */}
-      <footer className="p-6 text-center text-xs text-gray-400 bg-gray-50 border-t border-gray-200">
-        Student Forge Technologies Private Limited © 2026
+      <footer className="fixed bottom-0 left-0 right-0 h-10 bg-white border-t border-zinc-200 flex items-center justify-center px-8 z-[30]">
+         <p className="text-[9px] text-zinc-400 font-bold uppercase tracking-[0.4em]">STDFG Assessment Core Node (L-Grid Architecture)</p>
       </footer>
 
+      <style jsx global>{`
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #e5e7eb; }
+      `}</style>
     </div>
   );
 }
