@@ -1,12 +1,11 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { 
   CheckCircle2, 
   Loader2,
-  AlertTriangle,
-  FileText
+  AlertTriangle
 } from "lucide-react";
 
 export default function ExamReviewPage() {
@@ -29,37 +28,26 @@ export default function ExamReviewPage() {
     setSubmission(JSON.parse(storedSubmission));
   }, [router]);
 
-  const syncSession = async (status: string, answers: any, questions: any, vCount: number) => {
+  const handleFinalSubmit = async () => {
+    setLoading(true);
     try {
       await fetch("/api/exams/session", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           userId: user.id,
-          status,
-          violations: vCount,
-          answers,
-          questionMapping: questions
+          status: "SUBMITTED",
+          violations: submission.violations,
+          answers: submission.answers,
+          questionMapping: submission.shuffledQuestions
         })
       });
-    } catch (err) {
-      console.error("Sync error");
-    }
-  };
-
-  const handleFinalSubmit = async () => {
-    setLoading(true);
-    try {
-      if (typeof document !== "undefined" && document.exitFullscreen) {
-        document.exitFullscreen().catch(() => {});
-      }
-
-      await syncSession("SUBMITTED", submission.answers, submission.shuffledQuestions, submission.violations);
       
       localStorage.removeItem("exam_submission");
       setIsSubmitted(true);
+      if (typeof document !== "undefined" && document.exitFullscreen) document.exitFullscreen().catch(() => {});
     } catch (err) {
-      alert("Submission failed. Try again.");
+      alert("Submission failed. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -67,15 +55,18 @@ export default function ExamReviewPage() {
 
   if (isSubmitted) {
     return (
-      <div className="min-h-screen bg-white flex flex-col items-center justify-center p-10 font-sans">
-        <CheckCircle2 size={80} className="text-green-600 mb-8" />
-        <h1 className="text-3xl font-black text-blue-900 mb-4 uppercase tracking-tighter">Exam Submitted</h1>
-        <p className="text-zinc-500 mb-12 font-bold text-sm uppercase">Your answers have been securely synced with Student Forge.</p>
+      <div className="min-h-screen bg-white flex flex-col items-center justify-center p-6 text-center">
+        <CheckCircle2 size={60} className="text-green-600 mb-6" />
+        <h1 className="text-2xl font-bold text-blue-900 mb-2">Exam Submitted Successfully</h1>
+        <p className="text-gray-500 mb-8 max-w-sm">
+           Thank you for completing the exam. Your reports will be available in the 
+           <strong className="text-blue-700"> Intern Dashboard &gt; Reports</strong>.
+        </p>
         <button 
           onClick={() => { localStorage.removeItem("intern_user"); router.push("/exams"); }}
-          className="bg-blue-700 text-white px-16 py-4 font-black uppercase text-xs tracking-widest shadow-2xl hover:bg-blue-800 transition-all"
+          className="bg-blue-700 text-white px-10 py-3 font-semibold rounded shadow hover:bg-blue-800 transition-all"
         >
-          Logout Terminal
+          Logout
         </button>
       </div>
     );
@@ -83,96 +74,89 @@ export default function ExamReviewPage() {
 
   if (!submission) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center font-sans">
+      <div className="min-h-screen bg-white flex items-center justify-center">
         <Loader2 className="animate-spin text-blue-700" />
       </div>
     );
   }
 
-  const { answers, status, shuffledQuestions } = submission;
+  const { status, shuffledQuestions } = submission;
   const answeredCount = Object.values(status).filter(s => s === 'answered' || s === 'marked_for_review').length;
   const totalCount = shuffledQuestions.length;
   const unansweredCount = totalCount - answeredCount;
 
   return (
-    <div className="min-h-screen bg-white font-sans flex flex-col select-none">
+    <div className="min-h-screen bg-gray-50 font-sans flex flex-col text-gray-700">
       
-      {/* Simple Header */}
-      <header className="h-20 bg-blue-700 text-white px-10 flex justify-between items-center shadow-lg relative z-20">
-        <div>
-           <h1 className="text-xl font-black uppercase tracking-tight">Final Summary</h1>
-           <p className="text-[10px] font-bold opacity-70 uppercase tracking-widest">Candidate Verification Node</p>
-        </div>
-        <div className="h-10 w-10 bg-blue-800 border border-blue-500 flex items-center justify-center rounded shadow-inner">
-           <FileText size={20} />
+      {/* Header */}
+      <header className="bg-blue-700 text-white p-6 shadow-md">
+        <div className="max-w-3xl mx-auto flex justify-between items-center">
+           <h1 className="text-lg font-bold">Exam Summary</h1>
+           <p className="text-xs opacity-80">{user.name}</p>
         </div>
       </header>
 
-      <main className="flex-1 p-8 md:p-20 overflow-y-auto bg-zinc-50/50">
-        <div className="max-w-3xl mx-auto space-y-12">
+      <main className="flex-1 p-6 md:p-10 flex items-center justify-center">
+        <div className="max-w-2xl w-full bg-white border border-gray-300 shadow-sm overflow-hidden">
           
-          <div className="text-center space-y-4">
-             <h2 className="text-4xl font-black text-blue-900 uppercase tracking-tighter leading-none">Review Your Status</h2>
-             <p className="text-[10px] text-zinc-400 font-bold uppercase tracking-[0.2em]">Check carefully before final submission</p>
+          <div className="bg-gray-100 p-4 border-b border-gray-300">
+             <h2 className="text-blue-800 font-bold text-center text-sm">Review Your Performance</h2>
           </div>
 
-          {/* Stats Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-             <div className="bg-white border-2 border-zinc-100 p-8 text-center shadow-sm">
-                <p className="text-4xl font-black text-blue-700 mb-2">{totalCount}</p>
-                <p className="text-[10px] font-black text-zinc-400 uppercase tracking-widest">Total Nodes</p>
+          <div className="p-8 space-y-8">
+             
+             {/* Simple Stats */}
+             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="p-6 border border-gray-200 text-center rounded-lg bg-gray-50">
+                   <p className="text-3xl font-bold text-gray-800 mb-1">{totalCount}</p>
+                   <p className="text-xs text-gray-400 font-medium">Total Questions</p>
+                </div>
+                <div className="p-6 border border-green-200 text-center rounded-lg bg-green-50">
+                   <p className="text-3xl font-bold text-green-700 mb-1">{answeredCount}</p>
+                   <p className="text-xs text-green-600 font-medium">Answered</p>
+                </div>
+                <div className="p-6 border border-amber-200 text-center rounded-lg bg-amber-50">
+                   <p className="text-3xl font-bold text-amber-700 mb-1">{unansweredCount}</p>
+                   <p className="text-xs text-amber-600 font-medium">Unanswered</p>
+                </div>
              </div>
-             <div className="bg-white border-2 border-green-500/20 p-8 text-center shadow-sm border-b-green-500">
-                <p className="text-4xl font-black text-green-600 mb-2">{answeredCount}</p>
-                <p className="text-[10px] font-black text-zinc-400 uppercase tracking-widest">Answered</p>
+
+             {/* Important Note */}
+             <div className="p-4 bg-blue-50 border border-blue-100 flex items-start gap-4">
+                <AlertTriangle className="text-blue-700 shrink-0" size={20} />
+                <div>
+                   <p className="text-sm font-semibold text-blue-900 mb-1">Final Submission</p>
+                   <p className="text-sm text-blue-700/80 leading-relaxed">
+                      Please check your details. Once you click "Final Submit," you cannot make any changes.
+                      Your results will be visible in your dashboard after submission.
+                   </p> 
+                </div>
              </div>
-             <div className="bg-white border-2 border-amber-500/20 p-8 text-center shadow-sm border-b-amber-500">
-                <p className="text-4xl font-black text-amber-600 mb-2">{unansweredCount}</p>
-                <p className="text-[10px] font-black text-zinc-400 uppercase tracking-widest">Unanswered</p>
+
+             {/* Buttons */}
+             <div className="flex flex-col md:flex-row gap-4 pt-6">
+                <button 
+                   onClick={() => router.push("/exams/panel")}
+                   disabled={loading}
+                   className="flex-1 h-12 border border-blue-700 text-blue-700 font-bold text-sm rounded hover:bg-blue-50"
+                >
+                   Go Back
+                </button>
+                <button 
+                   onClick={handleFinalSubmit}
+                   disabled={loading}
+                   className="flex-1 h-12 bg-blue-700 text-white font-bold text-sm rounded shadow hover:bg-blue-800 disabled:opacity-50 flex items-center justify-center gap-2"
+                >
+                   {loading ? <Loader2 className="animate-spin" size={20} /> : "Final Submit"}
+                </button>
              </div>
           </div>
-
-          {/* Warning Node */}
-          <div className="bg-amber-50 border-l-4 border-amber-500 p-6 flex items-start gap-4">
-             <AlertTriangle className="text-amber-600 shrink-0" size={24} />
-             <div>
-                <h4 className="text-xs font-black text-amber-900 uppercase tracking-tight mb-1">Final Submission Warning</h4>
-                <p className="text-xs text-amber-800 font-bold leading-relaxed opacity-80 uppercase tracking-tight">
-                   Once submitted, you cannot go back and modify any answers. Ensure all modules have been attempted.
-                </p>
-             </div>
-          </div>
-
-          {/* Action Buttons */}
-          <div className="flex flex-col md:flex-row gap-6 pt-10">
-             <button 
-                onClick={() => router.push("/exams/panel")}
-                className="flex-1 h-16 border-2 border-zinc-200 text-zinc-600 font-black uppercase text-xs tracking-widest hover:bg-zinc-100 transition-all"
-             >
-                Back to Questions
-             </button>
-             <button 
-                onClick={handleFinalSubmit}
-                disabled={loading}
-                className="flex-1 h-16 bg-blue-700 text-white font-black uppercase text-xs tracking-widest shadow-2xl hover:bg-blue-800 transition-all flex items-center justify-center disabled:opacity-50"
-             >
-                {loading ? <Loader2 className="animate-spin" /> : "Final Submit"}
-             </button>
-          </div>
-
         </div>
       </main>
 
-      {/* Tiled Background Watermark */}
-      <div className="fixed inset-0 pointer-events-none z-0 opacity-[0.03] overflow-hidden select-none">
-          <div className="grid grid-cols-3 gap-y-32 gap-x-12 p-10 h-full w-full">
-              {[...Array(30)].map((_, i) => (
-                  <div key={i} className="flex items-center justify-center -rotate-12">
-                     <span className="text-2xl font-black whitespace-nowrap">STUDENT FORGE</span>
-                  </div>
-              ))}
-          </div>
-      </div>
+      <footer className="p-6 text-center text-xs text-gray-400">
+        Student Forge Technologies © 2026
+      </footer>
 
     </div>
   );
