@@ -178,19 +178,12 @@ export default function ExamPanelPage() {
   return (
     <div className="h-screen bg-white flex flex-col select-none relative overflow-hidden font-sans">
       
-      {/* CROSSED WATERMARKS - CLEARLY VISIBLE */}
-      <div className="absolute inset-0 pointer-events-none z-0 opacity-[0.1] overflow-hidden">
-          <div className="h-full w-full flex flex-col justify-around">
-              {[...Array(10)].map((_, i) => (
-                  <div key={i} className="flex justify-around w-[200%] -ml-[50%] rotate-[-20deg] py-8">
-                     <span className="text-2xl font-black tracking-[4em]">STUDENT FORGE</span>
-                  </div>
-              ))}
-          </div>
-          <div className="absolute inset-0 flex flex-col justify-around">
-              {[...Array(10)].map((_, i) => (
-                  <div key={i} className="flex justify-around w-[200%] -ml-[50%] rotate-[20deg] py-8 border-t border-gray-900/10">
-                     <span className="text-2xl font-black tracking-[4em]">STUDENT FORGE</span>
+      {/* Simple Tiled Watermark Grid */}
+      <div className="absolute inset-0 pointer-events-none z-0 opacity-[0.05] overflow-hidden select-none">
+          <div className="grid grid-cols-3 md:grid-cols-5 gap-y-24 gap-x-12 p-10 h-full w-full">
+              {[...Array(50)].map((_, i) => (
+                  <div key={i} className="flex items-center justify-center -rotate-12">
+                     <span className="text-xl font-black whitespace-nowrap">STUDENT FORGE</span>
                   </div>
               ))}
           </div>
