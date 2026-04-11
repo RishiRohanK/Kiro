@@ -1,20 +1,86 @@
-* 7443813 - docs: rewrite README as a strictly minimalist V2.2.0 technical log (2026-04-07)
-* bb910ea - docs: update README with V2.2.0 institutional security and management features (2026-04-07)
-* eda5092 - security: implement v2.0.8 security overhaul with RLS policies, 28-hour lockout, and Redis rate limiting (2026-04-07)
-* 7fdd202 - security: implement 28-hour lockout and signin rate limiting (2026-04-07)
-* 8115e28 - fix: restore compatible workflow and next-pwa versions (2026-04-07)
-* 31b2ee5 - chore: remove all comments from codebase and apply security patches (2026-04-07)
-* 1a4a598 - feat: implement interview rescheduling, submission audit filters, and batch 2 deadline extension (2026-04-06)
-* 2043cb2 - style(pwa): update branding to latest minimalist logo (version 2) (2026-04-06)
-* cd67160 - style(pwa): update branding with new minimalist logo and synchronized brand-red theme colors (2026-04-06)
-* 23873ae - style(pwa): simplify initialization preloader to minimalist industrial version (2026-04-06)
-* 6bc964b - feat(pwa): persistent login and 10-second industrial red preloader for mobile terminal (2026-04-06)
-* 8f9cc31 - style(login): modernize cleed login portal with integrated branding and industrial card aesthetic (2026-04-06)
-* 3b03391 - fix(mobile): resolve white-on-white visibility issue in PWA navigation overlay (2026-04-06)
-* f8e9592 - style(admin): modernize dashboard with industrial minimalist aesthetic, simple grammar, and high-density card layouts (2026-04-06)
-* d9ac9d4 - fix: global interview modal placement and explicit date/time scheduling (2026-04-05)
-* d1077b0 - feat: improved hiring registry responsiveness and status management UI (2026-04-05)
-* e444a7f - fix: interview persistence and improved mail logging (2026-04-05)
-* fc8254f - fix: restore and optimize hiring registry navigation on desktop (2026-04-05)
-* 62330e9 - feat: added interview scheduling feature to hiring registry with professional email template (2026-04-05)
-* 8aa43c1 - feat: updated attendance logic to use calendar days since first login and cap at 100% across all portals (2026-04-05)
+# STUDENT FORGE | Learn Grid Ecosystem
+**Version 2.5.0 (Enterprise Assessment Overhaul)**
+
+STUDENT FORGE is a secure, high-fidelity internship and learning management ecosystem built for scale and integrity. The platform features an industrial-grade examination terminal, advanced performance analytics, and a centralized administrative command center.
+
+---
+
+## 🚀 Key Modules
+
+### 1. Secure Examination Terminal (`/exams`)
+An industrial-standard assessment engine configured to JEE Mains protocols.
+- **Marking Scheme**: +3 for correct answers, -1 for negative marking.
+- **Session Integrity**:
+  - Mandatory Full-screen enforcement.
+  - Real-time Violation logging (Tab switching, Key-blocking: F5, F12, Ctrl+T).
+  - Standalone Review Terminal for final candidate verification.
+- **Server-Side Scoring**: Anti-cheat scoring logic executed strictly on the server to prevent payload manipulation.
+
+### 2. Intern Performance Reports (`/intern/dashboard/reports`)
+High-density diagnostic reporting for candidates.
+- **Scale**: Performance metrics based on 150-mark standard.
+- **Visualization**: Graphical representation of intern growth and accuracy.
+- **Automated Feedback**: Diagnostic commentary based on assessment nodes.
+
+### 3. CLEED Command Center (`/cleed/dashboard`)
+The administrative heart of the ecosystem.
+- **Live Monitoring**: Real-time tracking of active exam sessions and violation counts.
+- **Unified Management**: Centralized control over interns, tasks, and scheduling.
+- **Hiring Registry**: Advanced portal for talent acquisition and interview orchestration.
+
+---
+
+## 🛠 Tech Stack
+
+- **Core Framework**: Next.js 16.2.0 (Turbopack Powered)
+- **Database Engine**: PostgreSQL with Prisma ORM
+- **Security Layer**: 
+  - Dynamic Client Refresh (Preventing stale state).
+  - Encrypted Local Storage Bridges for session transitions.
+  - SMTP-based Secure Recovery.
+- **UI/UX**: 
+  - Tailwind CSS (Minimalist Industrial Aesthetic).
+  - Lenis (Unified Smooth Scroll with selective exclusion via `data-lenis-prevent`).
+  - Lucide React (Standardized Iconography).
+
+---
+
+## 🏗 Installation & Deployment
+
+### Development Environment
+```bash
+# Install dependencies
+npm install
+
+# Generate Prisma Client
+npx prisma generate
+
+# Run with Turbopack
+npm run dev
+```
+
+### Production Build
+```bash
+# Secure build with pre-generation
+npm run build
+
+# Start production server
+npm run start
+```
+
+---
+
+## 🔒 Security Protocol (Zero-Trust)
+STUDENT FORGE operates on a zero-trust architecture for assessment data. All `CORRECT_ANSWERS` are isolated in the backend environment, ensuring that the frontend only receives question text, never the evaluation keys.
+
+---
+
+### 📅 Release Log (V2.5.0)
+- **Implemented standalone Review Page** for optimized assessment exit flows.
+- **Upgraded to +3 / -1 Marking Standard** across all diagnostic tools.
+- **Resolved Lenis Scrolling Conflicts** in independent UI regions.
+- **Forced Dynamic Prisma Client Refresh** to prevent hot-reload stale states.
+
+---
+**Student Forge Technologies Private Limited © 2026**
+*Minimalist Industrial Standard | Engineered for Integrity*
