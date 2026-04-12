@@ -1089,8 +1089,7 @@ export default function CleedDashboard() {
                         { id: "internships", icon: Briefcase, label: "Programs" },
                         { id: "certification", icon: FileBadge, label: "Certificates" },
                         { id: "attendance", icon: CalendarCheck, label: "Attendance" },
-                         { id: "feedback", icon: MessageSquare, label: "Feedback" },
-                         { id: "uiuxtasks", icon: Paperclip, label: "UI/UX Tasks" },
+                        { id: "vault", icon: Shield, label: "Vault" },
                         { id: "schedule", icon: Calendar, label: "Daily Plan" },
                         { id: "manage_schedules", icon: Settings, label: "Schedules" },
                         { id: "assign", icon: Send, label: "Dispatch" },
@@ -1100,7 +1099,14 @@ export default function CleedDashboard() {
                      ].map((item) => (
                         <button
                            key={item.id}
-                           onClick={() => { setActiveTab(item.id); setIsMobileMenuOpen(false); }}
+                           onClick={() => { 
+                              if (item.id === "vault") {
+                                 router.push("/cleed/dashboard/submissions");
+                              } else {
+                                 setActiveTab(item.id); 
+                              }
+                              setIsMobileMenuOpen(false); 
+                           }}
                            className={`h-24 border flex flex-col items-center justify-center gap-2.5 transition-all rounded-none ${activeTab === item.id
                               ? "bg-white/20 text-white border-white border-l-4 -ml-[1px]"
                               : "bg-white/5 text-white/80 border-white/10"
@@ -2655,103 +2661,6 @@ export default function CleedDashboard() {
                )}
 
                {/* Logbook / System History Node */}
-               {activeTab === "feedback" && (
-                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-5">
-                     <div className="flex items-center justify-between">
-                        <div>
-                           <h2 className="text-lg font-semibold text-zinc-800">Candidate Feedback</h2>
-                           <p className="text-sm text-zinc-400 mt-0.5">{feedbacks.length} response{feedbacks.length !== 1 ? "s" : ""} collected</p>
-                        </div>
-                     </div>
-
-                     <div className="space-y-4">
-                        {feedbacks.length > 0 ? (
-                           feedbacks.map((f, idx) => (
-                              <div key={f.id} className="bg-white border border-zinc-200 rounded-lg overflow-hidden hover:shadow-sm transition-shadow">
-                                 <div className="px-5 py-4 border-b border-zinc-100 flex justify-between items-center">
-                                    <div>
-                                       <p className="text-sm font-semibold text-zinc-800">{f.name}</p>
-                                       <p className="text-xs text-zinc-400 mt-0.5">{f.college}</p>
-                                    </div>
-                                    <span className="text-xs text-zinc-300">
-                                       {new Date(f.createdAt).toLocaleString()}
-                                    </span>
-                                 </div>
-                                 <div className="px-5 py-4 grid grid-cols-1 md:grid-cols-3 gap-6">
-                                    <div>
-                                       <p className="text-xs font-medium text-blue-600 mb-1">Exam experience</p>
-                                       <p className="text-sm text-zinc-600 leading-relaxed">{f.examExperience}</p>
-                                    </div>
-                                    <div>
-                                       <p className="text-xs font-medium text-rose-500 mb-1">What to improve</p>
-                                       <p className="text-sm text-zinc-600 leading-relaxed">{f.upgradeSuggestions}</p>
-                                    </div>
-                                    <div>
-                                       <p className="text-xs font-medium text-zinc-500 mb-1">Want to learn</p>
-                                       <p className="text-sm text-zinc-600 leading-relaxed">{f.learningGoals}</p>
-                                    </div>
-                                 </div>
-                              </div>
-                           ))
-                        ) : (
-                           <div className="bg-zinc-50 border border-zinc-200 border-dashed rounded-lg p-16 text-center">
-                              <MessageSquare className="mx-auto text-zinc-300 mb-3" size={32} />
-                              <p className="text-sm text-zinc-400">No feedback submitted yet.</p>
-                           </div>
-                        )}
-                     </div>
-                  </motion.div>
-               )}
-
-               {activeTab === "uiuxtasks" && (
-                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-5">
-                     <div>
-                        <h2 className="text-lg font-semibold text-zinc-800">UI/UX Task Submissions</h2>
-                        <p className="text-sm text-zinc-400 mt-0.5">{uiuxSubmissions.length} submission{uiuxSubmissions.length !== 1 ? "s" : ""} received</p>
-                     </div>
-
-                     {uiuxSubmissions.length > 0 ? (
-                        <div className="bg-white border border-zinc-200 rounded-lg overflow-hidden">
-                           <table className="w-full text-sm">
-                              <thead>
-                                 <tr className="border-b border-zinc-100 bg-zinc-50">
-                                    <th className="text-left px-5 py-3 text-xs font-semibold text-zinc-500">Intern</th>
-                                    <th className="text-left px-5 py-3 text-xs font-semibold text-zinc-500">Task name</th>
-                                    <th className="text-left px-5 py-3 text-xs font-semibold text-zinc-500">Live link</th>
-                                    <th className="text-left px-5 py-3 text-xs font-semibold text-zinc-500">GitHub</th>
-                                    <th className="text-left px-5 py-3 text-xs font-semibold text-zinc-500">Submitted</th>
-                                 </tr>
-                              </thead>
-                              <tbody className="divide-y divide-zinc-100">
-                                 {uiuxSubmissions.map((s) => (
-                                    <tr key={s.id} className="hover:bg-zinc-50 transition-colors">
-                                       <td className="px-5 py-3 font-medium text-zinc-800">{s.userName}</td>
-                                       <td className="px-5 py-3 text-zinc-600">{s.taskName}</td>
-                                       <td className="px-5 py-3">
-                                          <a href={s.taskLink} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline text-xs truncate max-w-[180px] block">{s.taskLink}</a>
-                                       </td>
-                                       <td className="px-5 py-3">
-                                          {s.githubLink ? (
-                                             <a href={s.githubLink} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline text-xs truncate max-w-[180px] block">{s.githubLink}</a>
-                                          ) : (
-                                             <span className="text-zinc-300 text-xs">—</span>
-                                          )}
-                                       </td>
-                                       <td className="px-5 py-3 text-zinc-400 text-xs">{new Date(s.createdAt).toLocaleString()}</td>
-                                    </tr>
-                                 ))}
-                              </tbody>
-                           </table>
-                        </div>
-                     ) : (
-                        <div className="bg-zinc-50 border border-zinc-200 border-dashed rounded-lg p-16 text-center">
-                           <Paperclip className="mx-auto text-zinc-300 mb-3" size={28} />
-                           <p className="text-sm text-zinc-400">No task submissions yet.</p>
-                        </div>
-                     )}
-                  </motion.div>
-               )}
-
                {activeTab === "history" && (
                   <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-8">
                      <div className="bg-white border border-zinc-100 p-8 text-left">
