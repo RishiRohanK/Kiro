@@ -200,6 +200,34 @@ function InternDashboardContent() {
    }, [router]);
 
     const [showChatSidebar, setShowChatSidebar] = useState(true);
+    const [showUIUXModal, setShowUIUXModal] = useState(false);
+    const [uiuxSubmitting, setUiuxSubmitting] = useState(false);
+    const [uiuxSuccess, setUiuxSuccess] = useState(false);
+    const [uiuxForm, setUiuxForm] = useState({ taskName: "", taskLink: "", githubLink: "" });
+
+    const handleUIUXSubmit = async (e: React.FormEvent) => {
+       e.preventDefault();
+       setUiuxSubmitting(true);
+       try {
+          const res = await fetch("/api/intern/uiux-submission", {
+             method: "POST",
+             headers: { "Content-Type": "application/json" },
+             body: JSON.stringify({
+                userId: user.id,
+                userName: user.name,
+                ...uiuxForm
+             })
+          });
+          if (res.ok) {
+             setUiuxSuccess(true);
+             setTimeout(() => { setShowUIUXModal(false); setUiuxSuccess(false); setUiuxForm({ taskName: "", taskLink: "", githubLink: "" }); }, 2000);
+          }
+       } catch (err) {
+          console.error("UI/UX submission failed:", err);
+       } finally {
+          setUiuxSubmitting(false);
+       }
+    };
     const [showFeedbackModal, setShowFeedbackModal] = useState(false);
     const [submittingFeedback, setSubmittingFeedback] = useState(false);
     const [feedbackForm, setFeedbackForm] = useState({
@@ -562,6 +590,25 @@ function InternDashboardContent() {
                      alt="Programs Banner"
                      className="w-full h-auto block"
                   />
+               </div>
+
+               {/* UI/UX Task Submission Alert */}
+               <div className="flex items-center justify-between gap-4 bg-blue-50 border border-blue-200 rounded-lg px-5 py-4">
+                  <div className="flex items-center gap-3">
+                     <div className="h-9 w-9 bg-blue-600 rounded-lg flex items-center justify-center shrink-0">
+                        <Paperclip className="text-white" size={16} />
+                     </div>
+                     <div>
+                        <p className="text-sm font-semibold text-zinc-800">UI/UX Interns — Submit your task</p>
+                        <p className="text-xs text-zinc-500 mt-0.5">Please submit your developed task link so we can review your work.</p>
+                     </div>
+                  </div>
+                  <button
+                     onClick={() => setShowUIUXModal(true)}
+                     className="shrink-0 px-4 py-2 bg-blue-600 text-white text-xs font-semibold rounded-md hover:bg-blue-700 transition-all"
+                  >
+                     Submit here
+                  </button>
                </div>
 
                {userStatus?.offerLetterUrl && (
@@ -1184,6 +1231,85 @@ function InternDashboardContent() {
                </div>
             )}
          </AnimatePresence>
+         {/* UI/UX Task Submission Modal */}
+         <AnimatePresence>
+            {showUIUXModal && (
+               <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="fixed inset-0 z-[9999] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4"
+               >
+                  <motion.div
+                     initial={{ scale: 0.95, y: 16 }}
+                     animate={{ scale: 1, y: 0 }}
+                     className="bg-white max-w-md w-full shadow-xl rounded-lg overflow-hidden"
+                  >
+                     <div className="p-6 border-b border-zinc-100 flex items-center justify-between">
+                        <div>
+                           <h2 className="text-base font-semibold text-zinc-800">Submit your task</h2>
+                           <p className="text-xs text-zinc-400 mt-0.5">UI/UX Development track submission</p>
+                        </div>
+                        <button onClick={() => setShowUIUXModal(false)} className="text-zinc-300 hover:text-zinc-600 transition-colors">
+                           <X size={18} />
+                        </button>
+                     </div>
+                     <form onSubmit={handleUIUXSubmit} className="p-6 space-y-4">
+                        {uiuxSuccess ? (
+                           <div className="py-8 text-center">
+                              <CheckCircle2 className="mx-auto text-emerald-500 mb-3" size={32} />
+                              <p className="text-sm font-semibold text-zinc-800">Submitted successfully!</p>
+                              <p className="text-xs text-zinc-400 mt-1">Your task has been sent for review.</p>
+                           </div>
+                        ) : (
+                           <>
+                              <div className="space-y-1.5">
+                                 <label className="text-sm font-medium text-zinc-600">Task name</label>
+                                 <input
+                                    required
+                                    type="text"
+                                    placeholder="e.g. Color Theory UI mockup"
+                                    className="w-full border border-zinc-200 rounded-md p-2.5 text-sm text-zinc-800 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                                    value={uiuxForm.taskName}
+                                    onChange={e => setUiuxForm({ ...uiuxForm, taskName: e.target.value })}
+                                 />
+                              </div>
+                              <div className="space-y-1.5">
+                                 <label className="text-sm font-medium text-zinc-600">Task / Live link</label>
+                                 <input
+                                    required
+                                    type="url"
+                                    placeholder="https://your-project-link.com"
+                                    className="w-full border border-zinc-200 rounded-md p-2.5 text-sm text-zinc-800 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                                    value={uiuxForm.taskLink}
+                                    onChange={e => setUiuxForm({ ...uiuxForm, taskLink: e.target.value })}
+                                 />
+                              </div>
+                              <div className="space-y-1.5">
+                                 <label className="text-sm font-medium text-zinc-600">GitHub link <span className="text-zinc-400 font-normal">(optional)</span></label>
+                                 <input
+                                    type="url"
+                                    placeholder="https://github.com/you/repo"
+                                    className="w-full border border-zinc-200 rounded-md p-2.5 text-sm text-zinc-800 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                                    value={uiuxForm.githubLink}
+                                    onChange={e => setUiuxForm({ ...uiuxForm, githubLink: e.target.value })}
+                                 />
+                              </div>
+                              <button
+                                 disabled={uiuxSubmitting}
+                                 type="submit"
+                                 className="w-full bg-blue-600 text-white py-2.5 text-sm font-medium rounded-md hover:bg-blue-700 transition-all flex items-center justify-center gap-2 disabled:opacity-50 mt-2"
+                              >
+                                 {uiuxSubmitting ? <><RefreshCw className="animate-spin" size={15} /> Submitting...</> : <><Send size={14} /> Submit task</>}
+                              </button>
+                           </>
+                        )}
+                     </form>
+                  </motion.div>
+               </motion.div>
+            )}
+         </AnimatePresence>
+
          {/* Mandatory Feedback Modal */}
          <AnimatePresence>
             {showFeedbackModal && (

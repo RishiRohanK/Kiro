@@ -1,6 +1,3 @@
-
-
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -474,4 +471,16 @@ model Feedback {
   upgradeSuggestions String
   learningGoals      String
   createdAt          DateTime @default(now())
+}
+
+model UIUXSubmission {
+  id         String   @id @default(cuid())
+  userId     String
+  userName   String
+  taskName   String
+  taskLink   String
+  githubLink String?
+  createdAt  DateTime @default(now())
+
+  @@map("UIUXSubmission")
 }
