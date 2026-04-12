@@ -10,6 +10,8 @@ import {
   FileText,
   ShieldCheck,
   TrendingUp,
+  ChevronDown,
+  ChevronUp,
   Award
 } from "lucide-react";
 import { motion } from "framer-motion";
@@ -173,12 +175,15 @@ export default function InternReportsPage() {
                                  </p>
                               </div>
                            </div>
-                           <button 
-                              onClick={() => setShowResponses(!showResponses)}
-                              className="text-[10px] font-bold text-blue-600 hover:underline"
-                           >
-                              {showResponses ? "Hide details" : "More details"}
-                           </button>
+                           {session.questionMapping && session.answers && (
+                              <button 
+                                 onClick={() => setShowResponses(!showResponses)}
+                                 className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest border border-zinc-200 bg-white hover:bg-zinc-50 transition-all text-zinc-600 flex items-center gap-2 shadow-sm"
+                              >
+                                 {showResponses ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
+                                 {showResponses ? "Hide details" : "More details"}
+                              </button>
+                           )}
                         </div>
                      </div>
 
