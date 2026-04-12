@@ -13,12 +13,14 @@ import {
   Award
 } from "lucide-react";
 import { motion } from "framer-motion";
+import { CORRECT_ANSWERS } from "@/lib/exam-questions";
 
 export default function InternReportsPage() {
   const [session, setSession] = useState<any>(null);
   const [history, setHistory] = useState<any[]>([]);
   const [attendance, setAttendance] = useState<number>(0);
   const [loading, setLoading] = useState(true);
+  const [showResponses, setShowResponses] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -157,20 +159,90 @@ export default function InternReportsPage() {
                      </div>
 
                      <div className="p-4 bg-zinc-50 border border-zinc-100">
-                        <div className="flex gap-3 items-center">
-                           <div className="h-8 w-8 bg-white border border-zinc-100 flex items-center justify-center text-zinc-400">
-                              <TrendingUp size={16} />
+                        <div className="flex gap-3 items-center justify-between">
+                           <div className="flex gap-3 items-center">
+                              <div className="h-8 w-8 bg-white border border-zinc-100 flex items-center justify-center text-zinc-400">
+                                 <TrendingUp size={16} />
+                              </div>
+                              <div>
+                                 <p className="text-[10px] font-bold text-zinc-800">Exam feedback</p>
+                                 <p className="text-xs text-zinc-500 mt-0.5">
+                                    {session.score >= 105 ? "Great job. You have a solid understanding of the concepts." : 
+                                    session.score >= 75 ? "Good work. Try to focus more on advanced topics." :
+                                    "Keep practicing. We suggest reviewing the core architecture guides."}
+                                 </p>
+                              </div>
                            </div>
-                           <div>
-                              <p className="text-[10px] font-bold text-zinc-800">Exam feedback</p>
-                              <p className="text-xs text-zinc-500 mt-0.5">
-                                 {session.score >= 105 ? "Great job. You have a solid understanding of the concepts." : 
-                                 session.score >= 75 ? "Good work. Try to focus more on advanced topics." :
-                                 "Keep practicing. We suggest reviewing the core architecture guides."}
-                              </p>
-                           </div>
+                           <button 
+                              onClick={() => setShowResponses(!showResponses)}
+                              className="text-[10px] font-bold text-blue-600 hover:underline"
+                           >
+                              {showResponses ? "Hide details" : "More details"}
+                           </button>
                         </div>
                      </div>
+
+                     {showResponses && session.questionMapping && session.answers && (
+                        <div className="mt-8 space-y-4 border-t border-zinc-100 pt-6">
+                           <h4 className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 mb-4">Question Review</h4>
+                           <div className="space-y-6">
+                              {(session.questionMapping as any[]).map((q, idx) => {
+                                 const userAnswerIdx = session.answers[idx];
+                                 const correctOptionIdx = CORRECT_ANSWERS[q.id as keyof typeof CORRECT_ANSWERS];
+                                 const isCorrect = userAnswerIdx === correctOptionIdx;
+                                 
+                                 return (
+                                    <div key={idx} className="pb-8 border-b border-zinc-50 last:border-0">
+                                       <div className="flex justify-between items-start mb-3">
+                                          <p className="text-sm font-semibold text-zinc-800 leading-relaxed max-w-2xl">
+                                             <span className="text-zinc-400 mr-2 font-mono">#{idx + 1}</span> {q.question}
+                                          </p>
+                                          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${isCorrect ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'}`}>
+                                             {isCorrect ? '+3 marks' : '-1 mark'}
+                                          </span>
+                                       </div>
+                                       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                          {q.options.map((opt: string, optIdx: number) => {
+                                             const isUserChoice = userAnswerIdx === optIdx;
+                                             const isCorrectOpt = correctOptionIdx === optIdx;
+                                             
+                                             let borderColor = 'border-zinc-100';
+                                             let bgColor = 'bg-white';
+                                             let textColor = 'text-zinc-500';
+
+                                             if (isCorrectOpt) {
+                                                borderColor = 'border-emerald-200';
+                                                bgColor = 'bg-emerald-50/50';
+                                                textColor = 'text-emerald-700 font-bold';
+                                             } else if (isUserChoice && !isCorrect) {
+                                                borderColor = 'border-rose-200';
+                                                bgColor = 'bg-rose-50/50';
+                                                textColor = 'text-rose-700 font-bold';
+                                             }
+
+                                             return (
+                                                <div 
+                                                   key={optIdx} 
+                                                   className={`p-3 text-[11px] border transition-all ${borderColor} ${bgColor} ${textColor} flex items-center justify-between`}
+                                                >
+                                                   <div className="flex items-center gap-3">
+                                                      <span className="text-[10px] opacity-40 font-mono w-4">{String.fromCharCode(65 + optIdx)}</span>
+                                                      <span>{opt}</span>
+                                                   </div>
+                                                   <div className="flex gap-2">
+                                                      {isCorrectOpt && <span className="text-[9px] font-black uppercase text-emerald-600 bg-emerald-100 px-1.5 py-0.5">Correct</span>}
+                                                      {isUserChoice && <span className={`text-[9px] font-black uppercase px-1.5 py-0.5 ${isCorrect ? 'text-emerald-600 bg-emerald-100' : 'text-rose-600 bg-rose-100'}`}>You</span>}
+                                                   </div>
+                                                </div>
+                                             );
+                                          })}
+                                       </div>
+                                    </div>
+                                 );
+                              })}
+                           </div>
+                        </div>
+                     )}
                   </div>
                ) : (
                   <div className="py-8 text-center">

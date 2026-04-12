@@ -100,6 +100,8 @@ export async function PATCH(req: Request) {
         status, 
         score: finalScore, 
         violations: finalViolations,
+        answers: answers || null,
+        questionMapping: questionMapping || null,
         updatedAt: new Date()
       },
     });

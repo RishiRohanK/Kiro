@@ -455,6 +455,8 @@ model ExamSession {
   status     String   @default("STARTED") // STARTED, SUBMITTED, DISQUALIFIED
   score      Int?
   violations Int      @default(0)
+  answers    Json?
+  questionMapping Json?
   updatedAt  DateTime @updatedAt
 
   @@unique([userId])
