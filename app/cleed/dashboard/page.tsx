@@ -1148,7 +1148,13 @@ export default function CleedDashboard() {
                      ].map((item) => (
                         <button
                            key={item.id}
-                           onClick={() => setActiveTab(item.id)}
+                           onClick={() => {
+                              if (item.id === "vault") {
+                                 router.push("/cleed/dashboard/submissions");
+                              } else {
+                                 setActiveTab(item.id);
+                              }
+                           }}
                            className={`w-full h-10 flex items-center px-3 gap-3 transition-all rounded-none ${activeTab === item.id
                               ? "bg-white/10 text-white font-bold border-l-2 border-white -ml-[9px] pl-[10px]"
                               : "text-white/70 hover:text-white hover:bg-white/5"
@@ -1176,11 +1182,17 @@ export default function CleedDashboard() {
                         { id: "certification", icon: FileBadge, label: "Certificates" },
                         { id: "exams", icon: FileText, label: "Exams" },
                         { id: "attendance", icon: CalendarCheck, label: "Attendance" },
-                         { id: "feedback", icon: MessageSquare, label: "Feedback" },
+                         { id: "vault", icon: Shield, label: "Vault" },
                      ].map((item) => (
                         <button
                            key={item.id}
-                           onClick={() => setActiveTab(item.id)}
+                           onClick={() => {
+                              if (item.id === "vault") {
+                                 router.push("/cleed/dashboard/submissions");
+                              } else {
+                                 setActiveTab(item.id);
+                              }
+                           }}
                            className={`w-full h-10 flex items-center px-3 gap-3 transition-all rounded-none ${activeTab === item.id
                               ? "bg-white/10 text-white font-bold border-l-2 border-white -ml-[9px] pl-[10px]"
                               : "text-white/70 hover:text-white hover:bg-white/5"
@@ -1209,7 +1221,13 @@ export default function CleedDashboard() {
                      ].map((item) => (
                         <button
                            key={item.id}
-                           onClick={() => setActiveTab(item.id)}
+                           onClick={() => {
+                              if (item.id === "vault") {
+                                 router.push("/cleed/dashboard/submissions");
+                              } else {
+                                 setActiveTab(item.id);
+                              }
+                           }}
                            className={`w-full h-10 flex items-center px-3 gap-3 transition-all rounded-none ${activeTab === item.id
                               ? "bg-white/10 text-white font-bold border-l-2 border-white -ml-[9px] pl-[10px]"
                               : "text-white/70 hover:text-white hover:bg-white/5"
@@ -1243,7 +1261,7 @@ export default function CleedDashboard() {
                   <span className="text-zinc-900 text-[10px] md:text-[11px] font-bold uppercase tracking-tight whitespace-nowrap">Home</span>
                   <ChevronRight size={10} className="text-zinc-700 flex-shrink-0" />
                   <span className="text-zinc-950 font-bold text-[11px] truncate uppercase tracking-tight">
-                     {activeTab === "internships" ? "Internships" : activeTab === "employees" ? "Employees" : activeTab === "interns" ? "Intern List" : activeTab === "assign" ? "Tasks" : activeTab === "certification" ? "Certificates" : activeTab === "authorizations" ? "Approvals" : activeTab === "mentorship" ? "Mentors" : activeTab === "schedule" ? "Schedules" : activeTab === "hiring" ? "Hiring" : activeTab === "submissions" ? "Submissions" : activeTab === "events" ? "Events" : activeTab === "ideas" ? "Ideas" : activeTab === "attendance" ? "Attendance" : activeTab === "feedback" ? "Feedback Vault" : activeTab === "uiuxtasks" ? "UI/UX Tasks" : "Log"}
+                     {activeTab === "internships" ? "Internships" : activeTab === "employees" ? "Employees" : activeTab === "interns" ? "Intern List" : activeTab === "assign" ? "Tasks" : activeTab === "certification" ? "Certificates" : activeTab === "authorizations" ? "Approvals" : activeTab === "mentorship" ? "Mentors" : activeTab === "schedule" ? "Schedules" : activeTab === "hiring" ? "Hiring" : activeTab === "submissions" ? "Submissions" : activeTab === "events" ? "Events" : activeTab === "ideas" ? "Ideas" : activeTab === "attendance" ? "Attendance" : "Log"}
                   </span>
                </div>
 
