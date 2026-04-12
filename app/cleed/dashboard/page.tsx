@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import {
    Users,
    Send,
@@ -148,6 +149,7 @@ interface InternshipItem {
 }
 
 export default function CleedDashboard() {
+   const router = useRouter();
    const [activeTab, setActiveTab] = useState("overview");
    const [interns, setInterns] = useState<Intern[]>([]);
    const [hiringApplications, setHiringApplications] = useState<HiringApplication[]>([]);
