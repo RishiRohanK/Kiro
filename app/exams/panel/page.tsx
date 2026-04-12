@@ -8,7 +8,8 @@ import {
   CheckCircle2,
   ChevronLeft,
   ChevronRight,
-  Loader2
+  Loader2,
+  AlertTriangle
 } from "lucide-react";
 import { EXAM_QUESTIONS } from "@/lib/exam-questions";
 
@@ -23,18 +24,19 @@ export default function ExamPanelPage() {
   const router = useRouter();
   const [user, setUser] = useState<any>(null);
   const [currentIdx, setCurrentIdx] = useState(0);
-  const [answers, setAnswers] = useState<Record<number, number>>({});
+  const [answers, setAnswers] = useState<Record<number, any>>({});
   const [status, setStatus] = useState<Record<number, string>>({});
-  const [timeLeft, setTimeLeft] = useState(3600);
+  const [timeLeft, setTimeLeft] = useState(7200); // 2 hours for UI/UX
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+  const [activeTerminal, setActiveTerminal] = useState<string | null>(null);
   
   const [shuffledQuestions] = useState(() => [...EXAM_QUESTIONS].sort(() => Math.random() - 0.5));
 
   const violationsRef = useRef(0);
   const isSubmittedRef = useRef(false);
 
-  const syncSession = useCallback(async (statusStr: string, finalScore: number | null, vCount: number, currentAnswers?: any) => {
+  const syncSession = useCallback(async (statusStr: string, finalScore: number | null, vCount: number, currentAnswers?: any, allowSystemOverride = false) => {
     const storedUser = localStorage.getItem("intern_user");
     if (!storedUser) return;
     const u = JSON.parse(storedUser);
@@ -48,23 +50,25 @@ export default function ExamPanelPage() {
           status: statusStr,
           score: finalScore,
           violations: vCount,
-          answers: currentAnswers,
-          questionMapping: shuffledQuestions
+          answers: currentAnswers || answers,
+          questionMapping: shuffledQuestions,
+          allowSystemOverride
         })
       });
       if (!res.ok) {
         const errorData = await res.json();
-        console.error("Sync Error Details:", errorData);
+        console.error("Sync Error Details:", JSON.stringify(errorData, null, 2));
       }
     } catch (err) {
       console.error("Fetch Network error:", err);
     }
-  }, [shuffledQuestions]);
+  }, [shuffledQuestions, answers]);
 
   const handleSubmit = useCallback(async () => {
     if (isSubmittedRef.current) return;
     isSubmittedRef.current = true;
-    await syncSession("SUBMITTED", null, violationsRef.current, answers);
+    // Auto-submission uses system override to bypass exit key requirement
+    await syncSession("SUBMITTED", null, violationsRef.current, answers, true);
     setIsSubmitted(true);
     setShowConfirm(false);
     if (typeof document !== "undefined" && document.exitFullscreen) document.exitFullscreen().catch(() => {});
@@ -113,7 +117,8 @@ export default function ExamPanelPage() {
     setUser(u);
 
     const handleVisibilityChange = () => {
-      if (document.hidden && !isSubmittedRef.current) {
+      // DONT increment violations if user is in "Designing State" (activeTerminal is set)
+      if (document.hidden && !isSubmittedRef.current && !activeTerminal) {
         violationsRef.current += 1;
         syncSession("STARTED", null, violationsRef.current);
         alert("Warning: Do not change tabs.");
@@ -124,12 +129,13 @@ export default function ExamPanelPage() {
       const forbidden = ["F5", "F11", "F12"];
       if (forbidden.includes(e.key) || (e.ctrlKey && ["r", "w", "t", "n"].includes(e.key.toLowerCase()))) {
         e.preventDefault();
-        handleSubmit(); 
+        if (!activeTerminal) handleSubmit(); 
       }
     };
 
     const handleFullScreenExit = () => {
-        if (!document.fullscreenElement && !isSubmittedRef.current) {
+        // DONT trigger submission if user is designing (popups shift focus)
+        if (!document.fullscreenElement && !isSubmittedRef.current && !activeTerminal) {
             alert("Exited full screen. Submission triggered.");
             handleSubmit();
         }
@@ -144,7 +150,7 @@ export default function ExamPanelPage() {
       document.removeEventListener("keydown", handleKeyDown);
       document.removeEventListener("fullscreenchange", handleFullScreenExit);
     };
-  }, [router, handleSubmit, syncSession]);
+  }, [router, handleSubmit, syncSession, activeTerminal]);
 
   useEffect(() => {
     if (timeLeft <= 0 || isSubmitted) {
@@ -209,8 +215,45 @@ export default function ExamPanelPage() {
     not_answered: shuffledQuestions.length - Object.values(status).filter(s => s === 'answered').length - Object.values(status).filter(s => s === 'marked_for_review').length
   };
 
+  const getTerminalUrl = () => {
+    if (activeTerminal === 'figma') return 'https://www.figma.com';
+    if (activeTerminal === 'canva') return 'https://www.canva.com';
+    if (activeTerminal === 'adobe') return 'https://www.adobe.com/express/';
+    return '';
+  };
+
   return (
     <div className="h-screen bg-white flex flex-col select-none relative overflow-hidden font-sans">
+      
+      {/* Design Mode Active Overlay (Safe Popup Strategy) */}
+      {activeTerminal && (
+          <div className="fixed inset-0 z-[200] bg-white/95 backdrop-blur-sm flex flex-col items-center justify-center p-10 text-center animate-in fade-in duration-500">
+             <div className="max-w-xl space-y-8">
+                <div className="relative inline-block">
+                   <div className="absolute inset-0 bg-blue-100 animate-ping rounded-full opacity-20"></div>
+                   <div className="h-24 w-24 bg-blue-600 text-white rounded-full flex items-center justify-center relative shadow-xl">
+                      <Timer className="animate-pulse" size={40} />
+                   </div>
+                </div>
+                <div className="space-y-3">
+                   <h2 className="text-3xl font-black text-blue-900 uppercase tracking-tight">Studio Design Mode Active</h2>
+                   <p className="text-zinc-500 font-medium text-sm leading-relaxed">
+                      Security monitoring is temporarily **PAUSED** to allow you to use <span className="text-blue-600 font-bold uppercase">{activeTerminal}</span>.
+                   </p>
+                </div>
+                <div className="bg-zinc-100 p-6 border border-zinc-200 rounded grid grid-cols-1 gap-2 text-[10px] font-bold text-zinc-400 uppercase tracking-widest text-left">
+                   <p className="flex items-center gap-3"><span className="h-2 w-2 bg-emerald-500 rounded-full"></span> Time is still running: <span className="text-blue-600">{formatTime(timeLeft)}</span></p>
+                   <p className="flex items-center gap-3"><span className="h-2 w-2 bg-emerald-500 rounded-full"></span> Return here to finish and submit your work.</p>
+                </div>
+                <button 
+                   onClick={() => setActiveTerminal(null)}
+                   className="w-full bg-blue-700 h-14 text-white font-black uppercase text-xs tracking-[0.2em] shadow-2xl hover:bg-blue-800 transition-all rounded"
+                >
+                   ← Return to Exam Terminal
+                </button>
+             </div>
+          </div>
+      )}
       
       {/* Simple Tiled Watermark Grid */}
       <div className="absolute inset-0 pointer-events-none z-0 opacity-[0.05] overflow-hidden select-none">
@@ -225,9 +268,14 @@ export default function ExamPanelPage() {
 
       {/* Header - Simple Simple Look */}
       <header className="h-16 bg-blue-700 text-white px-8 flex justify-between items-center shadow-md relative z-20">
-        <div>
-           <h1 className="text-lg font-bold">Full Stack Exam (10:45 AM - 11:45 AM)</h1>
-           <p className="text-[10px] font-bold opacity-70">Student Forge Technologies</p>
+        <div className="flex items-center gap-5">
+           <div className="h-10 w-10 bg-white rounded flex items-center justify-center shadow-inner overflow-hidden">
+               <img src="https://img.freepik.com/free-vector/gradient-robot-logo-with-slogan_23-2148834418.jpg" className="h-full w-full object-cover" alt="Student Forge" />
+           </div>
+           <div>
+              <h1 className="text-lg font-bold uppercase tracking-tight font-sans">UI/UX Exam (3:30 PM - 5:30 PM)</h1>
+              <p className="text-[10px] font-bold opacity-70">Student Forge Technologies</p>
+           </div>
         </div>
         <div className="flex items-center gap-6">
             <div className="bg-blue-800 px-4 py-1 border border-blue-400 font-bold text-xl">
@@ -245,35 +293,91 @@ export default function ExamPanelPage() {
            <div className="bg-gray-50 p-3 border-b border-gray-300 flex justify-between items-center shrink-0">
               <span className="text-blue-800 font-bold text-xs">Question: {currentIdx + 1}</span>
               <div className="flex gap-4 text-[10px] font-bold text-gray-400 uppercase">
-                 <span className="text-green-600">Correct: +3</span>
-                 <span className="text-red-500">Negative: -1</span>
+                 <span className="text-emerald-600">Correct: +2</span>
+                 <span className="text-zinc-400">No Negative Marking</span>
               </div>
            </div>
-
-           <div className="flex-1 p-10 md:p-14 overflow-y-auto custom-scrollbar" data-lenis-prevent>
-              <div className="max-w-4xl mx-auto">
-                  <h2 className="text-xl font-bold text-gray-800 border-b pb-6 mb-8 leading-relaxed">
-                     {q.question}
-                  </h2>
-
-                  <div className="grid grid-cols-1 gap-4">
-                    {q.options.map((opt, idx) => (
-                        <label 
-                           key={idx}
-                           className={`flex items-start gap-4 p-5 border transition-all cursor-pointer ${
-                              answers[currentIdx] === idx ? 'border-blue-700 bg-blue-50' : 'border-gray-100 hover:border-gray-200'
-                           }`}
-                        >
-                           <input type="radio" checked={answers[currentIdx] === idx} onChange={() => setAnswers({ ...answers, [currentIdx]: idx })} className="mt-1 h-4 w-4 accent-blue-700" />
-                           <p className="text-sm font-bold text-gray-700">
-                              <span className="text-gray-400 mr-4">{String.fromCharCode(65 + idx)}.</span>
-                              {opt}
-                           </p>
-                        </label>
-                    ))}
+           <div className={`flex-1 overflow-y-auto custom-scrollbar flex ${q.type === 'practical' ? 'flex-row' : 'flex-col'} p-0`} data-lenis-prevent>
+               {q.type === 'practical' ? (
+                  <div className="flex-1 flex flex-col items-center justify-center p-10 text-center bg-gray-50 border-2 border-dashed border-gray-200 m-8 rounded">
+                     <AlertTriangle size={48} className="text-amber-500 mb-4" />
+                     <h3 className="text-lg font-bold text-gray-800 uppercase">Section Paused</h3>
+                     <p className="text-sm text-gray-500 max-w-sm">The practical section of this exam has been temporarily disabled. Please proceed to the next question.</p>
                   </div>
-              </div>
-           </div>
+               ) : (
+                  <div className="max-w-4xl mx-auto p-10 md:p-14">
+                     {/* Visual Analysis Image */}
+                     {q.image && (
+                        <div className="mb-10 rounded-lg overflow-hidden border-4 border-zinc-100 shadow-xl bg-white p-2">
+                           <div className="bg-zinc-800 text-white p-2 text-[9px] font-black uppercase tracking-[0.2em] mb-2 flex justify-between">
+                              <span>Visual Reference Asset #{q.id}</span>
+                              <span className="text-blue-400">UI/UX Assessment Node</span>
+                           </div>
+                           <img 
+                              src={q.image} 
+                              alt="Visual Analysis" 
+                              className="w-full h-auto object-contain max-h-[500px]"
+                           />
+                        </div>
+                     )}
+
+                     <h2 className="text-xl font-bold text-gray-800 border-b pb-6 mb-8 leading-relaxed">
+                        {q.question}
+                     </h2>
+
+                     <div className="grid grid-cols-1 gap-4">
+                        {q.type === 'mcq' ? (
+                           (q.options || []).map((opt: any, idx: number) => (
+                              <label 
+                                 key={idx}
+                                 className={`flex items-start gap-4 p-5 border transition-all cursor-pointer ${
+                                    answers[currentIdx] === idx ? 'border-blue-700 bg-blue-50' : 'border-gray-100 hover:border-gray-200'
+                                 }`}
+                              >
+                                 <input type="radio" checked={answers[currentIdx] === idx} onChange={() => setAnswers({ ...answers, [currentIdx]: idx })} className="mt-1 h-4 w-4 accent-blue-700" />
+                                 <p className="text-sm font-bold text-gray-700">
+                                    <span className="text-gray-400 mr-4">{String.fromCharCode(65 + idx)}.</span>
+                                    {opt}
+                                 </p>
+                              </label>
+                           ))
+                        ) : (
+                           <div className="space-y-4">
+                              <textarea 
+                                 className="w-full h-80 p-6 border-2 border-gray-100 focus:border-blue-700 outline-none text-sm font-medium leading-relaxed custom-scrollbar whitespace-pre-wrap rounded resize-none"
+                                 placeholder="Provide your detailed response here..."
+                                 value={answers[currentIdx] || ''}
+                                 onChange={(e) => setAnswers({ ...answers, [currentIdx]: e.target.value })}
+                                 onPaste={(e) => { e.preventDefault(); alert("Paste is disabled for this section."); }}
+                                 onCopy={(e) => e.preventDefault()}
+                                 onCut={(e) => e.preventDefault()}
+                                 onContextMenu={(e) => e.preventDefault()}
+                              />
+                              <div className="flex justify-between items-center text-[10px] font-bold uppercase tracking-wider">
+                                 <div className="flex items-center gap-4">
+                                    <span className="text-gray-400">Theory Response</span>
+                                    <span className="text-zinc-300">|</span>
+                                    <span className="text-gray-400">Security: Copy/Paste Disabled</span>
+                                 </div>
+                                 <div className="flex items-center gap-4">
+                                    <span className={`px-2 py-0.5 border ${
+                                       (answers[currentIdx] || '').toString().trim().split(/\s+/).filter(Boolean).length >= 180 
+                                          ? 'border-emerald-200 text-emerald-600 bg-emerald-50' 
+                                          : 'border-zinc-200 text-zinc-500'
+                                    }`}>
+                                       Words: {(answers[currentIdx] || '').toString().trim().split(/\s+/).filter(Boolean).length} / 200 approx.
+                                    </span>
+                                 </div>
+                              </div>
+                              <p className="text-[9px] text-zinc-400 italic">
+                                 * Please use the keyboard only. Copying from external sources is strictly prohibited.
+                              </p>
+                           </div>
+                        )}
+                     </div>
+                  </div>
+               )}
+            </div>
 
            {/* Buttons - Simple Look */}
            <div className="bg-gray-100 p-4 border-t border-gray-300 flex justify-between items-center shrink-0">

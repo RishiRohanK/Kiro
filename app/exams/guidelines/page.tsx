@@ -86,8 +86,8 @@ export default function ExamGuidelinesPage() {
       <header className="bg-blue-700 text-white p-6 shadow-md shrink-0">
         <div className="max-w-4xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center">
           <div>
-            <h1 className="text-xl font-bold">Full Stack Development Exam</h1>
-            <p className="text-sm mt-1 opacity-80">12-04-2026 | 10:45 AM to 11:45 AM</p>
+            <h1 className="text-xl font-bold">UI/UX Development Exam</h1>
+            <p className="text-sm mt-1 opacity-80">12-04-2026 | 3:30 PM to 5:30 PM</p>
           </div>
           <div className="mt-4 md:mt-0 text-xs font-semibold opacity-70">
              Student Forge Technologies
@@ -123,20 +123,46 @@ export default function ExamGuidelinesPage() {
              </div>
              <table className="w-full text-sm border-collapse">
                 <tbody>
-                   <tr className="border-b border-gray-200">
-                      <td className="p-4 bg-gray-50 border-r border-gray-300 w-1/3 font-medium">MERN stack</td>
-                      <td className="p-4 text-gray-600">React, Next.js, Node.js and MongoDB</td>
-                   </tr>
-                   <tr className="border-b border-gray-200">
-                      <td className="p-4 bg-gray-50 border-r border-gray-300 font-medium">Cloud and DevOps</td>
-                      <td className="p-4 text-gray-600">AWS S3, Docker, CI/CD and Kubernetes</td>
-                   </tr>
-                   <tr>
-                      <td className="p-4 bg-gray-50 border-r border-gray-300 font-medium">Advanced topics</td>
-                      <td className="p-4 text-gray-600">TRPC, WebRTC and JWT Security</td>
-                   </tr>
+                    <tr className="border-b border-gray-200">
+                       <td className="p-4 bg-gray-50 border-r border-gray-300 w-1/3 font-medium">UI & UX Concepts</td>
+                       <td className="p-4 text-gray-600">Basics of UI & UX and Visual hierarchy</td>
+                    </tr>
+                    <tr className="border-b border-gray-200">
+                       <td className="p-4 bg-gray-50 border-r border-gray-300 font-medium">Layout design</td>
+                       <td className="p-4 text-gray-600">Wireframing, layout design and Responsive design</td>
+                    </tr>
+                    <tr>
+                       <td className="p-4 bg-gray-50 border-r border-gray-300 font-medium">Design principles</td>
+                       <td className="p-4 text-gray-600">Spacing, typography, consistency and CTA</td>
+                    </tr>
                 </tbody>
              </table>
+          </div>
+
+          {/* Exam Structure */}
+          <div className="bg-white border border-gray-300">
+             <div className="bg-gray-100 p-3 border-b border-gray-300 font-semibold text-blue-800 text-sm">
+                Exam Structure
+             </div>
+             <div className="p-0 overflow-x-auto text-[11px] font-bold uppercase tracking-widest text-zinc-400">
+                <div className="grid grid-cols-1 md:grid-cols-3 divide-x divide-gray-200 border-b border-gray-200">
+                   <div className="p-5 space-y-2">
+                       <p className="text-zinc-800 text-xs font-bold">Section A – MCQs</p>
+                       <p className="text-blue-600">10 Marks</p>
+                       <p className="text-[10px] lowercase font-medium text-zinc-500 normal-case tracking-normal">Basic concepts of UI/UX</p>
+                   </div>
+                   <div className="p-5 space-y-2">
+                       <p className="text-zinc-800 text-xs font-bold">Section B – Theory</p>
+                       <p className="text-blue-600">15 Marks</p>
+                       <p className="text-[10px] lowercase font-medium text-zinc-500 normal-case tracking-normal">Understanding of design principles</p>
+                   </div>
+                   <div className="p-5 space-y-2 bg-blue-50/10">
+                       <p className="text-zinc-800 text-xs font-bold">Section C – Practical</p>
+                       <p className="text-blue-600">25 Marks</p>
+                       <p className="text-[10px] normal-case font-bold text-blue-700 tracking-normal">Design-based question (most important)</p>
+                   </div>
+                </div>
+             </div>
           </div>
 
           {/* Instructions */}
@@ -146,13 +172,13 @@ export default function ExamGuidelinesPage() {
              </div>
              <div className="p-6 md:p-8 space-y-4 text-sm leading-relaxed">
                 <ul className="list-decimal pl-5 space-y-4 text-gray-600">
-                   <li>You have 60 minutes for 50 questions.</li>
-                   <li>You get 3 marks for correct answers and 1 mark is deducted for wrong ones.</li>
-                   <li>The exam will run in full-screen mode. Do not exit it.</li>
-                   <li>Do not change tabs or your session will be disqualified.</li>
-                   <li>Keyboard keys like F5 and F12 are blocked.</li>
-                   <li>Click "Save and Next" after every question to save your progress.</li>
-                   <li>Rules are strictly monitored by the system.</li>
+                   <li>You have 120 minutes (3:30 PM to 5:30 PM) for the complete assessment.</li>
+                   <li>The exam consists of three sections: MCQs, Theory, and a Practical Design task.</li>
+                   <li>Total weightage of the assessment is 50 Marks.</li>
+                   <li>The exam will run in mandatory full-screen mode. Do not exit it.</li>
+                   <li>Do not change tabs or your session will be strictly disqualified.</li>
+                   <li>High security: Keyboard keys like F5, F11, and F12 are blocked.</li>
+                   <li>Ensure you click "Save and Next" to persist your progress to the server.</li>
                 </ul>
              </div>
           </div>
@@ -182,7 +208,7 @@ export default function ExamGuidelinesPage() {
                    {examActive ? 'Start Exam' : 'Wait for Admin'}
                 </button>
                 {!examActive && (
-                   <p className="text-xs text-gray-400 font-medium">System will activate at 10:45 AM</p>
+                   <p className="text-xs text-gray-400 font-medium">System will activate at 3:30 PM</p>
                 )}
              </div>
           </div>

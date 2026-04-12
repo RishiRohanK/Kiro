@@ -66,12 +66,12 @@ export default function ExamLoginPage() {
       <header className="bg-blue-700 text-white p-6 shadow-md">
         <div className="max-w-5xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
-            <h1 className="text-xl font-bold uppercase tracking-tight">Full Stack Development Exam</h1>
+            <h1 className="text-xl font-bold uppercase tracking-tight">UI/UX Development Exam</h1>
             <p className="text-xs opacity-70 mt-1">Student Forge Technologies Private Limited</p>
           </div>
           <div className="bg-blue-800 p-3 border border-blue-500 rounded text-xs">
             <p className="font-bold">Date: 12-04-2026</p>
-            <p className="mt-1 font-bold">Time: 10:45 AM to 11:45 AM</p>
+            <p className="mt-1 font-bold">Time: 3:30 PM to 5:30 PM</p>
           </div>
         </div>
       </header>

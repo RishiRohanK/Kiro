@@ -1,60 +1,229 @@
-export const EXAM_QUESTIONS = [
-  { id: 1, question: "What is Node.js primarily used for?", options: ["Styling web pages", "Running JavaScript on the server", "Database management", "Compiling Java"] },
-  { id: 2, question: "Which hook is used for state in React?", options: ["useEffect", "useState", "useMemo", "useRef"] },
-  { id: 3, question: "What is JSX?", options: ["Java syntax extension", "JavaScript XML", "JSON XML", "Java execution"] },
-  { id: 4, question: "In Next.js, what is used for routing?", options: ["React Router", "Express Router", "File-based routing", "Manual configuration"] },
-  { id: 5, question: "What does AWS S3 provide?", options: ["Compute service", "Object storage", "Database", "CDN"] },
-  { id: 6, question: "What is Docker?", options: ["Programming language", "Containerization platform", "Database", "Operating system"] },
-  { id: 7, question: "Which command builds a Docker image?", options: ["docker start", "docker run", "docker build", "docker init"] },
-  { id: 8, question: "What is a Promise in JavaScript?", options: ["A loop", "An async operation handler", "A variable type", "A function call"] },
-  { id: 9, question: "What does TypeScript add to JavaScript?", options: ["Styling", "Types", "Backend support", "Database"] },
-  { id: 10, question: "What is useEffect used for?", options: ["Styling", "Side effects", "Routing", "State"] },
-  { id: 11, question: "What is serverless?", options: ["No servers exist", "Managed backend execution", "Only frontend apps", "Local servers"] },
-  { id: 12, question: "What is AWS Lambda?", options: ["Database", "Serverless compute", "CDN", "Storage"] },
-  { id: 13, question: "What is WebRTC mainly used for?", options: ["Storage", "Real-time communication", "Styling", "Routing"] },
-  { id: 14, question: "What is TRPC?", options: ["REST API", "Type-safe API communication", "Database", "CDN"] },
-  { id: 15, question: "What is a monorepo?", options: ["Single file repo", "Multiple repos", "Single repo with multiple projects", "Cloud repo"] },
-  { id: 16, question: "What does Turborepo do?", options: ["Styling", "Build system optimization", "Database", "API creation"] },
-  { id: 17, question: "What is Kubernetes used for?", options: ["Styling", "Container orchestration", "Database", "Routing"] },
-  { id: 18, question: "What is npm?", options: ["Node Package Manager", "Network Protocol Manager", "New Project Maker", "Node Process Manager"] },
-  { id: 19, question: "What is SSR in Next.js?", options: ["Static rendering", "Server-side rendering", "Client rendering", "API rendering"] },
-  { id: 20, question: "What is JSON?", options: ["Programming language", "Data format", "Database", "Framework"] },
-  { id: 21, question: "What happens in Node.js event loop when a Promise resolves?", options: ["Goes to call stack", "Goes to microtask queue", "Goes to callback queue", "Ignored"] },
-  { id: 22, question: "Which phase executes setTimeout callbacks?", options: ["Poll", "Timers", "Check", "Close"] },
-  { id: 23, question: "In React, what triggers re-render?", options: ["Console log", "State/props change", "CSS change", "DOM access"] },
-  { id: 24, question: "What is React Fiber?", options: ["CSS engine", "Rendering engine", "Router", "State manager"] },
-  { id: 25, question: "What is hydration in Next.js?", options: ["API fetching", "Attaching JS to SSR HTML", "Styling", "Caching"] },
-  { id: 26, question: "What is Incremental Static Regeneration (ISR)?", options: ["Real-time rendering", "Static + dynamic regeneration", "SSR only", "CSR only"] },
-  { id: 27, question: "What does edge runtime mean in Next.js?", options: ["Runs on client", "Runs closer to user (CDN edge)", "Runs in database", "Runs in browser"] },
-  { id: 28, question: "What is cold start in serverless?", options: ["First request latency", "Server crash", "Network issue", "Cache miss"] },
-  { id: 29, question: "What protocol does WebRTC primarily use?", options: ["HTTP", "UDP", "TCP", "FTP"] },
-  { id: 30, question: "What is STUN used for in WebRTC?", options: ["Encryption", "NAT traversal", "Streaming", "Storage"] },
-  { id: 31, question: "What is TURN server?", options: ["Backup routing server", "Relay server for WebRTC", "CDN", "Database"] },
-  { id: 32, question: "In Docker, what is a container?", options: ["VM", "Lightweight isolated environment", "OS", "Image"] },
-  { id: 33, question: "Difference between Docker image and container?", options: ["No difference", "Image = blueprint, container = running instance", "Container = blueprint", "Image = runtime"] },
-  { id: 34, question: "What is Kubernetes Pod?", options: ["Single container", "Group of containers", "Cluster", "Node"] },
-  { id: 35, question: "What is Kubernetes Deployment?", options: ["Storage", "Pod manager", "Load balancer", "Database"] },
-  { id: 36, question: "What is Horizontal Pod Autoscaling?", options: ["Scaling vertically", "Scaling pods count", "Scaling CPU only", "Scaling storage"] },
-  { id: 37, question: "What does TRPC eliminate?", options: ["Backend", "API layer boilerplate", "Database", "Frontend"] },
-  { id: 38, question: "What ensures type safety in TRPC?", options: ["JSON", "TypeScript inference", "REST", "GraphQL"] },
-  { id: 39, question: "What is tree shaking?", options: ["Removing unused code", "Sorting files", "Compiling code", "Rendering"] },
-  { id: 40, question: "What is code splitting?", options: ["Breaking CSS", "Lazy loading chunks", "Compressing code", "Debugging"] },
-  { id: 41, question: "What is memoization in React?", options: ["Storing DOM", "Caching results", "API caching", "State reset"] },
-  { id: 42, question: "What is useCallback used for?", options: ["Styling", "Memoizing functions", "API calls", "Routing"] },
-  { id: 43, question: "What is closure in JavaScript?", options: ["Function inside loop", "Access to outer scope", "Async function", "Callback"] },
-  { id: 44, question: "What is event delegation?", options: ["Multiple listeners", "Parent handles child events", "DOM removal", "Rendering"] },
-  { id: 45, question: "What is hoisting?", options: ["Variable movement", "Memory allocation before execution", "Async execution", "Loop behavior"] },
-  { id: 46, question: "What is strict mode?", options: ["Faster execution", "Error-prone mode", "Restrictive JS mode", "Debug mode"] },
-  { id: 47, question: "What is a monorepo challenge?", options: ["Small size", "Dependency conflicts", "No sharing", "No builds"] },
-  { id: 48, question: "What does Turborepo cache?", options: ["API calls", "Build outputs", "Database", "Logs"] },
-  { id: 49, question: "What is AWS CloudFront?", options: ["Compute", "CDN", "Database", "Storage"] },
-  { id: 50, question: "What is IAM in AWS?", options: ["Storage system", "Access management", "CDN", "Compute"] }
+export interface Question {
+  id: number;
+  question: string;
+  type: 'mcq' | 'theory' | 'practical';
+  options?: string[];
+  image?: string;
+  section: string;
+}
+
+export const EXAM_QUESTIONS: Question[] = [
+  // Section A - MCQs (Basics)
+  { 
+    id: 1, 
+    question: "Which of the following best describes UX?",
+    type: 'mcq',
+    options: [
+      "Visual design of a website",
+      "Overall experience of user interaction with a product",
+      "Color and typography selection",
+      "Frontend development"
+    ],
+    section: "Section A"
+  },
+  { 
+    id: 2, 
+    question: "Which option improves both usability AND readability?",
+    type: 'mcq',
+    options: [
+      "Using more colors",
+      "Adding animations everywhere",
+      "Proper spacing and visual hierarchy",
+      "Increasing font size randomly"
+    ],
+    section: "Section A"
+  },
+  { 
+    id: 3, 
+    question: "What is the main purpose of a wireframe?",
+    type: 'mcq',
+    options: [
+      "Final UI design",
+      "Backend structure",
+      "Layout and structure planning before design",
+      "Adding animations"
+    ],
+    section: "Section A"
+  },
+  { 
+    id: 4, 
+    question: "A button is not getting clicks. What is the MOST likely UX issue?",
+    type: 'mcq',
+    options: [
+      "Code error",
+      "Low contrast or poor visibility",
+      "Database issue",
+      "Server problem"
+    ],
+    section: "Section A"
+  },
+  { 
+    id: 5, 
+    question: "Which of the following is a UX problem (not UI)?",
+    type: 'mcq',
+    options: [
+      "Poor color combination",
+      "Misaligned elements",
+      "Confusing navigation flow",
+      "Small font size"
+    ],
+    section: "Section A"
+  },
+  // Section B - Visual Analysis (Image Based)
+  {
+    id: 6,
+    question: "Look at the image provided. Comparing the two navigation styles, which improvement most impacts the 'Good UX' side?",
+    type: 'mcq',
+    image: "/assets/exams/ui_ux_navigation_comparison_1775983776360.png",
+    options: [
+        "The use of icons only",
+        "Higher density of links",
+        "Clear labels, better hierarchy, and thumb-friendly spacing",
+        "Darker background colors"
+    ],
+    section: "Section B"
+  },
+  {
+    id: 7,
+    question: "Observe the landing page comparison. What is the primary reason the right side converts better?",
+    type: 'mcq',
+    image: "/assets/exams/ui_ux_visual_hierarchy_landing_page_1775983792981.png",
+    options: [
+        "It uses more gradients",
+        "Strong visual hierarchy with a clear headline and 'Start Free' CTA button",
+        "It has more text content",
+        "The logo is positioned differently"
+    ],
+    section: "Section B"
+  },
+  {
+    id: 8,
+    question: "Accessibility Check: Study the color contrast comparison. Why is 'Low Accessibility' a danger for UI?",
+    type: 'mcq',
+    image: "/assets/exams/ui_ux_color_contrast_comparison_1775983812279.png",
+    options: [
+        "It makes the app look old",
+        "It increases the build size",
+        "It excludes users with visual impairments or those in bright environments",
+        "It uses too much dark navy"
+    ],
+    section: "Section B"
+  },
+  {
+    id: 9,
+    question: "Form Design: Looking at the comparison, what is the most significant improvement in the 'Premium Experience'?",
+    type: 'mcq',
+    image: "/assets/exams/ui_ux_form_design_best_practices_1775983828295.png",
+    options: [
+        "It uses multiple columns",
+        "Inline validation, single-column layout, and clear logical grouping",
+        "Adding more input fields",
+        "The 'Clear' and 'Help' buttons"
+    ],
+    section: "Section B"
+  },
+  // Section C - Advanced Principles
+  {
+    id: 10,
+    question: "What does the 'Fitts's Law' primarily relate to in UI design?",
+    type: 'mcq',
+    options: [
+        "The color wheel",
+        "Size and distance of target elements for easier interaction",
+        "Font pairing rules",
+        "Server response times"
+    ],
+    section: "Section C"
+  },
+  {
+    id: 11,
+    question: "In Responsive Design, what is a 'Breakpoint'?",
+    type: 'mcq',
+    options: [
+        "A bug in the code",
+        "A specific screen width where the layout changes",
+        "The time when the server stops responding",
+        "A design error"
+    ],
+    section: "Section C"
+  },
+  {
+    id: 12,
+    question: "Which of these is a key benefit of a 'Design System'?",
+    type: 'mcq',
+    options: [
+        "It makes the file size smaller",
+        "Consistency across teams and products",
+        "It replaces the need for developers",
+        "It only helps with colors"
+    ],
+    section: "Section C"
+  },
+  {
+    id: 13,
+    question: "What is 'Affordance' in UI design?",
+    type: 'mcq',
+    options: [
+        "How much the software costs",
+        "Visual cues that suggest how an element should be used",
+        "The contrast ratio of text",
+        "The speed of an animation"
+    ],
+    section: "Section C"
+  },
+  {
+    id: 14,
+    question: "In the UX process, what is 'Personas' used for?",
+    type: 'mcq',
+    options: [
+        "Creating fake profiles for testing",
+        "Representing different user types within your targeted audience",
+        "Creating custom fonts",
+        "Designing profile pictures"
+    ],
+    section: "Section C"
+  },
+  {
+    id: 15,
+    question: "Which principle states that 'Users spend most of their time on other sites'?",
+    type: 'mcq',
+    options: [
+        "Jacob's Law",
+        "Miller's Law",
+        "Hick's Law",
+        "The 80/20 Rule"
+    ],
+    section: "Section C"
+  },
+  // Section D - Theory (Manual Grading)
+  {
+    id: 16,
+    question: "Explain the 'Double Diamond' design process and its four phases. (5 Marks)",
+    type: 'theory',
+    section: "Section D"
+  },
+  {
+    id: 17,
+    question: "What is Information Architecture (IA), and why is it critical for complex enterprise applications? (5 Marks)",
+    type: 'theory',
+    section: "Section D"
+  }
 ];
 
 export const CORRECT_ANSWERS = {
-  1: 1, 2: 1, 3: 1, 4: 2, 5: 1, 6: 1, 7: 2, 8: 1, 9: 1, 10: 1,
-  11: 1, 12: 1, 13: 1, 14: 1, 15: 2, 16: 1, 17: 1, 18: 0, 19: 1, 20: 1,
-  21: 1, 22: 1, 23: 1, 24: 1, 25: 1, 26: 1, 27: 1, 28: 0, 29: 1, 30: 1,
-  31: 1, 32: 1, 33: 1, 34: 1, 35: 1, 36: 1, 37: 1, 38: 1, 39: 0, 40: 1,
-  41: 1, 42: 1, 43: 1, 44: 1, 45: 1, 46: 2, 47: 1, 48: 1, 49: 1, 50: 1
+  1: 1, // B
+  2: 2, // C
+  3: 2, // C
+  4: 1, // B
+  5: 2, // C
+  6: 2, // C
+  7: 1, // B
+  8: 2, // C
+  9: 1, // B
+  10: 1, // B
+  11: 1, // B
+  12: 1, // B
+  13: 1, // B
+  14: 1, // B
+  15: 0  // A
 };

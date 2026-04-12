@@ -193,57 +193,81 @@ export default function InternReportsPage() {
                            <div className="space-y-6">
                               {(session.questionMapping as any[]).map((q, idx) => {
                                  const userAnswerIdx = session.answers[idx];
-                                 const correctOptionIdx = CORRECT_ANSWERS[q.id as keyof typeof CORRECT_ANSWERS];
-                                 const isCorrect = userAnswerIdx === correctOptionIdx;
+                                 const isMcq = q.type === 'mcq';
                                  
-                                 return (
-                                    <div key={idx} className="pb-8 border-b border-zinc-50 last:border-0">
-                                       <div className="flex justify-between items-start mb-3">
-                                          <p className="text-sm font-semibold text-zinc-800 leading-relaxed max-w-2xl">
-                                             <span className="text-zinc-400 mr-2 font-mono">#{idx + 1}</span> {q.question}
-                                          </p>
-                                          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${isCorrect ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'}`}>
-                                             {isCorrect ? '+3 marks' : '-1 mark'}
-                                          </span>
-                                       </div>
-                                       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                          {q.options.map((opt: string, optIdx: number) => {
-                                             const isUserChoice = userAnswerIdx === optIdx;
-                                             const isCorrectOpt = correctOptionIdx === optIdx;
-                                             
-                                             let borderColor = 'border-zinc-100';
-                                             let bgColor = 'bg-white';
-                                             let textColor = 'text-zinc-500';
+                                 if (isMcq) {
+                                    const correctOptionIdx = CORRECT_ANSWERS[q.id as keyof typeof CORRECT_ANSWERS];
+                                    const isCorrect = userAnswerIdx === correctOptionIdx;
+                                    
+                                    return (
+                                       <div key={idx} className="pb-8 border-b border-zinc-50 last:border-0">
+                                          <div className="flex justify-between items-start mb-3">
+                                             <p className="text-sm font-semibold text-zinc-800 leading-relaxed max-w-2xl">
+                                                <span className="text-zinc-400 mr-2 font-mono">#{idx + 1}</span> {q.question}
+                                             </p>
+                                             <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${isCorrect ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'}`}>
+                                                {isCorrect ? '+2 marks' : '0 marks'}
+                                             </span>
+                                          </div>
+                                          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                             {q.options.map((opt: string, optIdx: number) => {
+                                                const isUserChoice = userAnswerIdx === optIdx;
+                                                const isCorrectOpt = correctOptionIdx === optIdx;
+                                                
+                                                let borderColor = 'border-zinc-100';
+                                                let bgColor = 'bg-white';
+                                                let textColor = 'text-zinc-500';
 
-                                             if (isCorrectOpt) {
-                                                borderColor = 'border-emerald-200';
-                                                bgColor = 'bg-emerald-50/50';
-                                                textColor = 'text-emerald-700 font-bold';
-                                             } else if (isUserChoice && !isCorrect) {
-                                                borderColor = 'border-rose-200';
-                                                bgColor = 'bg-rose-50/50';
-                                                textColor = 'text-rose-700 font-bold';
-                                             }
+                                                if (isCorrectOpt) {
+                                                   borderColor = 'border-emerald-200';
+                                                   bgColor = 'bg-emerald-50/50';
+                                                   textColor = 'text-emerald-700 font-bold';
+                                                } else if (isUserChoice && !isCorrect) {
+                                                   borderColor = 'border-rose-200';
+                                                   bgColor = 'bg-rose-50/50';
+                                                   textColor = 'text-rose-700 font-bold';
+                                                }
 
-                                             return (
-                                                <div 
-                                                   key={optIdx} 
-                                                   className={`p-3 text-[11px] border transition-all ${borderColor} ${bgColor} ${textColor} flex items-center justify-between`}
-                                                >
-                                                   <div className="flex items-center gap-3">
-                                                      <span className="text-[10px] opacity-40 font-mono w-4">{String.fromCharCode(65 + optIdx)}</span>
-                                                      <span>{opt}</span>
+                                                return (
+                                                   <div 
+                                                      key={optIdx} 
+                                                      className={`p-3 text-[11px] border transition-all ${borderColor} ${bgColor} ${textColor} flex items-center justify-between`}
+                                                   >
+                                                      <div className="flex items-center gap-3">
+                                                         <span className="text-[10px] opacity-40 font-mono w-4">{String.fromCharCode(65 + optIdx)}</span>
+                                                         <span>{opt}</span>
+                                                      </div>
+                                                      <div className="flex gap-2">
+                                                         {isCorrectOpt && <span className="text-[9px] font-black uppercase text-emerald-600 bg-emerald-100 px-1.5 py-0.5">Correct</span>}
+                                                         {isUserChoice && <span className={`text-[9px] font-black uppercase px-1.5 py-0.5 ${isCorrect ? 'text-emerald-600 bg-emerald-100' : 'text-rose-600 bg-rose-100'}`}>You</span>}
+                                                      </div>
                                                    </div>
-                                                   <div className="flex gap-2">
-                                                      {isCorrectOpt && <span className="text-[9px] font-black uppercase text-emerald-600 bg-emerald-100 px-1.5 py-0.5">Correct</span>}
-                                                      {isUserChoice && <span className={`text-[9px] font-black uppercase px-1.5 py-0.5 ${isCorrect ? 'text-emerald-600 bg-emerald-100' : 'text-rose-600 bg-rose-100'}`}>You</span>}
-                                                   </div>
-                                                </div>
-                                             );
-                                          })}
+                                                );
+                                             })}
+                                          </div>
                                        </div>
-                                    </div>
-                                 );
+                                    );
+                                 } else {
+                                    // Theory or Practical
+                                    return (
+                                       <div key={idx} className="pb-8 border-b border-zinc-50 last:border-0">
+                                          <div className="flex justify-between items-start mb-3">
+                                             <p className="text-sm font-semibold text-zinc-800 leading-relaxed max-w-2xl">
+                                                <span className="text-zinc-400 mr-2 font-mono">#{idx + 1}</span> {q.question}
+                                             </p>
+                                             <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-50 text-blue-600">
+                                                Pending Evaluation
+                                             </span>
+                                          </div>
+                                          <div className="bg-zinc-50 border border-zinc-100 p-5 rounded-sm">
+                                             <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-3">Your Answer:</p>
+                                             <div className="text-xs text-zinc-600 whitespace-pre-wrap leading-relaxed font-medium">
+                                                {userAnswerIdx || "No response provided."}
+                                             </div>
+                                          </div>
+                                       </div>
+                                    );
+                                 }
                               })}
                            </div>
                         </div>

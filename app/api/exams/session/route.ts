@@ -50,8 +50,19 @@ export async function POST(req: Request) {
 export async function PATCH(req: Request) {
   try {
     const payload = await req.json();
-    const { userId, status, score: clientScore, violations, answers, questionMapping, typedExitKey } = payload;
+    const { 
+      userId, 
+      status, 
+      score: clientScore, 
+      violations, 
+      answers, 
+      questionMapping, 
+      typedExitKey,
+      allowSystemOverride // New flag for auto-submissions
+    } = payload;
     
+    console.log(`[API] Syncing session for User: ${userId}, Status: ${status}, Override: ${allowSystemOverride}`);
+
     if (!userId) {
       return NextResponse.json({ error: "userId is required" }, { status: 400 });
     }
@@ -65,8 +76,10 @@ export async function PATCH(req: Request) {
     }
 
     // Security Exit Key Check for Submission
-    if (status === "SUBMITTED") {
+    // Bypass if allowSystemOverride is true (e.g. timeout or forced exit)
+    if (status === "SUBMITTED" && !allowSystemOverride) {
         if (!typedExitKey || typedExitKey !== globalSecurity.exitKey) {
+            console.error(`[API] Submission blocked: Invalid key for user ${userId}`);
             return NextResponse.json({ error: "Invalid Security Exit Key" }, { status: 403 });
         }
     }
@@ -79,12 +92,10 @@ export async function PATCH(req: Request) {
       Object.entries(answers).forEach(([idxStr, chosenOpt]: [string, any]) => {
         const idx = parseInt(idxStr);
         const originalQuestion = (questionMapping as any)[idx]; 
-        if (originalQuestion && chosenOpt !== undefined && chosenOpt !== null) {
+        if (originalQuestion && originalQuestion.type === 'mcq' && chosenOpt !== undefined && chosenOpt !== null) {
           const correctOpt = (CORRECT_ANSWERS as any)[originalQuestion.id];
-          if (chosenOpt === correctOpt) {
-            calcScore += 3;
-          } else {
-            calcScore -= 1;
+          if (correctOpt !== undefined && chosenOpt === correctOpt) {
+            calcScore += 2;
           }
         }
       });
@@ -94,22 +105,33 @@ export async function PATCH(req: Request) {
     // Ensure violations is a number
     const finalViolations = typeof violations === 'number' ? violations : 0;
 
-    const session = await prisma.examSession.update({
-      where: { userId },
-      data: { 
-        status, 
-        score: finalScore, 
-        violations: finalViolations,
-        answers: answers || null,
-        questionMapping: questionMapping || null,
-        updatedAt: new Date()
-      },
-    });
+    try {
+      const session = await prisma.examSession.update({
+        where: { userId },
+        data: { 
+          status, 
+          score: finalScore, 
+          violations: finalViolations,
+          answers: answers || null,
+          questionMapping: questionMapping || null,
+          updatedAt: new Date()
+        },
+      });
 
-    console.log("Session updated successfully");
-    return NextResponse.json(session);
+      console.log(`[API] Session updated: ${userId} -> ${status}`);
+      return NextResponse.json(session);
+    } catch (dbError: any) {
+      console.error(`[API] Database Update Error for ${userId}:`, dbError.message);
+      return NextResponse.json({ 
+        error: "Database update failed", 
+        details: dbError.message 
+      }, { status: 500 });
+    }
   } catch (error: any) {
-    console.error("PATCH /api/exams/session Error:", error.message, error);
-    return NextResponse.json({ error: "Failed to update exam session", details: error.message }, { status: 500 });
+    console.error("PATCH /api/exams/session Global Error:", error.message);
+    return NextResponse.json({ 
+      error: "Internal Server Error", 
+      details: error.message 
+    }, { status: 500 });
   }
 }
