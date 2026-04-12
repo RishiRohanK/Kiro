@@ -370,7 +370,7 @@ export default function CleedDashboard() {
 
    useEffect(() => {
       fetchData();
-      const interval = setInterval(fetchData, 30000);
+      const interval = setInterval(fetchData, 10000); // Higher frequency for live exams
       return () => clearInterval(interval);
    }, []);
 
@@ -1556,29 +1556,37 @@ export default function CleedDashboard() {
                               <h3 className="text-xs font-bold uppercase tracking-widest text-zinc-800">Live Results</h3>
                               <p className="text-[10px] text-zinc-400 font-bold uppercase">See student scores and rules breaking here</p>
                            </div>
-                                  <div className="flex bg-zinc-100 p-1 rounded-sm">
+                                  <div className="flex bg-zinc-100 p-1 rounded-sm gap-1">
                                      <button 
                                         onClick={() => setExamViewMode("UI_UX")}
-                                        className={`px-4 py-1 text-[10px] font-bold uppercase transition-all ${examViewMode === "UI_UX" ? 'bg-white shadow text-blue-600' : 'text-zinc-500 hover:bg-zinc-200'}`}
+                                        className={`px-4 py-1.5 text-[10px] font-bold uppercase transition-all flex items-center gap-2 ${examViewMode === "UI_UX" ? 'bg-white shadow text-blue-600' : 'text-zinc-500 hover:bg-zinc-200'}`}
                                      >
-                                        Active: UI/UX
+                                        <div className={`h-1.5 w-1.5 rounded-full ${examViewMode === "UI_UX" ? 'bg-blue-600 animate-pulse' : 'bg-zinc-400'}`} />
+                                        UI/UX Live ({examSessions.filter(s => s.examType === "UI_UX").length})
                                      </button>
                                      <button 
                                         onClick={() => setExamViewMode("FULLSTACK")}
-                                        className={`px-4 py-1 text-[10px] font-bold uppercase transition-all ${examViewMode === "FULLSTACK" ? 'bg-white shadow text-blue-600' : 'text-zinc-500 hover:bg-zinc-200'}`}
+                                        className={`px-4 py-1.5 text-[10px] font-bold uppercase transition-all ${examViewMode === "FULLSTACK" ? 'bg-white shadow text-zinc-900' : 'text-zinc-500 hover:bg-zinc-200'}`}
                                      >
-                                        History: Full Stack
+                                        Full Stack History ({examSessions.filter(s => s.examType === "FULLSTACK").length})
                                      </button>
                                   </div>
                                   <div className="flex items-center gap-3">
+                                     <button 
+                                        disabled={isLoading}
+                                        onClick={fetchData}
+                                        className="flex items-center gap-2 px-3 py-1.5 bg-blue-600 text-white text-[10px] font-bold uppercase tracking-widest hover:bg-blue-700 transition-all disabled:opacity-50"
+                                     >
+                                        <RefreshCw size={14} className={isLoading ? "animate-spin" : ""} />
+                                        Refresh Results
+                                     </button>
                                      <button 
                                         onClick={downloadExamPdf}
                                         className="flex items-center gap-2 px-3 py-1.5 bg-zinc-900 text-white text-[10px] font-bold uppercase tracking-widest hover:bg-zinc-800 transition-all"
                                      >
                                         <Download size={14} />
-                                        Download {examViewMode === "UI_UX" ? "UI/UX" : "Full Stack"} PDF
+                                        Export PDF
                                      </button>
-                                     <div className="h-1.5 w-1.5 bg-green-500 animate-pulse" />
                                   </div>
                                </div>
                                <div className="overflow-x-auto">
