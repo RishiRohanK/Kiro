@@ -199,7 +199,49 @@ function InternDashboardContent() {
       };
    }, [router]);
 
-   const [showChatSidebar, setShowChatSidebar] = useState(true);
+    const [showChatSidebar, setShowChatSidebar] = useState(true);
+    const [showFeedbackModal, setShowFeedbackModal] = useState(false);
+    const [submittingFeedback, setSubmittingFeedback] = useState(false);
+    const [feedbackForm, setFeedbackForm] = useState({
+       name: "",
+       college: "",
+       examExperience: "",
+       upgradeSuggestions: "",
+       learningGoals: ""
+    });
+
+    useEffect(() => {
+       if (user && !user.hasSubmittedFeedback) {
+          setShowFeedbackModal(true);
+       }
+    }, [user]);
+
+    const handleFeedbackSubmit = async (e: React.FormEvent) => {
+       e.preventDefault();
+       setSubmittingFeedback(true);
+       try {
+          const res = await fetch("/api/intern/feedback", {
+             method: "POST",
+             headers: { "Content-Type": "application/json" },
+             body: JSON.stringify({
+                userId: user.id,
+                ...feedbackForm
+             })
+          });
+          if (res.ok) {
+             const updatedUser = { ...user, hasSubmittedFeedback: true };
+             setUser(updatedUser);
+             localStorage.setItem("intern_user", JSON.stringify(updatedUser));
+             setShowFeedbackModal(false);
+          } else {
+             alert("Failed to submit. Please try again.");
+          }
+       } catch (err) {
+          console.error("Feedback error:", err);
+       } finally {
+          setSubmittingFeedback(false);
+       }
+    };
 
 
    useEffect(() => {
@@ -1140,6 +1182,136 @@ function InternDashboardContent() {
                      </div>
                   </motion.div>
                </div>
+            )}
+         </AnimatePresence>
+         {/* Mandatory Feedback Modal */}
+         <AnimatePresence>
+            {showFeedbackModal && (
+               <motion.div 
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="fixed inset-0 z-[9999] bg-zinc-950/80 backdrop-blur-md flex items-center justify-center p-4"
+               >
+                  <motion.div 
+                     initial={{ scale: 0.95, y: 20 }}
+                     animate={{ scale: 1, y: 0 }}
+                     className="bg-white max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-zinc-200"
+                  >
+                     <div className="bg-blue-700 p-8 text-white">
+                        <div className="flex items-center gap-3 mb-2">
+                           <MessageSquare className="text-blue-200" size={24} />
+                           <h2 className="text-xl font-black uppercase tracking-tighter">Candidate Feedback Survey</h2>
+                        </div>
+                        <p className="text-xs text-blue-100 font-bold uppercase tracking-widest opacity-80">Please complete this formal requirement to unlock your dashboard</p>
+                     </div>
+
+                     <form onSubmit={handleFeedbackSubmit} className="p-8 space-y-8">
+                        {/* Identity Grid */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-6 border-b border-zinc-100">
+                           <div className="space-y-2">
+                              <label className="text-[10px] font-black uppercase text-zinc-400 tracking-widest">Full Legal Name</label>
+                              <input 
+                                 required
+                                 type="text"
+                                 placeholder="As per records"
+                                 className="w-full bg-zinc-50 border border-zinc-200 p-3 text-xs font-bold focus:outline-none focus:border-blue-500 transition-all"
+                                 value={feedbackForm.name}
+                                 onChange={e => setFeedbackForm({...feedbackForm, name: e.target.value})}
+                              />
+                           </div>
+                           <div className="space-y-2">
+                              <label className="text-[10px] font-black uppercase text-zinc-400 tracking-widest">Education Institute</label>
+                              <select 
+                                 required
+                                 className="w-full bg-zinc-50 border border-zinc-200 p-3 text-xs font-bold focus:outline-none focus:border-blue-500 transition-all appearance-none"
+                                 value={feedbackForm.college}
+                                 onChange={e => setFeedbackForm({...feedbackForm, college: e.target.value})}
+                              >
+                                 <option value="">Select College / University</option>
+                                 <option value="IIT / NIT">IIT / NIT</option>
+                                 <option value="VIT University">VIT University</option>
+                                 <option value="SRM Institute">SRM Institute</option>
+                                 <option value="Anna University">Anna University</option>
+                                 <option value="JNTU / Osmania">JNTU / Osmania</option>
+                                 <option value="VTU Karnataka">VTU Karnataka</option>
+                                 <option value="Delhi University">Delhi University</option>
+                                 <option value="Amity / LPU">Amity / LPU</option>
+                                 <option value="Other Regional College">Other Regional College</option>
+                              </select>
+                           </div>
+                        </div>
+
+                        {/* Subjective Analysis */}
+                        <div className="space-y-6">
+                           <div className="space-y-2">
+                              <label className="text-[10px] font-black uppercase text-zinc-900 tracking-widest flex items-center gap-2">
+                                 <div className="h-1.5 w-1.5 bg-blue-600" />
+                                 How was your experience during today's assessment?
+                              </label>
+                              <textarea 
+                                 required
+                                 rows={3}
+                                 placeholder="Briefly describe the difficulty and technical relevance..."
+                                 className="w-full bg-zinc-50 border border-zinc-200 p-4 text-xs font-medium focus:outline-none focus:border-blue-500 transition-all resize-none"
+                                 value={feedbackForm.examExperience}
+                                 onChange={e => setFeedbackForm({...feedbackForm, examExperience: e.target.value})}
+                              />
+                           </div>
+
+                           <div className="space-y-2">
+                              <label className="text-[10px] font-black uppercase text-zinc-900 tracking-widest flex items-center gap-2">
+                                 <div className="h-1.5 w-1.5 bg-blue-600" />
+                                 What improvements can we make to our platform / process?
+                              </label>
+                              <textarea 
+                                 required
+                                 rows={3}
+                                 placeholder="Technical feedback, UI/UX suggestions, or portal issues..."
+                                 className="w-full bg-zinc-50 border border-zinc-200 p-4 text-xs font-medium focus:outline-none focus:border-blue-500 transition-all resize-none"
+                                 value={feedbackForm.upgradeSuggestions}
+                                 onChange={e => setFeedbackForm({...feedbackForm, upgradeSuggestions: e.target.value})}
+                              />
+                           </div>
+
+                           <div className="space-y-2">
+                              <label className="text-[10px] font-black uppercase text-zinc-900 tracking-widest flex items-center gap-2">
+                                 <div className="h-1.5 w-1.5 bg-blue-600" />
+                                 Which advanced technologies are you eager to master?
+                              </label>
+                              <textarea 
+                                 required
+                                 rows={3}
+                                 placeholder="Next.js, AI/ML, DevOps, CyberSecurity, etc..."
+                                 className="w-full bg-zinc-50 border border-zinc-200 p-4 text-xs font-medium focus:outline-none focus:border-blue-500 transition-all resize-none"
+                                 value={feedbackForm.learningGoals}
+                                 onChange={e => setFeedbackForm({...feedbackForm, learningGoals: e.target.value})}
+                              />
+                           </div>
+                        </div>
+
+                        <div className="pt-4">
+                           <button 
+                              disabled={submittingFeedback}
+                              type="submit"
+                              className="w-full bg-zinc-900 text-white py-4 text-[10px] font-black uppercase tracking-[0.2em] hover:bg-zinc-800 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                           >
+                              {submittingFeedback ? (
+                                 <>
+                                    <RefreshCw className="animate-spin" size={16} />
+                                    Synchronizing Responses...
+                                 </>
+                              ) : (
+                                 <>
+                                    Submit and Access Dashboard
+                                    <Send size={14} />
+                                 </>
+                              )}
+                           </button>
+                        </div>
+                     </form>
+                  </motion.div>
+               </motion.div>
             )}
          </AnimatePresence>
       </div>

@@ -256,6 +256,7 @@ export default function CleedDashboard() {
    const [isUpdatingExam, setIsUpdatingExam] = useState(false);
    const [examSessions, setExamSessions] = useState<any[]>([]);
    const [examViewMode, setExamViewMode] = useState<"UI_UX" | "FULLSTACK">("UI_UX");
+   const [feedbacks, setFeedbacks] = useState<any[]>([]);
 
    const handleScheduleInterview = async (e: React.FormEvent) => {
       e.preventDefault();
@@ -371,6 +372,16 @@ export default function CleedDashboard() {
    useEffect(() => {
       fetchData();
       const interval = setInterval(fetchData, 10000); // Higher frequency for live exams
+      
+      const fetchFeedbacks = async () => {
+         try {
+            const res = await fetch("/api/cleed/feedback");
+            const data = await res.json();
+            if (Array.isArray(data)) setFeedbacks(data);
+         } catch (err) { console.error("Feedback fetch failure"); }
+      };
+      
+      fetchFeedbacks();
       return () => clearInterval(interval);
    }, []);
 
@@ -1067,6 +1078,7 @@ export default function CleedDashboard() {
                         { id: "internships", icon: Briefcase, label: "Programs" },
                         { id: "certification", icon: FileBadge, label: "Certificates" },
                         { id: "attendance", icon: CalendarCheck, label: "Attendance" },
+                         { id: "feedback", icon: MessageSquare, label: "Feedback" },
                         { id: "schedule", icon: Calendar, label: "Daily Plan" },
                         { id: "manage_schedules", icon: Settings, label: "Schedules" },
                         { id: "assign", icon: Send, label: "Dispatch" },
@@ -1144,6 +1156,7 @@ export default function CleedDashboard() {
                         { id: "certification", icon: FileBadge, label: "Certificates" },
                         { id: "exams", icon: FileText, label: "Exams" },
                         { id: "attendance", icon: CalendarCheck, label: "Attendance" },
+                         { id: "feedback", icon: MessageSquare, label: "Feedback" },
                      ].map((item) => (
                         <button
                            key={item.id}
@@ -1210,7 +1223,7 @@ export default function CleedDashboard() {
                   <span className="text-zinc-900 text-[10px] md:text-[11px] font-bold uppercase tracking-tight whitespace-nowrap">Home</span>
                   <ChevronRight size={10} className="text-zinc-700 flex-shrink-0" />
                   <span className="text-zinc-950 font-bold text-[11px] truncate uppercase tracking-tight">
-                     {activeTab === "internships" ? "Internships" : activeTab === "employees" ? "Employees" : activeTab === "interns" ? "Intern List" : activeTab === "assign" ? "Tasks" : activeTab === "certification" ? "Certificates" : activeTab === "authorizations" ? "Approvals" : activeTab === "mentorship" ? "Mentors" : activeTab === "schedule" ? "Schedules" : activeTab === "hiring" ? "Hiring" : activeTab === "submissions" ? "Submissions" : activeTab === "events" ? "Events" : activeTab === "ideas" ? "Ideas" : activeTab === "attendance" ? "Attendance" : "Log"}
+                     {activeTab === "internships" ? "Internships" : activeTab === "employees" ? "Employees" : activeTab === "interns" ? "Intern List" : activeTab === "assign" ? "Tasks" : activeTab === "certification" ? "Certificates" : activeTab === "authorizations" ? "Approvals" : activeTab === "mentorship" ? "Mentors" : activeTab === "schedule" ? "Schedules" : activeTab === "hiring" ? "Hiring" : activeTab === "submissions" ? "Submissions" : activeTab === "events" ? "Events" : activeTab === "ideas" ? "Ideas" : activeTab === "attendance" ? "Attendance" : activeTab === "feedback" ? "Feedback Vault" : "Log"}
                   </span>
                </div>
 
@@ -2630,6 +2643,62 @@ export default function CleedDashboard() {
                )}
 
                {/* Logbook / System History Node */}
+               {activeTab === "feedback" && (
+                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
+                     <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                        <div>
+                           <h2 className="text-xl font-black uppercase tracking-tighter text-zinc-800">Survey Insights</h2>
+                           <p className="text-[10px] text-zinc-400 font-bold uppercase tracking-widest">Candidate feedback and learning goals</p>
+                        </div>
+                        <div className="bg-zinc-100 p-1 rounded-sm flex gap-1">
+                           <div className="px-3 py-1 bg-white shadow-sm text-[10px] font-black text-zinc-900 uppercase">Total: {feedbacks.length}</div>
+                        </div>
+                     </div>
+
+                     <div className="grid grid-cols-1 gap-6">
+                        {feedbacks.length > 0 ? (
+                           feedbacks.map((f, idx) => (
+                              <div key={f.id} className="bg-white border border-zinc-200 overflow-hidden shadow-sm hover:border-blue-200 transition-colors">
+                                 <div className="bg-zinc-50 p-4 border-b border-zinc-100 flex justify-between items-center">
+                                    <div className="flex items-center gap-3">
+                                       <div className="h-8 w-8 bg-blue-600 flex items-center justify-center text-white text-[10px] font-bold">
+                                          {idx + 1}
+                                       </div>
+                                       <div>
+                                          <h4 className="text-xs font-black uppercase text-zinc-900">{f.name}</h4>
+                                          <p className="text-[9px] font-bold text-zinc-400 uppercase tracking-widest">{f.college}</p>
+                                       </div>
+                                    </div>
+                                    <span className="text-[9px] font-bold text-zinc-300 uppercase">
+                                       {new Date(f.createdAt).toLocaleString()}
+                                    </span>
+                                 </div>
+                                 <div className="p-6 grid grid-cols-1 md:grid-cols-3 gap-8">
+                                    <div className="space-y-2">
+                                       <h5 className="text-[9px] font-black uppercase text-blue-600 tracking-widest">Exam Experience</h5>
+                                       <p className="text-xs text-zinc-600 leading-relaxed italic">"{f.examExperience}"</p>
+                                    </div>
+                                    <div className="space-y-2">
+                                       <h5 className="text-[9px] font-black uppercase text-rose-600 tracking-widest">Upgrade Suggestions</h5>
+                                       <p className="text-xs text-zinc-600 leading-relaxed italic">"{f.upgradeSuggestions}"</p>
+                                    </div>
+                                    <div className="space-y-2 border-l border-zinc-100 pl-4">
+                                       <h5 className="text-[9px] font-black uppercase text-zinc-900 tracking-widest">Learning Roadmap</h5>
+                                       <p className="text-xs font-bold text-blue-800 uppercase tracking-tight">{f.learningGoals}</p>
+                                    </div>
+                                 </div>
+                              </div>
+                           ))
+                        ) : (
+                           <div className="bg-zinc-50 border border-zinc-200 border-dashed p-20 text-center">
+                              <MessageSquare className="mx-auto text-zinc-200 mb-4" size={48} />
+                              <p className="text-xs text-zinc-400 font-bold uppercase tracking-widest">No candidate feedback logs found.</p>
+                           </div>
+                        )}
+                     </div>
+                  </motion.div>
+               )}
+
                {activeTab === "history" && (
                   <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-8">
                      <div className="bg-white border border-zinc-100 p-8 text-left">
