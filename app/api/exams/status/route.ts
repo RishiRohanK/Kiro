@@ -9,12 +9,11 @@ export async function GET() {
     
     if (!status) {
       const newStatus = await prisma.examStatus.create({
-        data: { id: "global_exam_state", isActive: false, exitKey: "000000" },
+        data: { id: "global_exam_state", isActive: false },
       });
       return NextResponse.json({ isActive: newStatus.isActive });
     }
 
-    // Never return exitKey to GET (interns use this)
     return NextResponse.json({ isActive: status.isActive });
   } catch (error) {
     console.error("GET ExamStatus Error:", error);
@@ -24,15 +23,12 @@ export async function GET() {
 
 export async function POST(req: Request) {
   try {
-    const { isActive, exitKey } = await req.json();
+    const { isActive } = await req.json();
 
     const data: any = {};
     if (isActive !== undefined) {
         data.isActive = isActive;
         data.startedAt = isActive ? new Date() : null;
-    }
-    if (exitKey !== undefined) {
-        data.exitKey = exitKey;
     }
 
     const status = await prisma.examStatus.upsert({
@@ -41,7 +37,6 @@ export async function POST(req: Request) {
       create: { 
         id: "global_exam_state", 
         isActive: isActive ?? false,
-        exitKey: exitKey ?? "000000",
         startedAt: isActive ? new Date() : null
       },
     });
