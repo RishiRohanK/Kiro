@@ -18,7 +18,7 @@ import { motion } from "framer-motion";
 import { CORRECT_ANSWERS } from "@/lib/exam-questions";
 
 export default function InternReportsPage() {
-  const [session, setSession] = useState<any>(null);
+  const [sessions, setSessions] = useState<any[]>([]);
   const [history, setHistory] = useState<any[]>([]);
   const [attendance, setAttendance] = useState<number>(0);
   const [loading, setLoading] = useState(true);
@@ -34,8 +34,8 @@ export default function InternReportsPage() {
         // Fetch Exam Session
         const exRes = await fetch("/api/exams/session");
         const exData = await exRes.json();
-        const userSession = exData.find((s: any) => s.userId === user.id);
-        setSession(userSession);
+        const userSessions = Array.isArray(exData) ? exData.filter((s: any) => s.userId === user.id) : [];
+        setSessions(userSessions);
 
         // Fetch History
         const histRes = await fetch(`/api/intern/reports?internId=${user.id}`);
@@ -78,72 +78,109 @@ export default function InternReportsPage() {
         <p className="text-sm text-zinc-500 mt-1">Check your performance and exam results here.</p>
       </div>
 
-      {}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+      {/* Exam Results Section */}
+      <div className="space-y-4 mb-10">
+        <h2 className="text-sm font-bold uppercase tracking-widest text-zinc-400">Exam Performance</h2>
+        {sessions.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {sessions.map((session) => (
+              <div key={session.id} className="bg-white border border-zinc-200 p-6 flex flex-col justify-between">
+                <div>
+                  <div className="flex justify-between items-start mb-4">
+                    <div className={`px-2 py-1 text-[9px] font-bold uppercase ${
+                      session.examType === 'UI_UX' ? 'bg-blue-100 text-blue-700' : 'bg-zinc-100 text-zinc-700'
+                    }`}>
+                      {session.examType === 'UI_UX' ? 'UI/UX Development' : 'Full Stack Assessment'}
+                    </div>
+                    <span className="text-[10px] text-zinc-400 font-medium">
+                      {new Date(session.startedAt).toLocaleDateString()}
+                    </span>
+                  </div>
+                  
+                  <div className="flex items-baseline gap-1 mb-1">
+                    <span className="text-2xl font-black text-zinc-900">
+                      {session.score !== null ? session.score : '0'}
+                    </span>
+                    <span className="text-zinc-400 font-bold text-xs">
+                      / {session.examType === 'UI_UX' ? '40' : '150'}
+                    </span>
+                  </div>
+                  <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-tighter mb-4">Final Score Accumulated</p>
+
+                  <div className="space-y-2 border-t border-zinc-50 pt-4">
+                    <div className="flex justify-between text-[10px] font-bold">
+                      <span className="text-zinc-500 uppercase">Status</span>
+                      <span className={session.status === 'SUBMITTED' ? 'text-green-600' : 'text-blue-600'}>
+                        {session.status}
+                      </span>
+                    </div>
+                    <div className="flex justify-between text-[10px] font-bold">
+                      <span className="text-zinc-500 uppercase">Violations</span>
+                      <span className={session.violations > 0 ? 'text-red-500' : 'text-zinc-400'}>
+                        {session.violations}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                
+                <button 
+                  onClick={() => setShowResponses(showResponses === session.id ? false : session.id)}
+                  className="mt-6 w-full py-2 bg-zinc-900 text-white text-[9px] font-bold uppercase tracking-widest hover:bg-zinc-800 transition-all flex items-center justify-center gap-2"
+                >
+                  <FileText size={12} />
+                  {showResponses === session.id ? "Hide Detailed Report" : "View Response Map"}
+                </button>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="bg-zinc-50 border border-zinc-100 p-8 text-center">
+            <p className="text-xs text-zinc-400 font-bold uppercase tracking-widest italic">No exam records detected on this channel.</p>
+          </div>
+        )}
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10">
         <div className="bg-blue-50/30 border border-blue-100 p-4 shadow-sm">
           <div className="flex justify-between items-start mb-3">
             <div className="bg-blue-100 p-2">
               <Award className="text-blue-600" size={20} />
             </div>
-            <span className="text-[10px] font-medium text-blue-600/70">Score</span>
+            <span className="text-[10px] font-medium text-blue-600/70">Attendance Rating</span>
           </div>
           <h3 className="text-2xl font-bold text-zinc-800">
-            {session?.score !== null ? `${session?.score} / 150` : '0 / 150'}
+            {attendance}%
           </h3>
-          <p className="text-[10px] text-blue-600/60 font-medium mt-1">Final exam score</p>
+          <p className="text-[10px] text-blue-600/60 font-medium mt-1">Overall session engagement</p>
         </div>
-
         <div className="bg-rose-50/30 border border-rose-100 p-4 shadow-sm">
           <div className="flex justify-between items-start mb-3">
             <div className="bg-rose-100 p-2">
               <AlertCircle className="text-rose-600" size={20} />
             </div>
-            <span className="text-[10px] font-medium text-rose-600/70">Warnings</span>
+            <span className="text-[10px] font-medium text-rose-600/70">Security Log</span>
           </div>
-          <h3 className="text-2xl font-bold text-zinc-800">{session?.violations || 0}</h3>
-          <p className="text-[10px] text-rose-600/60 font-medium mt-1">Rules broken</p>
-        </div>
-
-        <div className="bg-emerald-50/30 border border-emerald-100 p-4 shadow-sm">
-          <div className="flex justify-between items-start mb-3">
-            <div className="bg-emerald-100 p-2">
-              <CheckCircle2 className="text-emerald-600" size={20} />
-            </div>
-            <span className="text-[10px] font-medium text-emerald-600/70">Attendance</span>
-          </div>
-          <h3 className="text-xl font-bold text-zinc-800">
-             {attendance}%
+          <h3 className="text-2xl font-bold text-zinc-800">
+            {sessions.reduce((acc: number, s: any) => acc + (s.violations || 0), 0)}
           </h3>
-          <p className="text-[10px] text-emerald-600/60 font-medium mt-1">Average ratio</p>
+          <p className="text-[10px] text-rose-600/60 font-medium mt-1">Cumulative exam violations</p>
         </div>
       </div>
 
-      <div className="space-y-6">
-         {}
-         <div className="bg-white border border-zinc-200 overflow-hidden shadow-sm">
-            <div className="p-4 border-b border-zinc-100 bg-zinc-50 flex items-center justify-between">
-               <div className="flex items-center gap-2">
+      {showResponses && sessions.find(s => s.id === showResponses) && (() => {
+        const s = sessions.find(sess => sess.id === showResponses);
+        return (
+          <div className="space-y-6 animate-in fade-in slide-in-from-top-4 duration-500">
+            <div className="bg-white border border-zinc-200 overflow-hidden shadow-sm">
+              <div className="p-4 border-b border-zinc-100 bg-zinc-50 flex items-center justify-between">
+                <div className="flex items-center gap-2">
                   <ShieldCheck className="text-zinc-400" size={16} />
-                  <h2 className="text-xs font-bold text-zinc-800">Exam report</h2>
-               </div>
-               {session?.status === 'SUBMITTED' && (
+                  <h2 className="text-xs font-bold text-zinc-800">Detailed Report: {s.examType === 'UI_UX' ? 'UI/UX' : 'Full Stack'}</h2>
+                </div>
+                {s.status === 'SUBMITTED' && (
                   <span className="text-[9px] font-bold px-2 py-0.5 bg-emerald-50 text-emerald-600 border border-emerald-100">
-                     Completed
+                    Completed
                   </span>
-               )}
-            </div>
-            <div className="p-4">
-               {session ? (
-                  <div className="space-y-6">
-                     <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                        <div>
-                           <p className="text-[10px] font-medium text-zinc-400 mb-1">Start time</p>
-                           <p className="text-xs font-medium text-zinc-700">{new Date(session.startedAt).toLocaleString()}</p>
-                        </div>
-                        <div>
-                           <p className="text-[10px] font-medium text-zinc-400 mb-1">Finish time</p>
-                           <p className="text-xs font-medium text-zinc-700">
-                              {session.status === 'SUBMITTED' ? new Date(session.updatedAt).toLocaleString() : 'Not finished'}
                            </p>
                         </div>
                         <div>
