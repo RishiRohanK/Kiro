@@ -480,103 +480,46 @@ function InternDashboardContent() {
                </div>
 
                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-                  <div className="p-5 border border-blue-100 bg-blue-50/40 shadow-sm flex flex-col justify-between h-32">
-                     <div className="flex items-center justify-between"><span className="text-[10px] font-bold text-blue-600 uppercase tracking-tight">Assignments</span><Briefcase size={16} className="text-blue-500" /></div>
-                     <div className="mt-auto"><p className="text-2xl font-bold text-zinc-900">{tasks.filter(t => t.status === 'pending').length}</p><p className="text-[10px] text-blue-500/70 mt-1 uppercase font-bold tracking-tight">Pending tasks</p></div>
+                  <div className="p-5 border border-blue-100 bg-blue-50/30 shadow-sm flex flex-col justify-between h-32">
+                     <div className="flex items-center justify-between"><span className="text-[10px] font-bold text-blue-600/70">Assignments</span><Briefcase size={16} className="text-blue-500" /></div>
+                     <div className="mt-auto"><p className="text-2xl font-bold text-zinc-900">{tasks.filter(t => t.status === 'pending').length}</p><p className="text-[10px] text-blue-600/60 mt-1 font-medium">Pending tasks</p></div>
                   </div>
-                  <div className="p-5 border border-emerald-100 bg-emerald-50/40 shadow-sm flex flex-col justify-between h-32 relative overflow-hidden group">
-                     <div className="flex items-center justify-between z-10"><span className="text-[10px] font-bold text-emerald-600 uppercase tracking-tight">Attendance</span><Check size={16} className="text-emerald-500" /></div>
+                  <div className="p-5 border border-emerald-100 bg-emerald-50/30 shadow-sm flex flex-col justify-between h-32 relative overflow-hidden group">
+                     <div className="flex items-center justify-between z-10"><span className="text-[10px] font-bold text-emerald-600/70">Attendance</span><Check size={16} className="text-emerald-500" /></div>
                      <div className="mt-auto z-10">
                         <div className="flex items-baseline gap-2">
                            <p className="text-2xl font-bold text-zinc-900">{attendancePercentage}%</p>
-                           <span className="text-[10px] text-emerald-500/70 font-bold">({attendanceCount}/{attendanceData.totalTrackingDays} Days)</span>
+                           <span className="text-[10px] text-emerald-600/60 font-medium">({attendanceCount}/{attendanceData.totalTrackingDays} days)</span>
                         </div>
-                        <div className="w-full h-1 bg-emerald-100 mt-2 rounded-full overflow-hidden">
+                        <div className="w-full h-1 bg-emerald-100/50 mt-2 rounded-full overflow-hidden">
                            <div className="h-full bg-emerald-500 transition-all duration-1000" style={{ width: `${attendancePercentage}%` }} />
                         </div>
-                        <p className="text-[9px] text-emerald-500/70 mt-1 uppercase font-bold tracking-tight">Mission Presence Ratio</p>
-                     </div>
-                     <div className="absolute -right-4 -bottom-4 opacity-5 group-hover:opacity-10 transition-opacity">
-                        <Activity size={80} className="text-emerald-900" />
+                        <p className="text-[10px] text-emerald-600/60 mt-1 font-medium">Presence ratio</p>
                      </div>
                   </div>
-                  <div className="p-5 border border-zinc-200 bg-zinc-50 shadow-sm flex flex-col justify-between h-32">
-                     <div className="flex items-center justify-between"><span className="text-[10px] font-bold text-zinc-500 uppercase tracking-tight">Status</span><FileBadge size={16} className={userStatus?.offerLetterUrl ? "text-emerald-500" : "text-zinc-300"} /></div>
-                     <div className="mt-auto"><p className="text-sm font-bold text-zinc-900 uppercase tracking-tight">{userStatus?.offerLetterUrl ? "Letter Issued" : "Processing"}</p><p className="text-[10px] text-zinc-400 mt-1 uppercase font-bold tracking-tight">Current phase</p></div>
+                  <div className="p-5 border border-violet-100 bg-violet-50/30 shadow-sm flex flex-col justify-between h-32">
+                     <div className="flex items-center justify-between"><span className="text-[10px] font-bold text-violet-600/70">Status</span><FileBadge size={16} className={userStatus?.offerLetterUrl ? "text-emerald-500" : "text-violet-400"} /></div>
+                     <div className="mt-auto"><p className="text-sm font-bold text-zinc-900 leading-tight">{userStatus?.offerLetterUrl ? "Letter issued" : "Processing"}</p><p className="text-[10px] text-violet-600/60 mt-1 font-medium">Current phase</p></div>
                   </div>
-                  <div className="p-5 border border-amber-100 bg-amber-50/40 shadow-sm flex flex-col justify-between h-32">
-                     <div className="flex items-center justify-between"><span className="text-[10px] font-bold text-amber-600 uppercase tracking-tight">Next shift</span><Calendar size={16} className="text-amber-500" /></div>
-                     <div className="mt-auto"><p className="text-sm font-bold text-zinc-900 uppercase tracking-tight">Today, 10:00 AM</p><p className="text-[10px] text-amber-500/70 mt-1 uppercase font-bold tracking-tight">Starting time</p></div>
+                  <div className="p-5 border border-amber-100 bg-amber-50/30 shadow-sm flex flex-col justify-between h-32">
+                     <div className="flex items-center justify-between"><span className="text-[10px] font-bold text-amber-600/70">Next shift</span><Calendar size={16} className="text-amber-500" /></div>
+                     <div className="mt-auto"><p className="text-sm font-bold text-zinc-900 leading-tight">Today, 10:00 AM</p><p className="text-[10px] text-amber-600/60 mt-1 font-medium">Starting time</p></div>
                   </div>
-                  <Link href="/exams" className="p-5 border border-zinc-900 bg-zinc-900 text-white shadow-lg flex flex-col justify-between h-32 hover:scale-[1.02] transition-transform group">
-                     <div className="flex items-center justify-between"><span className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Exams Portal</span><Shield size={16} className="text-white animate-pulse" /></div>
+                  <Link href="/intern/dashboard/reports" className="p-5 border border-rose-100 bg-rose-50/30 shadow-sm flex flex-col justify-between h-32 hover:border-rose-200 transition-all group text-left">
+                     <div className="flex items-center justify-between"><span className="text-[10px] font-bold text-rose-600/70">Reports</span><FileTextIcon size={16} className="text-rose-500" /></div>
                      <div className="mt-auto">
-                        <p className="text-sm font-bold uppercase tracking-tight group-hover:underline">Access Terminal</p>
-                        <p className="text-[10px] text-zinc-500 mt-1 uppercase font-bold tracking-tight">Technical Assessment</p>
+                        <p className="text-2xl font-bold text-zinc-900">{reports.length}</p>
+                        <p className="text-[10px] text-rose-600/60 mt-1 font-medium">Reports available</p>
                      </div>
                   </Link>
                </div>
 
                <div className="w-full overflow-hidden rounded-xl border border-zinc-100 shadow-sm bg-zinc-50 relative group">
-                  <Swiper
-                     modules={[Autoplay, Pagination, Navigation, EffectFade]}
-                     effect="fade"
-                     fadeEffect={{ crossFade: true }}
-                     speed={1000}
-                     autoHeight={true}
-                     autoplay={{
-                        delay: 5000,
-                        disableOnInteraction: false,
-                     }}
-                     pagination={{
-                        clickable: true,
-                        bulletClass: 'swiper-pagination-bullet !bg-zinc-400 !opacity-50',
-                        bulletActiveClass: 'swiper-pagination-bullet-active !bg-black !opacity-100',
-                     }}
-                     navigation={{
-                        nextEl: '.swiper-button-next-custom',
-                        prevEl: '.swiper-button-prev-custom',
-                     }}
-                     className="w-full"
-                  >
-                     <SwiperSlide>
-                        <img
-                           src="https://ik.imagekit.io/dypkhqxip/Intern%20Meetup.png"
-                           alt="Meetup Banner"
-                           className="w-full h-auto block"
-                        />
-                     </SwiperSlide>
-                     <SwiperSlide>
-                        <img
-                           src="https://ik.imagekit.io/dypkhqxip/Coming%20soon.png"
-                           alt="Programs Banner"
-                           className="w-full h-auto block"
-                        />
-                     </SwiperSlide>
-
-                     {/* Custom Navigation */}
-                     <button className="swiper-button-prev-custom absolute left-4 top-1/2 -translate-y-1/2 z-20 h-10 w-10 bg-white/80 backdrop-blur-md border border-zinc-100 opacity-0 group-hover:opacity-100 transition-all hover:bg-white flex items-center justify-center rounded-full shadow-lg">
-                        <ChevronLeft size={20} className="text-zinc-900" />
-                     </button>
-                     <button className="swiper-button-next-custom absolute right-4 top-1/2 -translate-y-1/2 z-20 h-10 w-10 bg-white/80 backdrop-blur-md border border-zinc-100 opacity-0 group-hover:opacity-100 transition-all hover:bg-white flex items-center justify-center rounded-full shadow-lg">
-                        <ChevronRight size={20} className="text-zinc-900" />
-                     </button>
-                  </Swiper>
-
-                  <style jsx global>{`
-                     .swiper-pagination-bullet {
-                        width: 6px !important;
-                        height: 6px !important;
-                        transition: all 0.3s ease !important;
-                     }
-                     .swiper-pagination-bullet-active {
-                        width: 24px !important;
-                        border-radius: 4px !important;
-                     }
-                     .swiper-pagination {
-                        bottom: 16px !important;
-                     }
-                  `}</style>
+                  <img
+                     src="https://ik.imagekit.io/dypkhqxip/Coming%20soon.png"
+                     alt="Programs Banner"
+                     className="w-full h-auto block"
+                  />
                </div>
 
                {userStatus?.offerLetterUrl && (
@@ -1061,36 +1004,36 @@ function InternDashboardContent() {
 
          {activeTab === "reports" && (
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6 max-w-4xl text-left">
-               <header className="pb-6">
-                  <h1 className="text-xl font-semibold tracking-tight text-zinc-900">Academic Progress</h1>
-                  <p className="text-zinc-500 text-sm mt-1">Detailed evaluation of your weekly submissions and performance.</p>
+               <header className="pb-4">
+                  <h1 className="text-xl font-bold text-zinc-900">My reports</h1>
+                  <p className="text-zinc-500 text-sm mt-1">Check your results and feedback from review sessions.</p>
                </header>
 
                <div className="grid grid-cols-1 gap-4">
                   {loadingReports ? (
-                     <div className="py-20 flex flex-col items-center justify-center gap-3 bg-zinc-50 rounded-xl border border-zinc-100">
-                        <RefreshCw className="animate-spin text-zinc-300" size={24} />
-                        <p className="text-zinc-400 text-xs">Loading performance data...</p>
+                     <div className="py-12 flex flex-col items-center justify-center gap-2 bg-zinc-50 border border-zinc-100">
+                        <RefreshCw className="animate-spin text-zinc-300" size={20} />
+                        <p className="text-zinc-400 text-xs">Loading records...</p>
                      </div>
                   ) : reports.length > 0 ? (
                      reports.map((report) => (
-                        <div key={report.id} className="bg-white border border-zinc-200 rounded-xl p-6 flex flex-col md:flex-row md:items-center justify-between gap-6 hover:shadow-md hover:border-blue-200 transition-all group">
-                           <div className="flex-1 space-y-3">
-                              <div className="flex items-center gap-3">
-                                 <span className="text-[11px] font-medium px-2 py-0.5 bg-blue-50 text-blue-600 rounded-full border border-blue-100">
+                        <div key={report.id} className="bg-white border border-zinc-200 p-4 flex flex-col md:flex-row md:items-center justify-between gap-4 hover:border-zinc-300 transition-all group">
+                           <div className="flex-1 space-y-2">
+                              <div className="flex items-center gap-2">
+                                 <span className="text-[10px] font-medium px-2 py-0.5 bg-blue-50 text-blue-600 border border-blue-100">
                                     {report.schedule.week}
                                  </span>
-                                 <span className="text-zinc-300">•</span>
-                                 <span className="text-[11px] text-zinc-400 font-medium">
-                                    Reviewed on {new Date(report.reviewedAt).toLocaleDateString()}
+                                 <span className="text-zinc-300">|</span>
+                                 <span className="text-[10px] text-zinc-400 font-medium">
+                                    Checked on {new Date(report.reviewedAt).toLocaleDateString()}
                                  </span>
                               </div>
                               
                               <div>
-                                 <h3 className="text-base font-semibold text-zinc-900 leading-tight">
+                                 <h3 className="text-sm font-bold text-zinc-900 leading-tight">
                                     {report.schedule.typeOfWork}
                                  </h3>
-                                 <div className="mt-2 p-4 bg-zinc-50 rounded-lg border border-zinc-100 italic relative">
+                                 <div className="mt-1 p-3 bg-zinc-50 border border-zinc-100 relative">
                                     <p className="text-xs text-zinc-600 leading-relaxed">
                                        "{report.review || "Standard evaluation completed. Overall performance remains consistent."}"
                                     </p>
@@ -1098,16 +1041,16 @@ function InternDashboardContent() {
                               </div>
                            </div>
 
-                           <div className="flex items-center gap-6 shrink-0 md:pl-6 md:border-l border-zinc-100 min-w-[120px] justify-end">
+                           <div className="flex items-center gap-4 shrink-0 md:pl-4 md:border-l border-zinc-100 min-w-[100px] justify-end">
                               <div className="text-right">
                                  <div className="flex items-baseline justify-end gap-1">
-                                    <span className="text-3xl font-bold text-zinc-900 leading-none">
+                                    <span className="text-2xl font-bold text-zinc-900 leading-none">
                                        {report.marks}
                                     </span>
-                                    <span className="text-sm font-semibold text-zinc-400">/ 100</span>
+                                    <span className="text-xs font-medium text-zinc-400">/ 100</span>
                                  </div>
-                                 <p className="text-[10px] text-zinc-400 font-bold uppercase tracking-wider mt-1">Final Score</p>
-                                 <div className="w-20 h-1.5 bg-zinc-100 rounded-full mt-2 overflow-hidden">
+                                 <p className="text-[10px] text-zinc-400 font-medium mt-1">Score</p>
+                                 <div className="w-16 h-1 bg-zinc-100 rounded-full mt-2 overflow-hidden">
                                     <div 
                                        className={`h-full transition-all duration-1000 ${Number(report.marks) >= 75 ? 'bg-emerald-500' : 'bg-amber-500'}`}
                                        style={{ width: `${report.marks}%` }}
@@ -1118,12 +1061,12 @@ function InternDashboardContent() {
                         </div>
                      ))
                   ) : (
-                     <div className="py-24 flex flex-col items-center justify-center text-center bg-zinc-50 border border-zinc-200 border-dashed rounded-2xl">
-                        <div className="h-16 w-16 bg-white rounded-2xl border border-zinc-200 flex items-center justify-center mb-4 shadow-sm">
-                           <FileTextIcon size={24} className="text-zinc-200" />
+                     <div className="py-12 flex flex-col items-center justify-center text-center bg-zinc-50 border border-zinc-200 border-dashed">
+                        <div className="h-12 w-12 bg-white border border-zinc-200 flex items-center justify-center mb-3">
+                           <FileTextIcon size={20} className="text-zinc-200" />
                         </div>
-                        <h4 className="text-lg font-semibold text-zinc-900">No reports available</h4>
-                        <p className="text-sm text-zinc-500 max-w-sm mt-1">Your weekly evaluations will appear here once the technical review process is complete.</p>
+                        <h4 className="text-sm font-bold text-zinc-900">No records found</h4>
+                        <p className="text-xs text-zinc-500 max-w-sm mt-1">Your weekly results will appear here after review.</p>
                      </div>
                   )}
                </div>
