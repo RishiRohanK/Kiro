@@ -1191,44 +1191,42 @@ function InternDashboardContent() {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  className="fixed inset-0 z-[9999] bg-zinc-950/80 backdrop-blur-md flex items-center justify-center p-4"
+                  className="fixed inset-0 z-[9999] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4"
                >
                   <motion.div 
                      initial={{ scale: 0.95, y: 20 }}
                      animate={{ scale: 1, y: 0 }}
-                     className="bg-white max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-zinc-200"
+                     className="bg-white max-w-xl w-full max-h-[90vh] overflow-y-auto shadow-xl rounded-lg"
                   >
-                     <div className="bg-blue-700 p-8 text-white">
-                        <div className="flex items-center gap-3 mb-2">
-                           <MessageSquare className="text-blue-200" size={24} />
-                           <h2 className="text-xl font-black uppercase tracking-tighter">Candidate Feedback Survey</h2>
-                        </div>
-                        <p className="text-xs text-blue-100 font-bold uppercase tracking-widest opacity-80">Please complete this formal requirement to unlock your dashboard</p>
+                     <div className="p-6 border-b border-zinc-100">
+                        <h2 className="text-lg font-semibold text-zinc-800">Quick Feedback</h2>
+                        <p className="text-sm text-zinc-400 mt-0.5">Please fill this out before accessing your dashboard.</p>
                      </div>
 
-                     <form onSubmit={handleFeedbackSubmit} className="p-8 space-y-8">
-                        {/* Identity Grid */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-6 border-b border-zinc-100">
-                           <div className="space-y-2">
-                              <label className="text-[10px] font-black uppercase text-zinc-400 tracking-widest">Full Legal Name</label>
+                     <form onSubmit={handleFeedbackSubmit} className="p-6 space-y-5">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                           <div className="space-y-1.5">
+                              <label className="text-sm font-medium text-zinc-600">Your name</label>
                               <input 
                                  required
                                  type="text"
-                                 placeholder="As per records"
-                                 className="w-full bg-zinc-50 border border-zinc-200 p-3 text-xs font-bold focus:outline-none focus:border-blue-500 transition-all"
+                                 placeholder="Enter your full name"
+                                 className="w-full border border-zinc-200 rounded-md p-2.5 text-sm text-zinc-800 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
                                  value={feedbackForm.name}
                                  onChange={e => setFeedbackForm({...feedbackForm, name: e.target.value})}
                               />
                            </div>
-                           <div className="space-y-2">
-                              <label className="text-[10px] font-black uppercase text-zinc-400 tracking-widest">Education Institute</label>
+                           <div className="space-y-1.5">
+                              <label className="text-sm font-medium text-zinc-600">College / University</label>
                               <select 
                                  required
-                                 className="w-full bg-zinc-50 border border-zinc-200 p-3 text-xs font-bold focus:outline-none focus:border-blue-500 transition-all appearance-none"
+                                 className="w-full border border-zinc-200 rounded-md p-2.5 text-sm text-zinc-800 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all bg-white"
                                  value={feedbackForm.college}
                                  onChange={e => setFeedbackForm({...feedbackForm, college: e.target.value})}
                               >
-                                 <option value="">Select College / University</option>
+                                 <option value="">Select your college</option>
+                                 <option value="CMR Institute of Technology, Hyderabad">CMR Institute of Technology, Hyderabad</option>
+                                 <option value="Kamala Institute of Technology, Karimnagar">Kamala Institute of Technology, Karimnagar</option>
                                  <option value="IIT / NIT">IIT / NIT</option>
                                  <option value="VIT University">VIT University</option>
                                  <option value="SRM Institute">SRM Institute</option>
@@ -1237,78 +1235,64 @@ function InternDashboardContent() {
                                  <option value="VTU Karnataka">VTU Karnataka</option>
                                  <option value="Delhi University">Delhi University</option>
                                  <option value="Amity / LPU">Amity / LPU</option>
-                                 <option value="Other Regional College">Other Regional College</option>
+                                 <option value="Other">Other</option>
                               </select>
                            </div>
                         </div>
 
-                        {/* Subjective Analysis */}
-                        <div className="space-y-6">
-                           <div className="space-y-2">
-                              <label className="text-[10px] font-black uppercase text-zinc-900 tracking-widest flex items-center gap-2">
-                                 <div className="h-1.5 w-1.5 bg-blue-600" />
-                                 How was your experience during today's assessment?
-                              </label>
-                              <textarea 
-                                 required
-                                 rows={3}
-                                 placeholder="Briefly describe the difficulty and technical relevance..."
-                                 className="w-full bg-zinc-50 border border-zinc-200 p-4 text-xs font-medium focus:outline-none focus:border-blue-500 transition-all resize-none"
-                                 value={feedbackForm.examExperience}
-                                 onChange={e => setFeedbackForm({...feedbackForm, examExperience: e.target.value})}
-                              />
-                           </div>
-
-                           <div className="space-y-2">
-                              <label className="text-[10px] font-black uppercase text-zinc-900 tracking-widest flex items-center gap-2">
-                                 <div className="h-1.5 w-1.5 bg-blue-600" />
-                                 What improvements can we make to our platform / process?
-                              </label>
-                              <textarea 
-                                 required
-                                 rows={3}
-                                 placeholder="Technical feedback, UI/UX suggestions, or portal issues..."
-                                 className="w-full bg-zinc-50 border border-zinc-200 p-4 text-xs font-medium focus:outline-none focus:border-blue-500 transition-all resize-none"
-                                 value={feedbackForm.upgradeSuggestions}
-                                 onChange={e => setFeedbackForm({...feedbackForm, upgradeSuggestions: e.target.value})}
-                              />
-                           </div>
-
-                           <div className="space-y-2">
-                              <label className="text-[10px] font-black uppercase text-zinc-900 tracking-widest flex items-center gap-2">
-                                 <div className="h-1.5 w-1.5 bg-blue-600" />
-                                 Which advanced technologies are you eager to master?
-                              </label>
-                              <textarea 
-                                 required
-                                 rows={3}
-                                 placeholder="Next.js, AI/ML, DevOps, CyberSecurity, etc..."
-                                 className="w-full bg-zinc-50 border border-zinc-200 p-4 text-xs font-medium focus:outline-none focus:border-blue-500 transition-all resize-none"
-                                 value={feedbackForm.learningGoals}
-                                 onChange={e => setFeedbackForm({...feedbackForm, learningGoals: e.target.value})}
-                              />
-                           </div>
+                        <div className="space-y-1.5">
+                           <label className="text-sm font-medium text-zinc-600">How was your exam experience?</label>
+                           <textarea 
+                              required
+                              rows={3}
+                              placeholder="Share how the exam went, difficulty level, etc."
+                              className="w-full border border-zinc-200 rounded-md p-2.5 text-sm text-zinc-800 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all resize-none"
+                              value={feedbackForm.examExperience}
+                              onChange={e => setFeedbackForm({...feedbackForm, examExperience: e.target.value})}
+                           />
                         </div>
 
-                        <div className="pt-4">
-                           <button 
-                              disabled={submittingFeedback}
-                              type="submit"
-                              className="w-full bg-zinc-900 text-white py-4 text-[10px] font-black uppercase tracking-[0.2em] hover:bg-zinc-800 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
-                           >
-                              {submittingFeedback ? (
-                                 <>
-                                    <RefreshCw className="animate-spin" size={16} />
-                                    Synchronizing Responses...
-                                 </>
-                              ) : (
-                                 <>
-                                    Submit and Access Dashboard
-                                    <Send size={14} />
-                                 </>
-                              )}
-                           </button>
+                        <div className="space-y-1.5">
+                           <label className="text-sm font-medium text-zinc-600">What can we improve?</label>
+                           <textarea 
+                              required
+                              rows={3}
+                              placeholder="Any suggestions for the platform or process..."
+                              className="w-full border border-zinc-200 rounded-md p-2.5 text-sm text-zinc-800 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all resize-none"
+                              value={feedbackForm.upgradeSuggestions}
+                              onChange={e => setFeedbackForm({...feedbackForm, upgradeSuggestions: e.target.value})}
+                           />
                         </div>
+
+                        <div className="space-y-1.5">
+                           <label className="text-sm font-medium text-zinc-600">What do you want to learn?</label>
+                           <textarea 
+                              required
+                              rows={3}
+                              placeholder="e.g. Next.js, AI/ML, DevOps, UI/UX..."
+                              className="w-full border border-zinc-200 rounded-md p-2.5 text-sm text-zinc-800 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all resize-none"
+                              value={feedbackForm.learningGoals}
+                              onChange={e => setFeedbackForm({...feedbackForm, learningGoals: e.target.value})}
+                           />
+                        </div>
+
+                        <button 
+                           disabled={submittingFeedback}
+                           type="submit"
+                           className="w-full bg-blue-600 text-white py-3 text-sm font-medium rounded-md hover:bg-blue-700 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                        >
+                           {submittingFeedback ? (
+                              <>
+                                 <RefreshCw className="animate-spin" size={16} />
+                                 Submitting...
+                              </>
+                           ) : (
+                              <>
+                                 Submit and continue
+                                 <Send size={14} />
+                              </>
+                           )}
+                        </button>
                      </form>
                   </motion.div>
                </motion.div>
