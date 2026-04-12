@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { Prisma } from "@prisma/client";
 import { CORRECT_ANSWERS } from "@/lib/exam-questions";
 
 export async function GET() {
@@ -36,8 +37,8 @@ export async function POST(req: Request) {
         startedAt: new Date(),
         score: null,
         violations: 0,
-        answers: null,
-        questionMapping: null
+        answers: Prisma.DbNull,
+        questionMapping: Prisma.DbNull
       },
       create: { 
         userId,
@@ -48,8 +49,8 @@ export async function POST(req: Request) {
     });
 
     return NextResponse.json(session);
-  } catch (error) {
-    return NextResponse.json({ error: "Failed to start exam session" }, { status: 500 });
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
 
@@ -124,15 +125,15 @@ export async function PATCH(req: Request) {
           status, 
           score: finalScore, 
           violations: finalViolations,
-          answers: answers || null,
-          questionMapping: questionMapping || null,
+          answers: answers || Prisma.DbNull,
+          questionMapping: questionMapping || Prisma.DbNull,
         },
         update: { 
           status, 
           score: finalScore, 
           violations: finalViolations,
-          answers: answers || null,
-          questionMapping: questionMapping || null,
+          answers: answers || Prisma.DbNull,
+          questionMapping: questionMapping || Prisma.DbNull,
           updatedAt: new Date()
         },
       });
