@@ -10,14 +10,15 @@ import {
   Github, 
   Search, 
   School,
-  Calendar
+  Calendar,
+  Layers
 } from "lucide-react";
 import Link from "next/link";
 
 export default function SubmissionsVault() {
-  const [data, setData] = useState<{ feedback: any[], uiux: any[] }>({ feedback: [], uiux: [] });
+  const [data, setData] = useState<{ feedback: any[], uiux: any[], weekly: any[] }>({ feedback: [], uiux: [], weekly: [] });
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<"feedback" | "uiux">("feedback");
+  const [activeTab, setActiveTab] = useState<"feedback" | "uiux" | "weekly">("feedback");
   const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
@@ -46,6 +47,11 @@ export default function SubmissionsVault() {
     s.taskName.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  const filteredWeekly = data.weekly.filter(s => 
+    s.intern?.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    s.schedule?.week?.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <div className="min-h-screen bg-zinc-50 text-zinc-900 font-sans p-4 md:p-8">
       <div className="max-w-6xl mx-auto space-y-6">
@@ -57,14 +63,14 @@ export default function SubmissionsVault() {
               <ChevronLeft size={12} /> Dashboard
             </Link>
             <h1 className="text-2xl font-bold text-zinc-900 tracking-tight">Submission records</h1>
-            <p className="text-zinc-500 text-xs">View intern responses and project links.</p>
+            <p className="text-zinc-500 text-xs">Review all intern feedback and technical task completions.</p>
           </div>
 
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400" size={14} />
             <input 
               type="text"
-              placeholder="Search by name..."
+              placeholder="Search by name or week..."
               className="h-10 w-full md:w-64 pl-9 pr-4 bg-white border border-zinc-200 rounded-none text-xs focus:outline-none focus:border-red-600 transition-all shadow-sm"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -73,18 +79,24 @@ export default function SubmissionsVault() {
         </div>
 
         {/* Tab Selection */}
-        <div className="flex border-b border-zinc-200">
+        <div className="flex border-b border-zinc-200 overflow-x-auto custom-scrollbar">
           <button 
             onClick={() => setActiveTab("feedback")}
-            className={`px-6 py-3 text-xs font-bold transition-all border-b-2 ${activeTab === "feedback" ? "border-[#F5332C] text-[#F5332C]" : "border-transparent text-zinc-400 hover:text-zinc-600 text-normal"}`}
+            className={`px-6 py-3 text-xs font-bold transition-all border-b-2 whitespace-nowrap ${activeTab === "feedback" ? "border-[#F5332C] text-[#F5332C]" : "border-transparent text-zinc-400 hover:text-zinc-600"}`}
           >
             Feedback ({data.feedback.length})
           </button>
           <button 
-            onClick={() => setActiveTab("uiux")}
-            className={`px-6 py-3 text-xs font-bold transition-all border-b-2 ${activeTab === "uiux" ? "border-[#F5332C] text-[#F5332C]" : "border-transparent text-zinc-400 hover:text-zinc-600 text-normal"}`}
+            onClick={() => setActiveTab("weekly")}
+            className={`px-6 py-3 text-xs font-bold transition-all border-b-2 whitespace-nowrap ${activeTab === "weekly" ? "border-[#F5332C] text-[#F5332C]" : "border-transparent text-zinc-400 hover:text-zinc-600"}`}
           >
-            Task links ({data.uiux.length})
+            Weekly tasks ({data.weekly.length})
+          </button>
+          <button 
+            onClick={() => setActiveTab("uiux")}
+            className={`px-6 py-3 text-xs font-bold transition-all border-b-2 whitespace-nowrap ${activeTab === "uiux" ? "border-[#F5332C] text-[#F5332C]" : "border-transparent text-zinc-400 hover:text-zinc-600"}`}
+          >
+            UI/UX tasks ({data.uiux.length})
           </button>
         </div>
 
@@ -96,7 +108,7 @@ export default function SubmissionsVault() {
               className="py-20 flex flex-col items-center justify-center gap-2 text-zinc-400"
             >
               <div className="h-5 w-5 border-2 border-zinc-200 border-t-[#F5332C] rounded-none animate-spin" />
-              <p className="text-[10px] font-bold uppercase tracking-widest">Loading...</p>
+              <p className="text-[10px] font-bold uppercase tracking-widest">Synchronizing...</p>
             </motion.div>
           ) : activeTab === "feedback" ? (
             <motion.div 
@@ -115,7 +127,7 @@ export default function SubmissionsVault() {
                         </div>
                       </div>
                       <div className="px-3 py-1 bg-red-50 text-[#F5332C] border border-red-100 rounded-none text-[10px] font-bold uppercase tracking-tight h-fit">
-                        Record
+                        Feedback node
                       </div>
                    </div>
 
@@ -136,9 +148,71 @@ export default function SubmissionsVault() {
                 </div>
               )) : (
                 <div className="py-20 text-center bg-white border border-dashed rounded-none border-zinc-200">
-                  <p className="text-zinc-400 text-xs font-medium">No results found.</p>
+                  <p className="text-zinc-400 text-xs font-medium">No feedback entries found.</p>
                 </div>
               )}
+            </motion.div>
+          ) : activeTab === "weekly" ? (
+            <motion.div 
+              key="weekly" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              className="bg-white border border-zinc-200 rounded-none shadow-sm overflow-hidden"
+            >
+              <div className="overflow-x-auto">
+                <table className="w-full text-left border-collapse min-w-[700px]">
+                  <thead>
+                    <tr className="bg-zinc-50 border-b border-zinc-100">
+                      <th className="px-6 py-4 text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Intern</th>
+                      <th className="px-6 py-4 text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Assignment</th>
+                      <th className="px-6 py-4 text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Submissions</th>
+                      <th className="px-6 py-4 text-[10px] font-bold text-zinc-400 uppercase tracking-widest text-right">Date</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-zinc-50">
+                    {filteredWeekly.length > 0 ? filteredWeekly.map((s) => (
+                      <tr key={s.id} className="hover:bg-red-50/20 transition-colors">
+                        <td className="px-6 py-4">
+                           <div className="flex items-center gap-2">
+                              <div className="h-7 w-7 bg-red-600 text-white rounded-none flex items-center justify-center text-[10px] font-bold">
+                                {s.intern?.name?.[0] || "?"}
+                              </div>
+                              <div>
+                                <p className="text-xs font-bold text-zinc-900">{s.intern?.name}</p>
+                                <p className="text-[10px] text-zinc-400">{s.intern?.email}</p>
+                              </div>
+                           </div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <p className="text-xs font-bold text-zinc-700">{s.schedule?.week}</p>
+                          <p className="text-[10px] text-zinc-500">{s.schedule?.projectName || "Standard Task"}</p>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="flex items-center gap-3">
+                            <a 
+                              href={s.submissionLink} target="_blank" rel="noopener noreferrer"
+                              className="text-[10px] font-bold text-[#F5332C] hover:underline flex items-center gap-1"
+                            >
+                              Live view <ExternalLink size={10} />
+                            </a>
+                            <a 
+                              href={s.githubLink} target="_blank" rel="noopener noreferrer"
+                              className="text-[10px] font-bold text-zinc-400 hover:text-zinc-800 flex items-center gap-1"
+                            >
+                              Source <Github size={10} />
+                            </a>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 text-right">
+                          <span className="text-[10px] font-bold text-zinc-300">{new Date(s.createdAt).toLocaleDateString()}</span>
+                        </td>
+                      </tr>
+                    )) : (
+                      <tr>
+                        <td colSpan={4} className="py-20 text-center text-zinc-400 text-xs font-medium">No weekly submissions found.</td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
             </motion.div>
           ) : (
             <motion.div 
@@ -193,7 +267,7 @@ export default function SubmissionsVault() {
                       </tr>
                     )) : (
                       <tr>
-                        <td colSpan={4} className="py-20 text-center text-zinc-400 text-xs font-medium">No links received.</td>
+                        <td colSpan={4} className="py-20 text-center text-zinc-400 text-xs font-medium">No records found.</td>
                       </tr>
                     )}
                   </tbody>
