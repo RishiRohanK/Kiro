@@ -301,6 +301,72 @@ export default function CleedDashboard() {
       };
    }, [isMobileMenuOpen]);
 
+   const downloadExamPdf = () => {
+      const sorted = [...examSessions].sort((a, b) => (b.score || 0) - (a.score || 0));
+      const printWindow = window.open('', '_blank');
+      if (!printWindow) return;
+
+      const html = `
+         <html>
+         <head>
+            <title>Exam Results Report</title>
+            <style>
+               body { font-family: sans-serif; padding: 40px; color: #18181b; }
+               h1 { color: #000; font-size: 20px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.1em; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 20px; }
+               p { font-size: 10px; color: #71717a; margin-bottom: 30px; }
+               table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+               th, td { border: 1px solid #e4e4e7; padding: 10px; text-align: left; }
+               th { background-color: #f4f4f5; font-size: 9px; text-transform: uppercase; letter-spacing: 0.05em; color: #71717a; font-weight: bold; }
+               td { font-size: 11px; }
+               .rank { font-weight: bold; color: #a1a1aa; width: 40px; }
+               .score { font-weight: bold; color: #18181b; }
+               .violations { font-weight: bold; color: #dc2626; }
+               .status { font-size: 9px; font-weight: bold; padding: 2px 6px; background: #f4f4f5; display: inline-block; }
+            </style>
+         </head>
+         <body>
+            <h1>Final Assessment Rankings</h1>
+            <p>Batch: ${batchFilter} | Report Generated: ${new Date().toLocaleString()} | Total Sessions: ${sorted.length}</p>
+            <table>
+               <thead>
+                  <tr>
+                     <th>Rank</th>
+                     <th>Intern Name</th>
+                     <th>Time Started</th>
+                     <th>Final Score</th>
+                     <th>Violations</th>
+                     <th>Status</th>
+                  </tr>
+               </thead>
+               <tbody>
+                  ${sorted.map((s, idx) => `
+                     <tr>
+                        <td class="rank">#${idx + 1}</td>
+                        <td style="font-weight: 500;">${s.user?.name || "N/A"}</td>
+                        <td>${new Date(s.startedAt).toLocaleString()}</td>
+                        <td class="score">${s.score !== null ? s.score + ' / 150' : '--'}</td>
+                        <td class="violations">${s.violations}</td>
+                        <td><span class="status">${s.status}</span></td>
+                     </tr>
+                  `).join('')}
+               </tbody>
+            </table>
+            <div style="margin-top: 50px; border-top: 1px solid #e4e4e7; padding-top: 20px; font-size: 8px; color: #a1a1aa; text-align: center;">
+               Student Forge Industrial Gateway - Proprietary Examination Data
+            </div>
+            <script>
+               window.onload = () => {
+                  window.print();
+                  setTimeout(() => window.close(), 500);
+               };
+            </script>
+         </body>
+         </html>
+      `;
+      printWindow.document.write(html);
+      printWindow.document.close();
+   };
+
    useEffect(() => {
       fetchData();
       const interval = setInterval(fetchData, 30000);
@@ -1489,7 +1555,16 @@ export default function CleedDashboard() {
                               <h3 className="text-xs font-bold uppercase tracking-widest text-zinc-800">Live Results</h3>
                               <p className="text-[10px] text-zinc-400 font-bold uppercase">See student scores and rules breaking here</p>
                            </div>
-                           <div className="h-1.5 w-1.5 bg-green-500 animate-pulse" />
+                           <div className="flex items-center gap-3">
+                              <button 
+                                 onClick={downloadExamPdf}
+                                 className="flex items-center gap-2 px-3 py-1.5 bg-zinc-900 text-white text-[10px] font-bold uppercase tracking-widest hover:bg-zinc-800 transition-all"
+                              >
+                                 <Download size={14} />
+                                 Download PDF
+                              </button>
+                              <div className="h-1.5 w-1.5 bg-green-500 animate-pulse" />
+                           </div>
                         </div>
                         <div className="overflow-x-auto">
                            <table className="w-full text-left">
@@ -1504,7 +1579,7 @@ export default function CleedDashboard() {
                                  </tr>
                               </thead>
                               <tbody className="divide-y divide-zinc-50">
-                                 {examSessions.map((session) => (
+                                 {[...examSessions].sort((a,b) => (b.score || 0) - (a.score || 0)).map((session) => (
                                     <tr key={session.id} className="hover:bg-zinc-50 transition-colors">
                                        <td className="px-6 py-4">
                                           <div className="font-bold text-xs">{session.user?.name}</div>
