@@ -2645,55 +2645,47 @@ export default function CleedDashboard() {
 
                {/* Logbook / System History Node */}
                {activeTab === "feedback" && (
-                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
-                     <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-5">
+                     <div className="flex items-center justify-between">
                         <div>
-                           <h2 className="text-xl font-black uppercase tracking-tighter text-zinc-800">Survey Insights</h2>
-                           <p className="text-[10px] text-zinc-400 font-bold uppercase tracking-widest">Candidate feedback and learning goals</p>
-                        </div>
-                        <div className="bg-zinc-100 p-1 rounded-sm flex gap-1">
-                           <div className="px-3 py-1 bg-white shadow-sm text-[10px] font-black text-zinc-900 uppercase">Total: {feedbacks.length}</div>
+                           <h2 className="text-lg font-semibold text-zinc-800">Candidate Feedback</h2>
+                           <p className="text-sm text-zinc-400 mt-0.5">{feedbacks.length} response{feedbacks.length !== 1 ? "s" : ""} collected</p>
                         </div>
                      </div>
 
-                     <div className="grid grid-cols-1 gap-6">
+                     <div className="space-y-4">
                         {feedbacks.length > 0 ? (
                            feedbacks.map((f, idx) => (
-                              <div key={f.id} className="bg-white border border-zinc-200 overflow-hidden shadow-sm hover:border-blue-200 transition-colors">
-                                 <div className="bg-zinc-50 p-4 border-b border-zinc-100 flex justify-between items-center">
-                                    <div className="flex items-center gap-3">
-                                       <div className="h-8 w-8 bg-blue-600 flex items-center justify-center text-white text-[10px] font-bold">
-                                          {idx + 1}
-                                       </div>
-                                       <div>
-                                          <h4 className="text-xs font-black uppercase text-zinc-900">{f.name}</h4>
-                                          <p className="text-[9px] font-bold text-zinc-400 uppercase tracking-widest">{f.college}</p>
-                                       </div>
+                              <div key={f.id} className="bg-white border border-zinc-200 rounded-lg overflow-hidden hover:shadow-sm transition-shadow">
+                                 <div className="px-5 py-4 border-b border-zinc-100 flex justify-between items-center">
+                                    <div>
+                                       <p className="text-sm font-semibold text-zinc-800">{f.name}</p>
+                                       <p className="text-xs text-zinc-400 mt-0.5">{f.college}</p>
                                     </div>
-                                    <span className="text-[9px] font-bold text-zinc-300 uppercase">
+                                    <span className="text-xs text-zinc-300">
                                        {new Date(f.createdAt).toLocaleString()}
                                     </span>
                                  </div>
-                                 <div className="p-6 grid grid-cols-1 md:grid-cols-3 gap-8">
-                                    <div className="space-y-2">
-                                       <h5 className="text-[9px] font-black uppercase text-blue-600 tracking-widest">Exam Experience</h5>
-                                       <p className="text-xs text-zinc-600 leading-relaxed italic">"{f.examExperience}"</p>
+                                 <div className="px-5 py-4 grid grid-cols-1 md:grid-cols-3 gap-6">
+                                    <div>
+                                       <p className="text-xs font-medium text-blue-600 mb-1">Exam experience</p>
+                                       <p className="text-sm text-zinc-600 leading-relaxed">{f.examExperience}</p>
                                     </div>
-                                    <div className="space-y-2">
-                                       <h5 className="text-[9px] font-black uppercase text-rose-600 tracking-widest">Upgrade Suggestions</h5>
-                                       <p className="text-xs text-zinc-600 leading-relaxed italic">"{f.upgradeSuggestions}"</p>
+                                    <div>
+                                       <p className="text-xs font-medium text-rose-500 mb-1">What to improve</p>
+                                       <p className="text-sm text-zinc-600 leading-relaxed">{f.upgradeSuggestions}</p>
                                     </div>
-                                    <div className="space-y-2 border-l border-zinc-100 pl-4">
-                                       <h5 className="text-[9px] font-black uppercase text-zinc-900 tracking-widest">Learning Roadmap</h5>
-                                       <p className="text-xs font-bold text-blue-800 uppercase tracking-tight">{f.learningGoals}</p>
+                                    <div>
+                                       <p className="text-xs font-medium text-zinc-500 mb-1">Want to learn</p>
+                                       <p className="text-sm text-zinc-600 leading-relaxed">{f.learningGoals}</p>
                                     </div>
                                  </div>
                               </div>
                            ))
                         ) : (
-                           <div className="bg-zinc-50 border border-zinc-200 border-dashed p-20 text-center">
-                              <MessageSquare className="mx-auto text-zinc-200 mb-4" size={48} />
-                              <p className="text-xs text-zinc-400 font-bold uppercase tracking-widest">No candidate feedback logs found.</p>
+                           <div className="bg-zinc-50 border border-zinc-200 border-dashed rounded-lg p-16 text-center">
+                              <MessageSquare className="mx-auto text-zinc-300 mb-3" size={32} />
+                              <p className="text-sm text-zinc-400">No feedback submitted yet.</p>
                            </div>
                         )}
                      </div>
