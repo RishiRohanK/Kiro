@@ -56,8 +56,8 @@ export default function SubmissionsVault() {
             <Link href="/cleed/dashboard" className="text-[10px] font-bold text-zinc-400 hover:text-black transition-colors flex items-center gap-1 uppercase tracking-widest mb-2">
               <ChevronLeft size={12} /> Dashboard
             </Link>
-            <h1 className="text-2xl font-bold text-zinc-900">Submission Records</h1>
-            <p className="text-zinc-500 text-xs">View candidate responses and project links.</p>
+            <h1 className="text-2xl font-bold text-zinc-900 tracking-tight">Submission records</h1>
+            <p className="text-zinc-500 text-xs">View intern responses and project links.</p>
           </div>
 
           <div className="relative">
@@ -65,7 +65,7 @@ export default function SubmissionsVault() {
             <input 
               type="text"
               placeholder="Search by name..."
-              className="h-10 w-full md:w-64 pl-9 pr-4 bg-white border border-zinc-200 rounded-lg text-xs focus:outline-none focus:border-zinc-400 transition-all shadow-sm"
+              className="h-10 w-full md:w-64 pl-9 pr-4 bg-white border border-zinc-200 rounded-none text-xs focus:outline-none focus:border-red-600 transition-all shadow-sm"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -76,15 +76,15 @@ export default function SubmissionsVault() {
         <div className="flex border-b border-zinc-200">
           <button 
             onClick={() => setActiveTab("feedback")}
-            className={`px-6 py-3 text-xs font-bold transition-all border-b-2 ${activeTab === "feedback" ? "border-zinc-900 text-zinc-900" : "border-transparent text-zinc-400 hover:text-zinc-600"}`}
+            className={`px-6 py-3 text-xs font-bold transition-all border-b-2 ${activeTab === "feedback" ? "border-[#F5332C] text-[#F5332C]" : "border-transparent text-zinc-400 hover:text-zinc-600 text-normal"}`}
           >
             Feedback ({data.feedback.length})
           </button>
           <button 
             onClick={() => setActiveTab("uiux")}
-            className={`px-6 py-3 text-xs font-bold transition-all border-b-2 ${activeTab === "uiux" ? "border-zinc-900 text-zinc-900" : "border-transparent text-zinc-400 hover:text-zinc-600"}`}
+            className={`px-6 py-3 text-xs font-bold transition-all border-b-2 ${activeTab === "uiux" ? "border-[#F5332C] text-[#F5332C]" : "border-transparent text-zinc-400 hover:text-zinc-600 text-normal"}`}
           >
-            Task Links ({data.uiux.length})
+            Task links ({data.uiux.length})
           </button>
         </div>
 
@@ -95,7 +95,7 @@ export default function SubmissionsVault() {
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
               className="py-20 flex flex-col items-center justify-center gap-2 text-zinc-400"
             >
-              <div className="h-5 w-5 border-2 border-zinc-200 border-t-zinc-800 rounded-full animate-spin" />
+              <div className="h-5 w-5 border-2 border-zinc-200 border-t-[#F5332C] rounded-none animate-spin" />
               <p className="text-[10px] font-bold uppercase tracking-widest">Loading...</p>
             </motion.div>
           ) : activeTab === "feedback" ? (
@@ -104,24 +104,24 @@ export default function SubmissionsVault() {
               className="grid grid-cols-1 gap-4"
             >
               {filteredFeedback.length > 0 ? filteredFeedback.map((f) => (
-                <div key={f.id} className="bg-white border border-zinc-200 p-6 rounded-lg shadow-sm hover:border-zinc-300 transition-all">
+                <div key={f.id} className="bg-white border border-zinc-100 p-6 rounded-none shadow-sm hover:border-red-200 transition-all">
                    <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-6">
                       <div>
                         <h3 className="text-lg font-bold text-zinc-900">{f.name}</h3>
                         <div className="flex items-center gap-2 text-[11px] text-zinc-500 mt-1">
                           <School size={12} /> {f.college}
-                          <span className="text-zinc-300">•</span>
+                          <span className="text-zinc-200">•</span>
                           <Calendar size={12} /> {new Date(f.createdAt).toLocaleDateString()}
                         </div>
                       </div>
-                      <div className="px-3 py-1 bg-zinc-50 border border-zinc-100 rounded text-[10px] font-bold text-zinc-500 uppercase tracking-tight h-fit">
-                        Response
+                      <div className="px-3 py-1 bg-red-50 text-[#F5332C] border border-red-100 rounded-none text-[10px] font-bold uppercase tracking-tight h-fit">
+                        Record
                       </div>
                    </div>
 
-                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4 border-t border-zinc-50">
                       <div className="space-y-1">
-                        <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Exam Experience</p>
+                        <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Exam experience</p>
                         <p className="text-xs leading-relaxed text-zinc-700">{f.examExperience}</p>
                       </div>
                       <div className="space-y-1">
@@ -135,7 +135,7 @@ export default function SubmissionsVault() {
                    </div>
                 </div>
               )) : (
-                <div className="py-20 text-center bg-white border border-dashed rounded-lg border-zinc-200">
+                <div className="py-20 text-center bg-white border border-dashed rounded-none border-zinc-200">
                   <p className="text-zinc-400 text-xs font-medium">No results found.</p>
                 </div>
               )}
@@ -143,24 +143,24 @@ export default function SubmissionsVault() {
           ) : (
             <motion.div 
               key="uiux" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              className="bg-white border border-zinc-200 rounded-lg shadow-sm overflow-hidden"
+              className="bg-white border border-zinc-200 rounded-none shadow-sm overflow-hidden"
             >
               <div className="overflow-x-auto">
                 <table className="w-full text-left border-collapse min-w-[600px]">
                   <thead>
                     <tr className="bg-zinc-50 border-b border-zinc-100">
-                      <th className="px-6 py-4 text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Name</th>
-                      <th className="px-6 py-4 text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Task</th>
+                      <th className="px-6 py-4 text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Intern</th>
+                      <th className="px-6 py-4 text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Project</th>
                       <th className="px-6 py-4 text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Links</th>
                       <th className="px-6 py-4 text-[10px] font-bold text-zinc-400 uppercase tracking-widest text-right">Date</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-zinc-50">
                     {filteredUIUX.length > 0 ? filteredUIUX.map((s) => (
-                      <tr key={s.id} className="hover:bg-zinc-50/50 transition-colors">
+                      <tr key={s.id} className="hover:bg-red-50/20 transition-colors">
                         <td className="px-6 py-4">
                            <div className="flex items-center gap-2">
-                              <div className="h-7 w-7 bg-zinc-800 text-white rounded flex items-center justify-center text-[10px] font-bold">
+                              <div className="h-7 w-7 bg-zinc-900 text-white rounded-none flex items-center justify-center text-[10px] font-bold">
                                 {s.userName[0]}
                               </div>
                               <span className="text-xs font-bold text-zinc-900">{s.userName}</span>
@@ -173,22 +173,22 @@ export default function SubmissionsVault() {
                           <div className="flex items-center gap-3">
                             <a 
                               href={s.taskLink} target="_blank" rel="noopener noreferrer"
-                              className="text-[10px] font-bold text-blue-600 hover:text-blue-800 flex items-center gap-1"
+                              className="text-[10px] font-bold text-[#F5332C] hover:underline flex items-center gap-1"
                             >
                               Live link <ExternalLink size={10} />
                             </a>
                             {s.githubLink && (
                                <a 
                                 href={s.githubLink} target="_blank" rel="noopener noreferrer"
-                                className="text-[10px] font-bold text-zinc-500 hover:text-zinc-800 flex items-center gap-1"
+                                className="text-[10px] font-bold text-zinc-400 hover:text-zinc-800 flex items-center gap-1"
                               >
-                                Code <Github size={10} />
+                                Source <Github size={10} />
                               </a>
                             )}
                           </div>
                         </td>
                         <td className="px-6 py-4 text-right">
-                          <span className="text-[10px] font-bold text-zinc-300">{new Date(s.createdAt).toLocaleDateString()}</span>
+                          <span className="text-[10px] font-bold text-zinc-400">{new Date(s.createdAt).toLocaleDateString()}</span>
                         </td>
                       </tr>
                     )) : (
