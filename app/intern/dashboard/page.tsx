@@ -199,77 +199,79 @@ function InternDashboardContent() {
       };
    }, [router]);
 
-    const [showChatSidebar, setShowChatSidebar] = useState(true);
-    const [showUIUXModal, setShowUIUXModal] = useState(false);
-    const [uiuxSubmitting, setUiuxSubmitting] = useState(false);
-    const [uiuxSuccess, setUiuxSuccess] = useState(false);
-    const [uiuxForm, setUiuxForm] = useState({ taskName: "", taskLink: "", githubLink: "" });
+   const [showChatSidebar, setShowChatSidebar] = useState(true);
+   const [showUIUXModal, setShowUIUXModal] = useState(false);
+   const [uiuxSubmitting, setUiuxSubmitting] = useState(false);
+   const [uiuxSuccess, setUiuxSuccess] = useState(false);
+   const [uiuxForm, setUiuxForm] = useState({ taskName: "", taskLink: "", githubLink: "" });
 
-    const handleUIUXSubmit = async (e: React.FormEvent) => {
-       e.preventDefault();
-       setUiuxSubmitting(true);
-       try {
-          const res = await fetch("/api/intern/uiux-submission", {
-             method: "POST",
-             headers: { "Content-Type": "application/json" },
-             body: JSON.stringify({
-                userId: user.id,
-                userName: user.name,
-                ...uiuxForm
-             })
-          });
-          if (res.ok) {
-             setUiuxSuccess(true);
-             setTimeout(() => { setShowUIUXModal(false); setUiuxSuccess(false); setUiuxForm({ taskName: "", taskLink: "", githubLink: "" }); }, 2000);
-          }
-       } catch (err) {
-          console.error("UI/UX submission failed:", err);
-       } finally {
-          setUiuxSubmitting(false);
-       }
-    };
-    const [showFeedbackModal, setShowFeedbackModal] = useState(false);
-    const [submittingFeedback, setSubmittingFeedback] = useState(false);
-    const [feedbackForm, setFeedbackForm] = useState({
-       name: "",
-       college: "",
-       examExperience: "",
-       upgradeSuggestions: "",
-       learningGoals: ""
-    });
+   const handleUIUXSubmit = async (e: React.FormEvent) => {
+      e.preventDefault();
+      setUiuxSubmitting(true);
+      try {
+         const res = await fetch("/api/intern/uiux-submission", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+               userId: user.id,
+               userName: user.name,
+               ...uiuxForm
+            })
+         });
+         if (res.ok) {
+            setUiuxSuccess(true);
+            setTimeout(() => { setShowUIUXModal(false); setUiuxSuccess(false); setUiuxForm({ taskName: "", taskLink: "", githubLink: "" }); }, 2000);
+         }
+      } catch (err) {
+         console.error("UI/UX submission failed:", err);
+      } finally {
+         setUiuxSubmitting(false);
+      }
+   };
+   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
+   const [submittingFeedback, setSubmittingFeedback] = useState(false);
+   const [feedbackForm, setFeedbackForm] = useState({
+      name: "",
+      college: "",
+      examExperience: "",
+      upgradeSuggestions: "",
+      learningGoals: ""
+   });
 
-    useEffect(() => {
-       if (user && !user.hasSubmittedFeedback) {
-          setShowFeedbackModal(true);
-       }
-    }, [user]);
+   useEffect(() => {
+      if (user) {
+         const alreadySubmitted = localStorage.getItem(`feedback_submitted_${user.id}`);
+         if (!alreadySubmitted && !user.hasSubmittedFeedback) { setShowFeedbackModal(true); }
+      }
 
-    const handleFeedbackSubmit = async (e: React.FormEvent) => {
-       e.preventDefault();
-       setSubmittingFeedback(true);
-       try {
-          const res = await fetch("/api/intern/feedback", {
-             method: "POST",
-             headers: { "Content-Type": "application/json" },
-             body: JSON.stringify({
-                userId: user.id,
-                ...feedbackForm
-             })
-          });
-          if (res.ok) {
-             const updatedUser = { ...user, hasSubmittedFeedback: true };
-             setUser(updatedUser);
-             localStorage.setItem("intern_user", JSON.stringify(updatedUser));
-             setShowFeedbackModal(false);
-          } else {
-             alert("Failed to submit. Please try again.");
-          }
-       } catch (err) {
-          console.error("Feedback error:", err);
-       } finally {
-          setSubmittingFeedback(false);
-       }
-    };
+   }, [user]);
+   const handleFeedbackSubmit = async (e: React.FormEvent) => {
+      e.preventDefault();
+      setSubmittingFeedback(true);
+      try {
+         const res = await fetch("/api/intern/feedback", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+               userId: user.id,
+               ...feedbackForm
+            })
+         });
+         if (res.ok) {
+            const updatedUser = { ...user, hasSubmittedFeedback: true };
+            setUser(updatedUser);
+            localStorage.setItem("intern_user", JSON.stringify(updatedUser));
+            localStorage.setItem(`feedback_submitted_${user.id}`, "true");
+            setShowFeedbackModal(false);
+         } else {
+            alert("Failed to submit. Please try again.");
+         }
+      } catch (err) {
+         console.error("Feedback error:", err);
+      } finally {
+         setSubmittingFeedback(false);
+      }
+   };
 
 
    useEffect(() => {
@@ -373,20 +375,20 @@ function InternDashboardContent() {
       }
    };
 
-    const fetchReports = async (internId: string) => {
-        setLoadingReports(true);
-        try {
-            const res = await fetch(`/api/intern/reports?internId=${internId}`);
-            const data = await res.json();
-            if (data.success) {
-                setReports(data.reports);
-            }
-        } catch (e) {
-            console.error("Failed to load reports");
-        } finally {
-            setLoadingReports(false);
-        }
-    };
+   const fetchReports = async (internId: string) => {
+      setLoadingReports(true);
+      try {
+         const res = await fetch(`/api/intern/reports?internId=${internId}`);
+         const data = await res.json();
+         if (data.success) {
+            setReports(data.reports);
+         }
+      } catch (e) {
+         console.error("Failed to load reports");
+      } finally {
+         setLoadingReports(false);
+      }
+   };
 
    const fetchAllInterns = async () => {
       try {
@@ -1117,7 +1119,7 @@ function InternDashboardContent() {
                                     Checked on {new Date(report.reviewedAt).toLocaleDateString()}
                                  </span>
                               </div>
-                              
+
                               <div>
                                  <h3 className="text-sm font-bold text-zinc-900 leading-tight">
                                     {report.schedule.typeOfWork}
@@ -1140,7 +1142,7 @@ function InternDashboardContent() {
                                  </div>
                                  <p className="text-[10px] text-zinc-400 font-medium mt-1">Score</p>
                                  <div className="w-16 h-1 bg-zinc-100 rounded-full mt-2 overflow-hidden">
-                                    <div 
+                                    <div
                                        className={`h-full transition-all duration-1000 ${Number(report.marks) >= 75 ? 'bg-emerald-500' : 'bg-amber-500'}`}
                                        style={{ width: `${report.marks}%` }}
                                     />
@@ -1313,13 +1315,13 @@ function InternDashboardContent() {
          {/* Mandatory Feedback Modal */}
          <AnimatePresence>
             {showFeedbackModal && (
-               <motion.div 
+               <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   className="fixed inset-0 z-[9999] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4"
                >
-                  <motion.div 
+                  <motion.div
                      initial={{ scale: 0.95, y: 20 }}
                      animate={{ scale: 1, y: 0 }}
                      className="bg-white max-w-xl w-full max-h-[90vh] overflow-y-auto shadow-xl rounded-lg"
@@ -1333,22 +1335,22 @@ function InternDashboardContent() {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                            <div className="space-y-1.5">
                               <label className="text-sm font-medium text-zinc-600">Your name</label>
-                              <input 
+                              <input
                                  required
                                  type="text"
                                  placeholder="Enter your full name"
                                  className="w-full border border-zinc-200 rounded-md p-2.5 text-sm text-zinc-800 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
                                  value={feedbackForm.name}
-                                 onChange={e => setFeedbackForm({...feedbackForm, name: e.target.value})}
+                                 onChange={e => setFeedbackForm({ ...feedbackForm, name: e.target.value })}
                               />
                            </div>
                            <div className="space-y-1.5">
                               <label className="text-sm font-medium text-zinc-600">College / University</label>
-                              <select 
+                              <select
                                  required
                                  className="w-full border border-zinc-200 rounded-md p-2.5 text-sm text-zinc-800 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all bg-white"
                                  value={feedbackForm.college}
-                                 onChange={e => setFeedbackForm({...feedbackForm, college: e.target.value})}
+                                 onChange={e => setFeedbackForm({ ...feedbackForm, college: e.target.value })}
                               >
                                  <option value="">Select your college</option>
                                  <option value="CMR Institute of Technology, Hyderabad">CMR Institute of Technology, Hyderabad</option>
@@ -1368,41 +1370,41 @@ function InternDashboardContent() {
 
                         <div className="space-y-1.5">
                            <label className="text-sm font-medium text-zinc-600">How was your exam experience?</label>
-                           <textarea 
+                           <textarea
                               required
                               rows={3}
                               placeholder="Share how the exam went, difficulty level, etc."
                               className="w-full border border-zinc-200 rounded-md p-2.5 text-sm text-zinc-800 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all resize-none"
                               value={feedbackForm.examExperience}
-                              onChange={e => setFeedbackForm({...feedbackForm, examExperience: e.target.value})}
+                              onChange={e => setFeedbackForm({ ...feedbackForm, examExperience: e.target.value })}
                            />
                         </div>
 
                         <div className="space-y-1.5">
                            <label className="text-sm font-medium text-zinc-600">What can we improve?</label>
-                           <textarea 
+                           <textarea
                               required
                               rows={3}
                               placeholder="Any suggestions for the platform or process..."
                               className="w-full border border-zinc-200 rounded-md p-2.5 text-sm text-zinc-800 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all resize-none"
                               value={feedbackForm.upgradeSuggestions}
-                              onChange={e => setFeedbackForm({...feedbackForm, upgradeSuggestions: e.target.value})}
+                              onChange={e => setFeedbackForm({ ...feedbackForm, upgradeSuggestions: e.target.value })}
                            />
                         </div>
 
                         <div className="space-y-1.5">
                            <label className="text-sm font-medium text-zinc-600">What do you want to learn?</label>
-                           <textarea 
+                           <textarea
                               required
                               rows={3}
                               placeholder="e.g. Next.js, AI/ML, DevOps, UI/UX..."
                               className="w-full border border-zinc-200 rounded-md p-2.5 text-sm text-zinc-800 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all resize-none"
                               value={feedbackForm.learningGoals}
-                              onChange={e => setFeedbackForm({...feedbackForm, learningGoals: e.target.value})}
+                              onChange={e => setFeedbackForm({ ...feedbackForm, learningGoals: e.target.value })}
                            />
                         </div>
 
-                        <button 
+                        <button
                            disabled={submittingFeedback}
                            type="submit"
                            className="w-full bg-blue-600 text-white py-3 text-sm font-medium rounded-md hover:bg-blue-700 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
