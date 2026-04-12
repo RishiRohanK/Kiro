@@ -464,3 +464,14 @@ model ExamSession {
 
   @@unique([userId, examType])
 }
+
+model Feedback {
+  id                 String   @id @default(cuid())
+  userId             String
+  name               String
+  college            String
+  examExperience     String
+  upgradeSuggestions String
+  learningGoals      String
+  createdAt          DateTime @default(now())
+}
