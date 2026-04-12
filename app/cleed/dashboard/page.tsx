@@ -42,7 +42,8 @@ import {
    LogOut,
    Eye,
    Edit,
-   Shield
+   Shield,
+   MessageSquare
 } from "lucide-react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
