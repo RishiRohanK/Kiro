@@ -457,7 +457,9 @@ model ExamSession {
   violations Int      @default(0)
   answers    Json?
   questionMapping Json?
+  examType   String   @default("FULLSTACK")
+  examBatch  String?  @default("BATCH_1")
   updatedAt  DateTime @updatedAt
 
-  @@unique([userId])
+  @@unique([userId, examType])
 }

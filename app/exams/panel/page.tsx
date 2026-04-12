@@ -52,7 +52,8 @@ export default function ExamPanelPage() {
           violations: vCount,
           answers: currentAnswers || answers,
           questionMapping: shuffledQuestions,
-          allowSystemOverride
+          allowSystemOverride,
+          examType: "UI_UX" // Explicitly mark this track
         })
       });
       if (!res.ok) {

@@ -26,16 +26,22 @@ export async function POST(req: Request) {
   try {
     const { userId } = await req.json();
 
+    const et = "UI_UX"; // Default track for new sessions
     const session = await prisma.examSession.upsert({
-      where: { userId },
+      where: { 
+        userId_examType: { userId, examType: et } 
+      },
       update: { 
         status: "STARTED",
         startedAt: new Date(),
         score: null,
-        violations: 0
+        violations: 0,
+        answers: null,
+        questionMapping: null
       },
       create: { 
         userId,
+        examType: et,
         status: "STARTED",
         startedAt: new Date()
       },
@@ -58,7 +64,8 @@ export async function PATCH(req: Request) {
       answers, 
       questionMapping, 
       typedExitKey,
-      allowSystemOverride // New flag for auto-submissions
+      allowSystemOverride, // New flag for auto-submissions
+      examType
     } = payload;
     
     console.log(`[API] Syncing session for User: ${userId}, Status: ${status}, Override: ${allowSystemOverride}`);
@@ -106,9 +113,21 @@ export async function PATCH(req: Request) {
     const finalViolations = typeof violations === 'number' ? violations : 0;
 
     try {
-      const session = await prisma.examSession.update({
-        where: { userId },
-        data: { 
+      const et = examType || "FULLSTACK";
+      const session = await prisma.examSession.upsert({
+        where: { 
+          userId_examType: { userId, examType: et } 
+        },
+        create: {
+          userId,
+          examType: et,
+          status, 
+          score: finalScore, 
+          violations: finalViolations,
+          answers: answers || null,
+          questionMapping: questionMapping || null,
+        },
+        update: { 
           status, 
           score: finalScore, 
           violations: finalViolations,

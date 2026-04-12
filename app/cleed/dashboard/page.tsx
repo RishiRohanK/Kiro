@@ -255,6 +255,7 @@ export default function CleedDashboard() {
    const [globalExitKey, setGlobalExitKey] = useState("000000");
    const [isUpdatingExam, setIsUpdatingExam] = useState(false);
    const [examSessions, setExamSessions] = useState<any[]>([]);
+   const [examViewMode, setExamViewMode] = useState<"UI_UX" | "FULLSTACK">("UI_UX");
 
    const handleScheduleInterview = async (e: React.FormEvent) => {
       e.preventDefault();
@@ -1555,68 +1556,84 @@ export default function CleedDashboard() {
                               <h3 className="text-xs font-bold uppercase tracking-widest text-zinc-800">Live Results</h3>
                               <p className="text-[10px] text-zinc-400 font-bold uppercase">See student scores and rules breaking here</p>
                            </div>
-                           <div className="flex items-center gap-3">
-                              <button 
-                                 onClick={downloadExamPdf}
-                                 className="flex items-center gap-2 px-3 py-1.5 bg-zinc-900 text-white text-[10px] font-bold uppercase tracking-widest hover:bg-zinc-800 transition-all"
-                              >
-                                 <Download size={14} />
-                                 Download PDF
-                              </button>
-                              <div className="h-1.5 w-1.5 bg-green-500 animate-pulse" />
-                           </div>
-                        </div>
-                        <div className="overflow-x-auto">
-                           <table className="w-full text-left">
-                              <thead>
-                                 <tr className="bg-zinc-50 border-b border-zinc-100">
-                                    <th className="px-6 py-4 text-[10px] font-bold uppercase text-zinc-400">Intern</th>
-                                    <th className="px-6 py-4 text-[10px] font-bold uppercase text-zinc-400">Started At</th>
-                                    <th className="px-6 py-4 text-[10px] font-bold uppercase text-zinc-400">Status</th>
-                                    <th className="px-6 py-4 text-[10px] font-bold uppercase text-zinc-400">Score</th>
-                                    <th className="px-6 py-4 text-[10px] font-bold uppercase text-zinc-400">Errors</th>
-                                    <th className="px-6 py-4 text-[10px] font-bold uppercase text-zinc-400 text-right">Last Sync</th>
-                                 </tr>
-                              </thead>
-                              <tbody className="divide-y divide-zinc-50">
-                                 {[...examSessions].sort((a,b) => (b.score || 0) - (a.score || 0)).map((session) => (
-                                    <tr key={session.id} className="hover:bg-zinc-50 transition-colors">
-                                       <td className="px-6 py-4">
-                                          <div className="font-bold text-xs">{session.user?.name}</div>
-                                          <div className="text-[10px] text-zinc-400">{session.user?.email}</div>
-                                       </td>
-                                       <td className="px-6 py-4 text-xs font-medium">
-                                          {new Date(session.startedAt).toLocaleTimeString()}
-                                       </td>
-                                       <td className="px-6 py-4">
-                                          <span className={`px-2 py-1 text-[9px] font-bold uppercase ${
-                                             session.status === 'SUBMITTED' ? 'bg-green-100 text-green-700' :
-                                             session.status === 'DISQUALIFIED' ? 'bg-red-100 text-red-700' :
-                                             'bg-blue-100 text-blue-700'
-                                          }`}>
-                                             {session.status}
-                                          </span>
-                                       </td>
-                                       <td className="px-6 py-4 text-xs font-bold text-zinc-900 border-r border-zinc-50">
-                                          {session.score !== null ? `${session.score} / 150` : '--'}
-                                       </td>
-                                       <td className="px-6 py-4 text-xs font-bold">
-                                          <span className={session.violations > 0 ? 'text-red-600' : 'text-zinc-400'}>
-                                             {session.violations}
-                                          </span>
-                                       </td>
-                                       <td className="px-6 py-4 text-right text-[10px] font-bold text-zinc-400">
-                                          {Math.floor((new Date().getTime() - new Date(session.updatedAt).getTime()) / 1000)}s ago
-                                       </td>
-                                    </tr>
-                                 ))}
-                                 {examSessions.length === 0 && (
-                                    <tr>
-                                       <td colSpan={6} className="px-6 py-12 text-center text-zinc-400 text-xs italic">
-                                          No active exam sessions found. Ensure the global node is active.
-                                       </td>
-                                    </tr>
-                                 )}
+                                  <div className="flex bg-zinc-100 p-1 rounded-sm">
+                                     <button 
+                                        onClick={() => setExamViewMode("UI_UX")}
+                                        className={`px-4 py-1 text-[10px] font-bold uppercase transition-all ${examViewMode === "UI_UX" ? 'bg-white shadow text-blue-600' : 'text-zinc-500 hover:bg-zinc-200'}`}
+                                     >
+                                        Active: UI/UX
+                                     </button>
+                                     <button 
+                                        onClick={() => setExamViewMode("FULLSTACK")}
+                                        className={`px-4 py-1 text-[10px] font-bold uppercase transition-all ${examViewMode === "FULLSTACK" ? 'bg-white shadow text-blue-600' : 'text-zinc-500 hover:bg-zinc-200'}`}
+                                     >
+                                        History: Full Stack
+                                     </button>
+                                  </div>
+                                  <div className="flex items-center gap-3">
+                                     <button 
+                                        onClick={downloadExamPdf}
+                                        className="flex items-center gap-2 px-3 py-1.5 bg-zinc-900 text-white text-[10px] font-bold uppercase tracking-widest hover:bg-zinc-800 transition-all"
+                                     >
+                                        <Download size={14} />
+                                        Download {examViewMode === "UI_UX" ? "UI/UX" : "Full Stack"} PDF
+                                     </button>
+                                     <div className="h-1.5 w-1.5 bg-green-500 animate-pulse" />
+                                  </div>
+                               </div>
+                               <div className="overflow-x-auto">
+                                  <table className="w-full text-left">
+                                     <thead>
+                                        <tr className="bg-zinc-50 border-b border-zinc-100">
+                                           <th className="px-6 py-4 text-[10px] font-bold uppercase text-zinc-400">Intern</th>
+                                           <th className="px-6 py-4 text-[10px] font-bold uppercase text-zinc-400">Started At</th>
+                                           <th className="px-6 py-4 text-[10px] font-bold uppercase text-zinc-400">Status</th>
+                                           <th className="px-6 py-4 text-[10px] font-bold uppercase text-zinc-400">Score</th>
+                                           <th className="px-6 py-4 text-[10px] font-bold uppercase text-zinc-400">Errors</th>
+                                           <th className="px-6 py-4 text-[10px] font-bold uppercase text-zinc-400 text-right">Last Sync</th>
+                                        </tr>
+                                     </thead>
+                                     <tbody className="divide-y divide-zinc-50">
+                                        {[...examSessions]
+                                           .filter(s => s.examType === examViewMode)
+                                           .sort((a,b) => (b.score || 0) - (a.score || 0)).map((session) => (
+                                           <tr key={session.id} className="hover:bg-zinc-50 transition-colors">
+                                              <td className="px-6 py-4">
+                                                 <div className="font-bold text-xs">{session.user?.name}</div>
+                                                 <div className="text-[10px] text-zinc-400">{session.user?.email}</div>
+                                              </td>
+                                              <td className="px-6 py-4 text-xs font-medium">
+                                                 {new Date(session.startedAt).toLocaleTimeString()}
+                                              </td>
+                                              <td className="px-6 py-4">
+                                                 <span className={`px-2 py-1 text-[9px] font-bold uppercase ${
+                                                    session.status === 'SUBMITTED' ? 'bg-green-100 text-green-700' :
+                                                    session.status === 'DISQUALIFIED' ? 'bg-red-100 text-red-700' :
+                                                    'bg-blue-100 text-blue-700'
+                                                 }`}>
+                                                    {session.status}
+                                                 </span>
+                                              </td>
+                                              <td className="px-6 py-4 text-xs font-bold text-zinc-900 border-r border-zinc-50">
+                                                 {session.score !== null ? `${session.score} / ${examViewMode === "UI_UX" ? 40 : 150}` : '--'}
+                                              </td>
+                                              <td className="px-6 py-4 text-xs font-bold">
+                                                 <span className={session.violations > 0 ? 'text-red-600' : 'text-zinc-400'}>
+                                                    {session.violations}
+                                                 </span>
+                                              </td>
+                                              <td className="px-6 py-4 text-right text-[10px] font-bold text-zinc-400">
+                                                 {Math.floor((new Date().getTime() - new Date(session.updatedAt).getTime()) / 1000)}s ago
+                                              </td>
+                                           </tr>
+                                        ))}
+                                        {examSessions.filter(s => s.examType === examViewMode).length === 0 && (
+                                           <tr>
+                                              <td colSpan={6} className="px-6 py-12 text-center text-zinc-400 text-xs italic">
+                                                 No {examViewMode === "UI_UX" ? "UI/UX" : "Full Stack"} sessions found.
+                                              </td>
+                                           </tr>
+                                        )}
                               </tbody>
                            </table>
                         </div>
