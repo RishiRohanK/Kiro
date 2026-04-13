@@ -484,3 +484,15 @@ model UIUXSubmission {
 
   @@map("UIUXSubmission")
 }
+
+model BootcampRegistration {
+  id        String   @id @default(cuid())
+  name      String
+  college   String
+  branch    String
+  year      String
+  phone     String
+  email     String   @unique
+  whyJoin   String?
+  createdAt DateTime @default(now())
+}
