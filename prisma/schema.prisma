@@ -1,9 +1,12 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider  = "postgresql"
+  provider = "postgresql"
 }
 
 model Student {
@@ -40,13 +43,13 @@ model Event {
 }
 
 model Ticket {
-  id        String   @id @default(cuid())
-  student   Student  @relation(fields: [studentId], references: [id])
-  studentId String
-  event     Event    @relation(fields: [eventId], references: [id])
-  eventId   String
+  id         String   @id @default(cuid())
+  student    Student  @relation(fields: [studentId], references: [id])
+  studentId  String
+  event      Event    @relation(fields: [eventId], references: [id])
+  eventId    String
   ticketHash String   @unique
-  createdAt DateTime @default(now())
+  createdAt  DateTime @default(now())
 }
 
 model Review {
@@ -70,36 +73,36 @@ model Contact {
 }
 
 model User {
-  id         String   @id @default(cuid())
-  name       String
-  email      String   @unique
-  password   String
-  role       Role     @default(MEDIA_TEAM)
-  isApproved Boolean  @default(false)
-  handRaised Boolean  @default(false)
-  letterUrl  String?
-  offerLetterUrl String?
-  profileImage   String?
-  employeeId     String?
-  phoneNumber    String?
-  department     String?
-  reportingManager String?
-  location       String?   @default("Remote")
-  joiningDate    DateTime? @default(now())
-  employmentType String?   @default("Full-time")
-  lastActive DateTime @default(now())
-  college    String?
-  batch      String?   @default("Batch 1")
-  failedAttempts Int     @default(0)
-  lockUntil      DateTime?
-  hasSubmittedFeedback Boolean @default(false)
-  tasks      Task[]   @relation("UserTasks")
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  attendances Attendance[] @relation("UserAttendances")
-  scheduleSubmissions ScheduleSubmission[] @relation("InternSubmissions")
-  personalTasks PersonalTask[] @relation("UserPersonalTasks")
-  examSessions ExamSession[] @relation("UserExamSessions")
+  id                   String               @id @default(cuid())
+  name                 String
+  email                String               @unique
+  password             String
+  role                 Role                 @default(MEDIA_TEAM)
+  isApproved           Boolean              @default(false)
+  handRaised           Boolean              @default(false)
+  letterUrl            String?
+  offerLetterUrl       String?
+  profileImage         String?
+  employeeId           String?
+  phoneNumber          String?
+  department           String?
+  reportingManager     String?
+  location             String?              @default("Remote")
+  joiningDate          DateTime?            @default(now())
+  employmentType       String?              @default("Full-time")
+  lastActive           DateTime             @default(now())
+  college              String?
+  batch                String?              @default("Batch 1")
+  failedAttempts       Int                  @default(0)
+  lockUntil            DateTime?
+  hasSubmittedFeedback Boolean              @default(false)
+  tasks                Task[]               @relation("UserTasks")
+  createdAt            DateTime             @default(now())
+  updatedAt            DateTime             @updatedAt
+  attendances          Attendance[]         @relation("UserAttendances")
+  scheduleSubmissions  ScheduleSubmission[] @relation("InternSubmissions")
+  personalTasks        PersonalTask[]       @relation("UserPersonalTasks")
+  examSessions         ExamSession[]        @relation("UserExamSessions")
 }
 
 enum Role {
@@ -125,30 +128,30 @@ enum AttendanceStatus {
 }
 
 model Attendance {
-  id           String           @id @default(cuid())
-  userId       String
-  user         User             @relation("UserAttendances", fields: [userId], references: [id], onDelete: Cascade)
-  date         DateTime         @default(now())
-  status       AttendanceStatus @default(PRESENT)
-  workSummary  String?
-  createdAt    DateTime         @default(now())
-  updatedAt    DateTime         @updatedAt
+  id          String           @id @default(cuid())
+  userId      String
+  user        User             @relation("UserAttendances", fields: [userId], references: [id], onDelete: Cascade)
+  date        DateTime         @default(now())
+  status      AttendanceStatus @default(PRESENT)
+  workSummary String?
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
 
   @@unique([userId, date])
 }
 
 model Task {
-  id              String   @id @default(cuid())
-  batch           String?  @default("Batch 1")
-  title           String
-  description     String
-  attachmentUrl   String?  
-  assignedRole    Role     @default(INTERN)
-  assignedToId    String?  
-  user            User?    @relation("UserTasks", fields: [assignedToId], references: [id])
-  status          String   @default("pending")
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  id            String   @id @default(cuid())
+  batch         String?  @default("Batch 1")
+  title         String
+  description   String
+  attachmentUrl String?
+  assignedRole  Role     @default(INTERN)
+  assignedToId  String?
+  user          User?    @relation("UserTasks", fields: [assignedToId], references: [id])
+  status        String   @default("pending")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 }
 
 model Script {
@@ -156,7 +159,7 @@ model Script {
   title       String
   content     String
   submittedBy String
-  status      String   @default("pending") 
+  status      String   @default("pending")
   createdAt   DateTime @default(now())
 }
 
@@ -176,92 +179,79 @@ model Course {
   thumbnail       String?
   videoUrl        String?
   price           String?
-  level           String   @default("Beginner") 
-  
-  
-  description     String
-  outcomes        String[] 
-  skills          String[] 
-  targetAudience  String[] 
-  
-  
-  
-  curriculum      Json?    
-  
-  timeline        Json?    
-  
-  
-  requirements    String[]
-  
-  
-  projectsCount      Int     @default(0)
+  level           String   @default("Beginner")
+
+  description    String
+  outcomes       String[]
+  skills         String[]
+  targetAudience String[]
+
+  curriculum Json?
+
+  timeline Json?
+
+  requirements String[]
+
+  projectsCount        Int     @default(0)
   hasRealWorldProjects Boolean @default(true)
-  hasCapstone        Boolean @default(false)
-  practiceExercises  String?
-  
-  
+  hasCapstone          Boolean @default(false)
+  practiceExercises    String?
+
   hasCertificate      Boolean @default(true)
   isShareableLinkedIn Boolean @default(true)
   issuerName          String?
-  
-  
-  totalHours           String?
-  lecturesCount        Int     @default(0)
-  downloadableResources Int     @default(0)
-  access              String  @default("Lifetime")
-  
-  
-  
-  faqs                Json?   
 
-  createdAt           DateTime @default(now())
-  updatedAt           DateTime @updatedAt
-  enrollments         CourseEnrollment[]
+  totalHours            String?
+  lecturesCount         Int     @default(0)
+  downloadableResources Int     @default(0)
+  access                String  @default("Lifetime")
+
+  faqs Json?
+
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+  enrollments CourseEnrollment[]
 }
 
 model CourseEnrollment {
-  id              String   @id @default(cuid())
-  course          Course   @relation(fields: [courseId], references: [id])
-  courseId        String
-  
-  
-  name            String
-  phone           String
-  email           String
-  college         String
-  branch          String
-  year            String
-  whyJoin         String
-  
-  
-  paymentMethod   String   @default("MANUAL_UPI") 
-  amount          String
-  
-  
-  referenceId     String?  @unique 
-  transactionId   String?  
-  bankName        String?
-  accountName     String?
-  
-  
-  razorpayOrderId    String?  @unique
-  razorpayPaymentId  String?  @unique
-  razorpaySignature  String?
-  
-  status          String   @default("pending") 
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  id       String @id @default(cuid())
+  course   Course @relation(fields: [courseId], references: [id])
+  courseId String
+
+  name    String
+  phone   String
+  email   String
+  college String
+  branch  String
+  year    String
+  whyJoin String
+
+  paymentMethod String @default("MANUAL_UPI")
+  amount        String
+
+  referenceId   String? @unique
+  transactionId String?
+  bankName      String?
+  accountName   String?
+
+  razorpayOrderId   String? @unique
+  razorpayPaymentId String? @unique
+  razorpaySignature String?
+
+  status    String   @default("pending")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Project {
-  id              String   @id @default(cuid())
-  teamName        String
-  teamLeader      String
-  teamMembers     String[]
-  githubRepo      String
-  submissionDate  DateTime @default(now())
-  status          String   @default("live") 
-  hackathonName   String   @default("HACK FORGE Hackathon 2026")
+  id             String   @id @default(cuid())
+  teamName       String
+  teamLeader     String
+  teamMembers    String[]
+  githubRepo     String
+  submissionDate DateTime @default(now())
+  status         String   @default("live")
+  hackathonName  String   @default("HACK FORGE Hackathon 2026")
 }
 
 model HiringApplication {
@@ -269,8 +259,8 @@ model HiringApplication {
   name            String
   email           String
   phone           String
-  position        String   
-  resumeLink      String   
+  position        String
+  resumeLink      String
   college         String?
   portfolioLink   String?
   yearOfStudy     String?
@@ -278,7 +268,6 @@ model HiringApplication {
   interviewTiming String?
   createdAt       DateTime @default(now())
 }
-
 
 model ResetToken {
   id        String   @id @default(cuid())
@@ -289,34 +278,34 @@ model ResetToken {
 }
 
 model FailedTransaction {
-  id              String   @id @default(cuid())
-  courseId        String?
-  email           String?
-  name            String?
-  phone           String?
-  amount          String?
-  paymentMethod   String?
-  reason          String?
-  errorDetails    Json?
-  razorpayOrderId String?   @unique
-  razorpayPaymentId String? @unique
-  createdAt       DateTime  @default(now())
+  id                String   @id @default(cuid())
+  courseId          String?
+  email             String?
+  name              String?
+  phone             String?
+  amount            String?
+  paymentMethod     String?
+  reason            String?
+  errorDetails      Json?
+  razorpayOrderId   String?  @unique
+  razorpayPaymentId String?  @unique
+  createdAt         DateTime @default(now())
 }
 
 model Idea {
-  id          String   @id @default(cuid())
+  id          String     @id @default(cuid())
   title       String
   description String
   stack       String?
   usp         String?
   outcomes    String?
   developer   String?
-  name        String?  
-  subline     String?  
-  likes       Int      @default(0)
-  shares      Int      @default(0)
-  isApproved  Boolean  @default(false)
-  createdAt   DateTime @default(now())
+  name        String?
+  subline     String?
+  likes       Int        @default(0)
+  shares      Int        @default(0)
+  isApproved  Boolean    @default(false)
+  createdAt   DateTime   @default(now())
   joins       IdeaJoin[]
 }
 
@@ -330,60 +319,59 @@ model IdeaJoin {
 }
 
 model Mentorship {
-  id          String   @id @default(cuid())
-  name        String
-  email       String
-  date        String
-  time        String
-  topic       String
-  status      String   @default("pending") 
-  createdAt   DateTime @default(now())
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  date      String
+  time      String
+  topic     String
+  status    String   @default("pending")
+  createdAt DateTime @default(now())
 }
 
 model Schedule {
   id              String   @id @default(cuid())
-  batch           String   @default("Batch 1") 
-  week            String   
-  typeOfWork      String   
-  toolsUsed       String[] 
-  deploymentTools String[] 
-  requirements    String[] 
+  batch           String   @default("Batch 1")
+  week            String
+  typeOfWork      String
+  toolsUsed       String[]
+  deploymentTools String[]
+  requirements    String[]
   description     String
-  outcomes        String[] 
+  outcomes        String[]
   deadline        DateTime
-  submissionLink  String?  
-  githubLink      String?  
+  submissionLink  String?
+  githubLink      String?
   isCompleted     Boolean  @default(false)
-  
-  
-  teamAllocation  String?  
-  mentorName      String?  
-  mentorEmail     String?  
-  projectName     String?  
-  projectDocLink  String?  
-  teamLead        String?  
-  teamInternIds   String[] 
-  isManualOpen    Boolean  @default(false)
 
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-  submissions     ScheduleSubmission[]
+  teamAllocation String?
+  mentorName     String?
+  mentorEmail    String?
+  projectName    String?
+  projectDocLink String?
+  teamLead       String?
+  teamInternIds  String[]
+  isManualOpen   Boolean  @default(false)
+
+  createdAt   DateTime             @default(now())
+  updatedAt   DateTime             @updatedAt
+  submissions ScheduleSubmission[]
 }
 
 model ScheduleSubmission {
-  id              String   @id @default(cuid())
-  schedule        Schedule @relation(fields: [scheduleId], references: [id])
-  scheduleId      String
-  intern          User     @relation("InternSubmissions", fields: [internId], references: [id])
-  internId        String
-  githubLink      String
-  submissionLink  String
-  marks           String?
-  review          String?
-  reviewedBy      String?
-  reviewedAt      DateTime?
-  status          String   @default("SUBMITTED") 
-  createdAt       DateTime @default(now())
+  id             String    @id @default(cuid())
+  schedule       Schedule  @relation(fields: [scheduleId], references: [id])
+  scheduleId     String
+  intern         User      @relation("InternSubmissions", fields: [internId], references: [id])
+  internId       String
+  githubLink     String
+  submissionLink String
+  marks          String?
+  review         String?
+  reviewedBy     String?
+  reviewedAt     DateTime?
+  status         String    @default("SUBMITTED")
+  createdAt      DateTime  @default(now())
 
   @@unique([scheduleId, internId])
 }
@@ -394,15 +382,13 @@ model PersonalTask {
   user        User     @relation("UserPersonalTasks", fields: [userId], references: [id], onDelete: Cascade)
   title       String
   description String?
-  status      String   @default("TODO") 
+  status      String   @default("TODO")
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
 
-
-
 model Internship {
-  id          String   @id @default(cuid())
+  id          String  @id @default(cuid())
   title       String
   description String
   role        String?
@@ -411,32 +397,31 @@ model Internship {
   duration    String?
   stipend     String?
   applyLink   String
-  isApproved  Boolean  @default(false)
-  
-  
+  isApproved  Boolean @default(false)
+
   submitterName    String?
   submitterCompany String?
   submitterMobile  String?
-  
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Message {
-  id        String   @id @default(cuid())
-  teamId    String
-  senderId  String
+  id         String   @id @default(cuid())
+  teamId     String
+  senderId   String
   senderName String?
-  targetId  String?  
-  content   String
-  createdAt DateTime @default(now())
+  targetId   String?
+  content    String
+  createdAt  DateTime @default(now())
 }
 
 model ExamStatus {
-  id        String   @id @default("global_exam_state")
-  isActive  Boolean  @default(false)
+  id        String    @id @default("global_exam_state")
+  isActive  Boolean   @default(false)
   startedAt DateTime?
-  updatedAt DateTime @updatedAt
+  updatedAt DateTime  @updatedAt
 }
 
 model ExamSecurity {
@@ -446,18 +431,18 @@ model ExamSecurity {
 }
 
 model ExamSession {
-  id         String   @id @default(cuid())
-  userId     String
-  user       User     @relation("UserExamSessions", fields: [userId], references: [id], onDelete: Cascade)
-  startedAt  DateTime @default(now())
-  status     String   @default("STARTED") // STARTED, SUBMITTED, DISQUALIFIED
-  score      Int?
-  violations Int      @default(0)
-  answers    Json?
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation("UserExamSessions", fields: [userId], references: [id], onDelete: Cascade)
+  startedAt       DateTime @default(now())
+  status          String   @default("STARTED") // STARTED, SUBMITTED, DISQUALIFIED
+  score           Int?
+  violations      Int      @default(0)
+  answers         Json?
   questionMapping Json?
-  examType   String   @default("FULLSTACK")
-  examBatch  String?  @default("BATCH_1")
-  updatedAt  DateTime @updatedAt
+  examType        String   @default("FULLSTACK")
+  examBatch       String?  @default("BATCH_1")
+  updatedAt       DateTime @updatedAt
 
   @@unique([userId, examType])
 }
@@ -486,13 +471,15 @@ model UIUXSubmission {
 }
 
 model BootcampRegistration {
-  id        String   @id @default(cuid())
-  name      String
-  college   String
-  branch    String
-  year      String
-  phone     String
-  email     String   @unique
-  whyJoin   String?
-  createdAt DateTime @default(now())
+  id            String   @id @default(cuid())
+  name          String
+  college       String
+  branch        String
+  year          String
+  phone         String
+  email         String   @unique
+  whyJoin       String?
+  transactionId String?
+  paymentStatus String   @default("pending")
+  createdAt     DateTime @default(now())
 }

@@ -44,7 +44,8 @@ import {
    Eye,
    Edit,
    Shield,
-   MessageSquare
+   MessageSquare,
+   Zap
 } from "lucide-react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
@@ -148,6 +149,19 @@ interface InternshipItem {
    createdAt: string;
 }
 
+interface BootcampRegistration {
+   id: string;
+   name: string;
+   email: string;
+   college: string;
+   branch: string;
+   year: string;
+   phone: string;
+   transactionId?: string;
+   paymentStatus: string;
+   createdAt: string;
+}
+
 export default function CleedDashboard() {
    const router = useRouter();
    const [activeTab, setActiveTab] = useState("overview");
@@ -159,6 +173,7 @@ export default function CleedDashboard() {
    const [ideas, setIdeas] = useState<IdeaItem[]>([]);
    const [internships, setInternships] = useState<InternshipItem[]>([]);
    const [employees, setEmployees] = useState<any[]>([]);
+   const [bootcampRegistrations, setBootcampRegistrations] = useState<BootcampRegistration[]>([]);
    const [isLoading, setIsLoading] = useState(true);
 
 
@@ -414,6 +429,25 @@ export default function CleedDashboard() {
       }
    };
 
+   const fetchBootcampRegistrations = async () => {
+      try {
+         const res = await fetch("/api/cleed/bootcamp");
+         const data = await res.json();
+         if (data.success) setBootcampRegistrations(data.registrations);
+      } catch (err) { console.error("Bootcamp fetch failure"); }
+   };
+
+   const handleUpdateBootcampStatus = async (id: string, status: string) => {
+      try {
+         const res = await fetch("/api/cleed/bootcamp", {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ id, status })
+         });
+         if (res.ok) fetchBootcampRegistrations();
+      } catch (err) { console.error("Status update failure"); }
+   };
+
    const fetchSubmissions = async () => {
       setLoadingSubmissions(true);
       try {
@@ -612,6 +646,14 @@ export default function CleedDashboard() {
          } catch (err) { console.error("Exam sessions fetch failure"); }
       };
 
+      const fetchBootcampRegistrations = async () => {
+         try {
+            const res = await fetch("/api/cleed/bootcamp");
+            const data = await res.json();
+            if (data.success) setBootcampRegistrations(data.registrations);
+         } catch (err) { console.error("Bootcamp fetch failure"); }
+      };
+
       await Promise.allSettled([
          fetchInterns(),
          fetchTasks(),
@@ -624,7 +666,8 @@ export default function CleedDashboard() {
          fetchAllSchedules(),
          fetchSubmissions(),
          fetchExamStatus(),
-         fetchExamSessions()
+         fetchExamSessions(),
+         fetchBootcampRegistrations()
       ]);
       setIsLoading(false);
    };
@@ -1181,6 +1224,7 @@ export default function CleedDashboard() {
                         { id: "employees", icon: ShieldCheck, label: "Employees" },
                         { id: "certification", icon: FileBadge, label: "Certificates" },
                         { id: "exams", icon: FileText, label: "Exams" },
+                        { id: "bootcamp", icon: Zap, label: "Bootcamp" },
                         { id: "attendance", icon: CalendarCheck, label: "Attendance" },
                          { id: "vault", icon: Shield, label: "Vault" },
                      ].map((item) => (
@@ -1261,7 +1305,7 @@ export default function CleedDashboard() {
                   <span className="text-zinc-900 text-[10px] md:text-[11px] font-bold uppercase tracking-tight whitespace-nowrap">Home</span>
                   <ChevronRight size={10} className="text-zinc-700 flex-shrink-0" />
                   <span className="text-zinc-950 font-bold text-[11px] truncate uppercase tracking-tight">
-                     {activeTab === "internships" ? "Internships" : activeTab === "employees" ? "Employees" : activeTab === "interns" ? "Intern List" : activeTab === "assign" ? "Tasks" : activeTab === "certification" ? "Certificates" : activeTab === "authorizations" ? "Approvals" : activeTab === "mentorship" ? "Mentors" : activeTab === "schedule" ? "Schedules" : activeTab === "hiring" ? "Hiring" : activeTab === "submissions" ? "Submissions" : activeTab === "events" ? "Events" : activeTab === "ideas" ? "Ideas" : activeTab === "attendance" ? "Attendance" : "Log"}
+                     {activeTab === "internships" ? "Internships" : activeTab === "employees" ? "Employees" : activeTab === "interns" ? "Intern List" : activeTab === "assign" ? "Tasks" : activeTab === "certification" ? "Certificates" : activeTab === "authorizations" ? "Approvals" : activeTab === "mentorship" ? "Mentors" : activeTab === "schedule" ? "Schedules" : activeTab === "hiring" ? "Hiring" : activeTab === "submissions" ? "Submissions" : activeTab === "events" ? "Events" : activeTab === "ideas" ? "Ideas" : activeTab === "attendance" ? "Attendance" : activeTab === "bootcamp" ? "Bootcamp" : "Log"}
                   </span>
                </div>
 
@@ -2675,6 +2719,72 @@ export default function CleedDashboard() {
                                  </div>
                               );
                            })}
+                        </div>
+                     </div>
+                  </motion.div>
+               )}
+
+               {activeTab === "bootcamp" && (
+                  <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-8 text-left">
+                     <div className="bg-white border border-zinc-100 p-8">
+                        <div className="flex justify-between items-center mb-10">
+                           <div className="space-y-1">
+                              <h2 className="text-2xl font-bold tracking-tighter text-zinc-900">Summer Bootcamp 2026</h2>
+                              <p className="text-[12px] text-zinc-500 font-medium tracking-tight">Managing {bootcampRegistrations.length} enrollment registrations.</p>
+                           </div>
+                           <button onClick={() => fetchBootcampRegistrations()} className="p-2 border border-zinc-100 hover:bg-zinc-50 transition-colors">
+                              <RefreshCw size={16} className={isLoading ? "animate-spin text-red-600" : "text-zinc-400"} />
+                           </button>
+                        </div>
+                        <div className="overflow-x-auto">
+                           <table className="w-full text-left border-collapse">
+                              <thead>
+                                 <tr className="border-b border-zinc-200">
+                                    <th className="py-4 text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Candidate</th>
+                                    <th className="py-4 text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Affiliation</th>
+                                    <th className="py-4 text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Contact</th>
+                                    <th className="py-4 text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Transaction ID</th>
+                                    <th className="py-4 text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Status</th>
+                                    <th className="py-4 text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Actions</th>
+                                 </tr>
+                              </thead>
+                              <tbody>
+                                 {bootcampRegistrations.map((reg) => (
+                                    <tr key={reg.id} className="border-b border-zinc-50 group hover:bg-zinc-50/50 transition-colors">
+                                       <td className="py-4">
+                                          <p className="text-[14px] font-bold text-zinc-900">{reg.name}</p>
+                                          <p className="text-[11px] text-zinc-400">{reg.email}</p>
+                                       </td>
+                                       <td className="py-4">
+                                          <p className="text-[13px] font-medium text-zinc-700">{reg.college}</p>
+                                          <p className="text-[11px] text-zinc-400">{reg.branch} • {reg.year}</p>
+                                       </td>
+                                       <td className="py-4">
+                                          <p className="text-[13px] font-medium text-zinc-700">{reg.phone}</p>
+                                       </td>
+                                       <td className="py-4">
+                                          <p className="text-[12px] tabular-nums font-mono text-zinc-500">{reg.transactionId || "MANUAL_PENDING"}</p>
+                                       </td>
+                                       <td className="py-4">
+                                          <span className={`px-2 py-1 text-[9px] font-bold uppercase tracking-tight ${reg.paymentStatus === "paid" ? "bg-emerald-50 text-emerald-600 border border-emerald-100" : "bg-amber-50 text-amber-600 border border-amber-100"}`}>
+                                             {reg.paymentStatus}
+                                          </span>
+                                       </td>
+                                       <td className="py-4">
+                                          <div className="flex gap-2">
+                                             {reg.paymentStatus !== "paid" && (
+                                                <button onClick={() => handleUpdateBootcampStatus(reg.id, "paid")} className="px-3 py-1.5 bg-emerald-600 text-white text-[10px] font-bold hover:bg-emerald-700 transition-colors">Verify</button>
+                                             )}
+                                             <button onClick={() => { if(confirm("Neutralize registration?")) fetch(`/api/cleed/bootcamp?id=${reg.id}`, { method: 'DELETE' }).then(() => fetchBootcampRegistrations()) }} className="p-1.5 border border-zinc-100 hover:text-red-600 transition-colors"><Trash2 size={14} /></button>
+                                          </div>
+                                       </td>
+                                    </tr>
+                                 ))}
+                                 {bootcampRegistrations.length === 0 && (
+                                    <tr><td colSpan={6} className="py-20 text-center text-zinc-400 italic text-sm">No synchronized entry nodes found.</td></tr>
+                                 )}
+                              </tbody>
+                           </table>
                         </div>
                      </div>
                   </motion.div>
