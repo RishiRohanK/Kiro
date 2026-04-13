@@ -76,7 +76,6 @@ export default function BootcampPage() {
             alt="Banner"
             className="w-full h-auto block rounded-none"
             loading="eager"
-            style={{ imageRendering: 'high-quality' }}
           />
         </div>
 
