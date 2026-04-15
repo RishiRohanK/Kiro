@@ -1,54 +1,58 @@
-# Student Forge | Learn Grid Ecosystem
-**Version 2.5.0 (Enterprise assessment overhaul)**
+<div align="center">
 
-Student Forge is a secure, high-fidelity internship and learning management ecosystem. The platform implements an industrial-grade examination terminal, performance analytics, and a centralized administrative command center.
+# STUDENT FORGE | LEARN GRID ECOSYSTEM
+**Version 2.7.0 — Task Orchestration & Industrial Assessment**
+
+Student Forge is a secure, high-fidelity internship and learning management ecosystem. 
+Engineered for performance, the platform implements an industrial-grade examination terminal, performance analytics, and a centralized administrative command center.
+
+[**Documentation**](/docs) • [**Intern Portal**](/intern/signin) • [**Admin Dashboard**](/cleed/dashboard) • [**Task Submission**](/task-submission)
 
 ---
 
-## Core system architecture
+### 🛡️ TECH STACK
 
-### 1. Secure examination terminal (/exams)
-An industrial-standard assessment engine synchronized with JEE Mains protocols.
-- **Marking standard**: +3 for correct nodes, -1 for negative evaluations.
-- **Session integrity protocol**:
-  - Mandatory full-screen enforcement via DOM API.
-  - Real-time violation logging (Focus manipulation detection).
-  - Standalone review terminal for candidate verification state management.
-- **Server-side evaluation**: Scoring logic executed strictly on the backend to prevent client-side intercept manipulation.
+![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white) 
+![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB) 
+![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white) 
+![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
+<br/>
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white) 
+![Prisma](https://img.shields.io/badge/Prisma-3982CE?style=for-the-badge&logo=Prisma&logoColor=white) 
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white) 
+![Framer Motion](https://img.shields.io/badge/Framer_Motion-0055FF?style=for-the-badge&logo=framer&logoColor=white)
+<br/>
+![Lucide Icons](https://img.shields.io/badge/Lucide_Icons-61DAFB?style=for-the-badge&logo=lucide&logoColor=white)
+![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)
+![Redis](https://img.shields.io/badge/Redis-DC382D?style=for-the-badge&logo=redis&logoColor=white)
 
-### 2. Intern performance analytics (/intern/dashboard/reports)
-High-density diagnostic reporting for candidates.
-- **Metric scale**: Quantitative performance evaluation based on 150-mark standard.
-- **Visualization**: Graphical representation of intern trajectory and accuracy nodes.
-- **Automated feedback**: Diagnostic commentary based on assessment data nodes.
+</div>
 
-### 3. Cleed command center (/cleed/dashboard)
+---
+
+## 🏗️ CORE SYSTEM ARCHITECTURE
+
+### 1. Secure Examination Terminal (`/exams`)
+An industrial-standard assessment engine synchronized with Professional protocols.
+- **Marking Standard**: +3 for correct nodes, -1 for negative evaluations.
+- **Security Integrity**: Full-screen enforcement, violation logging, and server-side evaluation.
+
+### 2. Cleed Command Center (`/cleed/dashboard`)
 The administrative central unit of the ecosystem.
-- **Live monitoring**: Real-time observability of active sessions and violation counts.
-- **Unified management**: Centralized control over interns, scheduled tasks, and timelines.
-- **Hiring registry**: Operational portal for recruitment and interview orchestration.
+- **Real-time Monitoring**: Observability of active sessions and violation counts.
+- **Submissions Vault**: Centralized verification for all technical and weekly intern tasks.
+
+### 3. Intern Analytics Dashboard (`/intern/dashboard`)
+Diagnostic reporting with graphical trajectory nodes and performance metrics based on a 150-mark standard.
+
+### 4. Public Task Submission (`/task-submission`)
+A streamlined node for external task entries with automated synchronization to the vault.
 
 ---
 
-## Detailed technology stack breakdown
+## 🚀 INSTALLATION PROTOCOL
 
-| Layer | Technology | Specification |
-| :--- | :--- | :--- |
-| **Core framework** | Next.js 16.2.0 | Turbopack compilation engine with file-based routing |
-| **Runtime environment** | Node.js | Asynchronous event-driven JavaScript runtime |
-| **Database engine** | PostgreSQL | Relational database with strictly typed schemas |
-| **ORM / Data access** | Prisma 7.6.0 | Type-safe database client and automated migration node |
-| **Styling architecture** | Tailwind CSS | Utility-first CSS framework for industrial aesthetics |
-| **Scroll interpolation** | Lenis | Unified smooth scroll with `data-lenis-prevent` isolation |
-| **Iconography node** | Lucide React | SVG-based performance iconography terminal |
-| **API protocol** | REST / JSON | Stateless communication between frontend and backend |
-| **Security layer** | JWT / SMTP | Token-based authentication and secure mail relays |
-
----
-
-## Installation and deployment protocol
-
-### Development environment
+### Development Environment
 ```bash
 # Requisite: Node node_modules installation
 npm install
@@ -56,32 +60,31 @@ npm install
 # Prisma client regeneration
 npx prisma generate
 
-# Execution via Turbopack
+# Execution via Turbopack / TSX
 npm run dev
 ```
 
-### Production build
+### Database Synchronization
+Ensure the PostgreSQL environment is active, then synchronize the schema:
 ```bash
-# Optimized production compile
-npm run build
-
-# Start production server node
-npm run start
+npx prisma db push
 ```
 
 ---
 
-## Zero-trust security model
+## 🛡️ ZERO-TRUST SECURITY MODEL
 Student Forge operates on a zero-trust architecture for assessment data. All evaluation nodes (`CORRECT_ANSWERS`) are isolated within the backend environment, ensuring the client layer only processes question text and never the evaluation keys.
 
 ---
 
-### Version log (v2.5.0)
-- Implemented standalone review terminal for optimized assessment exit flows.
-- Upgraded to +3 / -1 marking standard across all diagnostic layers.
-- Resolved Lenis scrolling conflicts in independent UI regions via data-lenis-prevent.
-- Forced dynamic Prisma client refresh to prevent stale session states in dev.
+### 📜 VERSION LOG (v2.7.0)
+- **New**: Integrated **Public Task Submission** page with vault synchronization.
+- **New**: Added **Submission records** filter system in Cleed Dashboard.
+- **Fix**: Resolved Prisma client state synchronization in local dev environments.
+- **Update**: Standardized UI typography for minimalist industrial aesthetics.
 
 ---
-**Student Forge Technologies Private Limited © 2026**
+<div align="center">
+**Student Forge Technologies Private Limited © 2026**<br/>
 *Minimalist industrial standard | Engineered for integrity*
+</div>
