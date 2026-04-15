@@ -483,3 +483,13 @@ model BootcampRegistration {
   paymentStatus String   @default("pending")
   createdAt     DateTime @default(now())
 }
+
+model TaskSubmission {
+  id            String   @id @default(cuid())
+  name          String
+  email         String
+  taskAllocated String
+  githubLink    String
+  liveLink      String
+  createdAt     DateTime @default(now())
+}

@@ -16,9 +16,9 @@ import {
 import Link from "next/link";
 
 export default function SubmissionsVault() {
-  const [data, setData] = useState<{ feedback: any[], uiux: any[], weekly: any[] }>({ feedback: [], uiux: [], weekly: [] });
+  const [data, setData] = useState<{ feedback: any[], uiux: any[], weekly: any[], publicTasks: any[] }>({ feedback: [], uiux: [], weekly: [], publicTasks: [] });
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<"feedback" | "uiux" | "weekly">("feedback");
+  const [activeTab, setActiveTab] = useState<"feedback" | "uiux" | "weekly" | "publicTasks">("feedback");
   const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
@@ -50,6 +50,12 @@ export default function SubmissionsVault() {
   const filteredWeekly = data.weekly.filter(s => 
     s.intern?.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
     s.schedule?.week?.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const filteredPublicTasks = data.publicTasks.filter(s => 
+    s.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    s.taskAllocated.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    s.email.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
@@ -97,6 +103,12 @@ export default function SubmissionsVault() {
             className={`px-6 py-3 text-xs font-bold transition-all border-b-2 whitespace-nowrap ${activeTab === "uiux" ? "border-[#F5332C] text-[#F5332C]" : "border-transparent text-zinc-400 hover:text-zinc-600"}`}
           >
             UI/UX tasks ({data.uiux.length})
+          </button>
+          <button 
+            onClick={() => setActiveTab("publicTasks")}
+            className={`px-6 py-3 text-xs font-bold transition-all border-b-2 whitespace-nowrap ${activeTab === "publicTasks" ? "border-[#F5332C] text-[#F5332C]" : "border-transparent text-zinc-400 hover:text-zinc-600"}`}
+          >
+            Public tasks ({data.publicTasks.length})
           </button>
         </div>
 
@@ -208,6 +220,67 @@ export default function SubmissionsVault() {
                     )) : (
                       <tr>
                         <td colSpan={4} className="py-20 text-center text-zinc-400 text-xs font-medium">No weekly submissions found.</td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </motion.div>
+          ) : activeTab === "publicTasks" ? (
+            <motion.div 
+              key="publicTasks" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              className="bg-white border border-zinc-200 rounded-none shadow-sm overflow-hidden"
+            >
+              <div className="overflow-x-auto">
+                <table className="w-full text-left border-collapse min-w-[700px]">
+                  <thead>
+                    <tr className="bg-zinc-50 border-b border-zinc-100">
+                      <th className="px-6 py-4 text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Submitter</th>
+                      <th className="px-6 py-4 text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Task Allocated</th>
+                      <th className="px-6 py-4 text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Submissions</th>
+                      <th className="px-6 py-4 text-[10px] font-bold text-zinc-400 uppercase tracking-widest text-right">Date</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-zinc-50">
+                    {filteredPublicTasks.length > 0 ? filteredPublicTasks.map((s) => (
+                      <tr key={s.id} className="hover:bg-red-50/20 transition-colors">
+                        <td className="px-6 py-4">
+                           <div className="flex items-center gap-2">
+                              <div className="h-7 w-7 bg-emerald-500 text-white rounded-none flex items-center justify-center text-[10px] font-bold">
+                                {s.name?.[0] || "?"}
+                              </div>
+                              <div>
+                                <p className="text-xs font-bold text-zinc-900">{s.name}</p>
+                                <p className="text-[10px] text-zinc-400">{s.email}</p>
+                              </div>
+                           </div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <p className="text-xs font-bold text-zinc-700">{s.taskAllocated}</p>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="flex items-center gap-3">
+                            <a 
+                              href={s.liveLink} target="_blank" rel="noopener noreferrer"
+                              className="text-[10px] font-bold text-[#F5332C] hover:underline flex items-center gap-1"
+                            >
+                              Live view <ExternalLink size={10} />
+                            </a>
+                            <a 
+                              href={s.githubLink} target="_blank" rel="noopener noreferrer"
+                              className="text-[10px] font-bold text-zinc-400 hover:text-zinc-800 flex items-center gap-1"
+                            >
+                              Source <Github size={10} />
+                            </a>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 text-right">
+                          <span className="text-[10px] font-bold text-zinc-300">{new Date(s.createdAt).toLocaleDateString()}</span>
+                        </td>
+                      </tr>
+                    )) : (
+                      <tr>
+                        <td colSpan={4} className="py-20 text-center text-zinc-400 text-xs font-medium">No public task submissions found.</td>
                       </tr>
                     )}
                   </tbody>
