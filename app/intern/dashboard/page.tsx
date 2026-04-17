@@ -616,7 +616,7 @@ function InternDashboardContent() {
 
                            <button
                               onClick={() => setShowUIUXModal(true)}
-                              className="w-full sm:w-fit px-8 h-10 bg-[#003366] text-white text-[10px] font-semibold uppercase tracking-[0.2em] mt-6 hover:bg-black transition-all flex items-center justify-center gap-2"
+                              className="w-full sm:w-fit px-6 h-10 bg-[#003366] text-white text-[10px] font-semibold uppercase tracking-[0.1em] mt-6 hover:bg-black transition-all flex items-center justify-center gap-2 whitespace-nowrap"
                            >
                               Submit Work <ArrowUpRight size={14} />
                            </button>
