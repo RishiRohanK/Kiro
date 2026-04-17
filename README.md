@@ -14,19 +14,17 @@ Student Forge is a high-density, secure ecosystem designed for institutional lea
 ![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white) 
 ![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white) 
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white) 
-![Prisma](https://img.shields.io/badge/Prisma-2D3748?style=for-the-badge&logo=prisma&logoColor=white)
-![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white) 
-![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=for-the-badge&logo=tailwind-css&logoColor=white) 
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![Nginx](https://img.shields.io/badge/Nginx-009639?style=for-the-badge&logo=nginx&logoColor=white)
+![Socket.io](https://img.shields.io/badge/Socket.io-010101?style=for-the-badge&logo=socketdotio&logoColor=white)
 
+![Prisma](https://img.shields.io/badge/Prisma-2D3748?style=flat-square&logo=prisma&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=flat-square&logo=typescript&logoColor=white) 
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=flat-square&logo=tailwind-css&logoColor=white) 
 ![React](https://img.shields.io/badge/React-20232A?style=flat-square&logo=react&logoColor=61DAFB)
-![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black) 
-![Framer Motion](https://img.shields.io/badge/Framer_Motion-0055FF?style=flat-square&logo=framer&logoColor=white) 
 ![Redis](https://img.shields.io/badge/Redis-DC382D?style=flat-square&logo=redis&logoColor=white) 
 ![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=flat-square&logo=supabase&logoColor=white) 
 ![Razorpay](https://img.shields.io/badge/Razorpay-008CFF?style=flat-square&logo=razorpay&logoColor=white)
-![SQL](https://img.shields.io/badge/SQL-4479A1?style=flat-square&logo=postgresql&logoColor=white) 
-![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=flat-square&logo=html5&logoColor=white) 
-![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=flat-square&logo=css3&logoColor=white)
 
 </div>
 
@@ -61,11 +59,24 @@ A specialized endpoint for public task entries with automated synchronization to
 - **Ideas Hub**: Collaborative terminal for innovation and project ideation.
 - **Certifications**: Automated verification system for professional completions.
 
+### HORIZONTAL SCALING & CONTAINERIZATION
+The platform implements an industrial-grade containerized cluster with Nginx load balancing.
+- **Dockerization**: Integrated multi-stage Docker builds for high-performance production runtimes.
+- **Load Balancing**: Nginx entry point with `ip_hash` to ensure sticky Socket.io sessions across multiple app nodes.
+- **Scaling**: Optimized for horizontal scalability by deploying dual application nodes within a dedicated bridge network.
+
 ---
 
 ## OPERATIONAL PROTOCOL
 
-### DEVELOPMENT
+### DOCKER DEPLOYMENT (Recommended)
+```bash
+# Initialize the industrial cluster (LB + App Nodes)
+docker-compose up --build
+```
+*The ecosystem will be accessible at http://localhost (Port 80).*
+
+### LOCAL DEVELOPMENT
 ```bash
 # Dependency acquisition
 npm install
