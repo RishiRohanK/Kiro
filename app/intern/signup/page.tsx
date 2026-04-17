@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ShieldAlert, Loader2, Eye, EyeOff, User, Mail, Phone, Lock, Facebook, Linkedin, Instagram, School } from "lucide-react";
+import { ShieldAlert, Loader2, Eye, EyeOff, User, Mail, Phone, Lock, Linkedin, Instagram, School } from "lucide-react";
 
 const COLLEGES = [
     "CMR Institute of Technology (CMRIT Hyderabad)",
@@ -102,9 +102,11 @@ export default function InternSignupPage() {
             <div className="w-full md:w-[40%] p-8 md:p-16 flex flex-col justify-center relative bg-white">
                 <div className="max-w-[480px] w-full mx-auto space-y-8">
 
-                    <div className="flex flex-col gap-2">
-                        <h1 className="text-[#003366] text-2xl font-bold">Register account</h1>
-                        <p className="text-zinc-600 text-[13px] font-bold italic">Batch 3 registrations are now officially started!</p>
+                    <div className="flex flex-col gap-6">
+                        <h1 className="text-[#003366] text-2xl font-bold uppercase tracking-tight">Register account</h1>
+                        <div className="p-3 border-l-4 border-[#003366] bg-[#003366]/5">
+                            <p className="text-zinc-600 text-[13px] font-bold italic">Batch 3 registrations are now officially started!</p>
+                        </div>
                     </div>
 
                     <form onSubmit={handleSignup} className="space-y-5">
@@ -118,7 +120,7 @@ export default function InternSignupPage() {
                                     type="text"
                                     value={firstName}
                                     onChange={(e) => setFirstName(e.target.value)}
-                                    className="w-full h-12 bg-white border border-zinc-200 pl-11 pr-4 text-[14px] outline-none focus:border-[#003366] transition-all"
+                                    className="w-full h-12 bg-white border border-zinc-200 pl-11 pr-4 text-[14px] outline-none focus:border-[#003366] transition-all rounded-none"
                                     placeholder="First Name"
                                 />
                             </div>
@@ -131,7 +133,7 @@ export default function InternSignupPage() {
                                     type="text"
                                     value={lastName}
                                     onChange={(e) => setLastName(e.target.value)}
-                                    className="w-full h-12 bg-white border border-zinc-200 pl-11 pr-4 text-[14px] outline-none focus:border-[#003366] transition-all"
+                                    className="w-full h-12 bg-white border border-zinc-200 pl-11 pr-4 text-[14px] outline-none focus:border-[#003366] transition-all rounded-none"
                                     placeholder="Last Name"
                                 />
                             </div>
@@ -146,7 +148,7 @@ export default function InternSignupPage() {
                                 type="tel"
                                 value={phone}
                                 onChange={(e) => setPhone(e.target.value)}
-                                className="w-full h-12 bg-white border border-zinc-200 pl-11 pr-4 text-[14px] outline-none focus:border-[#003366] transition-all"
+                                className="w-full h-12 bg-white border border-zinc-200 pl-11 pr-4 text-[14px] outline-none focus:border-[#003366] transition-all rounded-none"
                                 placeholder="Enter Phone Number"
                             />
                         </div>
@@ -159,7 +161,7 @@ export default function InternSignupPage() {
                                 required
                                 value={college}
                                 onChange={(e) => setCollege(e.target.value)}
-                                className="w-full h-12 bg-white border border-zinc-200 pl-11 pr-4 text-[14px] outline-none focus:border-[#003366] transition-all appearance-none"
+                                className="w-full h-12 bg-white border border-zinc-200 pl-11 pr-4 text-[14px] outline-none focus:border-[#003366] transition-all appearance-none rounded-none"
                             >
                                 <option value="" disabled>Select College</option>
                                 {COLLEGES.map((c) => (
@@ -178,7 +180,7 @@ export default function InternSignupPage() {
                                     type="email"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
-                                    className="w-full h-12 bg-white border border-zinc-200 pl-11 pr-4 text-[14px] outline-none focus:border-[#003366] transition-all"
+                                    className="w-full h-12 bg-white border border-zinc-200 pl-11 pr-4 text-[14px] outline-none focus:border-[#003366] transition-all rounded-none"
                                     placeholder="Enter Email Address"
                                 />
                             </div>
@@ -191,7 +193,7 @@ export default function InternSignupPage() {
                                     type={showPassword ? "text" : "password"}
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
-                                    className="w-full h-12 bg-white border border-zinc-200 pl-11 pr-12 text-[14px] outline-none focus:border-[#003366] transition-all"
+                                    className="w-full h-12 bg-white border border-zinc-200 pl-11 pr-12 text-[14px] outline-none focus:border-[#003366] transition-all rounded-none"
                                     placeholder="Set password"
                                 />
                                 <button
@@ -207,7 +209,7 @@ export default function InternSignupPage() {
                         <div className="flex items-start gap-2 pt-2">
                             <input type="checkbox" required className="mt-1 w-3.5 h-3.5 border-zinc-300 rounded-none text-[#003366] focus:ring-0" />
                             <p className="text-[12px] text-zinc-500 font-medium">
-                                By registering you agree to the Student Forge <Link href="#" className="text-[#003366] font-bold hover:underline">Terms of Use</Link>
+                                By registering you agree to the Student Forge <Link href="/terms" className="text-[#003366] font-bold hover:underline">Terms of Use</Link>
                             </p>
                         </div>
 
@@ -221,7 +223,7 @@ export default function InternSignupPage() {
                         <button
                             disabled={loading}
                             type="submit"
-                            className="w-full h-12 bg-[#003366] text-white text-[14px] font-bold transition-all hover:bg-[#002244] active:scale-[0.98] flex items-center justify-center gap-2 disabled:opacity-50"
+                            className="w-full h-12 bg-[#003366] text-white text-[14px] font-bold transition-all hover:bg-[#002244] active:scale-[0.98] flex items-center justify-center gap-2 disabled:opacity-50 rounded-none"
                         >
                             {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Register"}
                         </button>
@@ -229,17 +231,17 @@ export default function InternSignupPage() {
 
                     <div className="space-y-6 pt-2">
                         <div className="flex flex-col items-center gap-4">
-                            <p className="text-[12px] text-zinc-400 font-bold">Follow us on</p>
+                            <p className="text-[12px] text-zinc-400 font-bold uppercase tracking-widest">Connect with us</p>
                             <div className="flex gap-3">
-                                <button type="button" className="w-9 h-9 rounded-full bg-[#1877F2] text-white flex items-center justify-center hover:scale-110 transition-all shadow-sm">
-                                    <Facebook size={18} />
-                                </button>
-                                <button type="button" className="w-9 h-9 rounded-full bg-[#0077B5] text-white flex items-center justify-center hover:scale-110 transition-all shadow-sm">
+                                <Link href="https://discord.gg/9ZAnhkXD" target="_blank" className="w-10 h-10 bg-[#5865F2] text-white flex items-center justify-center hover:opacity-80 transition-all shadow-sm rounded-none">
+                                    <svg viewBox="0 0 24 24" className="w-5 h-5 fill-current" xmlns="http://www.w3.org/2000/svg"><path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152c-.03-.005-.059.012-.072.0371-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495-.013-.025-.042-.042-.072-.037a19.7363 19.7363 0 00-4.8852 1.515c-.012.002-.023.011-.032.0277C.5334 9.0458-.319 13.5799.0992 18.0578c.002.019.013.04.0312.0561 2.0528 1.5076 4.0413 2.4228 5.9929 3.0294.032.01.0660-.003.0842-.0276.4616-.6304.8731-1.2952 1.226-1.9942.018-.033.004-.074-.0416-.1057-.6528-.2476-1.2743-.5495-1.8722-.8923-.048-.028-.051-.097-.0076-.1277.1258-.0943.2517-.1923.3718-.2914.025-.019.059-.026.0776-.0105 3.9278 1.7933 8.18 1.7933 12.0614 0 .018-.008.052-.001.0775.0095.1201.099.246.1981.3728.2924.044.03.041.099-.0066.1276a12.2986 12.2986 0 01-1.873.8914c-.045.016-.06.073-.0407.1067.3604.698.7719 1.3628 1.225 1.9932.018.024.049.038.0842.0286 1.961-.6067 3.9495-1.5219 6.0023-3.0294.018-.013.03-.034.0313-.0552.5004-5.177-.8382-9.6739-3.5485-13.6604a.0683.0683 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189z" /></svg>
+                                </Link>
+                                <Link href="https://www.linkedin.com/company/student-forge/" target="_blank" className="w-10 h-10 bg-[#0077B5] text-white flex items-center justify-center hover:opacity-80 transition-all shadow-sm rounded-none">
                                     <Linkedin size={18} />
-                                </button>
-                                <button type="button" className="w-9 h-9 rounded-full bg-[#E1306C] text-white flex items-center justify-center hover:scale-110 transition-all shadow-sm">
+                                </Link>
+                                <Link href="https://www.instagram.com/studentforge/" target="_blank" className="w-10 h-10 bg-[#E1306C] text-white flex items-center justify-center hover:opacity-80 transition-all shadow-sm rounded-none">
                                     <Instagram size={18} />
-                                </button>
+                                </Link>
                             </div>
                         </div>
 
