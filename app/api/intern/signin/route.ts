@@ -4,16 +4,21 @@ import bcrypt from "bcryptjs";
 
 export async function POST(req: Request) {
     try {
-        const { email, password, security_token, verification, v_sum } = await req.json();
+        const { email, password, captcha_token } = await req.json();
 
-        // 1. Honeypot check (Bots fill this)
-        if (security_token) {
-            return NextResponse.json({ error: "Security violation detected. Please refresh." }, { status: 403 });
+        // 1. Google reCAPTCHA Verification
+        if (!captcha_token) {
+            return NextResponse.json({ error: "Security verification token is missing." }, { status: 400 });
         }
 
-        // 2. Arithmetic Verification
-        if (verification !== v_sum) {
-            return NextResponse.json({ error: "Security verification failed. Are you human?" }, { status: 400 });
+        const secretKey = process.env.RECAPTCHA_SECRET_KEY;
+        const verifyRes = await fetch(`https://www.google.com/recaptcha/api/siteverify?secret=${secretKey}&response=${captcha_token}`, {
+            method: "POST"
+        });
+        const verifyData = await verifyRes.json();
+
+        if (!verifyData.success) {
+            return NextResponse.json({ error: "Security verification failed. Please try again." }, { status: 400 });
         }
 
         if (!email || !password) {

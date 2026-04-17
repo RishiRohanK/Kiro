@@ -5,16 +5,14 @@ import { Role } from "@prisma/client";
 
 export async function POST(req: Request) {
     
-    return NextResponse.json({ error: "Registrations for Batch 2 are currently frozen. Please contact the Student Forge administration for information on next intake." }, { status: 403 });
-
     try {
-        const { name, email, password, college } = await req.json();
+        const { name, email, password, college, phone } = await req.json();
 
         if (!name || !email || !password || !college) {
-            return NextResponse.json({ error: "Missing fields" }, { status: 400 });
+            return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
         }
 
-        
+        // Check if user already exists
         const existingUser = await prisma.user.findUnique({
             where: { email },
         });
@@ -23,10 +21,10 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: "User already exists with this email." }, { status: 400 });
         }
 
-        
+        // Hash password
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        
+        // Create user with Batch 3 classification
         const newUser = await prisma.user.create({
             data: {
                 name,
@@ -35,7 +33,8 @@ export async function POST(req: Request) {
                 role: Role.INTERN,
                 isApproved: false, 
                 college,
-                batch: "Batch 2"
+                phoneNumber: phone,
+                batch: "Batch 3"
             },
         });
 
