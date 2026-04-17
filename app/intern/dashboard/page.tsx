@@ -394,12 +394,12 @@ function InternDashboardContent() {
 
    const fetchExams = async (userId: string) => {
       try {
-          const res = await fetch("/api/exams/session");
-          const exData = await res.json();
-          const userSessions = Array.isArray(exData) ? exData.filter((s: any) => s.userId === userId) : [];
-          setExamSessions(userSessions);
+         const res = await fetch("/api/exams/session");
+         const exData = await res.json();
+         const userSessions = Array.isArray(exData) ? exData.filter((s: any) => s.userId === userId) : [];
+         setExamSessions(userSessions);
       } catch (e) {
-          console.error("Failed to load exams");
+         console.error("Failed to load exams");
       }
    };
 
@@ -547,9 +547,9 @@ function InternDashboardContent() {
 
    return (
       <div className="p-4 lg:p-6 max-w-[1600px] w-full mx-auto bg-white min-h-screen pb-24 lg:pb-6">
-          {activeTab === "overview" && (
+         {activeTab === "overview" && (
             <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} className="space-y-4">
-               
+
                {/* Hero Bento Section */}
                <div className="grid grid-cols-12 gap-4 text-left">
                   {/* Left Column: Greeting & Stats */}
@@ -557,7 +557,7 @@ function InternDashboardContent() {
                      <div className="relative overflow-hidden bg-[#E0E7FF] p-8 text-[#003366] shadow-sm border border-[#003366]/5">
                         {/* Decorative background accent */}
                         <div className="absolute top-[-20%] right-[-10%] w-64 h-64 bg-white/50 rounded-full blur-3xl" />
-                        
+
                         <div className="relative z-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
                            <div className="space-y-2">
                               <h1 className="text-3xl md:text-3xl font-semibold tracking-tight leading-none text-[#003366]">
@@ -605,7 +605,7 @@ function InternDashboardContent() {
                         <div className="absolute top-2 right-2 p-2 bg-blue-50 text-blue-600 z-10">
                            <Paperclip size={18} />
                         </div>
-                        
+
                         <div className="flex-1 flex flex-col justify-between h-full text-left relative z-10">
                            <div className="space-y-1">
                               <h3 className="text-sm font-semibold text-[#003366] uppercase tracking-wider">My Portal</h3>
@@ -614,7 +614,7 @@ function InternDashboardContent() {
                               </p>
                            </div>
 
-                           <button 
+                           <button
                               onClick={() => setShowUIUXModal(true)}
                               className="w-fit px-8 h-10 bg-[#003366] text-white text-[10px] font-semibold uppercase tracking-[0.2em] mt-6 hover:bg-black transition-all flex items-center justify-center gap-2"
                            >
@@ -624,9 +624,9 @@ function InternDashboardContent() {
 
                         {/* Extra Large Illustration on Right */}
                         <div className="w-64 h-64 flex items-center justify-center flex-shrink-0 -mr-12 -mb-8 pointer-events-none">
-                           <img 
-                              src="https://ik.imagekit.io/dypkhqxip/Image%20folder-amico.svg" 
-                              alt="Illustration" 
+                           <img
+                              src="https://ik.imagekit.io/dypkhqxip/Image%20folder-amico.svg"
+                              alt="Illustration"
                               className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-700 ease-out"
                            />
                         </div>
@@ -706,8 +706,8 @@ function InternDashboardContent() {
                   </div>
 
                   {/* Right Bento: Tech Flows */}
-                  <div className="col-span-12 lg:col-span-5 bg-white border border-zinc-100 p-6 shadow-sm overflow-hidden relative">
-                     <div className="flex items-center justify-between mb-8 pb-4 border-b border-zinc-50">
+                  <div className="col-span-12 lg:col-span-5 bg-zinc-100 border border-zinc-200 p-6 shadow-sm overflow-hidden relative group">
+                     <div className="flex items-center justify-between mb-8 pb-4 border-b border-zinc-200 relative z-10">
                         <div>
                            <h2 className="text-[11px] font-semibold text-[#003366] uppercase tracking-[0.3em]">Stack Flow</h2>
                            <p className="text-[9px] text-zinc-400 font-semibold uppercase mt-1">Official Industry Paths</p>
@@ -721,7 +721,7 @@ function InternDashboardContent() {
                            { title: "Mobile Engineering", logo: "https://www.vectorlogo.zone/logos/flutterio/flutterio-icon.svg", bg: "bg-violet-50/50", pdf: "https://ik.imagekit.io/dypkhqxip/android.pdf" },
                            { title: "Backend Core Systems", logo: "https://cdn.worldvectorlogo.com/logos/nodejs-icon.svg", bg: "bg-emerald-50/50", pdf: "https://ik.imagekit.io/dypkhqxip/backend.pdf" }
                         ].map((roadmap, i) => (
-                           <a 
+                           <a
                               key={i}
                               href={roadmap.pdf}
                               target="_blank"
@@ -747,7 +747,7 @@ function InternDashboardContent() {
                   </div>
                </div>
             </motion.div>
-          )}
+         )}
 
          {activeTab === "kanban" && (
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6 text-left">
@@ -1136,22 +1136,22 @@ function InternDashboardContent() {
                         <p className="text-3xl font-black text-[#003366]">{attendancePercentage}%</p>
                      </div>
                      <div className="w-full h-1 bg-white/40 mt-3 rounded-none overflow-hidden">
-                        <motion.div 
+                        <motion.div
                            initial={{ width: 0 }}
                            animate={{ width: `${attendancePercentage}%` }}
                            transition={{ duration: 1, ease: "easeOut" }}
-                           className="h-full bg-[#003366]" 
+                           className="h-full bg-[#003366]"
                         />
                      </div>
                   </div>
 
                   <div className="p-4 bg-white border border-[#003366]/5 shadow-sm flex flex-col justify-between">
                      <div>
-                         <h4 className="text-[9px] font-bold uppercase tracking-widest text-zinc-400 mb-0.5">Today</h4>
-                         <div className="flex items-baseline gap-1">
-                            <p className="text-2xl font-bold text-[#003366]">{attendanceCount}</p>
-                            <p className="text-xs font-bold text-zinc-300">/ {attendanceData.totalTrackingDays}</p>
-                         </div>
+                        <h4 className="text-[9px] font-bold uppercase tracking-widest text-zinc-400 mb-0.5">Today</h4>
+                        <div className="flex items-baseline gap-1">
+                           <p className="text-2xl font-bold text-[#003366]">{attendanceCount}</p>
+                           <p className="text-xs font-bold text-zinc-300">/ {attendanceData.totalTrackingDays}</p>
+                        </div>
                      </div>
                      <p className="text-[8px] font-bold text-emerald-600 mt-2 uppercase tracking-widest opacity-70">Days Present</p>
                   </div>
@@ -1199,7 +1199,7 @@ function InternDashboardContent() {
                                  <td className="px-6 py-2.5 text-right">
                                     <div className="flex items-center justify-end gap-1.5">
                                        <span className={`text-[9px] font-black tracking-widest uppercase ${log.status === "PRESENT" || log.status === "LATE" ? "text-emerald-500" : "text-rose-500"}`}>
-                                           {log.status === "PRESENT" ? "In" : log.status === "LATE" ? "Late" : "Out"}
+                                          {log.status === "PRESENT" ? "In" : log.status === "LATE" ? "Late" : "Out"}
                                        </span>
                                        <div className={`h-1 w-1 rounded-full ${log.status === "PRESENT" || log.status === "LATE" ? "bg-emerald-500" : "bg-rose-500"}`} />
                                     </div>
