@@ -179,16 +179,9 @@ function InternDashboardContent() {
          const syncInterval = setInterval(() => {
             fetchTasks(userData.id, userData.batch);
             fetchStatus(userData.id);
-            fetchAttendance(userData.id);
             fetchSchedules(userData.id, userData.batch);
-            fetchAllInterns();
-            fetchReports(userData.id);
             fetchExams(userData.id);
-            fetch(`/api/intern/personal-tasks?userId=${userData.id}`)
-               .then(r => r.json())
-               .then(d => { if (d.success) setPersonalTasks(d.tasks); })
-               .catch(() => { });
-         }, 20000);
+         }, 120000);
 
          const cleanup = () => {
             clearInterval(syncInterval);

@@ -69,7 +69,7 @@ function InternDashboardLayoutContent({
             }
         };
         sendPulse(); 
-        const interval = setInterval(sendPulse, 30000); 
+        const interval = setInterval(sendPulse, 120000); 
         return () => clearInterval(interval);
     }, [user]);
 

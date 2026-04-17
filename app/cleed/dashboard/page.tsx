@@ -403,7 +403,7 @@ export default function CleedDashboard() {
 
    useEffect(() => {
       fetchData();
-      const interval = setInterval(fetchData, 10000); // Higher frequency for live exams
+      const interval = setInterval(fetchData, 60000); // 1 minute interval for fresh data
       
       const fetchFeedbacks = async () => {
          try {
