@@ -601,33 +601,33 @@ function InternDashboardContent() {
                   {/* Right Column: Key Actions */}
                   <div className="col-span-12 lg:col-span-4 flex flex-col gap-4">
                      {/* Submission Portal Card */}
-                     <div className="flex-1 bg-white border border-zinc-100 p-6 flex flex-row items-center justify-between shadow-none relative overflow-hidden group min-h-[200px]">
+                     <div className="flex-1 bg-white border border-zinc-100 p-6 flex flex-col sm:flex-row items-center justify-between shadow-none relative overflow-hidden group min-h-[220px] sm:min-h-[200px]">
                         <div className="absolute top-2 right-2 p-2 bg-blue-50 text-blue-600 z-10">
                            <Paperclip size={18} />
                         </div>
 
-                        <div className="flex-1 flex flex-col justify-between h-full text-left relative z-10">
+                        <div className="flex-1 flex flex-col justify-between h-full text-center sm:text-left relative z-10 w-full">
                            <div className="space-y-1">
                               <h3 className="text-sm font-semibold text-[#003366] uppercase tracking-wider">My Portal</h3>
-                              <p className="text-[11px] text-zinc-500 font-medium leading-relaxed max-w-[180px]">
+                              <p className="text-[11px] text-zinc-500 font-medium leading-relaxed max-w-full sm:max-w-[180px]">
                                  Submit your work and get marks for your results. Daily progress tracking active.
                               </p>
                            </div>
 
                            <button
                               onClick={() => setShowUIUXModal(true)}
-                              className="w-fit px-8 h-10 bg-[#003366] text-white text-[10px] font-semibold uppercase tracking-[0.2em] mt-6 hover:bg-black transition-all flex items-center justify-center gap-2"
+                              className="w-full sm:w-fit px-8 h-10 bg-[#003366] text-white text-[10px] font-semibold uppercase tracking-[0.2em] mt-6 hover:bg-black transition-all flex items-center justify-center gap-2"
                            >
                               Submit Work <ArrowUpRight size={14} />
                            </button>
                         </div>
 
                         {/* Extra Large Illustration on Right */}
-                        <div className="w-64 h-64 flex items-center justify-center flex-shrink-0 -mr-12 -mb-8 pointer-events-none">
+                        <div className="w-48 h-48 sm:w-64 sm:h-64 flex items-center justify-center flex-shrink-0 mt-4 sm:mt-0 -mr-0 sm:-mr-12 -mb-4 sm:-mb-8 pointer-events-none">
                            <img
                               src="https://ik.imagekit.io/dypkhqxip/Image%20folder-amico.svg"
                               alt="Illustration"
-                              className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-700 ease-out"
+                              className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-700 ease-out"
                            />
                         </div>
                      </div>

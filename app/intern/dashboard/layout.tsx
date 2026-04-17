@@ -162,18 +162,6 @@ function InternDashboardLayoutContent({
                 </nav>
 
                 <div className="mt-auto p-4 space-y-4 border-t border-[#003366]/5">
-                    {/* Side Profile Card */}
-                    <div className="p-3 bg-[#E0E7FF] flex items-center gap-3">
-                        <div className="h-9 w-9 bg-[#0055FF] text-white flex items-center justify-center text-[12px] font-bold flex-shrink-0">
-                            {user.name[0]}
-                        </div>
-                        <div className="min-w-0 flex-1">
-                            <p className="text-[13px] font-bold text-[#003366] truncate">{user.name}</p>
-                            <p className="text-[9px] text-[#003366]/60 font-medium uppercase tracking-[0.1em]">
-                                Scholar • {user.batch || "Batch 3"}
-                            </p>
-                        </div>
-                    </div>
 
                     <div className="space-y-2">
                         <button 
@@ -230,14 +218,8 @@ function InternDashboardLayoutContent({
                     </div>
 
                     <div className="flex items-center gap-4">
-                        <div className="flex items-center gap-3">
-                            <div className="text-right hidden xs:block">
-                               <p className="text-[12px] font-bold text-zinc-900 leading-none truncate max-w-[100px]">{user.name}</p>
-                               <p className="text-[9px] text-zinc-500 font-medium mt-0.5 leading-none">Session: Active</p>
-                            </div>
-                            <div className="h-8 w-8 bg-[#0055FF] text-white flex items-center justify-center text-[12px] font-bold">
-                                {user.name[0]}
-                            </div>
+                        <div className="px-3 py-1 bg-emerald-50 text-emerald-600 text-[10px] font-bold uppercase tracking-widest border border-emerald-100 hidden sm:block">
+                           Secure Session
                         </div>
                     </div>
                 </header>
