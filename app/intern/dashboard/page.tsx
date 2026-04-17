@@ -31,6 +31,7 @@ import {
    Mail,
    Fingerprint,
    MessageSquare,
+   ArrowUpRight,
    Send,
    Users,
    Globe,
@@ -130,6 +131,7 @@ function InternDashboardContent() {
    const [selectedUser, setSelectedUser] = useState<any>(null);
    const [allInterns, setAllInterns] = useState<any[]>([]);
    const [reports, setReports] = useState<any[]>([]);
+   const [examSessions, setExamSessions] = useState<any[]>([]);
    const [loadingReports, setLoadingReports] = useState(false);
    const chatEndRef = useRef<HTMLDivElement>(null);
 
@@ -172,6 +174,8 @@ function InternDashboardContent() {
          fetchStatus(userData.id);
          fetchAttendance(userData.id);
          fetchReports(userData.id);
+         fetchExams(userData.id);
+         fetchSchedules(userData.id, userData.batch);
          const syncInterval = setInterval(() => {
             fetchTasks(userData.id, userData.batch);
             fetchStatus(userData.id);
@@ -179,6 +183,7 @@ function InternDashboardContent() {
             fetchSchedules(userData.id, userData.batch);
             fetchAllInterns();
             fetchReports(userData.id);
+            fetchExams(userData.id);
             fetch(`/api/intern/personal-tasks?userId=${userData.id}`)
                .then(r => r.json())
                .then(d => { if (d.success) setPersonalTasks(d.tasks); })
@@ -376,7 +381,6 @@ function InternDashboardContent() {
    };
 
    const fetchReports = async (internId: string) => {
-      setLoadingReports(true);
       try {
          const res = await fetch(`/api/intern/reports?internId=${internId}`);
          const data = await res.json();
@@ -385,8 +389,17 @@ function InternDashboardContent() {
          }
       } catch (e) {
          console.error("Failed to load reports");
-      } finally {
-         setLoadingReports(false);
+      }
+   };
+
+   const fetchExams = async (userId: string) => {
+      try {
+          const res = await fetch("/api/exams/session");
+          const exData = await res.json();
+          const userSessions = Array.isArray(exData) ? exData.filter((s: any) => s.userId === userId) : [];
+          setExamSessions(userSessions);
+      } catch (e) {
+          console.error("Failed to load exams");
       }
    };
 
@@ -534,146 +547,207 @@ function InternDashboardContent() {
 
    return (
       <div className="p-4 lg:p-6 max-w-[1600px] w-full mx-auto bg-white min-h-screen pb-24 lg:pb-6">
-         {activeTab === "overview" && (
-            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6 text-left">
-               <div className="mb-8 font-sans flex flex-col md:flex-row md:items-end justify-between gap-4">
-                  <div>
-                     <h1 className="text-xl lg:text-2xl font-bold text-zinc-900 leading-tight">Welcome back, {user.name.split(' ')[0]}</h1>
-                     <div className="flex flex-wrap items-center gap-2 mt-2">
-                        <span className="px-2 py-0.5 bg-blue-50 text-blue-600 border border-blue-100 text-[10px] font-bold rounded-sm uppercase tracking-tight flex items-center gap-1.5 shrink-0">
-                           <Layers size={10} /> {user.batch || "Batch 1"}
-                        </span>
-                        <span className="px-2 py-0.5 bg-zinc-50 text-zinc-500 border border-zinc-100 text-[10px] font-bold rounded-sm flex items-center gap-1.5">
-                           <School size={10} /> {user.college || "Forge Academy Intern"}
-                        </span>
-                     </div>
-                  </div>
-                  <p className="text-zinc-400 text-[10px] lg:text-xs font-semibold uppercase tracking-widest bg-zinc-50 px-2 py-1 border border-zinc-100 sm:border-none sm:bg-transparent sm:p-0">Session Active</p>
-               </div>
-
-               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-                  <div className="p-5 border border-blue-100 bg-blue-50/30 shadow-sm flex flex-col justify-between h-32">
-                     <div className="flex items-center justify-between"><span className="text-[10px] font-bold text-blue-600/70">Assignments</span><Briefcase size={16} className="text-blue-500" /></div>
-                     <div className="mt-auto"><p className="text-2xl font-bold text-zinc-900">{tasks.filter(t => t.status === 'pending').length}</p><p className="text-[10px] text-blue-600/60 mt-1 font-medium">Pending tasks</p></div>
-                  </div>
-                  <div className="p-5 border border-emerald-100 bg-emerald-50/30 shadow-sm flex flex-col justify-between h-32 relative overflow-hidden group">
-                     <div className="flex items-center justify-between z-10"><span className="text-[10px] font-bold text-emerald-600/70">Attendance</span><Check size={16} className="text-emerald-500" /></div>
-                     <div className="mt-auto z-10">
-                        <div className="flex items-baseline gap-2">
-                           <p className="text-2xl font-bold text-zinc-900">{attendancePercentage}%</p>
-                           <span className="text-[10px] text-emerald-600/60 font-medium">({attendanceCount}/{attendanceData.totalTrackingDays} days)</span>
-                        </div>
-                        <div className="w-full h-1 bg-emerald-100/50 mt-2 rounded-full overflow-hidden">
-                           <div className="h-full bg-emerald-500 transition-all duration-1000" style={{ width: `${attendancePercentage}%` }} />
-                        </div>
-                        <p className="text-[10px] text-emerald-600/60 mt-1 font-medium">Presence ratio</p>
-                     </div>
-                  </div>
-                  <div className="p-5 border border-violet-100 bg-violet-50/30 shadow-sm flex flex-col justify-between h-32">
-                     <div className="flex items-center justify-between"><span className="text-[10px] font-bold text-violet-600/70">Status</span><FileBadge size={16} className={userStatus?.offerLetterUrl ? "text-emerald-500" : "text-violet-400"} /></div>
-                     <div className="mt-auto"><p className="text-sm font-bold text-zinc-900 leading-tight">{userStatus?.offerLetterUrl ? "Letter issued" : "Processing"}</p><p className="text-[10px] text-violet-600/60 mt-1 font-medium">Current phase</p></div>
-                  </div>
-                  <div className="p-5 border border-amber-100 bg-amber-50/30 shadow-sm flex flex-col justify-between h-32">
-                     <div className="flex items-center justify-between"><span className="text-[10px] font-bold text-amber-600/70">Next shift</span><Calendar size={16} className="text-amber-500" /></div>
-                     <div className="mt-auto"><p className="text-sm font-bold text-zinc-900 leading-tight">Today, 10:00 AM</p><p className="text-[10px] text-amber-600/60 mt-1 font-medium">Starting time</p></div>
-                  </div>
-                  <Link href="/intern/dashboard/reports" className="p-5 border border-rose-100 bg-rose-50/30 shadow-sm flex flex-col justify-between h-32 hover:border-rose-200 transition-all group text-left">
-                     <div className="flex items-center justify-between"><span className="text-[10px] font-bold text-rose-600/70">Reports</span><FileTextIcon size={16} className="text-rose-500" /></div>
-                     <div className="mt-auto">
-                        <p className="text-2xl font-bold text-zinc-900">{reports.length}</p>
-                        <p className="text-[10px] text-rose-600/60 mt-1 font-medium">Reports available</p>
-                     </div>
-                  </Link>
-               </div>
-
-               <div className="w-full overflow-hidden rounded-xl border border-zinc-100 shadow-sm bg-zinc-50 relative group">
-                  <img
-                     src="https://ik.imagekit.io/dypkhqxip/Coming%20soon.png"
-                     alt="Programs Banner"
-                     className="w-full h-auto block"
-                  />
-               </div>
-
-               {/* UI/UX Task Submission Alert */}
-               <div className="flex items-center justify-between gap-4 bg-blue-50 border border-blue-200 rounded-lg px-5 py-4">
-                  <div className="flex items-center gap-3">
-                     <div className="h-9 w-9 bg-blue-600 rounded-lg flex items-center justify-center shrink-0">
-                        <Paperclip className="text-white" size={16} />
-                     </div>
-                     <div>
-                        <p className="text-sm font-semibold text-zinc-800">UI/UX Interns — Submit your task</p>
-                        <p className="text-xs text-zinc-500 mt-0.5">Please submit your developed task link so we can review your work.</p>
-                     </div>
-                  </div>
-                  <button
-                     onClick={() => setShowUIUXModal(true)}
-                     className="shrink-0 px-4 py-2 bg-blue-600 text-white text-xs font-semibold rounded-md hover:bg-blue-700 transition-all"
-                  >
-                     Submit here
-                  </button>
-               </div>
-
-               {userStatus?.offerLetterUrl && (
-                  <div className="p-4 lg:p-6 border border-emerald-100 bg-white flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm hover:border-emerald-200 transition-all">
-                     <div className="flex items-start lg:items-center gap-3">
-                        <div className="h-10 w-10 bg-zinc-900 text-white flex items-center justify-center shrink-0">
-                           <ShieldCheck size={20} />
-                        </div>
-                        <div>
-                           <h3 className="text-xs lg:text-sm font-bold text-zinc-900">Internship offer letter issued</h3>
-                           <p className="text-[10px] lg:text-xs text-zinc-500 mt-1 leading-relaxed">Welcome to the forge program. Your official legal documents are ready.</p>
-                        </div>
-                     </div>
-                     <a href={userStatus.offerLetterUrl} target="_blank" className="w-full sm:w-auto h-10 px-6 bg-zinc-900 text-white text-[11px] font-bold flex items-center justify-center gap-2 hover:bg-black transition-all">
-                        Download Document <Download size={14} />
-                     </a>
-                  </div>
-               )}
-
-               <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start pt-4 border-t border-zinc-100">
-                  <div className="lg:col-span-8 space-y-6">
-                     <div className="flex items-center justify-between mb-4"><h2 className="text-xs font-bold text-zinc-400">Active roadmap progression ({user.batch || "Batch 1"})</h2><Link href="/intern/dashboard/schedule" className="text-xs font-bold text-[#0055FF] hover:underline flex items-center gap-1">Full roadmap <ChevronRight size={12} /></Link></div>
-                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {schedules.length > 0 ? schedules.slice(0, 2).map((item) => (
-                           <div key={item.id} className="p-6 border border-zinc-100 bg-white hover:border-blue-200 transition-all flex flex-col h-full text-left shadow-sm group">
-                              <div className="flex items-center justify-between mb-4">
-                                 <span className="text-[10px] font-bold text-blue-600 bg-blue-50/50 px-2 py-0.5 border border-blue-100/50">
-                                    {item.week}
-                                 </span>
-                                 {item.isCompleted && <CheckCircle2 size={14} className="text-emerald-500" />}
-                              </div>
-                              <h3 className="text-sm font-bold text-zinc-900 mb-2 group-hover:text-blue-600 transition-colors">{item.typeOfWork}</h3>
-                              <p className="text-xs text-zinc-500 leading-relaxed mb-4 flex-1 line-clamp-3">{item.description}</p>
-                              <div className="pt-4 border-t border-zinc-50 flex items-center justify-between mt-auto">
-                                 <div className="flex items-center gap-2"><Target size={14} className="text-zinc-300" /><span className="text-[10px] text-zinc-400 font-bold uppercase tracking-tight">Timeline: {item.deadline.split('T')[0]}</span></div>
-                                 <span className="text-[10px] text-zinc-400 font-bold uppercase tracking-widest">Ongoing</span>
-                              </div>
+          {activeTab === "overview" && (
+            <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} className="space-y-4">
+               
+               {/* Hero Bento Section */}
+               <div className="grid grid-cols-12 gap-4 text-left">
+                  {/* Left Column: Greeting & Stats */}
+                  <div className="col-span-12 lg:col-span-8 flex flex-col gap-4">
+                     <div className="relative overflow-hidden bg-[#E0E7FF] p-8 text-[#003366] shadow-sm border border-[#003366]/5">
+                        {/* Decorative background accent */}
+                        <div className="absolute top-[-20%] right-[-10%] w-64 h-64 bg-white/50 rounded-full blur-3xl" />
+                        
+                        <div className="relative z-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
+                           <div className="space-y-2">
+                              <h1 className="text-3xl md:text-3xl font-semibold tracking-tight leading-none text-[#003366]">
+                                 {(() => {
+                                    const hour = new Date().getHours();
+                                    if (hour < 12) return "Good morning";
+                                    if (hour < 17) return "Good afternoon";
+                                    return "Good evening";
+                                 })()}, <span className="text-[#0055FF]">{user.name.split(' ')[0]}</span>
+                              </h1>
+                              <p className="text-[#003366]/60 text-sm font-medium max-w-sm">
+                                 Welcome back scholar. You have <span className="text-[#003366] font-semibold">{tasks.filter(t => t.status === 'pending').length} pending</span> tasks today.
+                              </p>
                            </div>
-                        )) : (
-                           <div className="col-span-2 p-12 border border-dashed border-zinc-100 bg-zinc-50/30 text-center flex flex-col items-center justify-center">
-                              <Map size={24} className="text-zinc-200 mb-2" />
-                              <p className="text-xs font-bold text-zinc-400">Roadmap processing for {user.batch || "Batch 1"}</p>
+                           <div className="flex items-center gap-3 bg-white/60 backdrop-blur-md px-4 py-2 border border-white/40">
+                              <span className="text-[10px] font-semibold uppercase tracking-widest text-[#003366]/40">Active Batch</span>
+                              <div className="text-[14px] font-semibold text-[#003366]">{user.batch || "Batch 3"}</div>
+                           </div>
+                        </div>
+
+                        {/* Integrated Stats Row with Separate Containers */}
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-12 pt-10 border-t border-[#003366]/10">
+                           {[
+                              { label: "Attendance", value: `${attendancePercentage}%`, icon: CheckCircle2 },
+                              { label: "Milestones", value: schedules.filter(s => s.isCompleted).length, icon: Target },
+                              { label: "Reports", value: reports.length + examSessions.length, icon: FileTextIcon },
+                              { label: "Warnings", value: examSessions.reduce((acc, s) => acc + (s.violations || 0), 0), icon: AlertCircle }
+                           ].map((stat, i) => (
+                              <div key={i} className="bg-white/40 border border-[#003366]/5 p-4 flex flex-col justify-between group hover:bg-white/60 transition-all">
+                                 <div className="flex items-center gap-2 opacity-60">
+                                    <stat.icon size={12} className="text-[#003366]" />
+                                    <span className="text-[9px] font-semibold uppercase tracking-wider text-[#003366]">{stat.label}</span>
+                                 </div>
+                                 <p className="text-2xl font-semibold text-[#003366] mt-1">{stat.value}</p>
+                              </div>
+                           ))}
+                        </div>
+                     </div>
+                  </div>
+
+                  {/* Right Column: Key Actions */}
+                  <div className="col-span-12 lg:col-span-4 flex flex-col gap-4">
+                     {/* Submission Portal Card */}
+                     <div className="flex-1 bg-white border border-zinc-100 p-6 flex flex-row items-center justify-between shadow-none relative overflow-hidden group min-h-[200px]">
+                        <div className="absolute top-2 right-2 p-2 bg-blue-50 text-blue-600 z-10">
+                           <Paperclip size={18} />
+                        </div>
+                        
+                        <div className="flex-1 flex flex-col justify-between h-full text-left relative z-10">
+                           <div className="space-y-1">
+                              <h3 className="text-sm font-semibold text-[#003366] uppercase tracking-wider">My Portal</h3>
+                              <p className="text-[11px] text-zinc-500 font-medium leading-relaxed max-w-[180px]">
+                                 Submit your work and get marks for your results. Daily progress tracking active.
+                              </p>
+                           </div>
+
+                           <button 
+                              onClick={() => setShowUIUXModal(true)}
+                              className="w-fit px-8 h-10 bg-[#003366] text-white text-[10px] font-semibold uppercase tracking-[0.2em] mt-6 hover:bg-black transition-all flex items-center justify-center gap-2"
+                           >
+                              Submit Work <ArrowUpRight size={14} />
+                           </button>
+                        </div>
+
+                        {/* Extra Large Illustration on Right */}
+                        <div className="w-64 h-64 flex items-center justify-center flex-shrink-0 -mr-12 -mb-8 pointer-events-none">
+                           <img 
+                              src="https://ik.imagekit.io/dypkhqxip/Image%20folder-amico.svg" 
+                              alt="Illustration" 
+                              className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-700 ease-out"
+                           />
+                        </div>
+                     </div>
+
+                     {/* Document Card (Conditional) */}
+                     {userStatus?.offerLetterUrl ? (
+                        <div className="bg-emerald-600 p-6 shadow-lg shadow-emerald-900/10 flex flex-col justify-between">
+                           <div className="flex items-baseline justify-between mb-2">
+                              <h3 className="text-xs font-bold text-white uppercase tracking-widest opacity-80">Certification</h3>
+                              <ShieldCheck size={18} className="text-white/40" />
+                           </div>
+                           <p className="text-[15px] font-bold text-white mb-6 leading-tight">Your Offer Letter is now ready.</p>
+                           <a href={userStatus.offerLetterUrl} target="_blank" className="w-full h-11 bg-white text-emerald-700 text-[11px] font-bold uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-zinc-50 transition-all">
+                              Get PDF <Download size={14} />
+                           </a>
+                        </div>
+                     ) : null}
+                  </div>
+               </div>
+
+               {/* Roadmap Bento Section */}
+               <div className="grid grid-cols-12 gap-4 pt-2 text-left">
+                  {/* Left Bento: Weekly Timeline */}
+                  <div className="col-span-12 lg:col-span-7 bg-white border border-zinc-100 p-6 shadow-sm">
+                     <div className="flex items-center justify-between mb-8 pb-4 border-b border-zinc-50">
+                        <div>
+                           <h2 className="text-[11px] font-semibold text-[#003366] uppercase tracking-[0.3em]">Weekly Roadmap</h2>
+                           <p className="text-[9px] text-zinc-400 font-semibold uppercase mt-1">Timeline for current track</p>
+                        </div>
+                        <Link href="/intern/dashboard/schedule" className="h-8 w-8 rounded-full border border-zinc-100 flex items-center justify-center hover:bg-zinc-50 transition-all text-zinc-400">
+                           <ChevronRight size={16} />
+                        </Link>
+                     </div>
+
+                     <div className="space-y-3">
+                        {schedules.length > 0 ? schedules.slice(0, 3).map((item, i) => {
+                           const colors = [
+                              { bg: "bg-blue-600", accent: "bg-white/20", text: "text-white", border: 'border-blue-700/50' },
+                              { bg: "bg-emerald-600", accent: "bg-white/20", text: "text-white", border: 'border-emerald-700/50' },
+                              { bg: "bg-violet-600", accent: "bg-white/20", text: "text-white", border: 'border-violet-700/50' }
+                           ];
+                           const theme = colors[i % colors.length];
+
+                           return (
+                              <div key={item.id} className={`group p-4 ${theme.bg} ${theme.border} border transition-all flex items-center gap-5 shadow-sm`}>
+                                 <div className={`h-11 w-11 flex flex-col items-center justify-center font-semibold ${theme.accent} ${theme.text}`}>
+                                    <span className="text-[10px] uppercase leading-none mb-1 opacity-70">Wk</span>
+                                    <span className="text-xl leading-none">{item.week.match(/\d+/)?.[0]}</span>
+                                 </div>
+                                 <div className="flex-1 overflow-hidden">
+                                    <h4 className={`text-[13px] font-semibold ${theme.text} transition-colors truncate`}>{item.typeOfWork}</h4>
+                                    <div className="flex items-center gap-3 mt-1.5 capitalize">
+                                       <span className={`text-[9px] font-semibold ${theme.text} opacity-70 uppercase leading-none`}>Due {item.deadline.split('T')[0]}</span>
+                                       <div className="h-1 w-1 rounded-full bg-white/40" />
+                                       <span className={`text-[9px] font-semibold uppercase leading-none ${item.isCompleted ? 'text-white' : 'text-white/90'}`}>
+                                          {item.isCompleted ? 'Task Done' : 'In Progress'}
+                                       </span>
+                                    </div>
+                                 </div>
+                                 {item.isCompleted ? (
+                                    <CheckCircle2 size={18} className="text-white" />
+                                 ) : (
+                                    <div className="h-5 w-5 rounded-full border border-white/30 flex items-center justify-center">
+                                       <div className="h-1.5 w-1.5 rounded-full bg-white animate-pulse" />
+                                    </div>
+                                 )}
+                              </div>
+                           );
+                        }) : (
+                           <div className="py-20 text-center opacity-30">
+                              <Map size={32} className="mx-auto mb-3" />
+                              <p className="text-xs font-bold uppercase">Loading roadmap...</p>
                            </div>
                         )}
                      </div>
                   </div>
 
-                  <aside className="lg:col-span-4 space-y-6">
-                     <div className="p-6 border border-zinc-200 bg-zinc-50/50 flex flex-col gap-5 text-left rounded-sm">
-                        <div className="flex items-center gap-2 text-[11px] font-bold text-zinc-900 uppercase tracking-widest pb-3 border-b border-zinc-200/50">
-                           <Map size={14} className="text-blue-500" /> Program overview
+                  {/* Right Bento: Tech Flows */}
+                  <div className="col-span-12 lg:col-span-5 bg-white border border-zinc-100 p-6 shadow-sm overflow-hidden relative">
+                     <div className="flex items-center justify-between mb-8 pb-4 border-b border-zinc-50">
+                        <div>
+                           <h2 className="text-[11px] font-semibold text-[#003366] uppercase tracking-[0.3em]">Stack Flow</h2>
+                           <p className="text-[9px] text-zinc-400 font-semibold uppercase mt-1">Official Industry Paths</p>
                         </div>
-                        <p className="text-xs text-zinc-500 leading-relaxed font-medium">Your professional growth is mapped across your {user.batch || "Batch 1"} internship duration. Ensure all milestones are met on time.</p>
-                        <div className="space-y-2">
-                           <div className="flex items-center justify-between p-3 bg-white border border-zinc-100 shadow-xs"><span className="text-[10px] font-bold text-zinc-400 uppercase tracking-tight">Weeks completed</span><span className="text-sm font-bold text-zinc-900">{schedules.filter(s => s.isCompleted).length}</span></div>
-                           <div className="flex items-center justify-between p-3 bg-white border border-zinc-100 shadow-xs"><span className="text-[10px] font-bold text-zinc-400 uppercase tracking-tight">Total milestones</span><span className="text-sm font-bold text-zinc-900">{schedules.length}</span></div>
-                        </div>
-                        <Link href="/intern/dashboard/schedule" className="w-full h-11 bg-zinc-900 text-white text-[10px] font-bold flex items-center justify-center hover:bg-black transition-all shadow-lg shadow-zinc-900/10">View full progression</Link>
+                        <Link href="/intern/dashboard/stack-flow" className="text-[10px] font-bold text-[#003366] hover:underline uppercase tracking-tighter">Enter Hub</Link>
                      </div>
-                  </aside>
+
+                     <div className="grid grid-cols-1 gap-2">
+                        {[
+                           { title: "Frontend Engineering", logo: "https://www.vectorlogo.zone/logos/w3_html5/w3_html5-icon.svg", bg: "bg-blue-50/50", pdf: "https://ik.imagekit.io/dypkhqxip/frontend.pdf" },
+                           { title: "Mobile Engineering", logo: "https://www.vectorlogo.zone/logos/flutterio/flutterio-icon.svg", bg: "bg-violet-50/50", pdf: "https://ik.imagekit.io/dypkhqxip/android.pdf" },
+                           { title: "Backend Core Systems", logo: "https://cdn.worldvectorlogo.com/logos/nodejs-icon.svg", bg: "bg-emerald-50/50", pdf: "https://ik.imagekit.io/dypkhqxip/backend.pdf" }
+                        ].map((roadmap, i) => (
+                           <a 
+                              key={i}
+                              href={roadmap.pdf}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="group p-3 hover:bg-zinc-50 transition-all flex items-center gap-4"
+                           >
+                              <div className={`h-12 w-12 flex items-center justify-center ${roadmap.bg} p-2.5 flex-shrink-0 group-hover:scale-105 transition-transform`}>
+                                 <img src={roadmap.logo} alt={roadmap.title} className="w-full h-full object-contain" />
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                 <h3 className="text-[12px] font-semibold text-zinc-900 group-hover:text-[#003366] transition-colors truncate">{roadmap.title}</h3>
+                                 <div className="flex items-center gap-1.5 mt-1">
+                                    <span className="text-[9px] font-semibold text-zinc-400 uppercase">Guide ready</span>
+                                    <Download size={10} className="text-zinc-300" />
+                                 </div>
+                              </div>
+                              <div className="h-6 w-6 rounded-none bg-blue-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                 <ArrowUpRight size={12} className="text-[#003366]" />
+                              </div>
+                           </a>
+                        ))}
+                     </div>
+                  </div>
                </div>
             </motion.div>
-         )}
+          )}
 
          {activeTab === "kanban" && (
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6 text-left">
@@ -1048,47 +1122,93 @@ function InternDashboardContent() {
          )}
 
          {activeTab === "attendance" && (
-            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6 text-left">
-               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <div className="p-8 bg-[#0055FF] text-white flex flex-col justify-center rounded-sm shadow-xl shadow-blue-500/10">
-                     <h4 className="text-[10px] font-bold uppercase tracking-widest opacity-60 mb-2">Current Attendance Rate</h4>
-                     <p className="text-4xl font-black">{attendancePercentage}%</p>
-                     <div className="w-full h-1.5 bg-white/20 mt-4 rounded-full overflow-hidden">
-                        <div className="h-full bg-white transition-all duration-1000" style={{ width: `${attendancePercentage}%` }} />
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-4 text-left">
+               {/* Page Header */}
+               <div className="space-y-0.5">
+                  <h2 className="text-xl font-bold text-[#003366]">My Attendance</h2>
+                  <p className="text-[12px] text-zinc-500 font-medium">Track your presence and active days here.</p>
+               </div>
+
+               <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                  <div className="p-4 bg-[#E0E7FF] border border-[#003366]/5 shadow-sm flex flex-col justify-between">
+                     <div>
+                        <h4 className="text-[9px] font-bold uppercase tracking-widest text-[#003366]/60 mb-0.5">Rate</h4>
+                        <p className="text-3xl font-black text-[#003366]">{attendancePercentage}%</p>
+                     </div>
+                     <div className="w-full h-1 bg-white/40 mt-3 rounded-none overflow-hidden">
+                        <motion.div 
+                           initial={{ width: 0 }}
+                           animate={{ width: `${attendancePercentage}%` }}
+                           transition={{ duration: 1, ease: "easeOut" }}
+                           className="h-full bg-[#003366]" 
+                        />
                      </div>
                   </div>
-                  <div className="p-8 bg-white border border-zinc-100 flex flex-col justify-center rounded-sm">
-                     <h4 className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 mb-2">Session Breakdown</h4>
-                     <div className="flex items-end gap-1">
-                        <p className="text-3xl font-bold text-zinc-900">{attendanceCount}</p>
-                        <p className="text-sm font-bold text-zinc-400 pb-1">/ {attendanceData.totalTrackingDays} Days</p>
+
+                  <div className="p-4 bg-white border border-[#003366]/5 shadow-sm flex flex-col justify-between">
+                     <div>
+                         <h4 className="text-[9px] font-bold uppercase tracking-widest text-zinc-400 mb-0.5">Today</h4>
+                         <div className="flex items-baseline gap-1">
+                            <p className="text-2xl font-bold text-[#003366]">{attendanceCount}</p>
+                            <p className="text-xs font-bold text-zinc-300">/ {attendanceData.totalTrackingDays}</p>
+                         </div>
                      </div>
-                     <p className="text-[10px] font-bold text-emerald-600 mt-2 uppercase tracking-tight">Total Present Days</p>
+                     <p className="text-[8px] font-bold text-emerald-600 mt-2 uppercase tracking-widest opacity-70">Days Present</p>
                   </div>
-                  <div className="p-8 bg-white border border-zinc-100 flex flex-col justify-center rounded-sm">
-                     <h4 className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 mb-2">Minimum Threshold</h4>
-                     <div className="flex items-baseline gap-2">
-                        <p className="text-3xl font-bold text-zinc-900">75%</p>
-                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${isLowAttendance ? 'bg-red-50 text-red-600' : 'bg-emerald-50 text-emerald-600'}`}>
-                           {isLowAttendance ? 'Critical' : 'Good Standing'}
-                        </span>
+
+                  <div className="p-4 bg-white border border-[#003366]/5 shadow-sm flex flex-col justify-between">
+                     <div>
+                        <h4 className="text-[9px] font-bold uppercase tracking-widest text-zinc-400 mb-0.5">Required</h4>
+                        <div className="flex items-baseline gap-2">
+                           <p className="text-2xl font-bold text-zinc-900">75%</p>
+                           <span className={`text-[8px] font-bold px-1.5 py-0.5 border ${isLowAttendance ? 'bg-rose-50 text-rose-600 border-rose-100' : 'bg-emerald-50 text-emerald-600 border-emerald-100'} uppercase`}>
+                              {isLowAttendance ? 'Low' : 'Good'}
+                           </span>
+                        </div>
                      </div>
-                     <p className="text-[10px] font-bold text-zinc-400 mt-2 uppercase tracking-tight">Required for certification</p>
+                     <p className="text-[8px] font-bold text-zinc-400 mt-2 uppercase tracking-widest opacity-70">Pass Mark</p>
                   </div>
                </div>
-               <div className="bg-white border border-zinc-100 overflow-hidden shadow-sm">
-                  <table className="w-full text-left border-collapse">
-                     <thead><tr className="bg-zinc-50/50 border-b border-zinc-100"><th className="px-8 py-5 text-xs font-bold text-zinc-400">Date</th><th className="px-8 py-5 text-xs font-bold text-zinc-400">Type</th><th className="px-8 py-5 text-xs font-bold text-zinc-400 text-right">Status</th></tr></thead>
-                     <tbody className="divide-y divide-zinc-50">
-                        {attendanceData.history.map((log: any) => (
-                           <tr key={log.id} className="hover:bg-zinc-50/30 transition-colors">
-                              <td className="px-8 py-4"><div className="flex flex-col"><span className="text-sm font-semibold text-zinc-900">{new Date(log.date).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })}</span><span className="text-[10px] text-zinc-300">{new Date(log.date).getFullYear()} record</span></div></td>
-                              <td className="px-8 py-4"><span className="text-xs text-zinc-500">Regular session</span></td>
-                              <td className="px-8 py-4 text-right"><div className="flex items-center justify-end gap-2"><div className={`h-1.5 w-1.5 ${log.status === "PRESENT" || log.status === "LATE" ? "bg-emerald-500" : "bg-rose-500"}`} /><span className={`text-xs font-semibold ${log.status === "PRESENT" || log.status === "LATE" ? "text-emerald-600" : "text-rose-600"}`}>{log.status === "PRESENT" ? "Present" : log.status === "LATE" ? "Late" : "Absent"}</span></div></td>
+
+               {/* Attendance History Table */}
+               <div className="bg-white border border-[#003366]/10 shadow-sm overflow-hidden">
+                  <div className="px-5 py-3 border-b border-zinc-50 flex items-center justify-between bg-zinc-50/30">
+                     <h3 className="text-[9px] font-bold text-[#003366] uppercase tracking-widest">History</h3>
+                  </div>
+                  <div className="overflow-x-auto">
+                     <table className="w-full text-left border-collapse">
+                        <thead>
+                           <tr className="bg-zinc-50/20">
+                              <th className="px-6 py-3 text-[9px] font-bold text-zinc-400 uppercase tracking-tight">Date</th>
+                              <th className="px-6 py-3 text-[9px] font-bold text-zinc-400 uppercase tracking-tight">Batch</th>
+                              <th className="px-6 py-3 text-[9px] font-bold text-zinc-400 uppercase tracking-tight text-right">Verification</th>
                            </tr>
-                        ))}
-                     </tbody>
-                  </table>
+                        </thead>
+                        <tbody className="divide-y divide-zinc-50">
+                           {attendanceData.history.map((log: any) => (
+                              <tr key={log.id} className="hover:bg-zinc-50/30 transition-colors">
+                                 <td className="px-6 py-2.5">
+                                    <div className="flex flex-col">
+                                       <span className="text-[12px] font-bold text-[#003366]">{new Date(log.date).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })}</span>
+                                       <span className="text-[8px] text-zinc-300 font-medium uppercase tracking-tighter">{new Date(log.date).getFullYear()} Record</span>
+                                    </div>
+                                 </td>
+                                 <td className="px-6 py-2.5">
+                                    <span className="text-[9px] font-bold text-zinc-500 uppercase">Regular</span>
+                                 </td>
+                                 <td className="px-6 py-2.5 text-right">
+                                    <div className="flex items-center justify-end gap-1.5">
+                                       <span className={`text-[9px] font-black tracking-widest uppercase ${log.status === "PRESENT" || log.status === "LATE" ? "text-emerald-500" : "text-rose-500"}`}>
+                                           {log.status === "PRESENT" ? "In" : log.status === "LATE" ? "Late" : "Out"}
+                                       </span>
+                                       <div className={`h-1 w-1 rounded-full ${log.status === "PRESENT" || log.status === "LATE" ? "bg-emerald-500" : "bg-rose-500"}`} />
+                                    </div>
+                                 </td>
+                              </tr>
+                           ))}
+                        </tbody>
+                     </table>
+                  </div>
                </div>
             </motion.div>
          )}
@@ -1432,7 +1552,7 @@ function InternDashboardContent() {
 
 export default function InternDashboard() {
    return (
-      <Suspense fallback={<div className="p-12 text-zinc-400 text-xs font-bold animate-pulse">Loading dashboard...</div>}>
+      <Suspense fallback={null}>
          <InternDashboardContent />
       </Suspense>
    );

@@ -45,7 +45,8 @@ import {
    Edit,
    Shield,
    MessageSquare,
-   Zap
+   Zap,
+   BookOpen
 } from "lucide-react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
@@ -174,7 +175,7 @@ export default function CleedDashboard() {
    const [internships, setInternships] = useState<InternshipItem[]>([]);
    const [employees, setEmployees] = useState<any[]>([]);
    const [bootcampRegistrations, setBootcampRegistrations] = useState<BootcampRegistration[]>([]);
-   const [isLoading, setIsLoading] = useState(true);
+   const [isLoading, setIsLoading] = useState(false);
 
 
    const [selectedIntern, setSelectedIntern] = useState<Intern | null>(null);
@@ -276,6 +277,18 @@ export default function CleedDashboard() {
    const [examViewMode, setExamViewMode] = useState<"UI_UX" | "FULLSTACK">("UI_UX");
    const [feedbacks, setFeedbacks] = useState<any[]>([]);
    const [uiuxSubmissions, setUiuxSubmissions] = useState<any[]>([]);
+
+   // Scheduled Exams State
+   const [examsList, setExamsList] = useState<any[]>([]);
+   const [examFormData, setExamFormData] = useState({ title: "", date: "", duration: "", batch: "All" });
+   const [sendingExamForm, setSendingExamForm] = useState(false);
+
+   // Resources State
+   const [resourcesList, setResourcesList] = useState<any[]>([]);
+   const [resourceFormData, setResourceFormData] = useState({ 
+       title: "", description: "", type: "PDF", url: "", category: "Documentation", date: "", batch: "All" 
+   });
+   const [sendingResourceForm, setSendingResourceForm] = useState(false);
 
    const handleScheduleInterview = async (e: React.FormEvent) => {
       e.preventDefault();
@@ -654,6 +667,22 @@ export default function CleedDashboard() {
          } catch (err) { console.error("Bootcamp fetch failure"); }
       };
 
+      const fetchExamsList = async () => {
+         try {
+            const res = await fetch("/api/cleed/exams");
+            const data = await res.json();
+            if (data.success) setExamsList(data.exams);
+         } catch (err) { console.error("Exams fetch failure"); }
+      };
+
+      const fetchResourcesList = async () => {
+         try {
+            const res = await fetch("/api/cleed/resources");
+            const data = await res.json();
+            if (data.success) setResourcesList(data.resources);
+         } catch (err) { console.error("Resources fetch failure"); }
+      };
+
       await Promise.allSettled([
          fetchInterns(),
          fetchTasks(),
@@ -667,7 +696,9 @@ export default function CleedDashboard() {
          fetchSubmissions(),
          fetchExamStatus(),
          fetchExamSessions(),
-         fetchBootcampRegistrations()
+         fetchBootcampRegistrations(),
+         fetchExamsList(),
+         fetchResourcesList()
       ]);
       setIsLoading(false);
    };
@@ -1085,13 +1116,87 @@ export default function CleedDashboard() {
    };
 
    const handleDeleteInternship = async (id: string) => {
-      if (!confirm("Neutralize this professional opportunity?")) return;
+      if (!confirm("Neutralize this opportunity?")) return;
       try {
          const res = await fetch(`/api/cleed/internships?id=${id}`, { method: "DELETE" });
          if (res.ok) fetchData();
       } catch (err) {
-         console.error("Internship deletion failed");
+         console.error("Opportunity neutralizing failed");
       }
+   };
+
+   const handlePostExam = async (e: React.FormEvent) => {
+      e.preventDefault();
+      setSendingExamForm(true);
+      try {
+         const res = await fetch("/api/cleed/exams", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(examFormData)
+         });
+         if (res.ok) {
+            setExamFormData({ title: "", date: "", duration: "", batch: "All" });
+            const fetchExams = async () => {
+               const res = await fetch("/api/cleed/exams");
+               const data = await res.json();
+               if (data.success) setExamsList(data.exams);
+            };
+            fetchExams();
+         }
+      } catch (err) { console.error("Exam registry failure"); }
+      finally { setSendingExamForm(false); }
+   };
+
+   const handleDeleteExam = async (id: string) => {
+      if (!confirm("Remove this scheduled exam?")) return;
+      try {
+         const res = await fetch(`/api/cleed/exams?id=${id}`, { method: "DELETE" });
+         if (res.ok) {
+            const fetchExams = async () => {
+               const res = await fetch("/api/cleed/exams");
+               const data = await res.json();
+               if (data.success) setExamsList(data.exams);
+            };
+            fetchExams();
+         }
+      } catch (err) { console.error("Exam deletion failure"); }
+   };
+
+   const handlePostResource = async (e: React.FormEvent) => {
+      e.preventDefault();
+      setSendingResourceForm(true);
+      try {
+         const res = await fetch("/api/cleed/resources", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(resourceFormData)
+         });
+         if (res.ok) {
+            setResourceFormData({ title: "", description: "", type: "PDF", url: "", category: "Documentation", date: new Date().toISOString().split('T')[0], batch: "All" });
+            const fetchResources = async () => {
+               const res = await fetch("/api/cleed/resources");
+               const data = await res.json();
+               if (data.success) setResourcesList(data.resources);
+            };
+            fetchResources();
+         }
+      } catch (err) { console.error("Resource registry failure"); }
+      finally { setSendingResourceForm(false); }
+   };
+
+   const handleDeleteResource = async (id: string) => {
+      if (!confirm("Remove this technical resource?")) return;
+      try {
+         const res = await fetch(`/api/cleed/resources?id=${id}`, { method: "DELETE" });
+         if (res.ok) {
+            const fetchResources = async () => {
+               const res = await fetch("/api/cleed/resources");
+               const data = await res.json();
+               if (data.success) setResourcesList(data.resources);
+            };
+            fetchResources();
+         }
+      } catch (err) { console.error("Resource deletion failure"); }
    };
 
    const raisedHandsCount = interns.filter(i => i.handRaised).length;
@@ -1179,7 +1284,7 @@ export default function CleedDashboard() {
             <nav className="flex-1 mt-6 px-3 overflow-y-auto space-y-4 custom-scrollbar pb-8">
 
                <details open className="group">
-                  <summary className="hidden lg:flex items-center justify-between text-[11px] font-bold text-white/60 uppercase tracking-widest px-3 py-2 cursor-pointer hover:text-white transition-colors select-none list-none [&::-webkit-details-marker]:hidden">
+                  <summary className="hidden lg:flex items-center justify-between text-[11px] font-bold text-white/60 tracking-widest px-3 py-2 cursor-pointer hover:text-white transition-colors select-none list-none [&::-webkit-details-marker]:hidden">
                      Hub
                      <ChevronDown size={14} className="group-open:rotate-180 transition-transform text-white/40" />
                   </summary>
@@ -1224,9 +1329,10 @@ export default function CleedDashboard() {
                         { id: "employees", icon: ShieldCheck, label: "Employees" },
                         { id: "certification", icon: FileBadge, label: "Certificates" },
                         { id: "exams", icon: FileText, label: "Exams" },
+                        { id: "resources", icon: BookOpen, label: "Resources" },
                         { id: "bootcamp", icon: Zap, label: "Bootcamp" },
                         { id: "attendance", icon: CalendarCheck, label: "Attendance" },
-                         { id: "vault", icon: Shield, label: "Vault" },
+                        { id: "vault", icon: Shield, label: "Vault" },
                      ].map((item) => (
                         <button
                            key={item.id}
@@ -1302,9 +1408,9 @@ export default function CleedDashboard() {
          <main className="md:pl-20 lg:pl-64 min-h-screen pt-[calc(4rem+env(safe-area-inset-top))] md:pt-0">
             <header className="h-14 border-b border-zinc-200 flex items-center justify-between px-6 md:px-8 sticky top-[calc(4rem+env(safe-area-inset-top))] md:top-0 z-40" style={{ backgroundColor: '#CCC8B9' }}>
                <div className="flex items-center gap-2 overflow-hidden">
-                  <span className="text-zinc-900 text-[10px] md:text-[11px] font-bold uppercase tracking-tight whitespace-nowrap">Home</span>
+                  <span className="text-zinc-900 text-[10px] md:text-[11px] font-bold tracking-tight whitespace-nowrap">Home</span>
                   <ChevronRight size={10} className="text-zinc-700 flex-shrink-0" />
-                  <span className="text-zinc-950 font-bold text-[11px] truncate uppercase tracking-tight">
+                  <span className="text-zinc-950 font-bold text-[11px] truncate tracking-tight">
                      {activeTab === "internships" ? "Internships" : activeTab === "employees" ? "Employees" : activeTab === "interns" ? "Intern List" : activeTab === "assign" ? "Tasks" : activeTab === "certification" ? "Certificates" : activeTab === "authorizations" ? "Approvals" : activeTab === "mentorship" ? "Mentors" : activeTab === "schedule" ? "Schedules" : activeTab === "hiring" ? "Hiring" : activeTab === "submissions" ? "Submissions" : activeTab === "events" ? "Events" : activeTab === "ideas" ? "Ideas" : activeTab === "attendance" ? "Attendance" : activeTab === "bootcamp" ? "Bootcamp" : "Log"}
                   </span>
                </div>
@@ -1577,7 +1683,7 @@ export default function CleedDashboard() {
                                  </div>
                               ))}
                               {employees.length === 0 && (
-                                 <p className="text-zinc-400 text-sm italic py-10 text-center border border-dashed border-zinc-200">No employees registered.</p>
+                                   <p className="text-zinc-400 text-sm italic py-10 text-center border border-dashed border-zinc-200">No employees registered.</p>
                               )}
                            </div>
                         </div>
@@ -1585,63 +1691,121 @@ export default function CleedDashboard() {
                   </motion.div>
                )}
 
-                 {activeTab === "exams" && (
-                  <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-12">
-                     <div className="max-w-2xl mx-auto text-center space-y-6 pt-16">
-                        <div className="space-y-4">
-                           <h2 className="text-3xl font-bold tracking-tight text-zinc-900 uppercase">Start the Test</h2>
-                           <p className="text-zinc-500 font-bold">Use the button below to start or stop the exam for everyone.</p>
-                        </div>
+               {activeTab === "exams" && (
+                  <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-12 pb-20">
+                     <div className="grid lg:grid-cols-2 gap-12">
+                        <div className="space-y-6 pt-16">
+                           <div className="space-y-4 text-center">
+                              <h2 className="text-3xl font-bold tracking-tight text-zinc-900 leading-none">Start the test</h2>
+                              <p className="text-zinc-500 font-bold">Use the button below to start or stop the exam for everyone.</p>
+                           </div>
 
-                        <div className={`p-8 border border-zinc-200 transition-all ${examIsActive ? 'bg-blue-50' : 'bg-white'}`}>
-                           <div className="flex flex-col items-center gap-6">
-                              <div className="space-y-1">
-                                 <p className={`text-[11px] font-bold uppercase tracking-widest ${examIsActive ? 'text-blue-600' : 'text-zinc-400'}`}>
-                                    Status: {examIsActive ? 'Now Running' : 'Stopped'}
-                                 </p>
-                              </div>
-
-                              <button 
-                                 disabled={isUpdatingExam}
-                                 onClick={toggleExamStatus}
-                                 className={`h-14 px-12 text-xs font-bold uppercase tracking-widest transition-all ${examIsActive ? 'bg-red-600 text-white' : 'bg-blue-600 text-white'}`}
-                              >
-                                 {isUpdatingExam ? '...' : examIsActive ? 'Stop Test' : 'Start Test'}
-                              </button>
-                              
-                              {examIsActive && (
-                                 <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 text-center rounded w-full max-w-sm">
-                                    <p className="text-[10px] text-yellow-700 font-bold uppercase tracking-widest mb-2">Global Exit Key</p>
-                                    <p className="text-3xl font-black text-yellow-800 tracking-[0.2em]">{globalExitKey}</p>
-                                    <p className="text-[9px] text-yellow-600 font-bold uppercase mt-2 italic">Provide to candidates for exam exit</p>
-                                    <button 
-                                       onClick={async () => {
-                                          const newKey = Math.floor(100000 + Math.random() * 900000).toString();
-                                          await fetch("/api/cleed/exams/status", {
-                                             method: "POST",
-                                             headers: { "Content-Type": "application/json" },
-                                             body: JSON.stringify({ exitKey: newKey })
-                                          });
-                                          setGlobalExitKey(newKey);
-                                       }}
-                                       className="mt-3 text-[10px] font-bold text-yellow-800 hover:text-yellow-900 border-b border-yellow-800"
-                                    >
-                                       Regenerate Key
-                                    </button>
+                           <div className={`p-8 border border-zinc-200 transition-all ${examIsActive ? 'bg-blue-50' : 'bg-white'}`}>
+                              <div className="flex flex-col items-center gap-6">
+                                 <div className="space-y-1">
+                                    <p className={`text-[11px] font-bold uppercase tracking-widest ${examIsActive ? 'text-blue-600' : 'text-zinc-400'}`}>
+                                       Status: {examIsActive ? 'Now Running' : 'Stopped'}
+                                    </p>
                                  </div>
-                              )}
+
+                                 <button 
+                                    disabled={isUpdatingExam}
+                                    onClick={toggleExamStatus}
+                                    className={`h-14 px-12 text-xs font-bold uppercase tracking-widest transition-all ${examIsActive ? 'bg-red-600 text-white' : 'bg-blue-600 text-white'}`}
+                                 >
+                                    {isUpdatingExam ? '...' : examIsActive ? 'Stop Test' : 'Start Test'}
+                                 </button>
+                                 
+                                 {examIsActive && (
+                                    <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 text-center rounded w-full max-w-sm">
+                                       <p className="text-[10px] text-yellow-700 font-bold uppercase tracking-widest mb-2">Global Exit Key</p>
+                                       <p className="text-3xl font-black text-yellow-800 tracking-[0.2em]">{globalExitKey}</p>
+                                       <p className="text-[9px] text-yellow-600 font-bold uppercase mt-2 italic">Provide to candidates for exam exit</p>
+                                       <button 
+                                          onClick={async () => {
+                                             const newKey = Math.floor(100000 + Math.random() * 900000).toString();
+                                             await fetch("/api/cleed/exams/status", {
+                                                method: "POST",
+                                                headers: { "Content-Type": "application/json" },
+                                                body: JSON.stringify({ exitKey: newKey })
+                                             });
+                                             setGlobalExitKey(newKey);
+                                          }}
+                                          className="mt-3 text-[10px] font-bold text-yellow-800 hover:text-yellow-900 border-b border-yellow-800"
+                                       >
+                                          Regenerate Key
+                                       </button>
+                                    </div>
+                                 )}
+                              </div>
                            </div>
                         </div>
 
-                        <div className="grid grid-cols-2 gap-4 text-left">
-                           <div className="p-4 bg-white border border-zinc-100">
-                              <p className="text-[10px] font-bold text-zinc-400 uppercase mb-1">Rule Check</p>
-                              <p className="text-[11px] text-zinc-600 font-bold">Lock full screen and block keys when running.</p>
+                        <div className="space-y-6 pt-16">
+                           <div className="space-y-4 text-center">
+                              <h2 className="text-3xl font-bold tracking-tight text-zinc-900 leading-none">Schedule exam</h2>
+                              <p className="text-zinc-500 font-bold">Add new exams to the intern portal schedule.</p>
                            </div>
-                           <div className="p-4 bg-white border border-zinc-100">
-                              <p className="text-[10px] font-bold text-zinc-400 uppercase mb-1">Live Sync</p>
-                              <p className="text-[11px] text-zinc-600 font-bold">Data is updated every few seconds.</p>
+
+                           <form onSubmit={handlePostExam} className="p-8 border border-zinc-200 bg-white space-y-4 text-left">
+                              <div className="space-y-1">
+                                 <label className="text-[11px] font-bold text-zinc-400">Exam Title</label>
+                                 <input required value={examFormData.title} onChange={(e) => setExamFormData({ ...examFormData, title: e.target.value })} className="w-full h-11 bg-zinc-50 border border-zinc-200 px-4 text-sm font-bold outline-none focus:border-red-600 rounded-none shadow-sm" placeholder="e.g., UI/UX Mid-Term" />
+                              </div>
+                              <div className="grid grid-cols-2 gap-4">
+                                 <div className="space-y-1">
+                                    <label className="text-[11px] font-bold text-zinc-400">Date</label>
+                                    <input required value={examFormData.date} onChange={(e) => setExamFormData({ ...examFormData, date: e.target.value })} className="w-full h-11 bg-zinc-50 border border-zinc-200 px-4 text-sm font-bold outline-none focus:border-red-600 rounded-none shadow-sm" placeholder="e.g., 25th April" />
+                                 </div>
+                                 <div className="space-y-1">
+                                    <label className="text-[11px] font-bold text-zinc-400">Duration (mins)</label>
+                                    <input required type="number" value={examFormData.duration} onChange={(e) => setExamFormData({ ...examFormData, duration: e.target.value })} className="w-full h-11 bg-zinc-50 border border-zinc-200 px-4 text-sm font-bold outline-none focus:border-red-600 rounded-none shadow-sm" placeholder="60" />
+                                 </div>
+                              </div>
+                              <button disabled={sendingExamForm} className="w-full h-14 bg-black text-white text-[11px] font-bold tracking-widest hover:bg-zinc-800 transition-all rounded-none shadow-sm disabled:opacity-50">
+                                 {sendingExamForm ? "Scheduling..." : "Add to Schedule"}
+                              </button>
+                           </form>
+                        </div>
+                     </div>
+
+                     <div className="bg-white border border-zinc-200">
+                        <div className="p-5 border-b border-zinc-100 flex items-center justify-between">
+                           <div>
+                              <h3 className="text-xs font-bold uppercase tracking-widest text-zinc-800">Upcoming Exams</h3>
+                              <p className="text-[10px] text-zinc-400 font-bold uppercase">Manage scheduled assessments for interns</p>
                            </div>
+                        </div>
+                        <div className="overflow-x-auto">
+                           <table className="w-full text-left">
+                              <thead>
+                                 <tr className="bg-zinc-50 border-b border-zinc-100">
+                                    <th className="px-6 py-4 text-[10px] font-bold uppercase text-zinc-400">Exam Title</th>
+                                    <th className="px-6 py-4 text-[10px] font-bold uppercase text-zinc-400">Date</th>
+                                    <th className="px-6 py-4 text-[10px] font-bold uppercase text-zinc-400">Duration</th>
+                                    <th className="px-6 py-4 text-[10px] font-bold uppercase text-zinc-400 text-right">Actions</th>
+                                 </tr>
+                              </thead>
+                              <tbody className="divide-y divide-zinc-50">
+                                 {examsList.map((exam) => (
+                                    <tr key={exam.id} className="hover:bg-zinc-50 transition-colors">
+                                       <td className="px-6 py-4 text-xs font-bold">{exam.title}</td>
+                                       <td className="px-6 py-4 text-xs font-medium">{exam.date}</td>
+                                       <td className="px-6 py-4 text-xs font-medium">{exam.duration} mins</td>
+                                       <td className="px-6 py-4 text-right">
+                                          <button onClick={() => handleDeleteExam(exam.id)} className="h-8 w-8 text-[#F5332C] hover:bg-red-50 inline-flex items-center justify-center border border-zinc-200 transition-all">
+                                             <Trash2 size={13} />
+                                          </button>
+                                       </td>
+                                    </tr>
+                                 ))}
+                                 {examsList.length === 0 && (
+                                    <tr>
+                                       <td colSpan={4} className="px-6 py-12 text-center text-zinc-400 text-xs italic border border-dashed border-zinc-100 m-4">No exams scheduled in technical registry.</td>
+                                    </tr>
+                                 )}
+                              </tbody>
+                           </table>
                         </div>
                      </div>
 
@@ -1651,94 +1815,132 @@ export default function CleedDashboard() {
                               <h3 className="text-xs font-bold uppercase tracking-widest text-zinc-800">Live Results</h3>
                               <p className="text-[10px] text-zinc-400 font-bold uppercase">See student scores and rules breaking here</p>
                            </div>
-                                  <div className="flex bg-zinc-100 p-1 rounded-sm gap-1">
-                                     <button 
-                                        onClick={() => setExamViewMode("UI_UX")}
-                                        className={`px-4 py-1.5 text-[10px] font-bold uppercase transition-all flex items-center gap-2 ${examViewMode === "UI_UX" ? 'bg-white shadow text-blue-600' : 'text-zinc-500 hover:bg-zinc-200'}`}
-                                     >
-                                        <div className={`h-1.5 w-1.5 rounded-full ${examViewMode === "UI_UX" ? 'bg-blue-600 animate-pulse' : 'bg-zinc-400'}`} />
-                                        UI/UX Live ({examSessions.filter(s => s.examType === "UI_UX").length})
-                                     </button>
-                                     <button 
-                                        onClick={() => setExamViewMode("FULLSTACK")}
-                                        className={`px-4 py-1.5 text-[10px] font-bold uppercase transition-all ${examViewMode === "FULLSTACK" ? 'bg-white shadow text-zinc-900' : 'text-zinc-500 hover:bg-zinc-200'}`}
-                                     >
-                                        Full Stack History ({examSessions.filter(s => s.examType === "FULLSTACK").length})
-                                     </button>
-                                  </div>
-                                  <div className="flex items-center gap-3">
-                                     <button 
-                                        disabled={isLoading}
-                                        onClick={fetchData}
-                                        className="flex items-center gap-2 px-3 py-1.5 bg-blue-600 text-white text-[10px] font-bold uppercase tracking-widest hover:bg-blue-700 transition-all disabled:opacity-50"
-                                     >
-                                        <RefreshCw size={14} className={isLoading ? "animate-spin" : ""} />
-                                        Refresh Results
-                                     </button>
-                                     <button 
-                                        onClick={downloadExamPdf}
-                                        className="flex items-center gap-2 px-3 py-1.5 bg-zinc-900 text-white text-[10px] font-bold uppercase tracking-widest hover:bg-zinc-800 transition-all"
-                                     >
-                                        <Download size={14} />
-                                        Export PDF
-                                     </button>
-                                  </div>
-                               </div>
-                               <div className="overflow-x-auto">
-                                  <table className="w-full text-left">
-                                     <thead>
-                                        <tr className="bg-zinc-50 border-b border-zinc-100">
-                                           <th className="px-6 py-4 text-[10px] font-bold uppercase text-zinc-400">Intern</th>
-                                           <th className="px-6 py-4 text-[10px] font-bold uppercase text-zinc-400">Started At</th>
-                                           <th className="px-6 py-4 text-[10px] font-bold uppercase text-zinc-400">Status</th>
-                                           <th className="px-6 py-4 text-[10px] font-bold uppercase text-zinc-400">Score</th>
-                                           <th className="px-6 py-4 text-[10px] font-bold uppercase text-zinc-400">Errors</th>
-                                           <th className="px-6 py-4 text-[10px] font-bold uppercase text-zinc-400 text-right">Last Sync</th>
-                                        </tr>
-                                     </thead>
-                                     <tbody className="divide-y divide-zinc-50">
-                                        {[...examSessions]
-                                           .filter(s => s.examType === examViewMode)
-                                           .sort((a,b) => (b.score || 0) - (a.score || 0)).map((session) => (
-                                           <tr key={session.id} className="hover:bg-zinc-50 transition-colors">
-                                              <td className="px-6 py-4">
-                                                 <div className="font-bold text-xs">{session.user?.name}</div>
-                                                 <div className="text-[10px] text-zinc-400">{session.user?.email}</div>
-                                              </td>
-                                              <td className="px-6 py-4 text-xs font-medium">
-                                                 {new Date(session.startedAt).toLocaleTimeString()}
-                                              </td>
-                                              <td className="px-6 py-4">
-                                                 <span className={`px-2 py-1 text-[9px] font-bold uppercase ${
-                                                    session.status === 'SUBMITTED' ? 'bg-green-100 text-green-700' :
-                                                    session.status === 'DISQUALIFIED' ? 'bg-red-100 text-red-700' :
-                                                    'bg-blue-100 text-blue-700'
-                                                 }`}>
-                                                    {session.status}
-                                                 </span>
-                                              </td>
-                                              <td className="px-6 py-4 text-xs font-bold text-zinc-900 border-r border-zinc-50">
-                                                 {session.score !== null ? `${session.score} / ${examViewMode === "UI_UX" ? 40 : 150}` : '--'}
-                                              </td>
-                                              <td className="px-6 py-4 text-xs font-bold">
-                                                 <span className={session.violations > 0 ? 'text-red-600' : 'text-zinc-400'}>
-                                                    {session.violations}
-                                                 </span>
-                                              </td>
-                                              <td className="px-6 py-4 text-right text-[10px] font-bold text-zinc-400">
-                                                 {Math.floor((new Date().getTime() - new Date(session.updatedAt).getTime()) / 1000)}s ago
-                                              </td>
-                                           </tr>
-                                        ))}
-                                        {examSessions.filter(s => s.examType === examViewMode).length === 0 && (
-                                           <tr>
-                                              <td colSpan={6} className="px-6 py-12 text-center text-zinc-400 text-xs italic">
-                                                 No {examViewMode === "UI_UX" ? "UI/UX" : "Full Stack"} sessions found.
-                                              </td>
-                                           </tr>
-                                        )}
+                           <div className="flex bg-zinc-100 p-1 rounded-sm gap-1">
+                              <button onClick={() => setExamViewMode("UI_UX")} className={`px-4 py-1.5 text-[10px] font-bold uppercase transition-all ${examViewMode === "UI_UX" ? 'bg-white shadow text-blue-600' : 'text-zinc-500'}`}>UI/UX</button>
+                              <button onClick={() => setExamViewMode("FULLSTACK")} className={`px-4 py-1.5 text-[10px] font-bold uppercase transition-all ${examViewMode === "FULLSTACK" ? 'bg-white shadow text-zinc-900' : 'text-zinc-500'}`}>Full Stack</button>
+                           </div>
+                           <div className="flex items-center gap-2">
+                              <button onClick={fetchData} className="px-3 py-1.5 bg-blue-600 text-white text-[10px] font-bold uppercase tracking-widest">Refresh</button>
+                              <button onClick={downloadExamPdf} className="px-3 py-1.5 bg-zinc-900 text-white text-[10px] font-bold uppercase tracking-widest">PDF</button>
+                           </div>
+                        </div>
+                        <div className="overflow-x-auto">
+                           <table className="w-full text-left">
+                              <thead>
+                                 <tr className="bg-zinc-50 border-b border-zinc-100">
+                                    <th className="px-6 py-4 text-[10px] font-bold uppercase text-zinc-400">Intern</th>
+                                    <th className="px-6 py-4 text-[10px] font-bold uppercase text-zinc-400">Score</th>
+                                    <th className="px-6 py-4 text-[10px] font-bold uppercase text-zinc-400">Errors</th>
+                                    <th className="px-6 py-4 text-[10px] font-bold uppercase text-zinc-400 text-right">Status</th>
+                                 </tr>
+                              </thead>
+                              <tbody className="divide-y divide-zinc-50">
+                                 {examSessions.filter(s => s.examType === examViewMode).map((session) => (
+                                    <tr key={session.id} className="hover:bg-zinc-50 transition-colors">
+                                       <td className="px-6 py-4">
+                                          <div className="font-bold text-xs">{session.user?.name}</div>
+                                          <div className="text-[10px] text-zinc-400">{session.user?.email}</div>
+                                       </td>
+                                       <td className="px-6 py-4 text-xs font-bold">{session.score ?? '--'}</td>
+                                       <td className="px-6 py-4 text-xs font-bold text-red-600">{session.violations}</td>
+                                       <td className="px-6 py-4 text-right">
+                                          <span className="text-[9px] font-bold uppercase px-2 py-1 bg-zinc-100">{session.status}</span>
+                                       </td>
+                                    </tr>
+                                 ))}
                               </tbody>
                            </table>
+                        </div>
+                     </div>
+                  </motion.div>
+               )}
+
+               {activeTab === "resources" && (
+                  <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-8 pb-20">
+                     <div className="grid md:grid-cols-2 gap-8 text-left">
+                        <div className="space-y-6">
+                           <h2 className="text-2xl font-bold tracking-tighter text-zinc-900">Add Resource</h2>
+                           <form onSubmit={handlePostResource} className="space-y-4">
+                              <div className="space-y-1">
+                                 <label className="text-[11px] font-bold text-zinc-400">Title</label>
+                                 <input required value={resourceFormData.title} onChange={(e) => setResourceFormData({ ...resourceFormData, title: e.target.value })} className="w-full h-11 bg-white border border-zinc-200 px-4 text-sm font-bold outline-none focus:border-red-600 rounded-none shadow-sm" placeholder="e.g., React Core Principles" />
+                              </div>
+                              <div className="space-y-1">
+                                 <label className="text-[11px] font-bold text-zinc-400">Description</label>
+                                 <textarea required rows={3} value={resourceFormData.description} onChange={(e) => setResourceFormData({ ...resourceFormData, description: e.target.value })} className="w-full bg-white border border-zinc-200 p-4 text-sm font-bold outline-none focus:border-red-600 resize-none rounded-none shadow-sm" placeholder="Short summary..." />
+                              </div>
+                              <div className="grid grid-cols-2 gap-4">
+                                 <div className="space-y-1">
+                                    <label className="text-[11px] font-bold text-zinc-400">Type</label>
+                                    <select value={resourceFormData.type} onChange={(e) => setResourceFormData({ ...resourceFormData, type: e.target.value })} className="w-full h-11 bg-white border border-zinc-200 px-4 text-sm font-bold outline-none focus:border-red-600 rounded-none shadow-sm">
+                                       <option value="PDF">PDF Document</option>
+                                       <option value="VIDEO">Video Link</option>
+                                       <option value="WEB">External Website</option>
+                                       <option value="ZIP">ZIP Archive</option>
+                                       <option value="DOC">Word / Doc</option>
+                                    </select>
+                                 </div>
+                                 <div className="space-y-1">
+                                    <label className="text-[11px] font-bold text-zinc-400">Category</label>
+                                    <input value={resourceFormData.category} onChange={(e) => setResourceFormData({ ...resourceFormData, category: e.target.value })} className="w-full h-11 bg-white border border-zinc-200 px-4 text-sm font-bold outline-none focus:border-red-600 rounded-none shadow-sm" placeholder="e.g., Frontend" />
+                                 </div>
+                              </div>
+                              <div className="space-y-1">
+                                 <label className="text-[11px] font-bold text-zinc-400">Resource URL</label>
+                                 <input required value={resourceFormData.url} onChange={(e) => setResourceFormData({ ...resourceFormData, url: e.target.value })} className="w-full h-11 bg-white border border-zinc-200 px-4 text-sm font-bold outline-none focus:border-red-600 rounded-none shadow-sm" placeholder="https://..." />
+                              </div>
+                              <div className="grid grid-cols-2 gap-4">
+                                 <div className="space-y-1">
+                                    <label className="text-[11px] font-bold text-zinc-400">Date</label>
+                                    <input type="date" required value={resourceFormData.date} onChange={(e) => setResourceFormData({ ...resourceFormData, date: e.target.value })} className="w-full h-11 bg-white border border-zinc-200 px-4 text-sm font-bold outline-none focus:border-red-600 rounded-none shadow-sm" />
+                                 </div>
+                                 <div className="space-y-1">
+                                    <label className="text-[11px] font-bold text-zinc-400">Batch Target</label>
+                                    <select value={resourceFormData.batch} onChange={(e) => setResourceFormData({ ...resourceFormData, batch: e.target.value })} className="w-full h-11 bg-white border border-zinc-200 px-4 text-sm font-bold outline-none focus:border-red-600 rounded-none shadow-sm">
+                                       <option value="All">All Batches</option>
+                                       <option value="Batch 1">Batch 1</option>
+                                       <option value="Batch 2">Batch 2</option>
+                                       <option value="Batch 3">Batch 3</option>
+                                    </select>
+                                 </div>
+                              </div>
+                              <button disabled={sendingResourceForm} className="w-full h-14 bg-black text-white text-[11px] font-bold tracking-widest hover:bg-zinc-800 transition-all rounded-none shadow-sm disabled:opacity-50">
+                                 {sendingResourceForm ? "Publish..." : "Publish Resource"}
+                              </button>
+                           </form>
+                        </div>
+                        <div className="space-y-6">
+                           <h2 className="text-2xl font-bold tracking-tighter text-zinc-900 text-left">Published Resources</h2>
+                           <div className="space-y-3 max-h-[600px] overflow-y-auto pr-2 no-scrollbar">
+                              {resourcesList.map((res) => (
+                                 <div key={res.id} className="bg-white border border-zinc-200 p-6 flex flex-col gap-4 group transition-all rounded-none hover:border-zinc-400 text-left">
+                                    <div className="flex items-start justify-between">
+                                       <div className="space-y-1 overflow-hidden">
+                                          <div className="flex items-center gap-2">
+                                             <h4 className="text-[14px] font-bold leading-tight truncate">{res.title}</h4>
+                                             <span className="bg-zinc-100 text-zinc-500 text-[9px] font-bold px-1.5 py-0.5 border border-zinc-200 uppercase">{res.type}</span>
+                                          </div>
+                                          <p className="text-[11px] font-medium text-zinc-500 line-clamp-2">{res.description}</p>
+                                          <div className="flex items-center gap-3 mt-2">
+                                             <span className="text-[10px] font-bold text-red-600">{res.category}</span>
+                                             <span className="text-[10px] font-bold text-zinc-400">{res.date}</span>
+                                          </div>
+                                       </div>
+                                       <div className="flex items-center gap-1.5">
+                                          <a href={res.url} target="_blank" className="h-8 w-8 text-zinc-400 hover:text-zinc-900 hover:bg-zinc-100 flex items-center justify-center transition-all bg-white border border-zinc-200 rounded-none shadow-sm">
+                                             <ExternalLink size={13} />
+                                          </a>
+                                          <button onClick={() => handleDeleteResource(res.id)} className="h-8 w-8 text-[#F5332C] hover:bg-red-50 flex items-center justify-center transition-all bg-white border border-zinc-200 rounded-none shadow-sm">
+                                             <Trash2 size={13} />
+                                          </button>
+                                       </div>
+                                    </div>
+                                 </div>
+                              ))}
+                              {resourcesList.length === 0 && (
+                                 <p className="text-zinc-400 text-sm italic py-10 text-center border border-dashed border-zinc-200">No resources published.</p>
+                              )}
+                           </div>
                         </div>
                      </div>
                   </motion.div>

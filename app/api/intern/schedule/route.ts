@@ -15,7 +15,7 @@ export async function GET(req: Request) {
             ];
         }
 
-        const schedules = await prisma.schedule.findMany({
+        let schedules = await prisma.schedule.findMany({
             where,
             include: {
                 submissions: internId ? {
@@ -26,6 +26,28 @@ export async function GET(req: Request) {
                 createdAt: 'asc'
             }
         });
+
+        // Fallback: If no schedules for Batch 3, try Batch 1 (Baseline)
+        if (schedules.length === 0 && batch !== "Batch 1") {
+            const fallbackWhere = { batch: "Batch 1" };
+            if (internId) {
+                (fallbackWhere as any).OR = [
+                    { teamInternIds: { has: internId } },
+                    { teamInternIds: { isEmpty: true } }
+                ];
+            }
+            schedules = await prisma.schedule.findMany({
+                where: fallbackWhere,
+                include: {
+                    submissions: internId ? {
+                        where: { internId }
+                    } : true
+                },
+                orderBy: {
+                    createdAt: 'asc'
+                }
+            });
+        }
 
         
         const allInternIds = Array.from(new Set(schedules.flatMap((s: any) => s.teamInternIds || [])));

@@ -11,21 +11,14 @@ export default function CleedLoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [showPreloader, setShowPreloader] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
-    // 10 Second Preloader Logic
-    const loaderTimer = setTimeout(() => {
-      setShowPreloader(false);
-      // Persistent Login Check
-      const isAuthenticated = localStorage.getItem("cleed_auth_v2");
-      if (isAuthenticated === "active") {
-        router.push("/cleed/dashboard");
-      }
-    }, 10000);
-
-    return () => clearTimeout(loaderTimer);
+    // Persistent Login Check
+    const isAuthenticated = localStorage.getItem("cleed_auth_v2");
+    if (isAuthenticated === "active") {
+      router.push("/cleed/dashboard");
+    }
   }, [router]);
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -57,31 +50,6 @@ export default function CleedLoginPage() {
 
   return (
     <div className="min-h-screen bg-[#F5F7FA] flex flex-col items-center justify-center p-6 relative overflow-hidden">
-      <AnimatePresence>
-        {showPreloader && (
-          <motion.div 
-            initial={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.6, ease: "easeInOut" }}
-            className="fixed inset-0 z-[100] flex flex-col items-center justify-center"
-            style={{ backgroundColor: '#F5332C' }}
-          >
-            <div className="flex flex-col items-center gap-8">
-              <div className="flex items-center gap-2">
-                <span className="text-4xl font-black text-white tracking-tighter uppercase leading-none select-none">Cleed</span>
-                <div className="h-2 w-2 bg-white rounded-none" />
-              </div>
-              <div className="h-10 w-10 relative">
-                 <motion.div
-                   animate={{ rotate: 360 }}
-                   transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                   className="absolute inset-0 border-[2px] border-white/20 border-t-white rounded-full"
-                 />
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
 
       {}
       <div className="absolute top-0 left-0 w-full h-1 bg-[#F5332C]" />

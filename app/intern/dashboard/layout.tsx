@@ -17,12 +17,16 @@ import {
     FileBadge,
     FileText,
     Kanban,
-    X
+    ClipboardCheck,
+    BookOpen,
+    Flame,
+    Layers,
+    X,
+    Menu,
+    ChevronLeft
 } from "lucide-react"; 
 
 import { motion, AnimatePresence } from "framer-motion";
-
-import { Menu } from "lucide-react";
 
 function InternDashboardLayoutContent({
   children,
@@ -102,9 +106,12 @@ function InternDashboardLayoutContent({
 
     const navItems = [
         { name: "Overview", icon: LayoutDashboard, slug: "/intern/dashboard", isNew: false, mobile: true },
-        { name: "Reports", icon: FileText, slug: "/intern/dashboard/reports", isNew: true, mobile: true },
-        { name: "Kanban", icon: Kanban, slug: "/intern/dashboard?view=kanban", isNew: true, mobile: true },
-        { name: "Group Chat", icon: MessageSquare, slug: "/intern/dashboard?view=chat", isNew: true, mobile: true },
+        { name: "Stack Flow", icon: Layers, slug: "/intern/dashboard/stack-flow", isNew: false, mobile: true },
+        { name: "Exams", icon: ClipboardCheck, slug: "/intern/dashboard/exams", isNew: false, mobile: true },
+        { name: "Resources", icon: BookOpen, slug: "/intern/dashboard/resources", isNew: false, mobile: true },
+        { name: "Reports", icon: FileText, slug: "/intern/dashboard/reports", isNew: false, mobile: true },
+        { name: "Kanban", icon: Kanban, slug: "/intern/dashboard?view=kanban", isNew: false, mobile: false },
+        { name: "Group Chat", icon: MessageSquare, slug: "/intern/dashboard?view=chat", isNew: false, mobile: false },
         { name: "Roadmap", icon: Calendar, slug: "/intern/dashboard/schedule", isNew: false, mobile: true },
         { name: "Assignments", icon: Briefcase, slug: "/intern/dashboard?view=tasks", isNew: false, mobile: false },
         { name: "Attendance", icon: FileBadge, slug: "/intern/dashboard?view=attendance", isNew: false, mobile: false },
@@ -112,18 +119,18 @@ function InternDashboardLayoutContent({
     ];
 
     return (
-        <div className="min-h-screen bg-white text-zinc-900 flex flex-col font-sans">
-            {}
-            <aside className="hidden lg:flex fixed left-0 top-0 bottom-0 w-64 flex-col bg-[#F4F4F5] border-r border-zinc-200 z-50">
-                <div className="p-8 pb-10 flex flex-col items-start gap-4">
+        <div className="min-h-screen bg-[#F8F9FA] text-zinc-900 flex flex-col font-sans">
+            {/* Sidebar Desktop */}
+            <aside className="hidden lg:flex fixed left-0 top-0 bottom-0 w-64 flex-col bg-[#E0E7FF] border-r border-[#003366]/5 z-50">
+                <div className="p-8 pb-10 flex flex-col items-start">
                     <img 
-                        src="https://ik.imagekit.io/dypkhqxip/learngrid" 
-                        alt="Learn Grid Logo" 
-                        className="h-8 max-w-[140px] w-auto object-contain"
+                        src="https://ik.imagekit.io/dypkhqxip/learngrid?updatedAt=1775552006855" 
+                        alt="Learn Grid" 
+                        className="h-8 w-auto"
                     />
                 </div>
 
-                <nav className="flex-1 px-4 space-y-1">
+                <nav className="flex-1 px-4 space-y-0.5">
                     {navItems.map((item) => {
                         const itemUrl = new URL(item.slug, "http://localhost");
                         const itemPath = itemUrl.pathname;
@@ -134,70 +141,83 @@ function InternDashboardLayoutContent({
                             <Link 
                                 key={item.name}
                                 href={item.slug} 
-                                className={`flex items-center h-11 px-4 gap-4 transition-all duration-200 group rounded-sm ${
+                                className={`flex items-center h-10 px-4 gap-3 transition-all duration-200 group rounded-none ${
                                     isActive 
-                                    ? "bg-white text-black shadow-sm border border-zinc-200 font-bold" 
-                                    : "text-zinc-500 hover:text-black hover:bg-white/50"
+                                    ? "bg-white text-[#003366] shadow-sm font-bold" 
+                                    : "text-[#003366]/40 hover:text-[#003366] hover:bg-white/30"
                                 }`}
                             >
-                                <item.icon size={18} strokeWidth={isActive ? 2.5 : 2} className={isActive ? "text-[#0055FF]" : ""} />
-                                <span className="flex flex-1 items-center justify-between text-[14px]">
-                                    {item.name}
-                                    {item.isNew && (
-                                        <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-red-100 text-red-600 uppercase tracking-wider leading-none">
-                                            New
-                                        </span>
-                                    )}
+                                <item.icon size={18} strokeWidth={isActive ? 2.5 : 2} className={isActive ? "text-[#003366]" : "text-[#003366]/30 group-hover:text-[#003366]"} />
+                                <span className="flex flex-1 items-center justify-between text-[13px]">
+                                    <span className="flex items-center gap-2">
+                                        {item.name}
+                                        {(item.name === "Exams" || item.name === "Resources" || item.name === "Stack Flow") && (
+                                            <Flame size={12} className="text-orange-500 fill-orange-500/20" />
+                                        )}
+                                    </span>
                                 </span>
                             </Link>
                         );
                     })}
                 </nav>
 
-                <div className="p-6 mt-auto border-t border-zinc-200 space-y-2">
-                    <button 
-                        onClick={toggleHand}
-                        disabled={isTogglingHand}
-                        className={`w-full h-11 flex items-center px-4 gap-4 font-bold transition-all ${
-                            handRaised 
-                            ? "bg-amber-500 text-white shadow-lg shadow-amber-500/20" 
-                            : "bg-white border border-zinc-200 text-zinc-600 hover:bg-zinc-50"
-                        }`}
-                    >
-                        {isTogglingHand ? (
-                            <div className="h-4 w-4 border-2 border-zinc-400 border-t-zinc-900 animate-spin" />
-                        ) : (
-                            <Hand size={18} className={handRaised ? "animate-bounce" : ""} />
-                        )}
-                        <span className="text-[12px] font-bold">
-                            {handRaised ? "Help Active" : "Raise Hand"}
-                        </span>
-                    </button>
+                <div className="mt-auto p-4 space-y-4 border-t border-[#003366]/5">
+                    {/* Side Profile Card */}
+                    <div className="p-3 bg-[#E0E7FF] flex items-center gap-3">
+                        <div className="h-9 w-9 bg-[#0055FF] text-white flex items-center justify-center text-[12px] font-bold flex-shrink-0">
+                            {user.name[0]}
+                        </div>
+                        <div className="min-w-0 flex-1">
+                            <p className="text-[13px] font-bold text-[#003366] truncate">{user.name}</p>
+                            <p className="text-[9px] text-[#003366]/60 font-medium uppercase tracking-[0.1em]">
+                                Scholar • {user.batch || "Batch 3"}
+                            </p>
+                        </div>
+                    </div>
 
-                    <button 
-                        onClick={handleLogout}
-                        className="w-full h-11 flex items-center px-4 gap-4 bg-red-600 text-white hover:bg-red-700 transition-all font-bold shadow-lg shadow-red-500/20"
-                    >
-                        <LogOut size={18} className="text-white" />
-                        <span className="text-[12px] font-bold">Log out</span>
-                    </button>
+                    <div className="space-y-2">
+                        <button 
+                            onClick={toggleHand}
+                            disabled={isTogglingHand}
+                            className={`w-full h-11 flex items-center justify-center gap-3 transition-all text-[12px] font-bold shadow-sm ${
+                                handRaised 
+                                ? "bg-amber-500 text-white" 
+                                : "bg-yellow-400 text-black hover:bg-yellow-500"
+                            }`}
+                        >
+                            {isTogglingHand ? (
+                                <div className="h-4 w-4 border-2 border-black/20 border-t-black animate-spin" />
+                            ) : (
+                                <Hand size={18} className={handRaised ? "animate-bounce" : ""} />
+                            )}
+                            <span>{handRaised ? "Help Active" : "Raise Hand"}</span>
+                        </button>
+
+                        <button 
+                            onClick={handleLogout}
+                            className="w-full h-11 flex items-center justify-center gap-3 bg-red-600 text-white hover:bg-red-700 transition-all text-[12px] font-bold shadow-sm"
+                        >
+                            <LogOut size={18} />
+                            <span>Logout</span>
+                        </button>
+                    </div>
                 </div>
             </aside>
 
             {}
             <div className="flex-1 flex flex-col min-w-0 lg:pl-64">
-                {}
-                <header className="h-14 lg:h-12 flex items-center justify-between px-4 lg:px-8 bg-[#0055FF] sticky top-0 z-[60] text-white shadow-lg shadow-blue-500/10">
+                {/* Header */}
+                <header className="h-14 lg:h-12 flex items-center justify-between px-4 lg:px-8 bg-zinc-100 border-b border-zinc-200 sticky top-0 z-[60] text-zinc-900 shadow-sm">
                     <div className="flex items-center gap-3">
                         <button 
                             onClick={() => setIsMobileMenuOpen(true)}
-                            className="lg:hidden p-2 -ml-2 text-white hover:bg-white/10 transition-colors"
+                            className="lg:hidden p-2 -ml-2 text-zinc-600 hover:bg-zinc-200 transition-colors"
                         >
                             <Menu size={20} />
                         </button>
                         <div className="flex items-center gap-2">
-                            <span className="hidden sm:inline text-[11px] font-medium text-blue-100/80">Portal Node</span>
-                            <ChevronRight size={12} className="hidden sm:inline text-blue-100/40" />
+                            <span className="hidden sm:inline text-[11px] font-medium text-zinc-500">Portal Node</span>
+                            <ChevronRight size={12} className="hidden sm:inline text-zinc-300" />
                             <span className="text-[12px] font-bold">
                                {navItems.find(item => {
                                    const itemUrl = new URL(item.slug, "http://localhost");
@@ -212,10 +232,10 @@ function InternDashboardLayoutContent({
                     <div className="flex items-center gap-4">
                         <div className="flex items-center gap-3">
                             <div className="text-right hidden xs:block">
-                               <p className="text-[12px] font-bold text-white leading-none truncate max-w-[100px]">{user.name}</p>
-                               <p className="text-[9px] text-blue-100/60 font-medium mt-0.5 leading-none">Session: Active</p>
+                               <p className="text-[12px] font-bold text-zinc-900 leading-none truncate max-w-[100px]">{user.name}</p>
+                               <p className="text-[9px] text-zinc-500 font-medium mt-0.5 leading-none">Session: Active</p>
                             </div>
-                            <div className="h-8 w-8 bg-white text-[#0055FF] flex items-center justify-center text-[12px] font-bold font-mono">
+                            <div className="h-8 w-8 bg-[#0055FF] text-white flex items-center justify-center text-[12px] font-bold">
                                 {user.name[0]}
                             </div>
                         </div>
