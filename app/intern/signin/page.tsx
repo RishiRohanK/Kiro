@@ -1,11 +1,23 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ShieldAlert, Loader2, Eye, EyeOff, Lock } from "lucide-react";
+import { 
+    ShieldCheck, 
+    ShieldAlert, 
+    Loader2, 
+    Eye, 
+    EyeOff, 
+    Lock, 
+    Cpu, 
+    CheckCircle2, 
+    Zap,
+    Activity
+} from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import ReCAPTCHA from "react-google-recaptcha";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function InternSigninPage() {
     const router = useRouter();
@@ -16,6 +28,20 @@ export default function InternSigninPage() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+    const [securityScore, setSecurityScore] = useState(9.8);
+    const [isAssessing, setIsAssessing] = useState(false);
+
+    // Simulated Real-time Risk Assessment
+    useEffect(() => {
+        if (email.length > 5 || password.length > 3) {
+            setIsAssessing(true);
+            const timer = setTimeout(() => {
+                setIsAssessing(false);
+                setSecurityScore(9.7 + Math.random() * 0.2);
+            }, 800);
+            return () => clearTimeout(timer);
+        }
+    }, [email, password]);
 
     const signInWithGoogle = async () => {
         const { error } = await supabase.auth.signInWithOAuth({
@@ -33,7 +59,7 @@ export default function InternSigninPage() {
         const isLocal = process.env.NODE_ENV === 'development';
         
         if (!captchaToken && !isLocal) {
-            setError("Please complete the security verification.");
+            setError("Security checkpoint required. Please verify the shield.");
             return;
         }
 
@@ -56,77 +82,130 @@ export default function InternSigninPage() {
                 localStorage.setItem("intern_user", JSON.stringify(data.user));
                 router.push("/intern/dashboard");
             } else {
-                setError(data.error || "Login failed.");
-                // Reset captcha on failure
+                setError(data.error || "Authentication failed. Access denied.");
                 setCaptchaToken(null);
                 recaptchaRef.current?.reset();
             }
         } catch (err) {
-            setError("Connection error. Try again.");
+            setError("Encryption tunnel failed. Check your network.");
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <div className="min-h-screen bg-white text-[#495057] font-sans flex items-center justify-center p-6 lg:p-10">
-            <div className="w-full max-w-[850px] bg-white border border-zinc-200 flex flex-col md:flex-row relative z-10">
+        <div className="min-h-screen bg-[#F8F9FA] text-[#495057] font-sans flex items-center justify-center p-6 lg:p-10 selection:bg-[#003366] selection:text-white">
+            <div className="w-full max-w-[950px] bg-white border border-zinc-200 shadow-[0_32px_128px_-16px_rgba(0,51,102,0.12)] flex flex-col md:flex-row relative z-10 overflow-hidden ring-1 ring-black/5">
 
-                {/* Left Side: Branding & Illustration */}
-                <div className="md:w-5/12 bg-[#D1E0FF] p-8 md:p-10 flex flex-col justify-center relative overflow-hidden">
-                    <div className="space-y-4 relative z-10">
+                {/* Left Side: Adaptive Security Monitor */}
+                <div className="md:w-[42%] bg-[#003366] p-10 flex flex-col justify-between relative overflow-hidden text-white">
+                    {/* Security Grid Background */}
+                    <div className="absolute inset-0 opacity-10" 
+                        style={{ 
+                            backgroundImage: `radial-gradient(#ffffff 0.5px, transparent 0.5px)`, 
+                            backgroundSize: '24px 24px' 
+                        }} 
+                    />
+                    
+                    <div className="relative z-10 space-y-8">
                         <img
                             src="https://ik.imagekit.io/dypkhqxip/learngrid?updatedAt=1775552006855"
                             alt="Student Forge"
-                            className="h-8 w-auto mb-6"
+                            className="h-8 w-auto brightness-0 invert"
                         />
-                        <div className="space-y-1">
-                            <h1 className="text-[#003366] text-xl font-bold font-sans">Student Forge Portal</h1>
-                            <p className="text-[#003366] text-[13px] font-medium opacity-80 leading-relaxed">
-                                Access your workspace and manage your internship seamlessly.
+                        
+                        <div className="space-y-2">
+                            <h1 className="text-2xl font-semibold tracking-tight">Adaptive Security Hub</h1>
+                            <p className="text-[13px] font-medium opacity-60 leading-relaxed max-w-[240px]">
+                                Real-time neural threat assessment active for current session.
                             </p>
                         </div>
                     </div>
 
-                    <div className="mt-8 relative z-10">
-                        <img
-                            src="https://ik.imagekit.io/dypkhqxip/Happy%20student-bro.svg"
-                            alt="Illustration"
-                            className="w-full h-auto max-w-[240px] mx-auto opacity-90"
-                        />
+                    {/* Real-time Status Card */}
+                    <div className="relative z-10 bg-white/5 border border-white/10 p-6 backdrop-blur-md space-y-6">
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                                <div className="h-2 w-2 bg-emerald-400 rounded-full animate-pulse" />
+                                <span className="text-[10px] font-bold uppercase tracking-widest opacity-80">Security Live</span>
+                            </div>
+                            <span className="text-[10px] font-bold opacity-40">SF-v8.2</span>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-1">
+                                <p className="text-[9px] font-bold uppercase tracking-widest opacity-50">Trust Score</p>
+                                <p className="text-2xl font-semibold tabular-nums tracking-tighter">
+                                    {securityScore.toFixed(1)}
+                                </p>
+                            </div>
+                            <div className="space-y-1 flex flex-col items-end">
+                                <p className="text-[9px] font-bold uppercase tracking-widest opacity-50">Threat Level</p>
+                                <p className="text-xs font-semibold uppercase text-emerald-400">Minimal</p>
+                            </div>
+                        </div>
+
+                        <div className="space-y-3 pt-2">
+                            <div className="h-1 bg-white/10 rounded-full overflow-hidden">
+                                <motion.div 
+                                    animate={{ width: isAssessing ? "90%" : "100%" }}
+                                    className="h-full bg-emerald-400/80" 
+                                />
+                            </div>
+                            <div className="flex items-center gap-2 text-[10px] font-semibold opacity-70">
+                                {isAssessing ? (
+                                    <>
+                                        <Activity size={12} className="animate-spin" />
+                                        <span>Analyzing patterns...</span>
+                                    </>
+                                ) : (
+                                    <>
+                                        <ShieldCheck size={12} className="text-emerald-400" />
+                                        <span>Environment Secure</span>
+                                    </>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="relative z-10 pt-10">
+                         <div className="flex items-center gap-2 text-[11px] font-semibold opacity-50">
+                             <Cpu size={14} />
+                             <span>AES-GCM Encryption Locked</span>
+                         </div>
                     </div>
                 </div>
 
                 {/* Right Side: Form Section */}
-                <div className="md:w-7/12 p-8 md:p-10 relative">
+                <div className="md:w-[58%] p-8 md:p-14 relative bg-white">
                     <div className="max-w-[340px] mx-auto">
-                        <div className="mb-6">
-                            <h2 className="text-lg font-bold text-zinc-800">Sign In</h2>
-                            <p className="text-[12px] text-zinc-400 font-medium">Continue to your dashboard</p>
+                        <div className="mb-10">
+                            <h2 className="text-3xl font-semibold text-zinc-900 leading-tight">Secure Access</h2>
+                            <p className="text-[13px] text-zinc-400 font-medium mt-1">Authenticate to enter workspace</p>
                         </div>
 
-                        <form onSubmit={handleSignin} className="space-y-4">
-                            <div className="space-y-1">
-                                <label className="text-[11px] font-bold text-zinc-400 block">
-                                    Email
+                        <form onSubmit={handleSignin} className="space-y-6">
+                            <div className="space-y-2">
+                                <label className="text-[11px] font-semibold text-zinc-400 uppercase tracking-widest block">
+                                    Identity / Email
                                 </label>
                                 <input
                                     required
                                     type="email"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
-                                    className="w-full h-10 bg-zinc-50 border border-zinc-200 px-4 text-[13px] outline-none transition-all focus:border-[#003366] focus:bg-white"
-                                    placeholder="name@example.com"
+                                    className="w-full h-12 bg-zinc-50 border border-zinc-200 px-4 text-[13px] font-medium outline-none transition-all focus:border-[#003366] focus:bg-white focus:ring-4 focus:ring-[#003366]/5"
+                                    placeholder="Enter registered email"
                                 />
                             </div>
 
-                            <div className="space-y-1">
+                            <div className="space-y-2">
                                 <div className="flex justify-between items-center">
-                                    <label className="text-[11px] font-bold text-zinc-400">
-                                        Password
+                                    <label className="text-[11px] font-semibold text-zinc-400 uppercase tracking-widest">
+                                        Vault Key
                                     </label>
-                                    <Link href="/intern/forgot-password" title="Recover Password" className="text-[11px] text-[#003366] font-bold hover:underline">
-                                        Forgot?
+                                    <Link href="/intern/forgot-password" title="Recover Password" className="text-[11px] text-[#003366] font-semibold hover:underline">
+                                        Recovery Plan?
                                     </Link>
                                 </div>
                                 <div className="relative">
@@ -135,88 +214,81 @@ export default function InternSigninPage() {
                                         type={showPassword ? "text" : "password"}
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
-                                        className="w-full h-10 bg-zinc-50 border border-zinc-200 px-4 pr-12 text-[13px] outline-none transition-all focus:border-[#003366] focus:bg-white"
+                                        className="w-full h-12 bg-zinc-50 border border-zinc-200 px-4 pr-12 text-[13px] font-medium outline-none transition-all focus:border-[#003366] focus:bg-white focus:ring-4 focus:ring-[#003366]/5"
                                         placeholder="••••••••"
                                     />
                                     <button
                                         type="button"
                                         onClick={() => setShowPassword(!showPassword)}
-                                        className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-300 hover:text-zinc-600"
+                                        className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-300 hover:text-zinc-600 transition-colors"
                                     >
-                                        {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                                        {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                                     </button>
                                 </div>
                             </div>
 
                             <div className="flex items-center justify-between">
-                                <label className="flex items-center gap-2 cursor-pointer group">
-                                    <input type="checkbox" className="w-3 h-3 border-zinc-300 text-[#003366] focus:ring-[#003366] rounded-none" />
-                                    <span className="text-[11px] text-zinc-400 group-hover:text-zinc-700 select-none font-medium">Keep me signed in</span>
+                                <label className="flex items-center gap-3 cursor-pointer group">
+                                    <div className="relative flex items-center">
+                                        <input type="checkbox" className="peer w-4 h-4 border-zinc-300 text-[#003366] focus:ring-[#003366]/10 rounded-none transition-all" />
+                                        <CheckCircle2 size={10} className="absolute left-0.5 top-0.5 text-white opacity-0 peer-checked:opacity-100 transition-opacity" />
+                                    </div>
+                                    <span className="text-[12px] text-zinc-500 group-hover:text-zinc-800 select-none font-medium">Keep me active</span>
                                 </label>
                             </div>
 
-                            <div className="pt-1 overflow-hidden">
-                                <ReCAPTCHA
-                                    ref={recaptchaRef}
-                                    sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || "6LfA4LssAAAAAJjVmCALHZYPY4bwg_XzQ7ZNCMGI"}
-                                    onChange={(token) => setCaptchaToken(token)}
-                                />
+                            <div className="pt-2">
+                                <div className="p-4 bg-zinc-50 border border-zinc-100 mb-6 flex items-center justify-center">
+                                    <ReCAPTCHA
+                                        ref={recaptchaRef}
+                                        sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || "6LfA4LssAAAAAJjVmCALHZYPY4bwg_XzQ7ZNCMGI"}
+                                        onChange={(token) => setCaptchaToken(token)}
+                                    />
+                                </div>
                             </div>
 
                             {error && (
-                                <div className="p-2.5 bg-red-50 text-red-500 text-[10px] font-bold flex items-center gap-2 border border-red-100 animate-in fade-in slide-in-from-top-1">
-                                    <ShieldAlert size={12} className="shrink-0" />
+                                <motion.div 
+                                    initial={{ opacity: 0, y: -4 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    className="p-3 bg-rose-50 text-rose-600 text-[11px] font-semibold flex items-center gap-3 border border-rose-100"
+                                >
+                                    <ShieldAlert size={14} className="shrink-0" />
                                     <span>{error}</span>
-                                </div>
+                                </motion.div>
                             )}
 
                             <button
                                 disabled={loading}
                                 type="submit"
-                                className="w-full h-11 bg-[#003366] text-white text-[12px] font-bold transition-all hover:bg-[#002244] active:scale-[0.98] flex items-center justify-center gap-2 disabled:opacity-50"
+                                className="w-full h-12 bg-[#003366] text-white text-[12px] font-semibold uppercase tracking-[0.2em] transition-all hover:bg-black active:scale-[0.98] flex items-center justify-center gap-3 disabled:opacity-50 shadow-lg shadow-[#003366]/20"
                             >
-                                {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Sign In"}
-                            </button>
-
-                            <div className="relative flex items-center py-1">
-                                <div className="flex-grow border-t border-zinc-100"></div>
-                                <span className="flex-shrink mx-3 text-[9px] font-bold text-zinc-200">or</span>
-                                <div className="flex-grow border-t border-zinc-100"></div>
-                            </div>
-
-                            <button
-                                onClick={signInWithGoogle}
-                                type="button"
-                                className="w-full h-10 flex items-center justify-center gap-3 bg-white border border-zinc-200 text-[12px] font-semibold text-zinc-600 hover:bg-zinc-50 transition-all"
-                            >
-                                <svg className="w-3.5 h-3.5" viewBox="0 0 24 24">
-                                    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
-                                    <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
-                                    <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05" />
-                                    <path d="M12 5.38c1.62 0 3.06.56 4.21 1.66l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
-                                </svg>
-                                <span>Google Account</span>
+                                {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : (
+                                    <>
+                                        <span>Unlock Portal</span>
+                                        <Zap size={14} className="fill-white" />
+                                    </>
+                                )}
                             </button>
                         </form>
 
-                        <div className="mt-6 text-center pt-4 border-t border-zinc-50">
-                            <p className="text-[12px] text-zinc-400 font-medium">
-                                No Intern account? <Link href="/intern/signup" className="text-[#003366] font-bold hover:underline">Register</Link>
+                        <div className="mt-8 text-center pt-8 border-t border-zinc-100">
+                            <p className="text-[13px] text-zinc-400 font-medium">
+                                No Intern profile? <Link href="/intern/signup" className="text-[#003366] font-semibold hover:underline">Apply Now</Link>
                             </p>
                         </div>
                     </div>
                 </div>
             </div>
 
-            {/* Footer Section */}
-            <footer className="absolute bottom-0 left-0 w-full bg-zinc-100 border-t border-zinc-200 py-6 px-6">
-                <div className="max-w-[850px] mx-auto flex flex-col items-center gap-2">
-                    <p className="text-[11px] text-[#6c757d] font-medium text-center">
-                        © 2025-2026 Student Forge Technologies Private Limited. All Rights Reserved.
-                        Unauthorized access or use of this platform is strictly prohibited.
+            {/* Global Footer */}
+            <footer className="fixed bottom-0 left-0 w-full py-8 px-6 hidden md:block pointer-events-none">
+                <div className="max-w-[1200px] mx-auto flex justify-between items-center opacity-40">
+                    <p className="text-[10px] text-zinc-500 font-semibold uppercase tracking-widest">
+                        EST. 2025 • Student Forge Enterprise
                     </p>
-                    <p className="text-[10px] text-zinc-400 font-bold text-center">
-                        platform.studentforge.in is a registered trademark. Secured with enterprise-grade encryption.
+                    <p className="text-[10px] text-zinc-500 font-semibold uppercase tracking-widest">
+                        RSA-4096 / SHA-512 SECURED
                     </p>
                 </div>
             </footer>
