@@ -220,6 +220,29 @@ function ExamPanelContent() {
     return () => clearInterval(timer);
   }, [timeLeft, isSubmitted, handleSubmit]);
 
+  // WebRTC / Proctoring Simulation
+  const [streamActive, setStreamActive] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    if (!loading && !isSubmitted) {
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => {
+                if (videoRef.current) videoRef.current.srcObject = stream;
+                setStreamActive(true);
+            })
+            .catch(err => {
+                console.error("WebRTC Error: PeerConnection failed to acquire MediaStream", err);
+            });
+    }
+    return () => {
+        if (videoRef.current?.srcObject) {
+            const stream = videoRef.current.srcObject as MediaStream;
+            stream.getTracks().forEach(track => track.stop());
+        }
+    };
+  }, [loading, isSubmitted]);
+
   const formatTime = (s: number) => {
     const min = Math.floor(s / 60);
     const sec = s % 60;
@@ -451,12 +474,44 @@ function ExamPanelContent() {
 
       {/* Footer */}
       <footer className="h-10 bg-slate-50 border-t border-gray-200 flex justify-between px-8 items-center shrink-0 relative z-20">
-         <div className="flex gap-6">
+         <div className="flex gap-6 items-center">
              <button onClick={() => currentIdx > 0 && setCurrentIdx(prev => prev - 1)} className="text-[10px] font-bold text-violet-700 uppercase hover:text-violet-900">Back</button>
              <button onClick={() => currentIdx < questions.length - 1 && setCurrentIdx(prev => prev + 1)} className="text-[10px] font-bold text-violet-700 uppercase hover:text-violet-900">Next</button>
+             <div className="h-4 w-px bg-slate-200 ml-2"></div>
+             <div className="flex gap-4 items-center pl-2">
+                <div className="flex items-center gap-1.5">
+                   <div className={`h-1.5 w-1.5 rounded-full ${streamActive ? 'bg-emerald-500 animate-pulse' : 'bg-red-500'}`}></div>
+                   <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">WebRTC: {streamActive ? 'Active' : 'Disconnected'}</span>
+                </div>
+                {streamActive && (
+                   <div className="hidden lg:flex gap-4 border-l border-slate-100 pl-4 items-center">
+                      <span className="text-[8px] font-bold text-slate-300 uppercase tracking-tight">ICE: connected</span>
+                      <span className="text-[8px] font-bold text-slate-300 uppercase tracking-tight">SDP: stable</span>
+                      <span className="text-[8px] font-bold text-slate-300 uppercase tracking-tight">Bitrate: 2.4 Mbps</span>
+                   </div>
+                )}
+             </div>
          </div>
-         <p className="text-[9px] text-slate-400 font-bold uppercase tracking-widest">Secure Screen</p>
+         <p className="text-[9px] text-slate-400 font-bold uppercase tracking-widest flex items-center gap-2">
+            Secure Node <ShieldCheck size={10} className="text-violet-400" />
+         </p>
       </footer>
+
+      {/* Proctoring Viewport Bubble */}
+      {streamActive && (
+         <div className="fixed bottom-14 left-6 z-[100] h-20 w-28 bg-black border border-violet-500/30 overflow-hidden shadow-2xl">
+            <video 
+               ref={videoRef}
+               autoPlay 
+               muted 
+               playsInline 
+               className="h-full w-full object-cover grayscale opacity-60"
+            />
+            <div className="absolute top-1 left-1 bg-violet-600 px-1 py-0.5 rounded-[1px]">
+               <p className="text-[6px] font-bold text-white uppercase tracking-tighter italic">Live Stream</p>
+            </div>
+         </div>
+      )}
 
 
       {/* Exit Verification Modal */}
