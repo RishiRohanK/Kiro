@@ -176,12 +176,13 @@ function InternDashboardContent() {
          fetchReports(userData.id);
          fetchExams(userData.id);
          fetchSchedules(userData.id, userData.batch);
+         fetchAllInterns();
          const syncInterval = setInterval(() => {
             fetchTasks(userData.id, userData.batch);
             fetchStatus(userData.id);
             fetchSchedules(userData.id, userData.batch);
-          fetchAllInterns();
             fetchExams(userData.id);
+            fetchAllInterns();
          }, 120000);
 
          const cleanup = () => {
@@ -328,9 +329,27 @@ function InternDashboardContent() {
    }, [user, socket]);
 
 
+   const fetchMessageHistory = async (teamId: string, otherUserId?: string) => {
+      try {
+         const url = otherUserId 
+            ? `/api/messages?teamId=${teamId}&userId=${user?.id}&targetId=${otherUserId}`
+            : `/api/messages?teamId=${teamId}`;
+         const res = await fetch(url);
+         const data = await res.json();
+         if (data.success) {
+            const formatted = data.messages.map((m: any) => ({
+               ...m,
+               content: m.content || m.text
+            }));
+            setMessages(formatted);
+         }
+      } catch (e) {
+         console.error("Failed to fetch message history");
+      }
+   };
+
    useEffect(() => {
       if (socket && schedules.length > 0 && user) {
-
          const teamSchedule = schedules.find(s => s.week.includes("Week 2") && s.teamInternIds?.length > 0)
             || schedules.find(s => s.teamInternIds?.length > 0)
             || schedules[0];
@@ -338,24 +357,15 @@ function InternDashboardContent() {
          const currentTeamId = teamSchedule.id;
          setActiveTeamId(currentTeamId);
          socket.emit("join_team", currentTeamId);
-
-
-         fetch(`/api/messages?teamId=${currentTeamId}`)
-            .then(res => res.json())
-            .then(data => {
-               if (data.success) {
-                  const formatted = data.messages.map((m: any) => ({
-                     ...m,
-                     content: m.content || m.text
-                  }));
-                  setMessages(formatted);
-               }
-            });
+         
+         fetchMessageHistory(currentTeamId, selectedUser?.id);
       }
-   }, [socket, schedules, user]);
+   }, [socket, schedules, user, selectedUser]);
 
    useEffect(() => {
-      chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+      if (messages.length > 0) {
+         chatEndRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }
    }, [messages]);
 
 
