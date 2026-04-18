@@ -131,15 +131,16 @@ function InternDashboardLayoutContent({
         <div className="min-h-screen bg-[#F8F9FA] text-zinc-900 flex flex-col font-sans">
             {/* Sidebar Desktop */}
             <aside className="hidden lg:flex fixed left-0 top-0 bottom-0 w-64 flex-col bg-[#E0E7FF] border-r border-[#003366]/5 z-50">
-                <div className="p-8 pb-10 flex flex-col items-start">
+                <div className="p-8 pb-10 flex flex-col items-start bg-[#E0E7FF] z-10">
                     <img 
                         src="https://ik.imagekit.io/dypkhqxip/learngrid?updatedAt=1775552006855" 
                         alt="Learn Grid" 
                         className="h-8 w-auto"
                     />
                 </div>
-
-                <nav className="flex-1 px-4 space-y-0.5">
+                
+                <div className="flex-1 min-h-0 flex flex-col overflow-y-auto overflow-x-hidden custom-scrollbar">
+                    <nav className="px-4 space-y-0.5">
                     {navItems.map((item) => {
                         const itemUrl = new URL(item.slug, "http://localhost");
                         const itemPath = itemUrl.pathname;
@@ -168,16 +169,14 @@ function InternDashboardLayoutContent({
                             </Link>
                         );
                     })}
-                </nav>
+                    </nav>
 
-                <div className="mt-auto p-4 space-y-4 border-t border-[#003366]/5">
-
-                    <div className="space-y-2">
+                    <div className="px-4 mt-6 mb-4">
                         <a 
                             href="https://platform.studentforge.in/bootcamp" 
                             target="_blank" 
                             rel="noopener noreferrer"
-                            className="block mb-4 rounded-none overflow-hidden border border-[#003366]/10 hover:opacity-90 transition-opacity"
+                            className="block rounded-none overflow-hidden border border-[#003366]/10 hover:opacity-90 transition-opacity"
                         >
                             <img 
                                 src="https://ik.imagekit.io/dypkhqxip/Summer%20Bootcamp%20(2).png" 
@@ -185,32 +184,34 @@ function InternDashboardLayoutContent({
                                 className="w-full h-auto"
                             />
                         </a>
-
-                        <button 
-                            onClick={toggleHand}
-                            disabled={isTogglingHand}
-                            className={`w-full h-11 flex items-center justify-center gap-3 transition-all text-[12px] font-bold shadow-sm ${
-                                handRaised 
-                                ? "bg-amber-500 text-white" 
-                                : "bg-yellow-400 text-black hover:bg-yellow-500"
-                            }`}
-                        >
-                            {isTogglingHand ? (
-                                <div className="h-4 w-4 border-2 border-black/20 border-t-black animate-spin" />
-                            ) : (
-                                <Hand size={18} className={handRaised ? "animate-bounce" : ""} />
-                            )}
-                            <span>{handRaised ? "Help Active" : "Raise Hand"}</span>
-                        </button>
-
-                        <button 
-                            onClick={handleLogout}
-                            className="w-full h-11 flex items-center justify-center gap-3 bg-red-600 text-white hover:bg-red-700 transition-all text-[12px] font-bold shadow-sm"
-                        >
-                            <LogOut size={18} />
-                            <span>Logout</span>
-                        </button>
                     </div>
+                </div>
+
+                <div className="p-4 space-y-2 border-t border-[#003366]/10 bg-[#E0E7FF] z-10 shadow-sm">
+                    <button 
+                        onClick={toggleHand}
+                        disabled={isTogglingHand}
+                        className={`w-full h-11 flex items-center justify-center gap-3 transition-all text-[12px] font-bold shadow-sm ${
+                            handRaised 
+                            ? "bg-amber-500 text-white" 
+                            : "bg-yellow-400 text-black hover:bg-yellow-500"
+                        }`}
+                    >
+                        {isTogglingHand ? (
+                            <div className="h-4 w-4 border-2 border-black/20 border-t-black animate-spin" />
+                        ) : (
+                            <Hand size={18} className={handRaised ? "animate-bounce" : ""} />
+                        )}
+                        <span>{handRaised ? "Help Active" : "Raise Hand"}</span>
+                    </button>
+
+                    <button 
+                        onClick={handleLogout}
+                        className="w-full h-11 flex items-center justify-center gap-3 bg-red-600 text-white hover:bg-red-700 transition-all text-[12px] font-bold shadow-sm"
+                    >
+                        <LogOut size={18} />
+                        <span>Logout Session</span>
+                    </button>
                 </div>
             </aside>
 
