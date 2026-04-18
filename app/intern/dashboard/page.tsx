@@ -203,6 +203,41 @@ function InternDashboardContent() {
    const [uiuxSuccess, setUiuxSuccess] = useState(false);
    const [uiuxForm, setUiuxForm] = useState({ taskName: "", taskLink: "", githubLink: "" });
 
+   const [showTaskSubmissionModal, setShowTaskSubmissionModal] = useState(false);
+   const [taskSubmissionForm, setTaskSubmissionForm] = useState({ name: "", githubLink: "", liveLink: "" });
+   const [isSubmittingTask, setIsSubmittingTask] = useState(false);
+   const [taskSubmissionSuccess, setTaskSubmissionSuccess] = useState(false);
+   const [selectedTaskForSubmit, setSelectedTaskForSubmit] = useState<Task | null>(null);
+
+   const handleTaskSubmission = async (e: React.FormEvent) => {
+      e.preventDefault();
+      if (!selectedTaskForSubmit) return;
+      setIsSubmittingTask(true);
+      try {
+         const res = await fetch("/api/task-submission", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+               email: user.email,
+               taskAllocated: selectedTaskForSubmit.title,
+               ...taskSubmissionForm
+            })
+         });
+         if (res.ok) {
+            setTaskSubmissionSuccess(true);
+            setTimeout(() => {
+               setShowTaskSubmissionModal(false);
+               setTaskSubmissionSuccess(false);
+               setTaskSubmissionForm({ name: user.name, githubLink: "", liveLink: "" });
+            }, 2000);
+         }
+      } catch (err) {
+         console.error("Task submission failed:", err);
+      } finally {
+         setIsSubmittingTask(false);
+      }
+   };
+
    const handleUIUXSubmit = async (e: React.FormEvent) => {
       e.preventDefault();
       setUiuxSubmitting(true);
@@ -1102,10 +1137,31 @@ function InternDashboardContent() {
                         <div key={task.id} className={`p-6 border ${theme.border} ${theme.bg} transition-all flex flex-col h-full text-left`}>
                            <div className="flex items-center justify-between mb-4"><div className="flex items-center gap-2"><div className={`h-1.5 w-1.5 ${theme.dot}`} /><span className={`text-[10px] font-bold ${theme.accent}`}>{task.status === "pending" ? "Todo" : "Done"}</span></div><span className="text-[10px] text-zinc-400">{new Date(task.createdAt).toLocaleDateString()}</span></div>
                            <h3 className="text-sm font-bold text-zinc-900 mb-2 leading-tight">{task.title}</h3>
-                           <p className="text-xs text-zinc-500 leading-relaxed mb-6 flex-1 line-clamp-3">{task.description}</p>
-                           <div className="pt-4 border-t border-zinc-900/5 flex items-center justify-between mt-auto">
-                              {task.attachmentUrl ? <a href={task.attachmentUrl} target="_blank" className="flex items-center gap-2 text-xs font-semibold text-zinc-400 hover:text-[#0055FF] transition-colors">Files <Download size={12} /></a> : <span className="text-[10px] text-zinc-300 italic">No files</span>}
-                              <button onClick={() => updateTaskStatus(task.id, task.status)} className={`h-9 px-5 text-xs font-semibold transition-all ${task.status === "pending" ? "bg-black text-white hover:bg-[#0055FF]" : "bg-white border border-zinc-200 text-zinc-900"}`}>{task.status === "pending" ? "Submit work" : "Marked done"}</button>
+                           <p className="text-xs text-zinc-500 leading-relaxed mb-6 flex-1">{task.description}</p>
+                           <div className="pt-4 border-t border-zinc-900/5 flex flex-col gap-3 mt-auto">
+                              <div className="flex items-center justify-between">
+                                 {task.attachmentUrl ? <a href={task.attachmentUrl} target="_blank" className="flex items-center gap-2 text-xs font-semibold text-zinc-400 hover:text-[#0055FF] transition-colors">Files <Download size={12} /></a> : <span className="text-[10px] text-zinc-300 italic">No files</span>}
+                              </div>
+                              <div className="flex gap-2">
+                                 <button 
+                                    onClick={() => {
+                                       setSelectedTaskForSubmit(task);
+                                       setTaskSubmissionForm({ ...taskSubmissionForm, name: user.name });
+                                       setShowTaskSubmissionModal(true);
+                                    }}
+                                    className="flex-1 h-10 bg-black text-white text-[11px] font-bold uppercase tracking-wider hover:bg-blue-600 transition-all"
+                                 >
+                                    Submit
+                                 </button>
+                                 <button 
+                                    onClick={() => updateTaskStatus(task.id, task.status)}
+                                    className={`flex-1 h-10 text-[11px] font-bold uppercase tracking-wider transition-all border ${task.status === "completed" ? "bg-emerald-50 text-emerald-600 border-emerald-100" : "bg-white text-zinc-600 border-zinc-200 hover:bg-zinc-50"}`}
+                                 >
+                                    {task.status === "completed" ? (
+                                       <span className="flex items-center justify-center gap-1"><Check size={12} /> Done</span>
+                                    ) : "Done"}
+                                 </button>
+                              </div>
                            </div>
                         </div>
                      );
@@ -1534,6 +1590,90 @@ function InternDashboardContent() {
                               </>
                            )}
                         </button>
+                     </form>
+                  </motion.div>
+               </motion.div>
+            )}
+         </AnimatePresence>
+         <AnimatePresence>
+            {showTaskSubmissionModal && (
+               <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="fixed inset-0 z-[9999] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4"
+               >
+                  <motion.div
+                     initial={{ scale: 0.95, y: 16 }}
+                     animate={{ scale: 1, y: 0 }}
+                     className="bg-white max-w-md w-full shadow-2xl rounded-2xl overflow-hidden border border-zinc-100"
+                  >
+                     <div className="p-6 border-b border-zinc-100 flex items-center justify-between bg-zinc-50/50">
+                        <div>
+                           <h2 className="text-sm font-bold text-zinc-900 uppercase tracking-widest">Submit Assignment</h2>
+                           <p className="text-[10px] text-zinc-400 font-bold uppercase mt-1">Assignment: {selectedTaskForSubmit?.title}</p>
+                        </div>
+                        <button onClick={() => setShowTaskSubmissionModal(false)} className="text-zinc-300 hover:text-zinc-600 transition-colors">
+                           <X size={20} />
+                        </button>
+                     </div>
+                     <form onSubmit={handleTaskSubmission} className="p-8 space-y-5">
+                        {taskSubmissionSuccess ? (
+                           <div className="py-10 text-center space-y-4">
+                              <div className="h-16 w-16 bg-emerald-50 text-emerald-500 rounded-full flex items-center justify-center mx-auto">
+                                 <CheckCircle2 size={32} />
+                              </div>
+                              <div>
+                                 <p className="text-sm font-bold text-zinc-900 uppercase">Submission Received</p>
+                                 <p className="text-[11px] text-zinc-400 font-medium mt-1">Your response has been logged for review.</p>
+                              </div>
+                           </div>
+                        ) : (
+                           <>
+                              <div className="space-y-2">
+                                 <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Full Name</label>
+                                 <input
+                                    required
+                                    type="text"
+                                    placeholder="Enter your name"
+                                    className="w-full bg-zinc-50 border border-zinc-100 rounded-xl px-4 h-11 text-sm font-semibold outline-none focus:bg-white focus:border-black transition-all"
+                                    value={taskSubmissionForm.name}
+                                    onChange={e => setTaskSubmissionForm({ ...taskSubmissionForm, name: e.target.value })}
+                                 />
+                              </div>
+                              <div className="space-y-2">
+                                 <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">GitHub Repository Link</label>
+                                 <input
+                                    required
+                                    type="url"
+                                    placeholder="https://github.com/username/repo"
+                                    className="w-full bg-zinc-50 border border-zinc-100 rounded-xl px-4 h-11 text-sm font-semibold outline-none focus:bg-white focus:border-black transition-all"
+                                    value={taskSubmissionForm.githubLink}
+                                    onChange={e => setTaskSubmissionForm({ ...taskSubmissionForm, githubLink: e.target.value })}
+                                 />
+                              </div>
+                              <div className="space-y-2">
+                                 <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Live Deployment Link</label>
+                                 <input
+                                    required
+                                    type="url"
+                                    placeholder="https://your-app.vercel.app"
+                                    className="w-full bg-zinc-50 border border-zinc-100 rounded-xl px-4 h-11 text-sm font-semibold outline-none focus:bg-white focus:border-black transition-all"
+                                    value={taskSubmissionForm.liveLink}
+                                    onChange={e => setTaskSubmissionForm({ ...taskSubmissionForm, liveLink: e.target.value })}
+                                 />
+                              </div>
+                              <div className="pt-2">
+                                 <button
+                                    disabled={isSubmittingTask}
+                                    type="submit"
+                                    className="w-full bg-black text-white h-12 text-[11px] font-bold uppercase tracking-[0.2em] hover:bg-blue-600 transition-all flex items-center justify-center gap-2 disabled:opacity-50 shadow-lg shadow-black/5"
+                                 >
+                                    {isSubmittingTask ? <><RefreshCw className="animate-spin" size={14} /> Processing...</> : <><Send size={14} /> Complete Submission</>}
+                                 </button>
+                              </div>
+                           </>
+                        )}
                      </form>
                   </motion.div>
                </motion.div>
