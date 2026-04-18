@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { User, Mail, School, GraduationCap, Calendar, Briefcase, Save, RefreshCw, CheckCircle2, Camera, Upload, Loader2, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/lib/supabase";
