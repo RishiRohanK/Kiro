@@ -163,13 +163,18 @@ function InternDashboardLayoutContent({
                 <div className="mt-auto p-4 space-y-4 border-t border-[#003366]/5">
 
                     <div className="space-y-2">
-                        <div className="mb-4 rounded-none overflow-hidden border border-[#003366]/10">
+                        <a 
+                            href="https://platform.studentforge.in/bootcamp" 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="block mb-4 rounded-none overflow-hidden border border-[#003366]/10 hover:opacity-90 transition-opacity"
+                        >
                             <img 
                                 src="https://ik.imagekit.io/dypkhqxip/Summer%20Bootcamp%20(2).png" 
                                 alt="Summer Bootcamp" 
                                 className="w-full h-auto"
                             />
-                        </div>
+                        </a>
 
                         <button 
                             onClick={toggleHand}
@@ -315,13 +320,18 @@ function InternDashboardLayoutContent({
                                 </div>
 
                                 <div className="p-4 border-t border-zinc-200 space-y-2 bg-white">
-                                    <div className="mb-3 rounded-lg overflow-hidden border border-zinc-200 shadow-sm">
+                                    <a 
+                                        href="https://platform.studentforge.in/bootcamp" 
+                                        target="_blank" 
+                                        rel="noopener noreferrer"
+                                        className="block mb-3 rounded-lg overflow-hidden border border-zinc-200 shadow-sm hover:opacity-90 transition-opacity"
+                                    >
                                         <img 
                                             src="https://ik.imagekit.io/dypkhqxip/Summer%20Bootcamp%20(2).png" 
                                             alt="Summer Bootcamp" 
                                             className="w-full h-auto"
                                         />
-                                    </div>
+                                    </a>
                                     <button 
                                         onClick={() => { toggleHand(); setIsMobileMenuOpen(false); }}
                                         disabled={isTogglingHand}
