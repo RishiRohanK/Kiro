@@ -403,7 +403,7 @@ function InternDashboardContent() {
          const query = batch ? `?internId=${id}&batch=${encodeURIComponent(batch)}` : `?internId=${id}`;
          const res = await fetch(`/api/intern/tasks${query}`);
          const data = await res.json();
-         setTasks(data);
+         setTasks(Array.isArray(data) ? data : []);
       } catch (error) {
          console.error("Failed to load tasks");
       } finally {
@@ -672,7 +672,7 @@ function InternDashboardContent() {
                                  })()}, <span className="text-[#0055FF]">{user.name.split(' ')[0]}</span>
                               </h1>
                               <p className="text-[#003366]/60 text-sm font-medium max-w-sm">
-                                 Welcome back scholar. You have <span className="text-[#003366] font-semibold">{tasks.filter(t => t.status === 'pending').length} pending</span> tasks today.
+                                 Welcome back scholar. You have <span className="text-[#003366] font-semibold">{(Array.isArray(tasks) ? tasks : []).filter(t => t.status === 'pending').length} pending</span> tasks today.
                               </p>
                            </div>
                            <div className="flex items-center gap-3 bg-white/60 backdrop-blur-md px-4 py-2 border border-white/40">
