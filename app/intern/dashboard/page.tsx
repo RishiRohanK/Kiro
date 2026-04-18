@@ -309,6 +309,9 @@ function InternDashboardContent() {
 
    useEffect(() => {
       if (user && !socket) {
+         // Wake up the chat server (Render free tier)
+         fetch("https://serversf.onrender.com/ping").catch(() => {});
+
          const newSocket = io("https://serversf.onrender.com");
          setSocket(newSocket);
 
@@ -967,7 +970,7 @@ function InternDashboardContent() {
 
 
          {activeTab === "chat" && (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="h-[calc(100vh-8rem)] lg:h-[calc(100vh-12rem)] min-h-[500px] flex bg-white border border-zinc-200 rounded-lg overflow-hidden text-left mb-6 shadow-sm relative">
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="h-[calc(100vh-8rem)] lg:h-[calc(100vh-12rem)] min-h-[500px] flex bg-white border border-zinc-200 rounded-none overflow-hidden text-left mb-6 relative">
                { }
                <aside className={`${showChatSidebar ? "flex" : "hidden"} lg:flex absolute inset-0 z-20 lg:relative lg:inset-auto w-full lg:w-64 bg-zinc-50 border-r border-zinc-200 flex-col shrink-0`}>
                   <div className="p-6 border-b border-zinc-200 bg-white flex items-center justify-between">
@@ -985,7 +988,7 @@ function InternDashboardContent() {
                      <div className="px-4 mb-6">
                         <button
                            onClick={() => { setSelectedUser(null); setShowChatSidebar(false); }}
-                           className={`w-full flex items-center gap-3 p-3 text-xs font-bold transition-all rounded-xl mb-2 ${!selectedUser ? "bg-black text-white shadow-md" : "hover:bg-zinc-200 text-zinc-600"}`}
+                           className={`w-full flex items-center gap-3 p-3 text-xs font-bold transition-all rounded-none mb-2 ${!selectedUser ? "bg-black text-white" : "hover:bg-zinc-200 text-zinc-600"}`}
                         >
                            <Users size={16} /> Team Chat
                         </button>
@@ -1014,9 +1017,9 @@ function InternDashboardContent() {
                                     <button
                                        key={i}
                                        onClick={() => { setSelectedUser(peer); setShowChatSidebar(false); }}
-                                       className={`w-full flex items-center gap-3 p-3 transition-all rounded-xl ${selectedUser?.id === peer.id ? "bg-white border border-zinc-200 text-black shadow-sm" : "text-zinc-600 hover:bg-zinc-100"}`}
+                                       className={`w-full flex items-center gap-3 p-3 transition-all rounded-none ${selectedUser?.id === peer.id ? "bg-white border border-zinc-200 text-black px-4" : "text-zinc-600 hover:bg-zinc-100"}`}
                                     >
-                                       <div className="h-8 w-8 bg-zinc-900 text-white flex items-center justify-center text-xs font-bold rounded-lg group-hover:scale-105 transition-transform">
+                                       <div className="h-8 w-8 bg-zinc-900 text-white flex items-center justify-center text-xs font-bold rounded-none group-hover:scale-105 transition-transform">
                                           {peer.name[0]}
                                        </div>
                                        <div className="text-left overflow-hidden">
@@ -1036,7 +1039,7 @@ function InternDashboardContent() {
 
                   { }
                   <div className="p-4 bg-zinc-100/50 border-t border-zinc-200 flex items-center gap-3">
-                     <div className="h-9 w-9 bg-black text-white flex items-center justify-center text-xs font-bold rounded-lg">
+                     <div className="h-9 w-9 bg-black text-white flex items-center justify-center text-xs font-bold rounded-none">
                         {user.name[0]}
                      </div>
                      <div className="overflow-hidden">
@@ -1054,7 +1057,7 @@ function InternDashboardContent() {
                         <button onClick={() => setShowChatSidebar(true)} className="lg:hidden p-2 -ml-2 text-zinc-400 hover:text-black transition-colors">
                            <ChevronLeft size={20} />
                         </button>
-                        <div className="h-8 w-8 lg:h-10 lg:w-10 bg-black text-white flex items-center justify-center font-bold rounded-lg shrink-0">
+                        <div className="h-8 w-8 lg:h-10 lg:w-10 bg-black text-white flex items-center justify-center font-bold rounded-none shrink-0">
                            {selectedUser ? <User size={16} /> : <Users size={16} />}
                         </div>
                         <div className="truncate">
@@ -1095,7 +1098,7 @@ function InternDashboardContent() {
                                           {msg.senderName}
                                        </span>
                                     )}
-                                    <div className={`px-4 lg:px-5 py-3 lg:py-4 border ${isOwn ? "bg-black border-black text-white rounded-2xl rounded-tr-sm shadow-lg shadow-black/10" : "bg-white border-zinc-200 text-zinc-900 rounded-2xl rounded-tl-sm shadow-sm"}`}>
+                                    <div className={`px-4 lg:px-5 py-3 lg:py-4 border ${isOwn ? "bg-black border-black text-white rounded-none shadow-none" : "bg-white border-zinc-200 text-zinc-900 rounded-none shadow-none"}`}>
                                        <p className="text-xs lg:text-sm font-medium leading-relaxed">{msg.content}</p>
                                        <span className={`text-[8px] lg:text-[9px] font-bold block mt-2 lg:mt-3 opacity-40 ${isOwn ? "text-zinc-400" : "text-zinc-500"}`}>
                                           {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
@@ -1115,10 +1118,10 @@ function InternDashboardContent() {
                         type="text"
                         value={inputText}
                         onChange={(e) => setInputText(e.target.value)}
-                        className="flex-1 px-4 lg:px-6 h-12 lg:h-14 bg-zinc-50 border border-zinc-200 text-xs lg:text-sm font-semibold rounded-xl lg:rounded-2xl focus:border-black focus:bg-white outline-none transition-all placeholder:text-zinc-300"
+                        className="flex-1 px-4 lg:px-6 h-12 lg:h-14 bg-zinc-50 border border-zinc-200 text-xs lg:text-sm font-semibold rounded-none focus:border-black focus:bg-white outline-none transition-all placeholder:text-zinc-300"
                         placeholder={selectedUser ? `Message ${selectedUser.name}...` : "Send a message..."}
                      />
-                     <button type="submit" disabled={!activeTeamId || !inputText.trim()} className="h-12 w-12 lg:h-14 lg:px-10 lg:w-auto bg-black text-white hover:bg-zinc-800 transition-all font-bold text-[10px] lg:text-xs uppercase tracking-widest rounded-xl lg:rounded-2xl disabled:opacity-30 active:scale-95 flex items-center justify-center gap-2">
+                     <button type="submit" disabled={!activeTeamId || !inputText.trim()} className="h-12 w-12 lg:h-14 lg:px-10 lg:w-auto bg-black text-white hover:bg-zinc-800 transition-all font-bold text-[10px] lg:text-xs uppercase tracking-widest rounded-none disabled:opacity-30 active:scale-95 flex items-center justify-center gap-2">
                         <Send size={16} /> <span className="hidden lg:inline">Send</span>
                      </button>
                   </form>
