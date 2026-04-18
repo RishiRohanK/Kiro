@@ -16,8 +16,20 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: "*", 
+    origin: "*",
+    methods: ["GET", "POST"],
+    credentials: true
   },
+  allowEIO3: true
+});
+
+// Health check endpoint for Render
+app.get("/ping", (req, res) => {
+  res.status(200).send("Relay Active");
+});
+
+app.get("/", (req, res) => {
+  res.status(200).send("Relay Node Operational");
 });
 
 io.on("connection", (socket) => {
