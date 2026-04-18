@@ -180,6 +180,7 @@ function InternDashboardContent() {
             fetchTasks(userData.id, userData.batch);
             fetchStatus(userData.id);
             fetchSchedules(userData.id, userData.batch);
+          fetchAllInterns();
             fetchExams(userData.id);
          }, 120000);
 
@@ -975,7 +976,7 @@ function InternDashboardContent() {
                <aside className={`${showChatSidebar ? "flex" : "hidden"} lg:flex absolute inset-0 z-20 lg:relative lg:inset-auto w-full lg:w-64 bg-zinc-50 border-r border-zinc-200 flex-col shrink-0`}>
                   <div className="p-6 border-b border-zinc-200 bg-white flex items-center justify-between">
                      <div>
-                        <h3 className="text-xs font-bold text-zinc-900 uppercase tracking-widest leading-none">Your Team</h3>
+                        <h3 className="text-xs font-bold text-zinc-900 font-bold leading-none">Your Team</h3>
                         <p className="text-[10px] text-zinc-400 mt-2 font-medium">Chat with your group members.</p>
                      </div>
                      <button onClick={() => setShowChatSidebar(false)} className="lg:hidden p-2 text-zinc-400">
@@ -995,7 +996,7 @@ function InternDashboardContent() {
 
                         <div className="h-px bg-zinc-200 my-4 mx-2" />
 
-                        <p className="px-3 py-2 text-[10px] font-bold text-zinc-400 uppercase tracking-tight">Teammates</p>
+                        <p className="px-3 py-2 text-[10px] font-bold text-zinc-400 font-bold tracking-tight">Teammates</p>
                         <div className="space-y-1 mt-1">
                            {(() => {
                               const activeSchedule = schedules.find(s => s.id === activeTeamId) || schedules.find(s => s.teamInternIds?.length > 0);
@@ -1005,7 +1006,7 @@ function InternDashboardContent() {
                               if (teamPeers.length === 0) {
                                  return (
                                     <div className="p-6 text-center">
-                                       <p className="text-[10px] text-zinc-300 font-bold uppercase tracking-wider">No teammates yet</p>
+                                       <p className="text-[10px] text-zinc-300 font-bold tracking-wider">No teammates yet</p>
                                     </div>
                                  );
                               }
@@ -1026,7 +1027,7 @@ function InternDashboardContent() {
                                           <p className="text-xs font-bold truncate leading-none mb-1">{peer.name}</p>
                                           <div className="flex items-center gap-1">
                                              <div className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                                             <p className="text-[9px] font-bold text-zinc-400 uppercase">Mission Active</p>
+                                             <p className="text-[9px] font-bold text-zinc-400 font-bold">Mission Active</p>
                                           </div>
                                        </div>
                                     </button>
@@ -1044,7 +1045,7 @@ function InternDashboardContent() {
                      </div>
                      <div className="overflow-hidden">
                         <p className="text-xs font-bold text-zinc-900 truncate leading-none mb-1">{user.name}</p>
-                        <p className="text-[9px] font-bold text-zinc-400 uppercase">You</p>
+                        <p className="text-[9px] font-bold text-zinc-400 font-bold">You</p>
                      </div>
                   </div>
                </aside>
@@ -1066,7 +1067,7 @@ function InternDashboardContent() {
                            </h2>
                            <div className="flex items-center gap-2">
                               <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-                              <span className="text-[9px] lg:text-[10px] font-bold text-zinc-400 uppercase tracking-widest leading-none">Active session</span>
+                              <span className="text-[9px] lg:text-[10px] font-bold text-zinc-400 font-bold leading-none">Active session</span>
                            </div>
                         </div>
                      </div>
@@ -1081,7 +1082,7 @@ function InternDashboardContent() {
                      ).length === 0 ? (
                         <div className="h-full flex flex-col items-center justify-center text-zinc-300">
                            <MessageSquare size={48} className="mb-4 opacity-20" />
-                           <p className="text-xs font-bold uppercase tracking-widest opacity-40">Start a conversation</p>
+                           <p className="text-xs font-bold tracking-widest opacity-40">Start a conversation</p>
                         </div>
                      ) : (
                         messages.filter(m =>
@@ -1094,7 +1095,7 @@ function InternDashboardContent() {
                               <div key={i} className={`flex flex-col ${isOwn ? "items-end" : "items-start"}`}>
                                  <div className={`max-w-[85%] lg:max-w-[70%] ${isOwn ? "text-right" : "text-left"}`}>
                                     {!isOwn && (
-                                       <span className="text-[9px] lg:text-[10px] font-bold text-zinc-400 mb-1 lg:mb-2 block uppercase px-1">
+                                       <span className="text-[9px] lg:text-[10px] font-bold text-zinc-400 mb-1 lg:mb-2 block px-1">
                                           {msg.senderName}
                                        </span>
                                     )}
