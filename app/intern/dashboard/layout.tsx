@@ -114,7 +114,7 @@ function InternDashboardLayoutContent({
         { name: "Roadmap", icon: Calendar, slug: "/intern/dashboard/schedule", isNew: false, mobile: true },
         { name: "Assignments", icon: Briefcase, slug: "/intern/dashboard?view=tasks", isNew: false, mobile: false },
         { name: "Attendance", icon: FileBadge, slug: "/intern/dashboard?view=attendance", isNew: false, mobile: false },
-        { name: "Settings", icon: Settings, slug: "/intern/dashboard/settings", isNew: false, mobile: false },
+        { name: "Profile", icon: User, slug: "/intern/dashboard/settings", isNew: false, mobile: false },
     ];
 
     return (

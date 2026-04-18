@@ -92,6 +92,10 @@ model User {
   employmentType       String?              @default("Full-time")
   lastActive           DateTime             @default(now())
   college              String?
+  year                 String?
+  graduationYear       String?
+  dob                  String?
+  interestedArea       String?
   batch                String?              @default("Batch 1")
   failedAttempts       Int                  @default(0)
   lockUntil            DateTime?

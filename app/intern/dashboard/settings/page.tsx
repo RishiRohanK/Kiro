@@ -1,88 +1,216 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { User, Mail, Shield, ChevronRight, Lock, Bell } from "lucide-react";
-import { motion } from "framer-motion";
+import { User, Mail, School, GraduationCap, Calendar, Briefcase, Save, RefreshCw, CheckCircle2 } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
-export default function InternSettings() {
+export default function InternProfile() {
     const [user, setUser] = useState<any>(null);
+    const [submitting, setSubmitting] = useState(false);
+    const [success, setSuccess] = useState(false);
+    const [formData, setFormData] = useState({
+        name: "",
+        college: "",
+        year: "",
+        department: "",
+        dob: "",
+        graduationYear: "",
+        interestedArea: ""
+    });
 
     useEffect(() => {
         const storedUser = localStorage.getItem("intern_user");
-        if (storedUser) setUser(JSON.parse(storedUser));
+        if (storedUser) {
+            const parsed = JSON.parse(storedUser);
+            setUser(parsed);
+            setFormData({
+                name: parsed.name || "",
+                college: parsed.college || "",
+                year: parsed.year || "",
+                department: parsed.department || "",
+                dob: parsed.dob || "",
+                graduationYear: parsed.graduationYear || "",
+                interestedArea: parsed.interestedArea || ""
+            });
+        }
     }, []);
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setSubmitting(true);
+        try {
+            const res = await fetch("/api/intern/profile", {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ userId: user.id, ...formData })
+            });
+            const data = await res.json();
+            if (data.success) {
+                const updatedUser = { ...user, ...formData };
+                localStorage.setItem("intern_user", JSON.stringify(updatedUser));
+                setUser(updatedUser);
+                setSuccess(true);
+                setTimeout(() => setSuccess(false), 3000);
+            }
+        } catch (error) {
+            console.error("Failed to update profile");
+        } finally {
+            setSubmitting(false);
+        }
+    };
 
     if (!user) return null;
 
     return (
         <div className="p-4 lg:p-12 max-w-4xl mx-auto space-y-10 pb-24 lg:pb-12">
-            {}
             <div>
-                <h1 className="text-2xl lg:text-3xl font-bold tracking-tight text-zinc-900">Settings</h1>
-                <p className="text-zinc-500 text-[11px] lg:text-sm mt-1">Manage your account preferences and security.</p>
+                <h1 className="text-2xl lg:text-3xl font-bold tracking-tight text-zinc-900 leading-none">Your Profile</h1>
+                <p className="text-zinc-500 text-[11px] lg:text-sm mt-2 font-medium">Update your academic and personal information to stay eligible for bounties.</p>
             </div>
 
-            {}
-            <section className="space-y-6">
-                <div className="flex items-center gap-2 pb-2 border-b border-zinc-100">
-                    <User size={16} className="text-[#0055FF]" />
-                    <h2 className="text-[12px] font-bold uppercase tracking-widest text-zinc-400">Profile Information</h2>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="p-6 bg-zinc-50 border border-zinc-100 rounded-2xl space-y-1">
-                        <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Full Name</p>
-                        <p className="text-sm font-bold text-zinc-900">{user.name}</p>
+            <form onSubmit={handleSubmit} className="space-y-8">
+                {/* Academic Background */}
+                <section className="space-y-6">
+                    <div className="flex items-center gap-2 pb-2 border-b border-zinc-100">
+                        <School size={16} className="text-[#0055FF]" />
+                        <h2 className="text-[12px] font-bold uppercase tracking-widest text-zinc-400">Academic Credentials</h2>
                     </div>
-                    <div className="p-6 bg-zinc-50 border border-zinc-100 rounded-2xl space-y-1">
-                        <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Email Address</p>
-                        <p className="text-sm font-bold text-zinc-900">{user.email}</p>
-                    </div>
-                </div>
-            </section>
 
-            {}
-            <section className="space-y-6">
-                <div className="flex items-center gap-2 pb-2 border-b border-zinc-100">
-                    <Shield size={16} className="text-[#0055FF]" />
-                    <h2 className="text-[12px] font-bold uppercase tracking-widest text-zinc-400">Security</h2>
-                </div>
-
-                <div className="bg-white border border-zinc-100 rounded-2xl overflow-hidden shadow-sm">
-                    <button className="w-full p-6 flex items-center justify-between hover:bg-zinc-50 transition-colors">
-                        <div className="flex items-center gap-4">
-                            <div className="h-10 w-10 rounded-xl bg-zinc-100 flex items-center justify-center text-zinc-500">
-                                <Lock size={18} />
-                            </div>
-                            <div className="text-left">
-                                <p className="text-sm font-bold text-zinc-900">Change Password</p>
-                                <p className="text-xs text-zinc-500">Update your account access key</p>
-                            </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="space-y-2">
+                           <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest px-1">Full Name</label>
+                           <input 
+                              required
+                              type="text"
+                              value={formData.name}
+                              onChange={e => setFormData({...formData, name: e.target.value})}
+                              className="w-full bg-zinc-50 border border-zinc-200 p-4 text-[13px] font-bold text-zinc-900 focus:outline-none focus:border-[#0055FF] transition-all"
+                           />
                         </div>
-                        <ChevronRight size={18} className="text-zinc-300" />
-                    </button>
-                </div>
-            </section>
+                        <div className="space-y-2 opacity-50">
+                           <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest px-1">Email Address (Locked)</label>
+                           <input 
+                              disabled
+                              type="email"
+                              value={user.email}
+                              className="w-full bg-zinc-100 border border-zinc-200 p-4 text-[13px] font-bold text-zinc-400 cursor-not-allowed"
+                           />
+                        </div>
+                        <div className="space-y-2">
+                           <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest px-1">College / University</label>
+                           <input 
+                              required
+                              type="text"
+                              placeholder="e.g. IIT Hyderabad"
+                              value={formData.college}
+                              onChange={e => setFormData({...formData, college: e.target.value})}
+                              className="w-full bg-zinc-50 border border-zinc-200 p-4 text-[13px] font-bold text-zinc-900 focus:outline-none focus:border-[#0055FF] transition-all"
+                           />
+                        </div>
+                        <div className="space-y-2">
+                           <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest px-1">Study Year</label>
+                           <select 
+                              required
+                              value={formData.year}
+                              onChange={e => setFormData({...formData, year: e.target.value})}
+                              className="w-full bg-zinc-50 border border-zinc-200 p-4 text-[13px] font-bold text-zinc-900 focus:outline-none focus:border-[#0055FF] transition-all"
+                           >
+                              <option value="">Select Year</option>
+                              <option value="1st Year">1st Year</option>
+                              <option value="2nd Year">2nd Year</option>
+                              <option value="3rd Year">3rd Year</option>
+                              <option value="4th Year">4th Year</option>
+                              <option value="Graduated">Graduated</option>
+                           </select>
+                        </div>
+                        <div className="space-y-2">
+                           <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest px-1">Department / Branch</label>
+                           <input 
+                              required
+                              type="text"
+                              placeholder="e.g. Computer Science"
+                              value={formData.department}
+                              onChange={e => setFormData({...formData, department: e.target.value})}
+                              className="w-full bg-zinc-50 border border-zinc-200 p-4 text-[13px] font-bold text-zinc-900 focus:outline-none focus:border-[#0055FF] transition-all"
+                           />
+                        </div>
+                        <div className="space-y-2">
+                           <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest px-1">Graduation Year</label>
+                           <input 
+                              required
+                              type="number"
+                              placeholder="e.g. 2026"
+                              value={formData.graduationYear}
+                              onChange={e => setFormData({...formData, graduationYear: e.target.value})}
+                              className="w-full bg-zinc-50 border border-zinc-200 p-4 text-[13px] font-bold text-zinc-900 focus:outline-none focus:border-[#0055FF] transition-all"
+                           />
+                        </div>
+                    </div>
+                </section>
 
-            {}
-            <section className="space-y-6">
-                <div className="flex items-center gap-2 pb-2 border-b border-zinc-100">
-                    <Bell size={16} className="text-[#0055FF]" />
-                    <h2 className="text-[12px] font-bold uppercase tracking-widest text-zinc-400">Preferences</h2>
-                </div>
+                {/* Personal & Professional */}
+                <section className="space-y-6">
+                    <div className="flex items-center gap-2 pb-2 border-b border-zinc-100">
+                        <Briefcase size={16} className="text-[#0055FF]" />
+                        <h2 className="text-[12px] font-bold uppercase tracking-widest text-zinc-400">Professional Interests</h2>
+                    </div>
 
-                <div className="bg-white border border-zinc-100 rounded-2xl p-6">
-                   <div className="flex items-center justify-between">
-                      <div>
-                         <p className="text-sm font-bold text-zinc-900">Email Notifications</p>
-                         <p className="text-xs text-zinc-500">Receive assignment updates via email</p>
-                      </div>
-                      <div className="h-6 w-11 bg-zinc-200 rounded-full relative p-1 cursor-pointer">
-                         <div className="h-4 w-4 bg-white rounded-full translate-x-5 shadow-sm" />
-                      </div>
-                   </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="space-y-2">
+                           <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest px-1">Date of Birth</label>
+                           <input 
+                              required
+                              type="date"
+                              value={formData.dob}
+                              onChange={e => setFormData({...formData, dob: e.target.value})}
+                              className="w-full bg-zinc-50 border border-zinc-200 p-4 text-[13px] font-bold text-zinc-900 focus:outline-none focus:border-[#0055FF] transition-all"
+                           />
+                        </div>
+                        <div className="space-y-2">
+                           <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest px-1">Interested Area (Bounties)</label>
+                           <select 
+                              required
+                              value={formData.interestedArea}
+                              onChange={e => setFormData({...formData, interestedArea: e.target.value})}
+                              className="w-full bg-zinc-50 border border-zinc-200 p-4 text-[13px] font-bold text-zinc-900 focus:outline-none focus:border-[#0055FF] transition-all"
+                           >
+                              <option value="">Select Domain</option>
+                              <option value="Frontend (React/Next.js)">Frontend (React/Next.js)</option>
+                              <option value="Backend (Node.js/Go)">Backend (Node.js/Go)</option>
+                              <option value="Full Stack Development">Full Stack Development</option>
+                              <option value="UI/UX Design">UI/UX Design</option>
+                              <option value="AI / ML Models">AI / ML Models</option>
+                              <option value="DevOps & Infrastructure">DevOps & Infrastructure</option>
+                              <option value="Content & Technical Writing">Content & Technical Writing</option>
+                           </select>
+                        </div>
+                    </div>
+                </section>
+
+                <div className="pt-6 flex items-center gap-4">
+                  <button 
+                     disabled={submitting}
+                     type="submit"
+                     className="bg-black text-white px-8 py-4 text-[13px] font-bold uppercase tracking-widest hover:bg-zinc-800 transition-all flex items-center gap-3 disabled:opacity-50"
+                  >
+                     {submitting ? <RefreshCw className="animate-spin" size={18} /> : <Save size={18} />}
+                     Update Profile
+                  </button>
+
+                  <AnimatePresence>
+                     {success && (
+                        <motion.div 
+                           initial={{ opacity: 0, x: -10 }} 
+                           animate={{ opacity: 1, x: 0 }} 
+                           className="flex items-center gap-2 text-emerald-600 font-bold text-[12px]"
+                        >
+                           <CheckCircle2 size={18} />
+                           Profile synchronized successfully!
+                        </motion.div>
+                     )}
+                  </AnimatePresence>
                 </div>
-            </section>
+            </form>
         </div>
     );
 }
