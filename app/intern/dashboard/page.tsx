@@ -1090,9 +1090,10 @@ function InternDashboardContent() {
                            ? (m.senderId === selectedUser.id || (m.senderId === user.id && m.targetId === selectedUser.id))
                            : (!m.targetId)
                      ).length === 0 ? (
-                        <div className="h-full flex flex-col items-center justify-center text-zinc-300">
-                           <MessageSquare size={48} className="mb-4 opacity-20" />
-                           <p className="text-xs font-bold tracking-widest opacity-40">Start a conversation</p>
+                        <div className="h-full flex flex-col items-center justify-center text-center p-8">
+                           <img src="https://ik.imagekit.io/dypkhqxip/Messaging-bro.svg" alt="No messages" className="w-48 lg:w-64 h-auto mb-6 grayscale opacity-60" />
+                           <p className="text-sm font-bold text-zinc-900 leading-none mb-2">No conversations found</p>
+                           <p className="text-[11px] text-zinc-400 font-bold">Start a new chat with your teammates.</p>
                         </div>
                      ) : (
                         messages.filter(m =>
