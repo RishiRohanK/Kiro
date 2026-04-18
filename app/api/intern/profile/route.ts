@@ -11,7 +11,8 @@ export async function PUT(req: Request) {
             department, 
             dob, 
             graduationYear, 
-            interestedArea 
+            interestedArea,
+            profileImage
         } = await req.json();
 
         if (!userId) {
@@ -27,7 +28,8 @@ export async function PUT(req: Request) {
                 department,
                 dob,
                 graduationYear,
-                interestedArea
+                interestedArea,
+                profileImage
             }
         });
 

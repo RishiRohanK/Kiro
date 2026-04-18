@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { User, Mail, School, GraduationCap, Calendar, Briefcase, Save, RefreshCw, CheckCircle2 } from "lucide-react";
+import { User, Mail, School, GraduationCap, Calendar, Briefcase, Save, RefreshCw, CheckCircle2, Camera, Upload, Loader2, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { supabase } from "@/lib/supabase";
 
 export default function InternProfile() {
     const [user, setUser] = useState<any>(null);
@@ -15,8 +15,12 @@ export default function InternProfile() {
         department: "",
         dob: "",
         graduationYear: "",
-        interestedArea: ""
+        interestedArea: "",
+        profileImage: ""
     });
+
+    const [uploading, setUploading] = useState(false);
+    const [dragActive, setDragActive] = useState(false);
 
     useEffect(() => {
         const storedUser = localStorage.getItem("intern_user");
@@ -30,10 +34,56 @@ export default function InternProfile() {
                 department: parsed.department || "",
                 dob: parsed.dob || "",
                 graduationYear: parsed.graduationYear || "",
-                interestedArea: parsed.interestedArea || ""
+                interestedArea: parsed.interestedArea || "",
+                profileImage: parsed.profileImage || ""
             });
         }
     }, []);
+
+    const handleUpload = async (file: File) => {
+        if (!file || !user) return;
+        setUploading(true);
+        try {
+            const fileExt = file.name.split('.').pop();
+            const fileName = `${user.id}-${Math.random()}.${fileExt}`;
+            const filePath = `profiles/${fileName}`;
+
+            const { error: uploadError } = await supabase.storage
+                .from('intern-assets')
+                .upload(filePath, file);
+
+            if (uploadError) throw uploadError;
+
+            const { data } = supabase.storage
+                .from('intern-assets')
+                .getPublicUrl(filePath);
+
+            const publicUrl = data.publicUrl;
+            
+            // Just update local state for the image, let the main form save handle the persistence
+            setFormData(prev => ({ ...prev, profileImage: publicUrl }));
+        } catch (error) {
+            console.error("Upload failed");
+        } finally {
+            setUploading(false);
+        }
+    };
+
+    const handleDrag = (e: React.DragEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (e.type === "dragenter" || e.type === "dragover") setDragActive(true);
+        else if (e.type === "dragleave") setDragActive(false);
+    };
+
+    const handleDrop = (e: React.DragEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setDragActive(false);
+        if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+            handleUpload(e.dataTransfer.files[0]);
+        }
+    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -69,6 +119,67 @@ export default function InternProfile() {
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-8">
+                {/* Profile Photo Upload */}
+                <section className="space-y-6">
+                   <div className="flex items-center gap-2 pb-2 border-b border-zinc-100">
+                        <Camera size={16} className="text-[#0055FF]" />
+                        <h2 className="text-[12px] font-bold uppercase tracking-widest text-zinc-400">Profile Image</h2>
+                    </div>
+
+                    <div className="flex flex-col md:flex-row items-center gap-8">
+                        <div className="relative group">
+                            <div className="h-32 w-32 bg-zinc-100 border-2 border-dashed border-zinc-200 overflow-hidden flex items-center justify-center">
+                                {formData.profileImage ? (
+                                    <img src={formData.profileImage} alt="Profile" className="w-full h-full object-cover" />
+                                ) : (
+                                    <User size={40} className="text-zinc-300" />
+                                )}
+                                
+                                {uploading && (
+                                    <div className="absolute inset-0 bg-white/80 flex items-center justify-center">
+                                        <Loader2 className="animate-spin text-[#0055FF]" size={24} />
+                                    </div>
+                                )}
+                            </div>
+                            {formData.profileImage && (
+                                <button 
+                                    type="button"
+                                    onClick={() => setFormData({...formData, profileImage: ""})}
+                                    className="absolute -top-2 -right-2 bg-black text-white p-1 rounded-full shadow-lg"
+                                >
+                                    <X size={12} />
+                                </button>
+                            )}
+                        </div>
+
+                        <div 
+                            onDragEnter={handleDrag}
+                            onDragOver={handleDrag}
+                            onDragLeave={handleDrag}
+                            onDrop={handleDrop}
+                            className={`flex-1 w-full p-8 border-2 border-dashed transition-all flex flex-col items-center justify-center gap-3 cursor-pointer ${
+                                dragActive ? "border-[#0055FF] bg-blue-50/30" : "border-zinc-200 hover:border-zinc-300"
+                            }`}
+                            onClick={() => document.getElementById('photo-upload')?.click()}
+                        >
+                            <input 
+                                id="photo-upload"
+                                type="file" 
+                                className="hidden" 
+                                accept="image/*"
+                                onChange={(e) => e.target.files?.[0] && handleUpload(e.target.files[0])}
+                            />
+                            <div className="w-10 h-10 bg-zinc-50 flex items-center justify-center text-zinc-400">
+                                <Upload size={18} />
+                            </div>
+                            <div className="text-center">
+                                <p className="text-[13px] font-bold text-zinc-900">Drag and drop your photo</p>
+                                <p className="text-[11px] font-semibold text-zinc-400 uppercase tracking-widest mt-1">or click to browse from device</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
                 {/* Academic Background */}
                 <section className="space-y-6">
                     <div className="flex items-center gap-2 pb-2 border-b border-zinc-100">
