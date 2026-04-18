@@ -105,7 +105,7 @@ function InternDashboardLayoutContent({
     if (!mounted || !user) return null;
 
     const navItems = [
-        { name: "Overview", icon: LayoutDashboard, slug: "/intern/dashboard", isNew: false, mobile: true },
+        { name: "Overview", icon: LayoutDashboard, slug: "/intern/dashboard?view=overview", isNew: false, mobile: true },
         { name: "Stack Flow", icon: Layers, slug: "/intern/dashboard/stack-flow", isNew: false, mobile: true },
         { name: "Exams", icon: ClipboardCheck, slug: "/intern/dashboard/exams", isNew: false, mobile: true },
         { name: "Resources", icon: BookOpen, slug: "/intern/dashboard/resources", isNew: false, mobile: true },
