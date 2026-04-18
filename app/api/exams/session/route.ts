@@ -30,7 +30,7 @@ export async function POST(req: Request) {
     const et = "UI_UX"; // Default track for new sessions
     const session = await prisma.examSession.upsert({
       where: { 
-        userId_examType: { userId, examType: et } 
+        userId: userId 
       },
       update: { 
         status: "STARTED",
@@ -117,7 +117,7 @@ export async function PATCH(req: Request) {
       const et = examType || "FULLSTACK";
       const session = await prisma.examSession.upsert({
         where: { 
-          userId_examType: { userId, examType: et } 
+          userId: userId 
         },
         create: {
           userId,

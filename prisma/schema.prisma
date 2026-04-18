@@ -432,7 +432,7 @@ model ExamSecurity {
 
 model ExamSession {
   id              String   @id @default(cuid())
-  userId          String
+  userId          String   @unique
   user            User     @relation("UserExamSessions", fields: [userId], references: [id], onDelete: Cascade)
   startedAt       DateTime @default(now())
   status          String   @default("STARTED") // STARTED, SUBMITTED, DISQUALIFIED
@@ -443,8 +443,6 @@ model ExamSession {
   examType        String   @default("FULLSTACK")
   examBatch       String?  @default("BATCH_1")
   updatedAt       DateTime @updatedAt
-
-  @@unique([userId, examType])
 }
 
 model Feedback {

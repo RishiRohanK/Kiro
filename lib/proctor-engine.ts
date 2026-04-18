@@ -94,12 +94,12 @@ class ProctoringEngine {
                 
                 this.config.onStreamStatus(true);
                 return;
-            } catch (e) {
-                console.warn("PROCTOR_ENGINE: Media Constraint Refused", constraint);
+            } catch (e: any) {
+                console.warn(`PROCTOR_ENGINE: Media Constraint Refused [${e.name}]: ${e.message}`, constraint);
             }
         }
 
-        console.error("PROCTOR_ENGINE: Total Media Acquisition Failure");
+        console.error("PROCTOR_ENGINE: Total Media Acquisition Failure - No compatible hardware/permissions secured.");
         this.config.onStreamStatus(false);
     }
 
