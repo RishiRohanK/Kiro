@@ -1091,7 +1091,7 @@ function InternDashboardContent() {
                            : (!m.targetId)
                      ).length === 0 ? (
                         <div className="h-full flex flex-col items-center justify-center text-center p-8">
-                           <img src="https://ik.imagekit.io/dypkhqxip/Messaging-bro.svg" alt="No messages" className="w-48 lg:w-64 h-auto mb-6 grayscale opacity-60" />
+                           <img src="https://ik.imagekit.io/dypkhqxip/Messaging-bro.svg" alt="No messages" className="w-48 lg:w-64 h-auto mb-6" />
                            <p className="text-sm font-bold text-zinc-900 leading-none mb-2">No conversations found</p>
                            <p className="text-[11px] text-zinc-400 font-bold">Start a new chat with your teammates.</p>
                         </div>
