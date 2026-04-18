@@ -28,7 +28,12 @@ app.prepare().then(() => {
     socket.on("proctor:join", (studentData) => {
       socket.join("proctor-room");
       socket.data = { ...studentData, socketId: socket.id };
-      io.to("proctor-room").emit("proctor:student-list", Array.from(io.sockets.adapter.rooms.get("proctor-room") || []).map(id => io.sockets.sockets.get(id)?.data).filter(Boolean));
+      
+      const students = Array.from(io.sockets.adapter.rooms.get("proctor-room") || [])
+        .map(id => io.sockets.sockets.get(id)?.data)
+        .filter(data => data && data.role !== "admin");
+
+      io.to("proctor-room").emit("proctor:student-list", students);
     });
 
     socket.on("proctor:offer", ({ to, offer }) => {
@@ -48,7 +53,11 @@ app.prepare().then(() => {
       activeUsers.delete(socket.id);
       io.emit("active-users", Array.from(activeUsers.values()));
       // Update proctor list on disconnect
-      io.to("proctor-room").emit("proctor:student-list", Array.from(io.sockets.adapter.rooms.get("proctor-room") || []).map(id => io.sockets.sockets.get(id)?.data).filter(Boolean));
+      const students = Array.from(io.sockets.adapter.rooms.get("proctor-room") || [])
+        .map(id => io.sockets.sockets.get(id)?.data)
+        .filter(data => data && data.role !== "admin");
+
+      io.to("proctor-room").emit("proctor:student-list", students);
     });
   });
 

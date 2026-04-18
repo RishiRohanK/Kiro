@@ -39,6 +39,7 @@ export default function ProctoringDashboard() {
 
         socket.on("connect", () => {
             console.log("Admin Connected to Monitoring Node");
+            socket.emit("proctor:join", { role: "admin" });
         });
 
         socket.on("proctor:student-list", (studentList: any[]) => {
