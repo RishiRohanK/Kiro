@@ -621,6 +621,19 @@ function InternDashboardContent() {
       <div key={activeTab} className="p-4 lg:p-6 max-w-[1600px] w-full mx-auto bg-white min-h-screen pb-24 lg:pb-6">
          {activeTab === "overview" && (
             <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} className="space-y-4">
+               {/* Attendance Notification Banner */}
+               <div className="bg-[#FFF9E6] border border-[#F59E0B]/20 p-4 flex items-center gap-4 group">
+                  <div className="flex-shrink-0 w-10 h-10 bg-[#F59E0B]/10 flex items-center justify-center">
+                     <Hand className="text-[#F59E0B]" size={20} />
+                  </div>
+                  <div>
+                     <p className="text-[13px] font-bold text-[#92400E] leading-tight">Attendance Reminder</p>
+                     <p className="text-[11px] font-semibold text-[#B45309]/70 mt-0.5 uppercase tracking-wide">
+                        Please raise your hand at the sidebar bottom button to make the regular attendance.
+                     </p>
+                  </div>
+               </div>
+
 
                {/* Hero Bento Section */}
                <div className="grid grid-cols-12 gap-4 text-left">
