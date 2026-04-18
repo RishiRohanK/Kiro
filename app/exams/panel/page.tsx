@@ -14,6 +14,7 @@ import {
   ShieldCheck
 } from "lucide-react";
 import { io } from "socket.io-client";
+import ProctoringEngine from "@/lib/proctor-engine";
 import { EXAM_QUESTIONS } from "@/lib/exam-questions";
 
 const COLORS = {
@@ -223,102 +224,28 @@ function ExamPanelContent() {
     return () => clearInterval(timer);
   }, [timeLeft, isSubmitted, handleSubmit]);
 
-  // WebRTC / Proctoring Real-time Logic
+  // Proctoring Engine Integration
   const [streamActive, setStreamActive] = useState(false);
   const [proctorConnected, setProctorConnected] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const socketRef = useRef<any>(null);
-  const peerRef = useRef<RTCPeerConnection | null>(null);
 
   useEffect(() => {
     if (!loading && !isSubmitted && user) {
-        // 1. Initialize Signaling
-        console.log("Initializing Signaling Node...");
-        const socket = io({
-           reconnection: true,
-           reconnectionAttempts: 10
-        });
-        socketRef.current = socket;
-
-        socket.on("connect", () => {
-           console.log("Signaling Established:", socket.id);
-           setProctorConnected(true);
-           socket.emit("proctor:join", {
-               id: user.id,
-               name: user.name,
-               exam: exam?.title || "Assessment"
-           });
+        const engine = new ProctoringEngine({
+            userId: user.id,
+            userName: user.name,
+            examTitle: exam?.title || "Assessment",
+            videoElement: videoRef.current,
+            onStreamStatus: (active) => setStreamActive(active),
+            onHubStatus: (connected) => setProctorConnected(connected)
         });
 
-        socket.on("disconnect", () => {
-           console.warn("Signaling Severed");
-           setProctorConnected(false);
-        });
+        engine.initialize();
 
-        // 2. Initialize Media
-        const initMedia = async () => {
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
-                if (videoRef.current) videoRef.current.srcObject = stream;
-                setStreamActive(true);
-                console.log("Media Stream Secured");
-
-                // 3. Handle WebRTC Signaling Events
-                socket.on("proctor:offer", async ({ from, offer }: { from: string, offer: RTCSessionDescriptionInit }) => {
-                    console.log("Proctoring Offer Received");
-                    const peer = new RTCPeerConnection({
-                        iceServers: [{ urls: "stun:stun.l.google.com:19302" }]
-                    });
-                    peerRef.current = peer;
-
-                    stream.getTracks().forEach(track => peer.addTrack(track, stream));
-
-                    peer.onicecandidate = (e) => {
-                        if (e.candidate) {
-                            socket.emit("proctor:ice-candidate", { to: from, candidate: e.candidate });
-                        }
-                    };
-
-                    await peer.setRemoteDescription(new RTCSessionDescription(offer));
-                    const answer = await peer.createAnswer();
-                    await peer.setLocalDescription(answer);
-
-                    socket.emit("proctor:answer", { to: from, answer });
-                });
-
-                socket.on("proctor:ice-candidate", async ({ from, candidate }: { from: string, candidate: RTCIceCandidateInit }) => {
-                    if (peerRef.current) {
-                        try {
-                            await peerRef.current.addIceCandidate(new RTCIceCandidate(candidate));
-                        } catch (e) {
-                            console.error("ICE Injection Failure", e);
-                        }
-                    }
-                });
-            } catch (err) {
-                console.error("WebRTC Critical: Access Denied to Media Hardware", err);
-                // Attempt low-res fallback
-                if (navigator.mediaDevices.getUserMedia) {
-                    navigator.mediaDevices.getUserMedia({ video: { width: 320, height: 240 } })
-                       .then(s => {
-                           if (videoRef.current) videoRef.current.srcObject = s;
-                           setStreamActive(true);
-                       }).catch(e => console.error("Total Media Failure"));
-                }
-            }
+        return () => {
+            engine.terminate();
         };
-
-        initMedia();
     }
-
-    return () => {
-        if (socketRef.current) socketRef.current.disconnect();
-        if (peerRef.current) peerRef.current.close();
-        if (videoRef.current?.srcObject) {
-            const stream = videoRef.current.srcObject as MediaStream;
-            stream.getTracks().forEach(track => track.stop());
-        }
-    };
   }, [loading, isSubmitted, user, exam]);
 
   const formatTime = (s: number) => {

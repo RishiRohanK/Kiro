@@ -28,7 +28,8 @@ app.prepare().then(() => {
     socket.on("proctor:join", (studentData) => {
       socket.join("proctor-room");
       socket.data = { ...studentData, socketId: socket.id };
-      
+      console.log(`PROCTOR_HUB: Node Joined [${socket.id}] - ${studentData.name || 'Admin'}`);
+
       const students = Array.from(io.sockets.adapter.rooms.get("proctor-room") || [])
         .map(id => io.sockets.sockets.get(id)?.data)
         .filter(data => data && data.role !== "admin");
@@ -37,14 +38,17 @@ app.prepare().then(() => {
     });
 
     socket.on("proctor:offer", ({ to, offer }) => {
+      console.log(`PROCTOR_HUB: Signaling Offer [${socket.id} -> ${to}]`);
       io.to(to).emit("proctor:offer", { from: socket.id, offer });
     });
 
     socket.on("proctor:answer", ({ to, answer }) => {
+      console.log(`PROCTOR_HUB: Signaling Answer [${socket.id} -> ${to}]`);
       io.to(to).emit("proctor:answer", { from: socket.id, answer });
     });
 
     socket.on("proctor:ice-candidate", ({ to, candidate }) => {
+      console.log(`PROCTOR_HUB: ICE Exchange [${socket.id} -> ${to}]`);
       io.to(to).emit("proctor:ice-candidate", { from: socket.id, candidate });
     });
 
