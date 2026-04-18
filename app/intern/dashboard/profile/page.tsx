@@ -147,9 +147,12 @@ export default function InternProfile() {
             <form onSubmit={handleSubmit} className="space-y-12 max-w-2xl">
                 {/* Profile Photo Upload */}
                 <section className="space-y-6">
-                   <div className="flex items-center gap-2 pb-2 border-b border-zinc-100">
-                        <Camera size={14} className="text-[#0055FF]" />
-                        <h2 className="text-[11px] font-bold uppercase tracking-widest text-zinc-400">Profile Image <span className="text-red-500">*</span></h2>
+                    <div className="flex flex-col md:flex-row md:items-end justify-between gap-2 pb-2 border-b border-zinc-100">
+                        <div className="flex items-center gap-2">
+                            <Camera size={14} className="text-[#0055FF]" />
+                            <h2 className="text-[11px] font-bold uppercase tracking-widest text-zinc-400">Profile Image <span className="text-red-500">*</span></h2>
+                        </div>
+                        <p className="text-[10px] font-black uppercase tracking-tight text-red-600">Original and valid photo is required</p>
                     </div>
 
                     <div className="flex flex-col md:flex-row items-center gap-10 relative">
