@@ -499,16 +499,18 @@ function ExamPanelContent() {
 
       {/* Proctoring Viewport Bubble */}
       {streamActive && (
-         <div className="fixed bottom-14 left-6 z-[100] h-20 w-28 bg-black border border-violet-500/30 overflow-hidden shadow-2xl">
+         <div className="fixed bottom-14 left-8 z-[100] h-32 w-48 bg-black border border-violet-500 shadow-2xl rounded overflow-hidden">
             <video 
                ref={videoRef}
                autoPlay 
                muted 
                playsInline 
-               className="h-full w-full object-cover grayscale opacity-60"
+               className="h-full w-full object-cover opacity-90"
             />
-            <div className="absolute top-1 left-1 bg-violet-600 px-1 py-0.5 rounded-[1px]">
-               <p className="text-[6px] font-bold text-white uppercase tracking-tighter italic">Live Stream</p>
+            <div className="absolute top-2 left-2 bg-violet-600 px-2 py-0.5 rounded-sm">
+               <p className="text-[7px] font-bold text-white uppercase tracking-widest flex items-center gap-1">
+                  <Activity size={8} /> WebRTC Active
+               </p>
             </div>
          </div>
       )}

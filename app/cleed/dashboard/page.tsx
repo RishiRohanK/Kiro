@@ -46,7 +46,8 @@ import {
    Shield,
    MessageSquare,
    Zap,
-   BookOpen
+   BookOpen,
+   Video
 } from "lucide-react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
@@ -1927,7 +1928,12 @@ export default function CleedDashboard() {
                                        <td className="px-6 py-4 text-xs font-bold">{session.score ?? '--'}</td>
                                        <td className="px-6 py-4 text-xs font-bold text-red-600">{session.violations}</td>
                                        <td className="px-6 py-4 text-right">
-                                          <span className="text-[9px] font-bold uppercase px-2 py-1 bg-zinc-100">{session.status}</span>
+                                          <div className="flex items-center justify-end gap-3">
+                                             <span className="text-[9px] font-bold uppercase px-2 py-1 bg-zinc-100">{session.status}</span>
+                                             <Link href="/admin/exam/proctor" className="h-8 px-3 bg-violet-600 text-white text-[9px] font-bold uppercase tracking-widest hover:bg-violet-700 transition-all flex items-center gap-2">
+                                                <Video size={12} /> Stream
+                                             </Link>
+                                          </div>
                                        </td>
                                     </tr>
                                  ))}
