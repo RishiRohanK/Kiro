@@ -314,8 +314,15 @@ function InternDashboardContent() {
          // Wake up the chat server (Render free tier)
          fetch("https://serversf.onrender.com/ping").catch(() => {});
 
-         const newSocket = io("https://serversf.onrender.com");
+         const newSocket = io("https://serversf.onrender.com", {
+            transports: ["websocket", "polling"],
+            reconnectionAttempts: 5,
+            timeout: 10000
+         });
          setSocket(newSocket);
+
+         newSocket.on("connect", () => console.log("CHAT_SERVER: Connection established"));
+         newSocket.on("connect_error", (err) => console.error("CHAT_SERVER: Connection failed:", err.message));
 
 
          newSocket.on("receive_message", (msg: ChatMessage) => {
@@ -349,14 +356,13 @@ function InternDashboardContent() {
    };
 
    useEffect(() => {
-      if (socket && schedules.length > 0 && user) {
-         const teamSchedule = schedules.find(s => s.week.includes("Week 2") && s.teamInternIds?.length > 0)
-            || schedules.find(s => s.teamInternIds?.length > 0)
-            || schedules[0];
-
-         const currentTeamId = teamSchedule.id;
+      if (socket && user) {
+         const teamAllocation = schedules.find(s => s.teamAllocation)?.teamAllocation;
+         const currentTeamId = teamAllocation || "global";
+         
          setActiveTeamId(currentTeamId);
          socket.emit("join_team", currentTeamId);
+         console.log("CHAT_SERVER: Joined room", currentTeamId);
          
          fetchMessageHistory(currentTeamId, selectedUser?.id);
       }
