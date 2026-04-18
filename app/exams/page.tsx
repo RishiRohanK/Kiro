@@ -79,7 +79,7 @@ function ExamLoginContent() {
   if (fetchingExam) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-white">
-        <Loader2 className="animate-spin text-indigo-600 mb-4" size={32} />
+        <Loader2 className="animate-spin text-violet-600 mb-4" size={32} />
         <p className="text-sm font-medium text-gray-400">Loading...</p>
       </div>
     );
@@ -150,7 +150,7 @@ function ExamLoginContent() {
                           type="email" 
                           required
                           placeholder="your@email.com"
-                          className="w-full h-11 px-4 bg-slate-50 border border-slate-200 text-sm outline-none transition-all focus:border-indigo-600 focus:bg-white rounded-none"
+                          className="w-full h-11 px-4 bg-slate-50 border border-slate-200 text-sm outline-none transition-all focus:border-violet-600 focus:bg-white rounded-none"
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
                       />
@@ -163,7 +163,7 @@ function ExamLoginContent() {
                              type="password" 
                              required
                              placeholder="Enter password"
-                             className="w-full h-11 px-4 bg-slate-50 border border-slate-200 text-sm outline-none transition-all focus:border-indigo-600 focus:bg-white rounded-none"
+                             className="w-full h-11 px-4 bg-slate-50 border border-slate-200 text-sm outline-none transition-all focus:border-violet-600 focus:bg-white rounded-none"
                              value={password}
                              onChange={(e) => setPassword(e.target.value)}
                          />
@@ -177,7 +177,7 @@ function ExamLoginContent() {
                           type="number" 
                           required
                           placeholder="Answer"
-                          className="w-full h-11 px-4 bg-slate-50 border border-slate-200 text-sm outline-none transition-all focus:border-indigo-600 focus:bg-white rounded-none"
+                          className="w-full h-11 px-4 bg-slate-50 border border-slate-200 text-sm outline-none transition-all focus:border-violet-600 focus:bg-white rounded-none"
                           value={mathAnswer}
                           onChange={(e) => setMathAnswer(e.target.value)}
                       />
@@ -194,7 +194,7 @@ function ExamLoginContent() {
                       <button 
                          type="submit"
                          disabled={loading || !exam}
-                         className="w-full h-12 bg-indigo-600 text-white text-[11px] font-bold uppercase tracking-widest transition-all hover:bg-indigo-700 active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-2 rounded-none"
+                         className="w-full h-12 bg-violet-600 text-white text-[11px] font-bold uppercase tracking-widest transition-all hover:bg-violet-700 active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-2 rounded-none"
                       >
                          {loading ? <Loader2 className="animate-spin" size={16} /> : "Start Exam"}
                       </button>
@@ -230,7 +230,7 @@ export default function ExamLoginPage() {
   return (
     <Suspense fallback={
       <div className="min-h-screen bg-white flex items-center justify-center">
-        <Loader2 className="animate-spin text-indigo-600" size={32} />
+        <Loader2 className="animate-spin text-violet-600" size={32} />
       </div>
     }>
       <ExamLoginContent />

@@ -177,7 +177,7 @@ export default function ExamReviewPage() {
   return (
     <Suspense fallback={
       <div className="min-h-screen bg-white flex items-center justify-center">
-        <Loader2 className="animate-spin text-indigo-600" size={32} />
+        <Loader2 className="animate-spin text-violet-600" size={32} />
       </div>
     }>
       <ExamReviewContent />
