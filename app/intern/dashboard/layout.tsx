@@ -110,7 +110,6 @@ function InternDashboardLayoutContent({
         { name: "Exams", icon: ClipboardCheck, slug: "/intern/dashboard/exams", isNew: false, mobile: true },
         { name: "Resources", icon: BookOpen, slug: "/intern/dashboard/resources", isNew: false, mobile: true },
         { name: "Reports", icon: FileText, slug: "/intern/dashboard/reports", isNew: false, mobile: true },
-        { name: "Kanban", icon: Kanban, slug: "/intern/dashboard?view=kanban", isNew: false, mobile: false },
         { name: "Group Chat", icon: MessageSquare, slug: "/intern/dashboard?view=chat", isNew: false, mobile: false },
         { name: "Roadmap", icon: Calendar, slug: "/intern/dashboard/schedule", isNew: false, mobile: true },
         { name: "Assignments", icon: Briefcase, slug: "/intern/dashboard?view=tasks", isNew: false, mobile: false },
