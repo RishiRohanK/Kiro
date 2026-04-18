@@ -225,6 +225,7 @@ function ExamPanelContent() {
 
   // WebRTC / Proctoring Real-time Logic
   const [streamActive, setStreamActive] = useState(false);
+  const [proctorConnected, setProctorConnected] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const socketRef = useRef<any>(null);
   const peerRef = useRef<RTCPeerConnection | null>(null);
@@ -232,23 +233,39 @@ function ExamPanelContent() {
   useEffect(() => {
     if (!loading && !isSubmitted && user) {
         // 1. Initialize Signaling
-        const socket = io();
+        console.log("Initializing Signaling Node...");
+        const socket = io({
+           reconnection: true,
+           reconnectionAttempts: 10
+        });
         socketRef.current = socket;
 
-        socket.emit("proctor:join", {
-            id: user.id,
-            name: user.name,
-            exam: exam?.title || "Assessment"
+        socket.on("connect", () => {
+           console.log("Signaling Established:", socket.id);
+           setProctorConnected(true);
+           socket.emit("proctor:join", {
+               id: user.id,
+               name: user.name,
+               exam: exam?.title || "Assessment"
+           });
+        });
+
+        socket.on("disconnect", () => {
+           console.warn("Signaling Severed");
+           setProctorConnected(false);
         });
 
         // 2. Initialize Media
-        navigator.mediaDevices.getUserMedia({ video: true, audio: false })
-            .then(stream => {
+        const initMedia = async () => {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
                 if (videoRef.current) videoRef.current.srcObject = stream;
                 setStreamActive(true);
+                console.log("Media Stream Secured");
 
                 // 3. Handle WebRTC Signaling Events
                 socket.on("proctor:offer", async ({ from, offer }: { from: string, offer: RTCSessionDescriptionInit }) => {
+                    console.log("Proctoring Offer Received");
                     const peer = new RTCPeerConnection({
                         iceServers: [{ urls: "stun:stun.l.google.com:19302" }]
                     });
@@ -271,13 +288,27 @@ function ExamPanelContent() {
 
                 socket.on("proctor:ice-candidate", async ({ from, candidate }: { from: string, candidate: RTCIceCandidateInit }) => {
                     if (peerRef.current) {
-                        await peerRef.current.addIceCandidate(new RTCIceCandidate(candidate));
+                        try {
+                            await peerRef.current.addIceCandidate(new RTCIceCandidate(candidate));
+                        } catch (e) {
+                            console.error("ICE Injection Failure", e);
+                        }
                     }
                 });
-            })
-            .catch(err => {
-                console.error("WebRTC Error: Critical Failure to acquire MediaStream", err);
-            });
+            } catch (err) {
+                console.error("WebRTC Critical: Access Denied to Media Hardware", err);
+                // Attempt low-res fallback
+                if (navigator.mediaDevices.getUserMedia) {
+                    navigator.mediaDevices.getUserMedia({ video: { width: 320, height: 240 } })
+                       .then(s => {
+                           if (videoRef.current) videoRef.current.srcObject = s;
+                           setStreamActive(true);
+                       }).catch(e => console.error("Total Media Failure"));
+                }
+            }
+        };
+
+        initMedia();
     }
 
     return () => {
@@ -527,14 +558,17 @@ function ExamPanelContent() {
              <div className="h-4 w-px bg-slate-200 ml-2"></div>
              <div className="flex gap-4 items-center pl-2">
                 <div className="flex items-center gap-1.5">
-                   <div className={`h-1.5 w-1.5 rounded-full ${streamActive ? 'bg-emerald-500 animate-pulse' : 'bg-red-500'}`}></div>
-                   <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">WebRTC: {streamActive ? 'Active' : 'Disconnected'}</span>
+                   <div className={`h-1.5 w-1.5 rounded-full ${proctorConnected ? 'bg-emerald-500 animate-pulse' : 'bg-red-500'}`}></div>
+                   <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Hub: {proctorConnected ? 'Linked' : 'Offline'}</span>
                 </div>
-                {streamActive && (
+                <div className="flex items-center gap-1.5">
+                   <div className={`h-1.5 w-1.5 rounded-full ${streamActive ? 'bg-emerald-500 animate-pulse' : 'bg-red-500'}`}></div>
+                   <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Camera: {streamActive ? 'Active' : 'Error'}</span>
+                </div>
+                {proctorConnected && streamActive && (
                    <div className="hidden lg:flex gap-4 border-l border-slate-100 pl-4 items-center">
-                      <span className="text-[8px] font-bold text-slate-300 uppercase tracking-tight">ICE: connected</span>
                       <span className="text-[8px] font-bold text-slate-300 uppercase tracking-tight">SDP: stable</span>
-                      <span className="text-[8px] font-bold text-slate-300 uppercase tracking-tight">Bitrate: 2.4 Mbps</span>
+                      <span className="text-[8px] font-bold text-slate-300 uppercase tracking-tight">ICE: connected</span>
                    </div>
                 )}
              </div>
