@@ -516,3 +516,31 @@ model InternResource {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
+
+model RichExam {
+  id          String   @id @default(cuid())
+  title       String
+  syllabus    String?
+  date        String
+  time        String
+  duration    String
+  guidelines  Json?    // Array of strings
+  status      String   @default("DRAFT") // DRAFT, PUBLISHED
+  questions   RichQuestion[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model RichQuestion {
+  id            String   @id @default(cuid())
+  examId        String
+  exam          RichExam @relation(fields: [examId], references: [id], onDelete: Cascade)
+  type          String   // MCQ, FILL_IN_BLANK, TEXT, IMAGE_BASED
+  question      String
+  options       Json?    // Array of strings for MCQ
+  correctAnswer String?
+  imageUrl      String?
+  points        Int      @default(1)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}

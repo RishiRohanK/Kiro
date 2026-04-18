@@ -1,14 +1,15 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useRouter } from "next/navigation";
 import { 
   CheckCircle2, 
   Loader2,
-  AlertTriangle
+  AlertTriangle,
+  FileText
 } from "lucide-react";
 
-export default function ExamReviewPage() {
+function ExamReviewContent() {
   const router = useRouter();
   const [submission, setSubmission] = useState<any>(null);
   const [user, setUser] = useState<any>(null);
@@ -39,7 +40,7 @@ export default function ExamReviewPage() {
           status: "SUBMITTED",
           violations: submission.violations,
           answers: submission.answers,
-          questionMapping: submission.shuffledQuestions,
+          questionMapping: submission.questions || submission.shuffledQuestions, // Fallback for old sessions
           typedExitKey: submission.exitKey
         })
       });
@@ -57,17 +58,17 @@ export default function ExamReviewPage() {
   if (isSubmitted) {
     return (
       <div className="min-h-screen bg-white flex flex-col items-center justify-center p-6 text-center">
-        <CheckCircle2 size={60} className="text-green-600 mb-6" />
-        <h1 className="text-2xl font-bold text-blue-900 mb-2">Exam Submitted Successfully</h1>
-        <p className="text-gray-500 mb-8 max-w-sm">
-           Thank you for completing the exam. Your reports will be available in the 
-           <strong className="text-blue-700"> Intern Dashboard &gt; Reports</strong>.
+        <CheckCircle2 size={80} className="text-emerald-600 mb-6" />
+        <h1 className="text-2xl font-bold text-slate-800 mb-2 tracking-tight">Assessment Submitted</h1>
+        <p className="text-slate-400 mb-10 max-w-sm text-sm font-medium">
+           Your assessment has been successfully recorded and verified. 
+           You may now close this window and check your intern dashboard for further updates.
         </p>
         <button 
           onClick={() => { localStorage.removeItem("intern_user"); router.push("/exams"); }}
-          className="bg-blue-700 text-white px-10 py-3 font-semibold rounded shadow hover:bg-blue-800 transition-all"
+          className="bg-indigo-600 text-white px-12 py-4 font-bold uppercase text-[11px] tracking-widest hover:bg-indigo-700 transition-all rounded"
         >
-          Logout
+          Exit Assessment
         </button>
       </div>
     );
@@ -75,90 +76,111 @@ export default function ExamReviewPage() {
 
   if (!submission) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <Loader2 className="animate-spin text-blue-700" />
+      <div className="min-h-screen bg-white flex items-center justify-center flex-col gap-4">
+        <Loader2 className="animate-spin text-indigo-600" size={32} />
+        <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Verifying Submission Node...</p>
       </div>
     );
   }
 
-  const { status, shuffledQuestions } = submission;
+  const { status, questions, shuffledQuestions } = submission;
+  const currentQuestions = questions || shuffledQuestions || [];
   const answeredCount = Object.values(status).filter(s => s === 'answered' || s === 'marked_for_review').length;
-  const totalCount = shuffledQuestions.length;
+  const totalCount = currentQuestions.length;
   const unansweredCount = totalCount - answeredCount;
 
   return (
-    <div className="min-h-screen bg-gray-50 font-sans flex flex-col text-gray-700">
+    <div className="min-h-screen bg-slate-50 font-sans flex flex-col text-slate-700">
       
       {/* Header */}
-      <header className="bg-blue-700 text-white p-6 shadow-md">
-        <div className="max-w-3xl mx-auto flex justify-between items-center">
-           <h1 className="text-lg font-bold">Exam Summary</h1>
-           <p className="text-xs opacity-80">{user.name}</p>
+      <header className="bg-indigo-600 text-white p-8 shadow-md border-b-2 border-indigo-700">
+        <div className="max-w-4xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left">
+           <div>
+              <h1 className="text-xl font-bold tracking-tight">Final Verification</h1>
+              <p className="text-[10px] font-semibold opacity-60 uppercase tracking-widest mt-1 italic">Session ID: {user.id?.slice(-8).toUpperCase()}</p>
+           </div>
+           <div className="bg-indigo-700 px-6 py-2 border border-indigo-400/20 rounded flex items-center gap-3">
+              <span className="text-[10px] font-bold opacity-60 uppercase">Candidate</span>
+              <span className="text-sm font-bold">{user.name}</span>
+           </div>
         </div>
       </header>
 
-      <main className="flex-1 p-6 md:p-10 flex items-center justify-center">
-        <div className="max-w-2xl w-full bg-white border border-gray-300 shadow-sm overflow-hidden">
+      <main className="flex-1 p-6 md:p-12 flex items-center justify-center">
+        <div className="max-w-3xl w-full bg-white border border-slate-200 shadow-sm rounded overflow-hidden">
           
-          <div className="bg-gray-100 p-4 border-b border-gray-300">
-             <h2 className="text-blue-800 font-bold text-center text-sm">Review Your Performance</h2>
+          <div className="bg-slate-50 p-5 border-b border-slate-200 flex justify-center items-center gap-2">
+             <FileText size={18} className="text-indigo-600" />
+             <h2 className="text-slate-800 font-bold text-xs uppercase tracking-widest">Submission Summary</h2>
           </div>
 
-          <div className="p-8 space-y-8">
+          <div className="p-8 md:p-12 space-y-12">
              
-             {/* Simple Stats */}
-             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="p-6 border border-gray-200 text-center rounded-lg bg-gray-50">
-                   <p className="text-3xl font-bold text-gray-800 mb-1">{totalCount}</p>
-                   <p className="text-xs text-gray-400 font-medium">Total Questions</p>
+             {/* Stats */}
+             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="p-8 border border-slate-100 text-center rounded bg-slate-50 flex flex-col justify-center">
+                   <p className="text-4xl font-bold text-slate-800 mb-1">{totalCount}</p>
+                   <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Total Nodes</p>
                 </div>
-                <div className="p-6 border border-green-200 text-center rounded-lg bg-green-50">
-                   <p className="text-3xl font-bold text-green-700 mb-1">{answeredCount}</p>
-                   <p className="text-xs text-green-600 font-medium">Answered</p>
+                <div className="p-8 border border-emerald-100 text-center rounded bg-emerald-50/50 flex flex-col justify-center">
+                   <p className="text-4xl font-bold text-emerald-600 mb-1">{answeredCount}</p>
+                   <p className="text-[10px] text-emerald-600/70 font-bold uppercase tracking-widest">Answered</p>
                 </div>
-                <div className="p-6 border border-amber-200 text-center rounded-lg bg-amber-50">
-                   <p className="text-3xl font-bold text-amber-700 mb-1">{unansweredCount}</p>
-                   <p className="text-xs text-amber-600 font-medium">Unanswered</p>
+                <div className="p-8 border border-amber-100 text-center rounded bg-amber-50/50 flex flex-col justify-center">
+                   <p className="text-4xl font-bold text-amber-600 mb-1">{unansweredCount}</p>
+                   <p className="text-[10px] text-amber-600/70 font-bold uppercase tracking-widest">Skipped</p>
                 </div>
              </div>
 
              {/* Important Note */}
-             <div className="p-4 bg-blue-50 border border-blue-100 flex items-start gap-4">
-                <AlertTriangle className="text-blue-700 shrink-0" size={20} />
-                <div>
-                   <p className="text-sm font-semibold text-blue-900 mb-1">Final Submission</p>
-                   <p className="text-sm text-blue-700/80 leading-relaxed">
-                      Please check your details. Once you click "Final Submit," you cannot make any changes.
-                      Your results will be visible in your dashboard after submission.
+             <div className="p-8 border border-indigo-100 bg-indigo-50/30 flex items-start gap-6 rounded relative overflow-hidden">
+                <div className="absolute top-0 left-0 w-1 h-full bg-indigo-600"></div>
+                <AlertTriangle className="text-indigo-600 shrink-0 mt-0.5" size={20} />
+                <div className="space-y-2">
+                   <p className="text-xs font-bold text-indigo-900 uppercase tracking-widest">Irreversible Action</p>
+                   <p className="text-sm text-indigo-800/80 leading-relaxed font-medium">
+                      Final submission is permanent. Once submitted, your answers will be locked and sent to the examination authority for evaluation. This action cannot be undone.
                    </p> 
                 </div>
              </div>
 
              {/* Buttons */}
-             <div className="flex flex-col md:flex-row gap-4 pt-6">
+             <div className="flex flex-col md:flex-row gap-4 pt-10 border-t border-slate-100">
                 <button 
                    onClick={() => router.push("/exams/panel")}
                    disabled={loading}
-                   className="flex-1 h-12 border border-blue-700 text-blue-700 font-bold text-sm rounded hover:bg-blue-50"
+                   className="flex-1 h-12 border border-slate-300 text-slate-400 font-bold text-[11px] uppercase tracking-widest rounded hover:bg-slate-50 transition-all active:scale-95"
                 >
-                   Go Back
+                   ← Return to Exam
                 </button>
                 <button 
                    onClick={handleFinalSubmit}
                    disabled={loading}
-                   className="flex-1 h-12 bg-blue-700 text-white font-bold text-sm rounded shadow hover:bg-blue-800 disabled:opacity-50 flex items-center justify-center gap-2"
+                   className="flex-1 h-12 bg-indigo-600 text-white font-bold text-[11px] uppercase tracking-widest rounded shadow-lg hover:bg-indigo-700 disabled:opacity-50 flex items-center justify-center gap-3 transition-all active:scale-95"
                 >
-                   {loading ? <Loader2 className="animate-spin" size={20} /> : "Final Submit"}
+                   {loading ? <Loader2 className="animate-spin" size={16} /> : "Finalize & Submit Session"}
                 </button>
              </div>
           </div>
         </div>
       </main>
 
-      <footer className="p-6 text-center text-xs text-gray-400">
-        Student Forge Technologies © 2026
+      <footer className="p-8 text-center text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+        Student Forge Technologies © 2026 • Official Assessment Module
       </footer>
 
     </div>
+  );
+}
+
+export default function ExamReviewPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <Loader2 className="animate-spin text-indigo-600" size={32} />
+      </div>
+    }>
+      <ExamReviewContent />
+    </Suspense>
   );
 }

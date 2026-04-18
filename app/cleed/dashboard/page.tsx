@@ -280,11 +280,13 @@ export default function CleedDashboard() {
 
    // Scheduled Exams State
    const [examsList, setExamsList] = useState<any[]>([]);
+   const [richExamsList, setRichExamsList] = useState<any[]>([]);
    const [examFormData, setExamFormData] = useState({ title: "", date: "", duration: "", batch: "All" });
    const [sendingExamForm, setSendingExamForm] = useState(false);
 
    // Resources State
    const [resourcesList, setResourcesList] = useState<any[]>([]);
+   const [copySuccess, setCopySuccess] = useState<string | null>(null);
    const [resourceFormData, setResourceFormData] = useState({ 
        title: "", description: "", type: "PDF", url: "", category: "Documentation", date: "", batch: "All" 
    });
@@ -431,6 +433,22 @@ export default function CleedDashboard() {
          fetchSubmissions();
       }
    }, [activeTab]);
+
+
+   const handleDeleteRichExam = async (id: string) => {
+      if (!confirm("Permanently delete this advanced exam node?")) return;
+      try {
+         await fetch(`/api/admin/exam?id=${id}`, { method: "DELETE" });
+         fetchData();
+      } catch (err) { console.error("Rich Exam deletion failed"); }
+   };
+
+   const handleCopyLink = (id: string) => {
+      const url = `${window.location.origin}/exams?id=${id}`;
+      navigator.clipboard.writeText(url);
+      setCopySuccess(id);
+      setTimeout(() => setCopySuccess(null), 2000);
+   };
 
    const handleDeleteHiringApplication = async (id: string) => {
       if (!confirm("Permanently neutralize this application node?")) return;
@@ -675,6 +693,14 @@ export default function CleedDashboard() {
          } catch (err) { console.error("Exams fetch failure"); }
       };
 
+      const fetchRichExams = async () => {
+         try {
+            const res = await fetch("/api/admin/exam");
+            const data = await res.json();
+            if (data.success) setRichExamsList(data.exams);
+         } catch (err) { console.error("Rich exams fetch failure"); }
+      };
+
       const fetchResourcesList = async () => {
          try {
             const res = await fetch("/api/cleed/resources");
@@ -698,6 +724,7 @@ export default function CleedDashboard() {
          fetchExamSessions(),
          fetchBootcampRegistrations(),
          fetchExamsList(),
+         fetchRichExams(),
          fetchResourcesList()
       ]);
       setIsLoading(false);
@@ -1743,29 +1770,85 @@ export default function CleedDashboard() {
 
                         <div className="space-y-6 pt-16">
                            <div className="space-y-4 text-center">
-                              <h2 className="text-3xl font-bold tracking-tight text-zinc-900 leading-none">Schedule exam</h2>
-                              <p className="text-zinc-500 font-bold">Add new exams to the intern portal schedule.</p>
+                              <h2 className="text-3xl font-bold tracking-tight text-zinc-900 leading-none">Advanced Builder</h2>
+                              <p className="text-zinc-500 font-bold">Create structured exams with automated guidelines.</p>
                            </div>
 
-                           <form onSubmit={handlePostExam} className="p-8 border border-zinc-200 bg-white space-y-4 text-left">
-                              <div className="space-y-1">
-                                 <label className="text-[11px] font-bold text-zinc-400">Exam Title</label>
-                                 <input required value={examFormData.title} onChange={(e) => setExamFormData({ ...examFormData, title: e.target.value })} className="w-full h-11 bg-zinc-50 border border-zinc-200 px-4 text-sm font-bold outline-none focus:border-red-600 rounded-none shadow-sm" placeholder="e.g., UI/UX Mid-Term" />
+                           <div className="p-8 border-2 border-dashed border-zinc-200 bg-zinc-50 flex flex-col items-center justify-center gap-6">
+                              <div className="w-16 h-16 bg-white border border-zinc-200 flex items-center justify-center text-zinc-400">
+                                 <Plus size={24} />
                               </div>
-                              <div className="grid grid-cols-2 gap-4">
-                                 <div className="space-y-1">
-                                    <label className="text-[11px] font-bold text-zinc-400">Date</label>
-                                    <input required value={examFormData.date} onChange={(e) => setExamFormData({ ...examFormData, date: e.target.value })} className="w-full h-11 bg-zinc-50 border border-zinc-200 px-4 text-sm font-bold outline-none focus:border-red-600 rounded-none shadow-sm" placeholder="e.g., 25th April" />
-                                 </div>
-                                 <div className="space-y-1">
-                                    <label className="text-[11px] font-bold text-zinc-400">Duration (mins)</label>
-                                    <input required type="number" value={examFormData.duration} onChange={(e) => setExamFormData({ ...examFormData, duration: e.target.value })} className="w-full h-11 bg-zinc-50 border border-zinc-200 px-4 text-sm font-bold outline-none focus:border-red-600 rounded-none shadow-sm" placeholder="60" />
-                                 </div>
+                              <div className="text-center space-y-1">
+                                 <p className="text-sm font-bold text-zinc-900 uppercase tracking-tight">New Assessment Node</p>
+                                 <p className="text-[10px] text-zinc-400 font-bold uppercase tracking-widest">Supports MCQ, Text, Images & Patterns</p>
                               </div>
-                              <button disabled={sendingExamForm} className="w-full h-14 bg-black text-white text-[11px] font-bold tracking-widest hover:bg-zinc-800 transition-all rounded-none shadow-sm disabled:opacity-50">
-                                 {sendingExamForm ? "Scheduling..." : "Add to Schedule"}
-                              </button>
-                           </form>
+                              <Link 
+                                 href="/admin/exam/login"
+                                 className="h-12 px-8 bg-black text-white text-[10px] font-black uppercase tracking-[0.2em] hover:opacity-90 active:scale-95 transition-all flex items-center justify-center gap-3"
+                              >
+                                 Open Builder <ExternalLink size={14} />
+                              </Link>
+                           </div>
+                        </div>
+                     </div>
+
+                     <div className="grid lg:grid-cols-1 gap-8 pt-12">
+                        <div className="bg-white border border-zinc-200">
+                           <div className="p-5 border-b border-zinc-100 flex items-center justify-between">
+                              <div>
+                                 <h3 className="text-xs font-bold uppercase tracking-widest text-zinc-800">Advanced Exams</h3>
+                                 <p className="text-[10px] text-zinc-400 font-bold uppercase">Complex assessments with multi-pattern questions</p>
+                              </div>
+                           </div>
+                           <div className="overflow-x-auto">
+                              <table className="w-full text-left">
+                                 <thead>
+                                    <tr className="bg-zinc-50 border-b border-zinc-100">
+                                       <th className="px-6 py-4 text-[10px] font-bold uppercase text-zinc-400">Title</th>
+                                       <th className="px-6 py-4 text-[10px] font-bold uppercase text-zinc-400">Date/Time</th>
+                                       <th className="px-6 py-4 text-[10px] font-bold uppercase text-zinc-400">Questions</th>
+                                       <th className="px-6 py-4 text-[10px] font-bold uppercase text-zinc-400 text-right">Actions</th>
+                                    </tr>
+                                 </thead>
+                                 <tbody className="divide-y divide-zinc-50">
+                                    {richExamsList.map((exam) => (
+                                       <tr key={exam.id} className="hover:bg-zinc-50 transition-colors">
+                                          <td className="px-6 py-4">
+                                             <div className="flex flex-col">
+                                                <span className="text-xs font-bold">{exam.title}</span>
+                                                <span className="text-[9px] text-zinc-400 font-bold uppercase tracking-tight">{exam.status}</span>
+                                             </div>
+                                          </td>
+                                          <td className="px-6 py-4">
+                                             <div className="flex flex-col">
+                                                <span className="text-xs font-medium">{exam.date}</span>
+                                                <span className="text-[9px] text-zinc-400 font-bold uppercase">{exam.time}</span>
+                                             </div>
+                                          </td>
+                                          <td className="px-6 py-4 text-xs font-bold text-zinc-600">{exam.questions?.length || 0} Nodes</td>
+                                          <td className="px-6 py-4 text-right">
+                                             <div className="flex items-center justify-end gap-2">
+                                                <button 
+                                                   onClick={() => handleCopyLink(exam.id)} 
+                                                   className={`h-8 px-3 text-[10px] font-bold uppercase tracking-widest border transition-all flex items-center gap-2 ${copySuccess === exam.id ? 'bg-green-50 border-green-200 text-green-600' : 'bg-white border-zinc-200 text-zinc-600 hover:bg-zinc-50'}`}
+                                                >
+                                                   <Globe size={13} /> {copySuccess === exam.id ? 'Copied' : 'Link'}
+                                                </button>
+                                                <button onClick={() => handleDeleteRichExam(exam.id)} className="h-8 w-8 text-[#F5332C] hover:bg-red-50 inline-flex items-center justify-center border border-zinc-200 transition-all">
+                                                   <Trash2 size={13} />
+                                                </button>
+                                             </div>
+                                          </td>
+                                       </tr>
+                                    ))}
+                                    {richExamsList.length === 0 && (
+                                       <tr>
+                                          <td colSpan={4} className="px-6 py-12 text-center text-zinc-400 text-[10px] font-bold uppercase tracking-[0.1em]">No advanced exams published yet</td>
+                                       </tr>
+                                    )}
+                                 </tbody>
+                              </table>
+                           </div>
                         </div>
                      </div>
 

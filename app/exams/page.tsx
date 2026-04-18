@@ -1,23 +1,46 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { Loader2 } from "lucide-react";
+import { useState, useEffect, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Loader2, Calendar, Clock, AlertCircle, ShieldCheck, Lock } from "lucide-react";
 
-export default function ExamLoginPage() {
+function ExamLoginContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const examId = searchParams.get("id");
+  
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [mathAnswer, setMathAnswer] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [exam, setExam] = useState<any>(null);
+  const [fetchingExam, setFetchingExam] = useState(true);
 
   useEffect(() => {
-    // Keep high security: disable right click
     const handleContext = (e: MouseEvent) => e.preventDefault();
     document.addEventListener("contextmenu", handleContext);
+    
+    const fetchExamDetails = async () => {
+      try {
+        const url = examId ? `/api/exams/details?id=${examId}` : "/api/exams/details";
+        const res = await fetch(url);
+        const data = await res.json();
+        if (data.success) {
+          setExam(data.exam);
+        } else {
+          setError(data.error || "No active assessment found.");
+        }
+      } catch (err) {
+        setError("Network failure while fetching exam metadata.");
+      } finally {
+        setFetchingExam(false);
+      }
+    };
+
+    fetchExamDetails();
     return () => document.removeEventListener("contextmenu", handleContext);
-  }, []);
+  }, [examId]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,7 +48,7 @@ export default function ExamLoginPage() {
     setError("");
 
     if (mathAnswer !== "12") {
-        setError("Security pin is wrong.");
+        setError("Security verification failed. Try again.");
         setLoading(false);
         return;
     }
@@ -34,144 +57,184 @@ export default function ExamLoginPage() {
       const res = await fetch("/api/exams/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, password, examId: exam?.id }),
       });
 
       const data = await res.json();
 
       if (res.ok) {
         localStorage.setItem("intern_user", JSON.stringify(data.user));
+        localStorage.setItem("active_exam", JSON.stringify(exam));
         router.push("/exams/guidelines");
       } else {
-        setError(data.error || "Login fail. Please check details.");
+        setError(data.error || "Authentication failed. Check credentials.");
       }
     } catch (err) {
-      setError("Server connection fail.");
+      setError("Server connection failure.");
     } finally {
       setLoading(false);
     }
   };
 
-  const handleReset = () => {
-    setEmail("");
-    setPassword("");
-    setMathAnswer("");
-    setError("");
-  };
+  if (fetchingExam) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-white">
+        <Loader2 className="animate-spin text-indigo-600 mb-4" size={32} />
+        <p className="text-sm font-medium text-gray-400">Loading...</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-gray-50 font-sans flex flex-col select-none">
+    <div className="min-h-screen bg-slate-50 font-sans flex flex-col relative select-none">
       
-      {/* Exam Details Header */}
-      <header className="bg-blue-700 text-white p-6 shadow-md">
-        <div className="max-w-5xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-          <div>
-            <h1 className="text-xl font-bold uppercase tracking-tight">UI/UX Development Exam</h1>
-            <p className="text-xs opacity-70 mt-1">Student Forge Technologies Private Limited</p>
+      {/* Top Banner with Exam Details */}
+      <div className="w-full bg-violet-600 border-b border-violet-700 py-2.5 px-6">
+         <div className="max-w-[900px] mx-auto flex justify-between items-center text-white">
+            <div className="flex items-center gap-4">
+               <div className="text-[10px] font-bold uppercase tracking-[0.2em] opacity-70 border-r border-white/20 pr-4">Assessment Mode</div>
+               <div className="text-xs font-bold truncate max-w-[300px]">
+                  {exam?.title || "Exam Portal"} • {exam?.date || "No date set"} • {exam?.time || "Time not set"}
+               </div>
+            </div>
+            <div className="flex items-center gap-2">
+               <div className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></div>
+               <span className="text-[10px] font-bold uppercase tracking-widest opacity-80">Secure Node Active</span>
+            </div>
+         </div>
+      </div>
+
+      <div className="flex-1 flex items-center justify-center p-6 lg:p-10 pb-32">
+        
+        <div className="w-full max-w-[900px] bg-white border border-gray-200 flex flex-col md:flex-row overflow-hidden relative z-10 shadow-sm">
+          
+          {/* Left Side: Branding */}
+          <div className="md:w-1/2 bg-violet-50 p-10 md:p-14 flex flex-col justify-center relative border-b md:border-b-0 md:border-r border-gray-100">
+             <div className="space-y-8">
+                <div className="flex items-center gap-3">
+                   <div className="h-10 w-10 bg-violet-600 rounded flex items-center justify-center text-white">
+                      <ShieldCheck size={24} />
+                   </div>
+                   <h1 className="text-violet-900 font-bold text-lg tracking-tight leading-tight">Exam Portal</h1>
+                </div>
+
+                <div className="space-y-2">
+                   <h2 className="text-violet-900 text-3xl font-bold leading-tight tracking-tight">
+                       {exam?.title || "Assessment"}
+                   </h2>
+                   <p className="text-violet-600/70 text-sm font-medium tracking-wide">Student Forge Technologies</p>
+                </div>
+             </div>
+
+             <div className="hidden md:block absolute bottom-14 left-10 md:left-14">
+                <p className="text-[10px] font-bold text-violet-300 uppercase tracking-widest leading-none">
+                   Official Assessment Gateway
+                </p>
+             </div>
           </div>
-          <div className="bg-blue-800 p-3 border border-blue-500 rounded text-xs">
-            <p className="font-bold">Date: 12-04-2026</p>
-            <p className="mt-1 font-bold">Time: 3:30 PM to 5:30 PM</p>
+
+          {/* Right Side: Form Section */}
+          <div className="md:w-1/2 p-10 md:p-14 bg-white">
+             <div className="max-w-[340px] mx-auto">
+                
+                <div className="mb-10">
+                   <h3 className="text-xl font-bold text-slate-800">Student Login</h3>
+                   <p className="text-xs text-slate-400 font-medium mt-1">Log in to start your exam.</p>
+                </div>
+
+                <form onSubmit={handleLogin} className="space-y-6">
+                   
+                   <div className="space-y-1.5">
+                      <label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest ml-1">Email address</label>
+                      <input 
+                          type="email" 
+                          required
+                          placeholder="your@email.com"
+                          className="w-full h-11 px-4 bg-slate-50 border border-slate-200 text-sm outline-none transition-all focus:border-indigo-600 focus:bg-white rounded-none"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                      />
+                   </div>
+
+                   <div className="space-y-1.5">
+                      <label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest ml-1">Password</label>
+                      <div className="relative">
+                         <input 
+                             type="password" 
+                             required
+                             placeholder="Enter password"
+                             className="w-full h-11 px-4 bg-slate-50 border border-slate-200 text-sm outline-none transition-all focus:border-indigo-600 focus:bg-white rounded-none"
+                             value={password}
+                             onChange={(e) => setPassword(e.target.value)}
+                         />
+                         <Lock className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-300" size={16} />
+                      </div>
+                   </div>
+
+                   <div className="space-y-1.5">
+                      <label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest ml-1">What is 5 + 7?</label>
+                      <input 
+                          type="number" 
+                          required
+                          placeholder="Answer"
+                          className="w-full h-11 px-4 bg-slate-50 border border-slate-200 text-sm outline-none transition-all focus:border-indigo-600 focus:bg-white rounded-none"
+                          value={mathAnswer}
+                          onChange={(e) => setMathAnswer(e.target.value)}
+                      />
+                   </div>
+
+                   {error && (
+                      <div className="p-3 bg-red-50 border border-red-100 rounded-none flex items-center gap-3">
+                         <AlertCircle size={14} className="text-red-500 shrink-0" />
+                         <p className="text-[10px] text-red-600 font-bold uppercase tracking-tight">{error}</p>
+                      </div>
+                   )}
+
+                   <div className="pt-4">
+                      <button 
+                         type="submit"
+                         disabled={loading || !exam}
+                         className="w-full h-12 bg-indigo-600 text-white text-[11px] font-bold uppercase tracking-widest transition-all hover:bg-indigo-700 active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-2 rounded-none"
+                      >
+                         {loading ? <Loader2 className="animate-spin" size={16} /> : "Start Exam"}
+                      </button>
+                   </div>
+
+                </form>
+
+             </div>
           </div>
-        </div>
-      </header>
-
-      {/* Main Content Area */}
-      <main className="flex-1 flex items-center justify-center p-4">
-        <div className="w-full max-w-2xl bg-white border border-gray-300 shadow-sm">
-           
-           <div className="bg-gray-100 p-3 border-b border-gray-300">
-              <h2 className="text-blue-800 font-bold text-center text-sm uppercase">Candidate Sign In</h2>
-           </div>
-
-           <form onSubmit={handleLogin} className="p-8">
-              
-              {/* Government Style Grid Form */}
-              <div className="border border-gray-200 divide-y divide-gray-200">
-                 
-                 <div className="grid grid-cols-1 md:grid-cols-12">
-                    <label className="md:col-span-4 bg-gray-50 p-4 text-xs font-bold text-gray-600 flex items-center border-r border-gray-200">
-                      Email address
-                    </label>
-                    <div className="md:col-span-8 p-3 flex items-center">
-                        <input 
-                            type="email" 
-                            required
-                            placeholder="Enter your email"
-                            className="w-full h-10 px-3 border border-gray-300 focus:border-blue-600 outline-none text-sm"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                        />
-                    </div>
-                 </div>
-
-                 <div className="grid grid-cols-1 md:grid-cols-12">
-                    <label className="md:col-span-4 bg-gray-50 p-4 text-xs font-bold text-gray-600 flex items-center border-r border-gray-200">
-                      Password
-                    </label>
-                    <div className="md:col-span-8 p-3 flex items-center">
-                        <input 
-                            type="password" 
-                            required
-                            placeholder="Enter password"
-                            className="w-full h-10 px-3 border border-gray-300 focus:border-blue-600 outline-none text-sm"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                        />
-                    </div>
-                 </div>
-
-                 <div className="grid grid-cols-1 md:grid-cols-12">
-                    <label className="md:col-span-4 bg-gray-50 p-4 text-xs font-bold text-gray-600 flex items-center border-r border-gray-200">
-                      Security Check (5+7)
-                    </label>
-                    <div className="md:col-span-8 p-3 flex items-center">
-                        <input 
-                            type="number" 
-                            required
-                            placeholder="Type result"
-                            className="w-full h-10 px-3 border border-gray-300 focus:border-blue-600 outline-none text-sm"
-                            value={mathAnswer}
-                            onChange={(e) => setMathAnswer(e.target.value)}
-                        />
-                    </div>
-                 </div>
-
-              </div>
-
-              {error && (
-                 <div className="mt-4 p-2 bg-red-50 border border-red-200 text-center">
-                    <p className="text-[10px] text-red-600 font-bold uppercase">{error}</p>
-                 </div>
-              )}
-
-              <div className="flex justify-center gap-6 mt-10">
-                 <button 
-                    type="button"
-                    onClick={handleReset}
-                    className="h-10 px-12 border border-gray-300 bg-gray-50 text-gray-600 text-[11px] font-bold uppercase hover:bg-gray-100"
-                 >
-                    Clear Form
-                 </button>
-                 <button 
-                    type="submit"
-                    disabled={loading}
-                    className="h-10 px-12 bg-blue-700 text-white text-[11px] font-bold hover:bg-blue-800 uppercase shadow-md"
-                 >
-                    {loading ? <Loader2 className="animate-spin" size={16} /> : "Login"}
-                 </button>
-              </div>
-
-           </form>
 
         </div>
-      </main>
 
-      {/* Simple Gray Footer */}
-      <footer className="p-8 text-center text-xs text-gray-500 bg-gray-200 border-t border-gray-300">
-        Student Forge Technologies Private Limited © 2026
+      </div>
+
+      {/* Standard Intern Footer */}
+      <footer className="absolute bottom-0 left-0 w-full bg-zinc-100 border-t border-zinc-200 py-6 px-6">
+          <div className="max-w-[900px] mx-auto flex flex-col items-center gap-2">
+              <p className="text-[11px] text-[#6c757d] font-medium text-center">
+                  © 2025-2026 Student Forge Technologies Private Limited. All Rights Reserved.
+                  Unauthorized access or use of this platform is strictly prohibited.
+              </p>
+              <p className="text-[10px] text-zinc-400 font-bold text-center">
+                  platform.studentforge.in is a registered trademark. Secured with enterprise-grade encryption.
+              </p>
+          </div>
       </footer>
 
     </div>
   );
 }
+
+export default function ExamLoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <Loader2 className="animate-spin text-indigo-600" size={32} />
+      </div>
+    }>
+      <ExamLoginContent />
+    </Suspense>
+  );
+}
+
