@@ -40,7 +40,7 @@ function ExamReviewContent() {
           status: "SUBMITTED",
           violations: submission.violations,
           answers: submission.answers,
-          questionMapping: submission.questions || submission.shuffledQuestions, // Fallback for old sessions
+          questionMapping: submission.questions || submission.shuffledQuestions,
           typedExitKey: submission.exitKey
         })
       });
@@ -59,16 +59,16 @@ function ExamReviewContent() {
     return (
       <div className="min-h-screen bg-white flex flex-col items-center justify-center p-6 text-center">
         <CheckCircle2 size={80} className="text-emerald-600 mb-6" />
-        <h1 className="text-2xl font-bold text-slate-800 mb-2 tracking-tight">Assessment Submitted</h1>
+        <h1 className="text-2xl font-bold text-slate-800 mb-2 tracking-tight">Exam Submitted</h1>
         <p className="text-slate-400 mb-10 max-w-sm text-sm font-medium">
-           Your assessment has been successfully recorded and verified. 
-           You may now close this window and check your intern dashboard for further updates.
+           Your exam has been successfully saved and verified. 
+           You can now close this window and check your dashboard.
         </p>
         <button 
           onClick={() => { localStorage.removeItem("intern_user"); router.push("/exams"); }}
-          className="bg-indigo-600 text-white px-12 py-4 font-bold uppercase text-[11px] tracking-widest hover:bg-indigo-700 transition-all rounded"
+          className="bg-violet-600 text-white px-12 py-4 font-bold uppercase text-[11px] tracking-widest hover:bg-violet-700 transition-all rounded shadow-lg shadow-violet-100"
         >
-          Exit Assessment
+          Exit Now
         </button>
       </div>
     );
@@ -77,8 +77,8 @@ function ExamReviewContent() {
   if (!submission) {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center flex-col gap-4">
-        <Loader2 className="animate-spin text-indigo-600" size={32} />
-        <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Verifying Submission Node...</p>
+        <Loader2 className="animate-spin text-violet-600" size={32} />
+        <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Checking Session...</p>
       </div>
     );
   }
@@ -93,14 +93,14 @@ function ExamReviewContent() {
     <div className="min-h-screen bg-slate-50 font-sans flex flex-col text-slate-700">
       
       {/* Header */}
-      <header className="bg-indigo-600 text-white p-8 shadow-md border-b-2 border-indigo-700">
+      <header className="bg-violet-600 text-white p-8 shadow-md border-b-2 border-violet-700">
         <div className="max-w-4xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left">
            <div>
-              <h1 className="text-xl font-bold tracking-tight">Final Verification</h1>
-              <p className="text-[10px] font-semibold opacity-60 uppercase tracking-widest mt-1 italic">Session ID: {user.id?.slice(-8).toUpperCase()}</p>
+              <h1 className="text-xl font-bold tracking-tight">Final Check</h1>
+              <p className="text-[10px] font-semibold opacity-60 uppercase tracking-widest mt-1 italic">Student ID: SF-{user.id?.slice(-8).toUpperCase()}</p>
            </div>
-           <div className="bg-indigo-700 px-6 py-2 border border-indigo-400/20 rounded flex items-center gap-3">
-              <span className="text-[10px] font-bold opacity-60 uppercase">Candidate</span>
+           <div className="bg-violet-700 px-6 py-2 border border-violet-400/20 rounded flex items-center gap-3">
+              <span className="text-[10px] font-bold opacity-60 uppercase">Student</span>
               <span className="text-sm font-bold">{user.name}</span>
            </div>
         </div>
@@ -110,8 +110,8 @@ function ExamReviewContent() {
         <div className="max-w-3xl w-full bg-white border border-slate-200 shadow-sm rounded overflow-hidden">
           
           <div className="bg-slate-50 p-5 border-b border-slate-200 flex justify-center items-center gap-2">
-             <FileText size={18} className="text-indigo-600" />
-             <h2 className="text-slate-800 font-bold text-xs uppercase tracking-widest">Submission Summary</h2>
+             <FileText size={18} className="text-violet-600" />
+             <h2 className="text-slate-800 font-bold text-xs uppercase tracking-widest">Exam Summary</h2>
           </div>
 
           <div className="p-8 md:p-12 space-y-12">
@@ -120,7 +120,7 @@ function ExamReviewContent() {
              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="p-8 border border-slate-100 text-center rounded bg-slate-50 flex flex-col justify-center">
                    <p className="text-4xl font-bold text-slate-800 mb-1">{totalCount}</p>
-                   <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Total Nodes</p>
+                   <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Total Questions</p>
                 </div>
                 <div className="p-8 border border-emerald-100 text-center rounded bg-emerald-50/50 flex flex-col justify-center">
                    <p className="text-4xl font-bold text-emerald-600 mb-1">{answeredCount}</p>
@@ -133,13 +133,13 @@ function ExamReviewContent() {
              </div>
 
              {/* Important Note */}
-             <div className="p-8 border border-indigo-100 bg-indigo-50/30 flex items-start gap-6 rounded relative overflow-hidden">
-                <div className="absolute top-0 left-0 w-1 h-full bg-indigo-600"></div>
-                <AlertTriangle className="text-indigo-600 shrink-0 mt-0.5" size={20} />
+             <div className="p-8 border border-violet-100 bg-violet-50/30 flex items-start gap-6 rounded relative overflow-hidden">
+                <div className="absolute top-0 left-0 w-1 h-full bg-violet-600"></div>
+                <AlertTriangle className="text-violet-600 shrink-0 mt-0.5" size={20} />
                 <div className="space-y-2">
-                   <p className="text-xs font-bold text-indigo-900 uppercase tracking-widest">Irreversible Action</p>
-                   <p className="text-sm text-indigo-800/80 leading-relaxed font-medium">
-                      Final submission is permanent. Once submitted, your answers will be locked and sent to the examination authority for evaluation. This action cannot be undone.
+                   <p className="text-xs font-bold text-violet-900 uppercase tracking-widest">Notice</p>
+                   <p className="text-sm text-violet-800/80 leading-relaxed font-medium">
+                      Final submission is permanent. Once you submit, your answers will be locked. This cannot be undone.
                    </p> 
                 </div>
              </div>
@@ -151,14 +151,14 @@ function ExamReviewContent() {
                    disabled={loading}
                    className="flex-1 h-12 border border-slate-300 text-slate-400 font-bold text-[11px] uppercase tracking-widest rounded hover:bg-slate-50 transition-all active:scale-95"
                 >
-                   ← Return to Exam
+                   ← Back to Exam
                 </button>
                 <button 
                    onClick={handleFinalSubmit}
                    disabled={loading}
-                   className="flex-1 h-12 bg-indigo-600 text-white font-bold text-[11px] uppercase tracking-widest rounded shadow-lg hover:bg-indigo-700 disabled:opacity-50 flex items-center justify-center gap-3 transition-all active:scale-95"
+                   className="flex-1 h-12 bg-violet-600 text-white font-bold text-[11px] uppercase tracking-widest rounded shadow-lg hover:bg-violet-700 disabled:opacity-50 flex items-center justify-center gap-3 transition-all active:scale-95 shadow-violet-100"
                 >
-                   {loading ? <Loader2 className="animate-spin" size={16} /> : "Finalize & Submit Session"}
+                   {loading ? <Loader2 className="animate-spin" size={16} /> : "Finalize & Submit Now"}
                 </button>
              </div>
           </div>
@@ -166,7 +166,7 @@ function ExamReviewContent() {
       </main>
 
       <footer className="p-8 text-center text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-        Student Forge Technologies © 2026 • Official Assessment Module
+        Exam Portal • Student Forge Technologies
       </footer>
 
     </div>
