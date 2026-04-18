@@ -326,7 +326,12 @@ function InternDashboardContent() {
 
 
          newSocket.on("receive_message", (msg: ChatMessage) => {
-            setMessages(prev => [...prev, msg]);
+            setMessages(prev => {
+               // Prevent duplicates (especially for local echo)
+               const exists = prev.some(m => m.id === msg.id || (m.senderId === msg.senderId && m.content === msg.content && Math.abs(new Date(m.createdAt).getTime() - new Date(msg.createdAt).getTime()) < 5000));
+               if (exists) return prev;
+               return [...prev, msg];
+            });
          });
 
          return () => {
@@ -490,15 +495,32 @@ function InternDashboardContent() {
       e.preventDefault();
       if (!inputText.trim() || !socket || !user || !activeTeamId) return;
 
+      const messageContent = inputText;
       const messageData = {
          teamId: activeTeamId,
          senderId: user.id,
          senderName: user.name,
-         message: inputText,
+         message: messageContent,
          targetId: selectedUser?.id || null,
       };
 
+      // Wake up server if needed during interaction
+      fetch("https://serversf.onrender.com/ping").catch(() => {});
+
       socket.emit("send_message", messageData);
+
+      // Local echo: add message to state immediately for responsiveness
+      const localMsg: ChatMessage = {
+         id: "temp-" + Date.now(),
+         teamId: activeTeamId,
+         senderId: user.id,
+         senderName: user.name,
+         content: messageContent,
+         createdAt: new Date().toISOString(),
+         targetId: selectedUser?.id || null
+      };
+      
+      setMessages(prev => [...prev, localMsg]);
       setInputText("");
    };
 
