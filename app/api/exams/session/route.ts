@@ -28,25 +28,34 @@ export async function POST(req: Request) {
     const { userId } = await req.json();
 
     const et = "UI_UX"; // Default track for new sessions
-    const session = await prisma.examSession.upsert({
-      where: { 
-        userId: userId 
-      },
-      update: { 
-        status: "STARTED",
-        startedAt: new Date(),
-        score: null,
-        violations: 0,
-        answers: Prisma.DbNull,
-        questionMapping: Prisma.DbNull
-      },
-      create: { 
-        userId,
-        examType: et,
-        status: "STARTED",
-        startedAt: new Date()
-      },
+    const existing = await (prisma.examSession as any).findUnique({
+      where: { userId }
     });
+
+    let session;
+    if (existing) {
+      session = await prisma.examSession.update({
+        where: { userId },
+        data: {
+          status: "STARTED",
+          startedAt: new Date(),
+          score: null,
+          violations: 0,
+          answers: Prisma.DbNull,
+          questionMapping: Prisma.DbNull,
+          updatedAt: new Date()
+        }
+      });
+    } else {
+      session = await prisma.examSession.create({
+        data: {
+          userId,
+          examType: et,
+          status: "STARTED",
+          startedAt: new Date()
+        }
+      });
+    }
 
     return NextResponse.json(session);
   } catch (error: any) {
@@ -115,30 +124,38 @@ export async function PATCH(req: Request) {
 
     try {
       const et = examType || "FULLSTACK";
-      const session = await prisma.examSession.upsert({
-        where: { 
-          userId: userId 
-        },
-        create: {
-          userId,
-          examType: et,
-          status, 
-          score: finalScore, 
-          violations: finalViolations,
-          answers: answers || Prisma.DbNull,
-          questionMapping: questionMapping || Prisma.DbNull,
-        },
-        update: { 
-          status, 
-          score: finalScore, 
-          violations: finalViolations,
-          answers: answers || Prisma.DbNull,
-          questionMapping: questionMapping || Prisma.DbNull,
-          updatedAt: new Date()
-        },
+      const existing = await (prisma.examSession as any).findUnique({
+        where: { userId }
       });
 
-      console.log(`[API] Session updated: ${userId} -> ${status}`);
+      let session;
+      if (existing) {
+        session = await prisma.examSession.update({
+          where: { userId },
+          data: {
+            status,
+            score: finalScore,
+            violations: finalViolations,
+            answers: answers || Prisma.DbNull,
+            questionMapping: questionMapping || Prisma.DbNull,
+            updatedAt: new Date()
+          }
+        });
+      } else {
+        session = await prisma.examSession.create({
+          data: {
+            userId,
+            examType: et,
+            status,
+            score: finalScore,
+            violations: finalViolations,
+            answers: answers || Prisma.DbNull,
+            questionMapping: questionMapping || Prisma.DbNull,
+          }
+        });
+      }
+
+      console.log(`[API] Session Resynced: ${userId} -> ${status}`);
       return NextResponse.json(session);
     } catch (dbError: any) {
       console.error(`[API] Database Update Error for ${userId}:`, dbError.message);
