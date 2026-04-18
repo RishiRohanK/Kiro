@@ -199,6 +199,7 @@ function InternDashboardContent() {
       };
    }, [router]);
 
+   const [showAttendanceAlert, setShowAttendanceAlert] = useState(true);
    const [showChatSidebar, setShowChatSidebar] = useState(true);
    const [showUIUXModal, setShowUIUXModal] = useState(false);
    const [uiuxSubmitting, setUiuxSubmitting] = useState(false);
@@ -622,17 +623,34 @@ function InternDashboardContent() {
          {activeTab === "overview" && (
             <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} className="space-y-4">
                {/* Attendance Notification Banner */}
-               <div className="bg-[#FFF9E6] border border-[#F59E0B]/20 p-4 flex items-center gap-4 group">
-                  <div className="flex-shrink-0 w-10 h-10 bg-[#F59E0B]/10 flex items-center justify-center">
-                     <Hand className="text-[#F59E0B]" size={20} />
-                  </div>
-                  <div>
-                     <p className="text-[13px] font-bold text-[#92400E] leading-tight">Attendance Reminder</p>
-                     <p className="text-[11px] font-semibold text-[#B45309]/70 mt-0.5 uppercase tracking-wide">
-                        Please raise your hand at the sidebar bottom button to make the regular attendance.
-                     </p>
-                  </div>
-               </div>
+               <AnimatePresence>
+                  {showAttendanceAlert && (
+                     <motion.div 
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, height: 0, margin: 0 }}
+                        className="bg-red-50 border border-red-200 p-4 flex items-center justify-between group overflow-hidden"
+                     >
+                        <div className="flex items-center gap-4">
+                           <div className="flex-shrink-0 w-10 h-10 bg-red-100 flex items-center justify-center">
+                              <Hand className="text-red-600" size={20} />
+                           </div>
+                           <div>
+                              <p className="text-[13px] font-bold text-red-900 leading-tight">Attendance Requirement</p>
+                              <p className="text-[12px] font-medium text-red-800/80 mt-0.5">
+                                 Please raise your hand at the sidebar bottom button to make the regular attendance.
+                              </p>
+                           </div>
+                        </div>
+                        <button 
+                           onClick={() => setShowAttendanceAlert(false)}
+                           className="p-2 text-red-300 hover:text-red-500 transition-colors"
+                        >
+                           <X size={18} />
+                        </button>
+                     </motion.div>
+                  )}
+               </AnimatePresence>
 
 
                {/* Hero Bento Section */}
