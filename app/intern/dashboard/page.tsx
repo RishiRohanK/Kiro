@@ -315,9 +315,9 @@ function InternDashboardContent() {
          fetch("https://serversf.onrender.com/ping").catch(() => {});
 
          const newSocket = io("https://serversf.onrender.com", {
-            transports: ["websocket", "polling"],
-            reconnectionAttempts: 5,
-            timeout: 10000
+            reconnectionAttempts: 8,
+            timeout: 20000,
+            autoConnect: true
          });
          setSocket(newSocket);
 
