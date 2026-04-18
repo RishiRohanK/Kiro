@@ -16,7 +16,7 @@ import {
    RefreshCw,
    FileBadge,
    X,
-   Settings,
+
    Calendar,
    XCircle,
    AlertCircle,
@@ -1409,17 +1409,7 @@ function InternDashboardContent() {
             </motion.div>
          )}
 
-         {activeTab === "settings" && (
-            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-8 max-w-5xl text-left">
-               <header className="pb-4"><h1 className="text-xl font-bold tracking-tight text-zinc-900 font-sans">Account settings.</h1><p className="text-zinc-400 text-[12px] font-medium mt-1">Manage your account details and security protocols.</p></header>
-               <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
-                  <div className="md:col-span-8 space-y-6">
-                     <section className="p-8 border border-zinc-100 bg-white shadow-sm space-y-6"><div className="flex items-center gap-3 pb-4 border-b border-zinc-50"><User size={18} className="text-[#0055FF]" /><h3 className="text-sm font-bold text-zinc-900">Personal information</h3></div><div className="grid grid-cols-1 md:grid-cols-2 gap-6"><div className="space-y-1.5"><p className="text-[10px] font-bold text-zinc-400">Full name</p><div className="p-3 bg-zinc-50 border border-zinc-100 text-sm font-medium text-zinc-900">{user.name}</div></div><div className="space-y-1.5"><p className="text-[10px] font-bold text-zinc-400">Email address</p><div className="p-3 bg-zinc-50 border border-zinc-100 text-sm font-medium text-zinc-900 flex items-center gap-2"><Mail size={12} className="text-zinc-400" />{user.email}</div></div></div></section>
-                  </div>
-                  <div className="md:col-span-4 space-y-6"><div className="p-8 border border-zinc-100 bg-white shadow-sm text-center"><div className="h-20 w-20 bg-[#0055FF]/10 text-[#0055FF] flex items-center justify-center mx-auto mb-4"><User size={36} /></div><h4 className="text-sm font-bold text-zinc-900">{user.name}</h4><p className="text-[10px] text-zinc-400 mb-8 font-medium">{user.college || "Forge Academy Intern"} • {user.batch || "Batch 1"}</p><button onClick={handleSignOut} className="w-full h-10 bg-black text-white text-[10px] font-bold flex items-center justify-center gap-2">Log out <LogOut size={14} /></button></div></div>
-               </div>
-            </motion.div>
-         )}
+
 
          <AnimatePresence>
             {showLetterModal && userStatus?.letterUrl && (

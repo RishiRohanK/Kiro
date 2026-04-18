@@ -7,7 +7,7 @@ import {
     LayoutDashboard, 
     LogOut, 
     User, 
-    Settings,
+
     ChevronRight,
     Briefcase,
     Calendar,
@@ -16,7 +16,7 @@ import {
     MessageSquare,
     FileBadge,
     FileText,
-    Kanban,
+
     ClipboardCheck,
     BookOpen,
     Flame,
@@ -42,6 +42,8 @@ function InternDashboardLayoutContent({
     const [handRaised, setHandRaised] = useState(false);
     const [isTogglingHand, setIsTogglingHand] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [isProfileComplete, setIsProfileComplete] = useState(true);
+    const [checkingProfile, setCheckingProfile] = useState(true);
 
     useEffect(() => {
         setMounted(true);
@@ -53,6 +55,12 @@ function InternDashboardLayoutContent({
         const userData = JSON.parse(storedUser);
         setUser(userData);
         setHandRaised(userData.handRaised || false);
+
+        // Check for profile completion
+        const requiredFields = ['name', 'college', 'year', 'department', 'dob', 'graduationYear', 'interestedArea', 'profileImage'];
+        const completed = requiredFields.every(field => userData[field] && userData[field].toString().trim() !== "");
+        setIsProfileComplete(completed);
+        setCheckingProfile(false);
     }, [router]);
 
     useEffect(() => {
@@ -102,7 +110,9 @@ function InternDashboardLayoutContent({
         }
     };
 
-    if (!mounted || !user) return null;
+    if (!mounted || !user || checkingProfile) return null;
+
+    const onProfilePage = pathname === "/intern/dashboard/profile";
 
     const navItems = [
         { name: "Overview", icon: LayoutDashboard, slug: "/intern/dashboard?view=overview", isNew: false, mobile: true },
@@ -114,7 +124,7 @@ function InternDashboardLayoutContent({
         { name: "Roadmap", icon: Calendar, slug: "/intern/dashboard/schedule", isNew: false, mobile: true },
         { name: "Assignments", icon: Briefcase, slug: "/intern/dashboard?view=tasks", isNew: false, mobile: false },
         { name: "Attendance", icon: FileBadge, slug: "/intern/dashboard?view=attendance", isNew: false, mobile: false },
-        { name: "Profile", icon: User, slug: "/intern/dashboard/settings", isNew: false, mobile: false },
+        { name: "Profile", icon: User, slug: "/intern/dashboard/profile", isNew: false, mobile: false },
     ];
 
     return (
@@ -354,6 +364,43 @@ function InternDashboardLayoutContent({
                                 </div>
                             </motion.aside>
                         </>
+                    )}
+                </AnimatePresence>
+                
+                <AnimatePresence>
+                    {!isProfileComplete && !onProfilePage && (
+                        <motion.div 
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-zinc-900/95 backdrop-blur-md"
+                        >
+                            <motion.div 
+                                initial={{ scale: 0.9, y: 20 }}
+                                animate={{ scale: 1, y: 0 }}
+                                className="bg-white max-w-md w-full p-8 text-center space-y-6 shadow-2xl border border-zinc-200"
+                            >
+                                <div className="h-20 w-20 bg-blue-50 rounded-none flex items-center justify-center mx-auto">
+                                    <User size={40} className="text-[#0055FF]" />
+                                </div>
+                                
+                                <div className="space-y-2">
+                                    <h2 className="text-2xl font-black uppercase tracking-tight text-zinc-900">Complete Your Profile</h2>
+                                    <p className="text-zinc-500 text-sm font-medium">To unlock the full dashboard and stay eligible for help and bounties, please finish setting up your profile.</p>
+                                </div>
+
+                                <div className="pt-4">
+                                    <Link 
+                                        href="/intern/dashboard/profile"
+                                        className="w-full inline-flex items-center justify-center h-14 bg-black text-white font-bold uppercase tracking-widest text-[12px] hover:bg-zinc-800 transition-all gap-3"
+                                    >
+                                        Go to Profile
+                                        <ChevronRight size={16} />
+                                    </Link>
+                                </div>
+                                
+                                <p className="text-[10px] text-zinc-400 font-bold uppercase tracking-widest">Mandatory Requirement</p>
+                            </motion.div>
+                        </motion.div>
                     )}
                 </AnimatePresence>
             </div>

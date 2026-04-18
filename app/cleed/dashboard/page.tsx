@@ -64,6 +64,12 @@ interface Intern {
    lastActive?: string;
    branch?: string;
    college?: string;
+   year?: string;
+   graduationYear?: string;
+   dob?: string;
+   interestedArea?: string;
+   department?: string;
+   profileImage?: string;
    githubLink?: string;
    batch?: string;
    attendancePercentage?: number;
@@ -167,6 +173,7 @@ interface BootcampRegistration {
 export default function CleedDashboard() {
    const router = useRouter();
    const [activeTab, setActiveTab] = useState("overview");
+   const [viewingIntern, setViewingIntern] = useState<Intern | null>(null);
    const [interns, setInterns] = useState<Intern[]>([]);
    const [hiringApplications, setHiringApplications] = useState<HiringApplication[]>([]);
    const [tasks, setTasks] = useState<Task[]>([]);
@@ -2159,15 +2166,26 @@ export default function CleedDashboard() {
                               </div>
                            ) : (
                               [...interns].sort((a, b) => (b.handRaised ? 1 : 0) - (a.handRaised ? 1 : 0)).map((intern) => (
-                                 <div key={intern.id} className={`p-5 bg-white border flex flex-col md:flex-row md:items-center justify-between gap-6 hover:border-zinc-400 transition-all rounded-none ${intern.handRaised ? "border-l-4 border-red-600 bg-red-50/10" : "border-zinc-200"}`}>
+                                 <div key={intern.id} onClick={() => setViewingIntern(intern)} className={`p-5 bg-white border flex flex-col md:flex-row md:items-center justify-between gap-6 hover:border-zinc-400 transition-all rounded-none cursor-pointer group/row ${intern.handRaised ? "border-l-4 border-red-600 bg-red-50/10" : "border-zinc-200"}`}>
                                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 flex-1 gap-6 md:gap-12">
-                                       <div className="flex flex-col">
-                                          <div className="flex items-center gap-2 mb-1">
-                                             <span className="text-[9px] font-bold text-zinc-400">Intern</span>
-                                             {intern.handRaised && <div className="h-1.5 w-1.5 bg-red-600 animate-ping" />}
+                                       <div className="flex items-center gap-4">
+                                          <div className="relative h-12 w-12 flex-shrink-0">
+                                             {intern.profileImage ? (
+                                                <img src={intern.profileImage} alt={intern.name} className="h-full w-full object-cover rounded-none grayscale group-hover/row:grayscale-0 transition-all" />
+                                             ) : (
+                                                <div className="h-full w-full bg-zinc-900 text-white flex items-center justify-center text-sm font-bold">
+                                                   {intern.name?.charAt(0) || "U"}
+                                                </div>
+                                             )}
+                                             {intern.handRaised && <div className="absolute -top-1 -right-1 h-3 w-3 bg-red-600 animate-pulse border-2 border-white" />}
                                           </div>
-                                          <h4 className="text-[14px] font-bold text-zinc-900 leading-none truncate">{intern.name}</h4>
-                                          <p className="text-[10px] text-zinc-500 font-medium mt-1">{intern.email}</p>
+                                          <div className="flex flex-col overflow-hidden">
+                                             <div className="flex items-center gap-2 mb-0.5">
+                                                <span className="text-[9px] font-bold text-zinc-400 uppercase tracking-widest">Intern Node</span>
+                                             </div>
+                                             <h4 className="text-[14px] font-bold text-zinc-900 leading-tight truncate uppercase tracking-tight">{intern.name}</h4>
+                                             <p className="text-[10px] text-zinc-500 font-medium tabular-nums">{intern.email}</p>
+                                          </div>
                                        </div>
 
                                        <div className="flex flex-col">
@@ -2222,6 +2240,126 @@ export default function CleedDashboard() {
                      </div>
                   </motion.div>
                )}
+
+               <AnimatePresence>
+                  {viewingIntern && (
+                     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-6 bg-zinc-950/40 backdrop-blur-sm">
+                        <motion.div 
+                           initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                           animate={{ opacity: 1, scale: 1, y: 0 }}
+                           exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                           className="bg-white max-w-2xl w-full shadow-2xl border border-zinc-200 overflow-hidden"
+                        >
+                           <div className="relative h-32 bg-zinc-900 overflow-hidden">
+                              <div className="absolute inset-0 opacity-20 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]" />
+                              <button 
+                                 onClick={() => setViewingIntern(null)}
+                                 className="absolute top-4 right-4 h-8 w-8 bg-black/20 hover:bg-black/40 text-white flex items-center justify-center transition-all rounded-none"
+                              >
+                                 <CloseIcon size={18} />
+                              </button>
+                           </div>
+
+                           <div className="px-8 pb-10">
+                              <div className="relative -mt-16 mb-6 flex items-end gap-6">
+                                 <div className="h-32 w-32 border-4 border-white bg-zinc-100 shadow-lg overflow-hidden flex-shrink-0">
+                                    {viewingIntern.profileImage ? (
+                                       <img src={viewingIntern.profileImage} alt={viewingIntern.name} className="h-full w-full object-cover rounded-none" />
+                                    ) : (
+                                       <div className="h-full w-full bg-zinc-900 text-white flex items-center justify-center text-4xl font-bold">
+                                          {viewingIntern.name?.charAt(0) || "U"}
+                                       </div>
+                                    )}
+                                 </div>
+                                 <div className="pb-2 space-y-1">
+                                    <h3 className="text-2xl font-black text-zinc-900 tracking-tight uppercase">{viewingIntern.name}</h3>
+                                    <div className="flex items-center gap-3">
+                                       <span className="bg-zinc-100 px-2 py-0.5 text-[10px] font-bold text-zinc-500 uppercase tracking-widest border border-zinc-200">{viewingIntern.batch || 'Batch Active'}</span>
+                                       <span className={`px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest border ${viewingIntern.isApproved ? 'bg-emerald-50 text-emerald-600 border-emerald-100' : 'bg-amber-50 text-amber-600 border-amber-100'}`}>
+                                          {viewingIntern.isApproved ? 'Authorized' : 'Pending Rev'}
+                                       </span>
+                                    </div>
+                                 </div>
+                              </div>
+
+                              <div className="grid md:grid-cols-2 gap-10">
+                                 <div className="space-y-6">
+                                    <div className="space-y-4">
+                                       <h4 className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest border-b border-zinc-100 pb-2">Academic Protocol</h4>
+                                       <div className="grid grid-cols-1 gap-4">
+                                          <div>
+                                             <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-tighter">Institution</p>
+                                             <p className="text-[13px] font-bold text-zinc-900 truncate">{viewingIntern.college || 'Not Synchronized'}</p>
+                                          </div>
+                                          <div className="grid grid-cols-2 gap-4">
+                                             <div>
+                                                <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-tighter">Department</p>
+                                                <p className="text-[13px] font-bold text-zinc-900 uppercase">{viewingIntern.department || viewingIntern.branch || 'N/A'}</p>
+                                             </div>
+                                             <div>
+                                                <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-tighter">Academic Year</p>
+                                                <p className="text-[13px] font-bold text-zinc-900 uppercase">{viewingIntern.year || 'N/A'}</p>
+                                             </div>
+                                          </div>
+                                          <div>
+                                             <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-tighter">Graduation Node</p>
+                                             <p className="text-[13px] font-bold text-zinc-900">{viewingIntern.graduationYear || 'N/A'}</p>
+                                          </div>
+                                       </div>
+                                    </div>
+
+                                    <div className="space-y-4">
+                                       <h4 className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest border-b border-zinc-100 pb-2">Identity Details</h4>
+                                       <div className="grid grid-cols-2 gap-4">
+                                          <div>
+                                             <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-tighter">Date of Birth</p>
+                                             <p className="text-[13px] font-bold text-zinc-900 tabular-nums">{viewingIntern.dob || 'N/A'}</p>
+                                          </div>
+                                          <div>
+                                             <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-tighter">Email Identity</p>
+                                             <p className="text-[13px] font-bold text-zinc-900 truncate">{viewingIntern.email}</p>
+                                          </div>
+                                       </div>
+                                    </div>
+                                 </div>
+
+                                 <div className="space-y-6">
+                                    <div className="space-y-4">
+                                       <h4 className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest border-b border-zinc-100 pb-2">Technical Archetype</h4>
+                                       <div className="p-4 bg-zinc-50 border border-zinc-100 min-h-[120px]">
+                                          <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-tighter mb-2">Area of Interest</p>
+                                          <p className="text-[13px] font-bold text-zinc-900 leading-relaxed italic">
+                                             "{viewingIntern.interestedArea || 'Technical mission parameters have not been defined for this identity yet.'}"
+                                          </p>
+                                       </div>
+                                    </div>
+
+                                    <div className="flex flex-col gap-3 pt-4">
+                                       <button 
+                                          onClick={() => {
+                                             window.location.href = `mailto:${viewingIntern.email}`;
+                                          }}
+                                          className="flex items-center justify-center gap-2 h-12 bg-black text-white text-[11px] font-bold uppercase tracking-widest hover:bg-zinc-800 transition-all rounded-none"
+                                       >
+                                          <Mail size={16} /> Contact Intern
+                                       </button>
+                                       {viewingIntern.githubLink && (
+                                          <a 
+                                             href={viewingIntern.githubLink}
+                                             target="_blank"
+                                             className="flex items-center justify-center gap-2 h-12 bg-white border border-zinc-200 text-zinc-900 text-[11px] font-bold uppercase tracking-widest hover:bg-zinc-50 transition-all rounded-none"
+                                          >
+                                             <Github size={16} /> Technical Profile
+                                          </a>
+                                       )}
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+                        </motion.div>
+                     </div>
+                  )}
+               </AnimatePresence>
                { }
                {activeTab === "assign" && (
                   <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-12">
