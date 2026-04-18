@@ -9,8 +9,11 @@ import {
   ChevronLeft,
   ChevronRight,
   Loader2,
-  AlertTriangle
+  AlertTriangle,
+  Activity,
+  ShieldCheck
 } from "lucide-react";
+import { io } from "socket.io-client";
 import { EXAM_QUESTIONS } from "@/lib/exam-questions";
 
 const COLORS = {
@@ -220,28 +223,72 @@ function ExamPanelContent() {
     return () => clearInterval(timer);
   }, [timeLeft, isSubmitted, handleSubmit]);
 
-  // WebRTC / Proctoring Simulation
+  // WebRTC / Proctoring Real-time Logic
   const [streamActive, setStreamActive] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const socketRef = useRef<any>(null);
+  const peerRef = useRef<RTCPeerConnection | null>(null);
 
   useEffect(() => {
-    if (!loading && !isSubmitted) {
-        navigator.mediaDevices.getUserMedia({ video: true })
+    if (!loading && !isSubmitted && user) {
+        // 1. Initialize Signaling
+        const socket = io();
+        socketRef.current = socket;
+
+        socket.emit("proctor:join", {
+            id: user.id,
+            name: user.name,
+            exam: exam?.title || "Assessment"
+        });
+
+        // 2. Initialize Media
+        navigator.mediaDevices.getUserMedia({ video: true, audio: false })
             .then(stream => {
                 if (videoRef.current) videoRef.current.srcObject = stream;
                 setStreamActive(true);
+
+                // 3. Handle WebRTC Signaling Events
+                socket.on("proctor:offer", async ({ from, offer }: { from: string, offer: RTCSessionDescriptionInit }) => {
+                    const peer = new RTCPeerConnection({
+                        iceServers: [{ urls: "stun:stun.l.google.com:19302" }]
+                    });
+                    peerRef.current = peer;
+
+                    stream.getTracks().forEach(track => peer.addTrack(track, stream));
+
+                    peer.onicecandidate = (e) => {
+                        if (e.candidate) {
+                            socket.emit("proctor:ice-candidate", { to: from, candidate: e.candidate });
+                        }
+                    };
+
+                    await peer.setRemoteDescription(new RTCSessionDescription(offer));
+                    const answer = await peer.createAnswer();
+                    await peer.setLocalDescription(answer);
+
+                    socket.emit("proctor:answer", { to: from, answer });
+                });
+
+                socket.on("proctor:ice-candidate", async ({ from, candidate }: { from: string, candidate: RTCIceCandidateInit }) => {
+                    if (peerRef.current) {
+                        await peerRef.current.addIceCandidate(new RTCIceCandidate(candidate));
+                    }
+                });
             })
             .catch(err => {
-                console.error("WebRTC Error: PeerConnection failed to acquire MediaStream", err);
+                console.error("WebRTC Error: Critical Failure to acquire MediaStream", err);
             });
     }
+
     return () => {
+        if (socketRef.current) socketRef.current.disconnect();
+        if (peerRef.current) peerRef.current.close();
         if (videoRef.current?.srcObject) {
             const stream = videoRef.current.srcObject as MediaStream;
             stream.getTracks().forEach(track => track.stop());
         }
     };
-  }, [loading, isSubmitted]);
+  }, [loading, isSubmitted, user, exam]);
 
   const formatTime = (s: number) => {
     const min = Math.floor(s / 60);

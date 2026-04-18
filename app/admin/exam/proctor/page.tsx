@@ -1,37 +1,103 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { 
     Shield, 
     Video, 
-    Monitor, 
     Activity, 
     AlertCircle, 
     Loader2,
     Users,
     Zap,
-    Cpu
+    Cpu,
+    Wifi
 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { io } from "socket.io-client";
 
-// Simulated student data for proctoring demonstration
-const LIVE_STUDENTS = [
-    { id: 1, name: "Arjun Mehta", status: "Active", bitrate: "2.4 Mbps", packetLoss: "0.01%", sdp: "stable", ice: "connected" },
-    { id: 2, name: "Priya Sharma", status: "Active", bitrate: "2.1 Mbps", packetLoss: "0.03%", sdp: "stable", ice: "connected" },
-    { id: 3, name: "Rahul Verma", status: "Warning", bitrate: "1.2 Mbps", packetLoss: "2.5%", sdp: "renegotiating", ice: "checking" },
-    { id: 4, name: "Ananya Iyer", status: "Active", bitrate: "2.8 Mbps", packetLoss: "0.00%", sdp: "stable", ice: "connected" },
-    { id: 5, name: "Siddharth Raj", status: "Active", bitrate: "2.2 Mbps", packetLoss: "0.02%", sdp: "stable", ice: "connected" },
-    { id: 6, name: "Ishita Kaur", status: "Offline", bitrate: "0 Kbps", packetLoss: "100%", sdp: "closed", ice: "failed" },
-];
+interface StudentStream {
+    socketId: string;
+    id: string;
+    name: string;
+    exam: string;
+    stream?: MediaStream;
+}
 
 export default function ProctoringDashboard() {
     const router = useRouter();
     const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString());
+    const [students, setStudents] = useState<StudentStream[]>([]);
+    const [activeCalls, setActiveCalls] = useState<Record<string, RTCPeerConnection>>({});
+    const socketRef = useRef<any>(null);
 
     useEffect(() => {
         const timer = setInterval(() => setCurrentTime(new Date().toLocaleTimeString()), 1000);
-        return () => clearInterval(timer);
-    }, []);
+        
+        // 1. Initialize Signaling
+        const socket = io();
+        socketRef.current = socket;
+
+        socket.on("connect", () => {
+            console.log("Admin Connected to Monitoring Node");
+        });
+
+        socket.on("proctor:student-list", (studentList: any[]) => {
+            setStudents(studentList);
+            // Automatically try to call new students
+            studentList.forEach(student => {
+                if (student.socketId && !activeCalls[student.socketId]) {
+                    initiateCall(student.socketId);
+                }
+            });
+        });
+
+        socket.on("proctor:answer", async ({ from, answer }: any) => {
+            const peer = activeCalls[from];
+            if (peer) {
+                await peer.setRemoteDescription(new RTCSessionDescription(answer));
+            }
+        });
+
+        socket.on("proctor:ice-candidate", async ({ from, candidate }: any) => {
+            const peer = activeCalls[from];
+            if (peer) {
+                await peer.addIceCandidate(new RTCIceCandidate(candidate));
+            }
+        });
+
+        return () => {
+            clearInterval(timer);
+            socket.disconnect();
+            Object.values(activeCalls).forEach(p => p.close());
+        };
+    }, [activeCalls]);
+
+    const initiateCall = async (targetSocketId: string) => {
+        const peer = new RTCPeerConnection({
+            iceServers: [{ urls: "stun:stun.l.google.com:19302" }]
+        });
+
+        peer.onicecandidate = (e) => {
+            if (e.candidate) {
+                socketRef.current.emit("proctor:ice-candidate", { to: targetSocketId, candidate: e.candidate });
+            }
+        };
+
+        peer.ontrack = (e) => {
+            setStudents(prev => prev.map(s => 
+                s.socketId === targetSocketId ? { ...s, stream: e.streams[0] } : s
+            ));
+        };
+
+        // Standard WebRTC trickle
+        peer.addTransceiver('video', { direction: 'recvonly' });
+
+        const offer = await peer.createOffer();
+        await peer.setLocalDescription(offer);
+        socketRef.current.emit("proctor:offer", { to: targetSocketId, offer });
+
+        setActiveCalls(prev => ({ ...prev, [targetSocketId]: peer }));
+    };
 
     return (
         <div className="min-h-screen bg-slate-900 text-slate-100 font-sans selection:bg-violet-500/30 flex flex-col">
@@ -76,10 +142,10 @@ export default function ProctoringDashboard() {
                         <section className="space-y-4">
                             <h3 className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] border-b border-white/5 pb-2">Cluster Metrics</h3>
                             <div className="grid grid-cols-1 gap-3">
-                                <MetricCard icon={<Users size={14}/>} label="Active Sessions" value="24" color="text-emerald-400" />
-                                <MetricCard icon={<Monitor size={14}/>} label="RTCPeerConnections" value="24" color="text-violet-400" />
-                                <MetricCard icon={<Zap size={14}/>} label="Throughput" value="54.2 Mbps" color="text-amber-400" />
-                                <MetricCard icon={<Cpu size={14}/>} label="Server Load" value="12%" color="text-slate-400" />
+                                <MetricCard icon={<Users size={14}/>} label="Active Sessions" value={students.length.toString()} color="text-emerald-400" />
+                                <MetricCard icon={<Zap size={14}/>} label="RTCPeerConnections" value={Object.keys(activeCalls).length.toString()} color="text-violet-400" />
+                                <MetricCard icon={<Wifi size={14}/>} label="Throughput" value="Real-time" color="text-amber-400" />
+                                <MetricCard icon={<Cpu size={14}/>} label="Server Load" value="Optimal" color="text-slate-400" />
                             </div>
                         </section>
 
@@ -92,16 +158,12 @@ export default function ProctoringDashboard() {
                             </div>
                         </section>
 
-                        <section className="bg-red-500/5 border border-red-500/20 p-6 rounded relative overflow-hidden group">
-                           <div className="absolute top-0 left-0 w-1 h-full bg-red-500"></div>
-                           <h4 className="text-[10px] font-bold text-red-400 uppercase tracking-widest mb-2 flex items-center gap-2">
-                              <AlertCircle size={14}/> Critical Alerts
-                           </h4>
-                           <p className="text-[11px] text-slate-400 font-medium leading-relaxed italic">
-                              2 students flagged for 'Object detection: Phone' via WebRTC Metadata analysis.
-                           </p>
-                        </section>
-
+                        <div className="p-6 bg-violet-600/10 border border-violet-500/20 rounded">
+                            <p className="text-[10px] font-bold text-violet-400 uppercase tracking-widest mb-1 italic">Protocol Active</p>
+                            <p className="text-[11px] text-slate-400 font-medium leading-relaxed">
+                                Automated peer discovery is active. Streams will initialize as students enter the assessment node.
+                            </p>
+                        </div>
                     </div>
                 </aside>
 
@@ -110,26 +172,24 @@ export default function ProctoringDashboard() {
                     
                     <div className="flex justify-between items-center mb-10">
                        <h2 className="text-xl font-bold tracking-tight text-white flex items-center gap-3">
-                          <Activity size={20} className="text-violet-500"/> Real-time Stream Matrix
+                          <Activity size={20} className="text-violet-500"/> Live Stream Matrix
                        </h2>
-                       <div className="flex gap-2">
-                          <div className="px-4 py-2 bg-black border border-white/10 text-[9px] font-bold uppercase tracking-widest rounded">Grid View</div>
-                          <div className="px-4 py-2 bg-violet-600 text-white text-[9px] font-bold uppercase tracking-widest rounded shadow-lg shadow-violet-600/20 cursor-pointer">Live Audit</div>
+                       <div className="flex gap-2 text-[10px] font-bold uppercase tracking-widest text-slate-500">
+                          Total Nodes Monitoring: {students.length}
                        </div>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {LIVE_STUDENTS.map(student => (
-                            <StudentVideoCard key={student.id} student={student} />
+                        {students.map(student => (
+                            <StudentLiveCard key={student.socketId} student={student} />
                         ))}
+                        {students.length === 0 && (
+                            <div className="col-span-full h-80 border border-dashed border-white/10 flex flex-col items-center justify-center gap-4">
+                                <Loader2 className="animate-spin text-violet-500" size={32} />
+                                <p className="text-xs font-bold text-slate-500 uppercase tracking-[0.2em]">Waiting for student nodes...</p>
+                            </div>
+                        )}
                     </div>
-
-                    <div className="mt-12 p-8 border border-white/5 bg-black/20 text-center">
-                       <p className="text-[10px] text-slate-500 font-bold uppercase tracking-[0.3em]">
-                          End of Live Buffer // JavaScript WebRTC Prototcol v2.4.0
-                       </p>
-                    </div>
-
                 </div>
 
             </main>
@@ -138,6 +198,69 @@ export default function ProctoringDashboard() {
                 .custom-scrollbar::-webkit-scrollbar { width: 4px; }
                 .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.05); border-radius: 10px; }
             `}</style>
+        </div>
+    );
+}
+
+function StudentLiveCard({ student }: { student: StudentStream }) {
+    const videoRef = useRef<HTMLVideoElement>(null);
+
+    useEffect(() => {
+        if (videoRef.current && student.stream) {
+            videoRef.current.srcObject = student.stream;
+        }
+    }, [student.stream]);
+
+    return (
+        <div className="bg-black border border-white/5 transition-all overflow-hidden shadow-2xl group hover:border-violet-500/40">
+            <div className="aspect-video bg-neutral-900 relative flex items-center justify-center overflow-hidden">
+                {student.stream ? (
+                    <video 
+                        ref={videoRef}
+                        autoPlay 
+                        playsInline 
+                        className="w-full h-full object-cover"
+                    />
+                ) : (
+                    <div className="flex flex-col items-center gap-3">
+                        <Loader2 className="animate-spin text-violet-500" size={24} />
+                        <p className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">Negotiating SDP...</p>
+                    </div>
+                )}
+                
+                <div className="absolute top-3 left-3">
+                    <div className="px-2 py-1 bg-emerald-600 text-white rounded-[1px] text-[8px] font-bold uppercase tracking-tighter">
+                        LIVE // CONNECTED
+                    </div>
+                </div>
+
+                <div className="absolute bottom-3 left-3 right-3 flex justify-between items-end backdrop-blur-md bg-black/40 p-2 border border-white/10">
+                    <div className="overflow-hidden">
+                        <p className="text-xs font-bold text-white tracking-tight truncate">{student.name}</p>
+                        <p className="text-[8px] font-mono text-slate-400 uppercase">Node ID: {student.id?.slice(-8)}</p>
+                    </div>
+                    <div className="text-right">
+                        <p className="text-[8px] font-bold text-violet-400 uppercase tracking-widest">Track: {student.exam}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div className="p-4 bg-white/[0.02] border-t border-white/5 space-y-3">
+                <div className="grid grid-cols-2 gap-4">
+                    <div>
+                        <p className="text-[8px] font-bold text-slate-500 uppercase tracking-tighter mb-0.5">ICE Role</p>
+                        <p className="text-[10px] font-mono text-slate-300">Controlling</p>
+                    </div>
+                    <div>
+                        <p className="text-[8px] font-bold text-slate-500 uppercase tracking-tighter mb-0.5">SDP State</p>
+                        <p className="text-[10px] font-mono text-slate-300">Stable</p>
+                    </div>
+                </div>
+                <div className="flex items-center gap-2 pt-1 border-t border-white/5">
+                   <AlertCircle size={10} className="text-emerald-500"/>
+                   <span className="text-[9px] font-bold text-emerald-500 uppercase tracking-widest">WebRTC Protocol Active</span>
+                </div>
+            </div>
         </div>
     );
 }
@@ -164,72 +287,6 @@ function HealthBar({ label, percentage, value, color }: any) {
             <div className="h-1 bg-white/5 overflow-hidden">
                 <div className={`h-full ${color} opacity-60`} style={{ width: `${percentage}%` }}></div>
             </div>
-        </div>
-    );
-}
-
-function StudentVideoCard({ student }: any) {
-    const isWarning = student.status === "Warning";
-    const isOffline = student.status === "Offline";
-
-    return (
-        <div className={`bg-black border transition-all overflow-hidden shadow-2xl group ${
-            isWarning ? 'border-red-500/40 shadow-red-500/5' : 
-            isOffline ? 'border-white/5 opacity-50' : 'border-white/5 hover:border-violet-500/30'
-        }`}>
-            {/* Simulated Video Placeholder */}
-            <div className="aspect-video bg-slate-800 relative flex items-center justify-center overflow-hidden">
-                <div className="absolute inset-0 bg-neutral-900 flex items-center justify-center">
-                    {isOffline ? (
-                       <Loader2 size={24} className="text-slate-700 animate-spin" />
-                    ) : (
-                       <div className="w-full h-full bg-gradient-to-br from-indigo-900/40 to-black relative">
-                          {/* Simulated Canvas Grain */}
-                          <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]"></div>
-                          <User size={48} className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 ${
-                              isWarning ? 'text-red-500/30' : 'text-slate-700/50'
-                          }`} />
-                       </div>
-                    )}
-                </div>
-
-                {/* Stream Metadata Overlay */}
-                <div className="absolute top-3 left-3 flex gap-2">
-                    <div className={`px-2 py-1 rounded-[1px] text-[8px] font-bold uppercase tracking-tighter ${
-                        isWarning ? 'bg-red-600 text-white' : 
-                        isOffline ? 'bg-slate-700 text-slate-300' : 'bg-emerald-600 text-white'
-                    }`}>
-                        LIVE // {student.status}
-                    </div>
-                </div>
-
-                <div className="absolute bottom-3 left-3 right-3 flex justify-between items-end backdrop-blur-sm bg-black/20 p-2 border border-white/5">
-                    <div>
-                        <p className="text-xs font-bold text-white tracking-tight">{student.name}</p>
-                        <p className="text-[8px] font-mono text-slate-400 uppercase">{student.bitrate} @ 30fps</p>
-                    </div>
-                    <div className="text-right">
-                        <p className="text-[8px] font-bold text-violet-400 uppercase tracking-widest">Jank: 2ms</p>
-                    </div>
-                </div>
-            </div>
-
-            {/* Technical Metadata Footer */}
-            <div className="p-4 bg-white/[0.02] border-t border-white/5 grid grid-cols-2 gap-y-3">
-                <MetadataItem label="ICE Candidates" value={student.ice} />
-                <MetadataItem label="SDP Exchange" value={student.sdp} />
-                <MetadataItem label="Packet Loss" value={student.packetLoss} />
-                <MetadataItem label="Latency" value="12ms" />
-            </div>
-        </div>
-    );
-}
-
-function MetadataItem({ label, value }: any) {
-    return (
-        <div>
-            <p className="text-[8px] font-bold text-slate-500 uppercase tracking-tighter mb-0.5">{label}</p>
-            <p className="text-[10px] font-mono text-slate-300 capitalize">{value}</p>
         </div>
     );
 }
