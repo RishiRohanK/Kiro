@@ -169,7 +169,7 @@ export default function BootcampPage() {
                   <div className="bg-[#F8F9FA] px-4 py-2 border-l-4 border-[#002147] mb-6 shadow-sm">
                     <h2 className="text-[15px] sm:text-[16px] font-semibold text-[#002147]">4. Comprehensive Syllabus (Full Stack Track)</h2>
                   </div>
-                  
+
                   <div className="space-y-10">
                     {/* Week 1 & 2 */}
                     <div className="space-y-4">
@@ -245,12 +245,12 @@ export default function BootcampPage() {
                         </table>
                       </div>
                       <div className="bg-[#F8F9FA] border border-zinc-200 p-4">
-                         <div className="text-[11px] font-semibold text-zinc-400 mb-2 uppercase tracking-wide underline underline-offset-4 decoration-[#002147]">Required Assessments</div>
-                         <div className="flex flex-col sm:flex-row gap-4">
-                            <div className="flex-1 bg-white p-3 border border-zinc-200 text-[12px] shadow-sm"><strong>MCQ Test:</strong> Concepts Week 1-4 (20m)</div>
-                            <div className="flex-1 bg-white p-3 border border-zinc-200 text-[12px] shadow-sm"><strong>Coding:</strong> API Integration (45m)</div>
-                            <div className="flex-1 bg-white p-3 border border-zinc-200 text-[12px] shadow-sm"><strong>Project:</strong> Full Submission (60m)</div>
-                         </div>
+                        <div className="text-[11px] font-semibold text-zinc-400 mb-2 uppercase tracking-wide underline underline-offset-4 decoration-[#002147]">Required Assessments</div>
+                        <div className="flex flex-col sm:flex-row gap-4">
+                          <div className="flex-1 bg-white p-3 border border-zinc-200 text-[12px] shadow-sm"><strong>MCQ Test:</strong> Concepts Week 1-4 (20m)</div>
+                          <div className="flex-1 bg-white p-3 border border-zinc-200 text-[12px] shadow-sm"><strong>Coding:</strong> API Integration (45m)</div>
+                          <div className="flex-1 bg-white p-3 border border-zinc-200 text-[12px] shadow-sm"><strong>Project:</strong> Full Submission (60m)</div>
+                        </div>
                       </div>
                     </div>
 
@@ -349,7 +349,7 @@ export default function BootcampPage() {
                                 <input required value={formData.college} onChange={(e) => setFormData({ ...formData, college: e.target.value })} className="w-full h-11 border border-zinc-200 bg-zinc-50 px-4 text-[14px] focus:bg-white focus:border-[#002147] outline-none font-medium" />
                               </div>
                               <div className="space-y-1">
-                                <label className="text-[11px] font-medium text-zinc-500">1.3 Stream / Group</label>
+                                <label className="text-[11px] font-medium text-zinc-500">1.3 Full-Stack | UI/UX</label>
                                 <input required value={formData.branch} onChange={(e) => setFormData({ ...formData, branch: e.target.value })} className="w-full h-11 border border-zinc-200 bg-zinc-50 px-4 text-[14px] focus:bg-white focus:border-[#002147] outline-none font-medium" />
                               </div>
                             </div>
