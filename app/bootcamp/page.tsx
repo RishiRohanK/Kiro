@@ -56,343 +56,433 @@ export default function BootcampPage() {
     }
   };
 
-  const courseFlow = [
-    { week: "01", title: "Coding Basics", details: "Loops, logic, and problem solving." },
-    { week: "02", title: "Core Skills", details: "Functions and data structures." },
-    { week: "03", title: "Design & Web", details: "UI/UX and web development." },
-    { week: "04", title: "Final Step", details: "Major project and interview prep." }
-  ];
-
   return (
-    <div className="min-h-screen bg-white font-sans selection:bg-zinc-100/50">
+    <div className="min-h-screen bg-[#F4F4F4] font-sans text-[#212529] selection:bg-blue-100">
       <Navbar />
       <SubNavbar />
 
-      <main className="pb-20">
-        {/* Natural Banner */}
-        <div className="w-full border-b border-zinc-100 bg-white">
-          <img
-            src="/banner4.png"
-            alt="Banner"
-            className="w-full h-auto block rounded-none"
-            loading="eager"
-          />
+      {/* Official Top Bar */}
+      <div className="bg-[#1D4E89] text-white py-1.5 px-6 text-[11px] font-medium flex justify-between items-center uppercase tracking-wider">
+        <span>Learn Grid An initiative by Student Forge Technologies Private Limited.</span>
+        <div className="flex gap-4">
+          <span>Batch: SUMMER-2026</span>
+
+        </div>
+      </div>
+
+      <main className="w-full bg-[#F0F2F5] min-h-screen py-1">
+        {/* Banner Section */}
+        <div className="w-full bg-white border-b border-zinc-200">
+          <div className="w-full max-w-[1400px] mx-auto p-0.5">
+            <img
+              src="/banner4.png"
+              alt="Official Portal Banner"
+              className="w-full h-auto block"
+              loading="eager"
+            />
+          </div>
         </div>
 
-        {/* Header Section */}
-        <section className="bg-white border-b border-zinc-50 py-10 sm:py-14">
-          <div className="mx-auto max-w-6xl px-6">
-            <div className="flex flex-col lg:flex-row gap-16 items-start">
-              {/* Info Column */}
-              <div className="flex-1">
-                <div className="flex flex-wrap gap-2 mb-6">
-                  <span className="px-2 py-0.5 bg-blue-50 text-blue-600/80 text-[10px] font-bold uppercase tracking-tight">Practice-Led</span>
-                  <span className="px-2 py-0.5 bg-emerald-50 text-emerald-600/80 text-[10px] font-bold uppercase tracking-tight">Industry-Ready</span>
-                  <span className="px-2 py-0.5 bg-amber-50 text-amber-600/80 text-[10px] font-bold uppercase tracking-tight">Limited Slots</span>
-                  <span className="px-2 py-0.5 bg-rose-50 text-rose-600/80 text-[10px] font-bold uppercase tracking-tight">MNC Exposure</span>
-                </div>
+        <div className="w-full max-w-[1400px] mx-auto bg-white shadow-sm my-1 border border-zinc-200">
+          {/* Public Notice Header */}
+          <div className="border-b-2 border-[#002147] pb-6 mb-6 text-center pt-8 px-6">
+            <h1 className="text-xl sm:text-2xl font-semibold text-[#002147] mb-2">Summer Boot Camp 2026 - Training Notification</h1>
+            <div className="inline-block px-3 py-0.5 bg-[#002147] text-white text-[11px] font-medium mb-3">Official Release</div>
+            <p className="text-[13px] sm:text-[14px] font-medium text-zinc-500">Learn Grid An initiative by Student Forge</p>
+          </div>
 
-                <h1 className="text-3xl sm:text-5xl font-medium tracking-tighter text-zinc-900 mb-4 leading-tight">Summer Boot Camp 2026</h1>
-                <p className="text-[16px] text-zinc-500 font-normal leading-relaxed mb-6 max-w-lg">
-                  30-day intensive skill program. Real-world architecting. Strategic MNC interaction. Direct career alignment. No complex theory.
-                </p>
+          <div className="px-6 sm:px-10 lg:px-12 pb-12">
+            <div className="flex flex-col lg:flex-row gap-10 items-start">
+              {/* Main Information Block */}
+              <div className="flex-1 space-y-10 w-full">
 
-                <div className="grid grid-cols-2 gap-y-4 gap-x-8 mb-10 text-[13px]">
-                  <div className="space-y-1">
-                    <p className="text-zinc-400 font-medium">Mode</p>
-                    <p className="text-black">Hybrid (Online + 1 Day Visit)</p>
+                {/* Section 1: Summary */}
+                <section>
+                  <div className="bg-[#F8F9FA] px-4 py-2 border-l-4 border-[#002147] mb-4 shadow-sm">
+                    <h2 className="text-[15px] sm:text-[16px] font-semibold text-[#002147]">1. Program Notification</h2>
                   </div>
-                  <div className="space-y-1">
-                    <p className="text-zinc-400 font-medium">Batch Size</p>
-                    <p className="text-emerald-600/70">50 Seats Only</p>
+                  <div className="space-y-4 text-[14px] sm:text-[15px] leading-relaxed text-zinc-800 font-normal">
+                    <p>
+                      This notice announces the start of the 30-day "Summer Boot Camp 2026". The program is designed to provide high-quality technical skills to students. We focus on building industry-standard capabilities through practical training.
+                    </p>
+                    <p>
+                      Our curriculum is built to help you master modern technology. You will receive instruction from seasoned professionals, engage in intensive lab sessions, and undergo weekly evaluations to monitor your growth.
+                    </p>
                   </div>
-                </div>
+                </section>
 
-                <div className="flex flex-wrap gap-6 pt-6 border-t border-zinc-50">
-                  <div className="flex items-center gap-2 text-[12px] text-zinc-800">
-                    <Calendar className="w-3.5 h-3.5 text-blue-500/50" /> Start: May 10
+                {/* Section 2: Eligibility Criteria */}
+                <section>
+                  <div className="bg-[#F8F9FA] px-4 py-2 border-l-4 border-[#002147] mb-4 shadow-sm">
+                    <h2 className="text-[15px] sm:text-[16px] font-semibold text-[#002147]">2. Eligibility Criteria</h2>
                   </div>
-                  <div className="flex items-center gap-2 text-[12px] text-zinc-800">
-                    <Clock className="w-3.5 h-3.5 text-blue-500/50" /> Duration: 30 Days
+                  <div className="space-y-4 text-[14px] sm:text-[15px] leading-relaxed text-zinc-800 font-normal">
+                    <p>
+                      The program is open to all students across all recognized colleges and technical institutions. Candidates from any undergraduate year are eligible to attend the training:
+                    </p>
+                    <ul className="list-disc pl-5 space-y-2 font-medium text-zinc-700">
+                      <li>First Year Students (All Branches)</li>
+                      <li>Second Year Students (All Branches)</li>
+                      <li>Third Year Students (All Branches)</li>
+                      <li>Final Year / Graduating Students</li>
+                    </ul>
                   </div>
-                  <div className="flex items-center gap-2 text-[12px] text-zinc-800">
-                    <CreditCard className="w-3.5 h-3.5 text-blue-500/50" /> Fee: ₹599
+                </section>
+
+                {/* Section 3: Important Dates */}
+                <section>
+                  <div className="bg-[#F8F9FA] px-4 py-2 border-l-4 border-[#002147] mb-4 shadow-sm">
+                    <h2 className="text-[15px] sm:text-[16px] font-semibold text-[#002147]">3. Important Dates</h2>
                   </div>
-                </div>
+                  <div className="overflow-x-auto border border-zinc-200">
+                    <table className="w-full text-left text-[14px] min-w-[450px]">
+                      <thead className="bg-[#F8F9FA] border-b border-zinc-200">
+                        <tr>
+                          <th className="px-5 py-3 font-semibold border-r border-zinc-200 text-[#002147]">Activity Description</th>
+                          <th className="px-5 py-3 font-semibold text-[#002147]">Schedule</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-zinc-200">
+                        <tr>
+                          <td className="px-5 py-3 bg-[#F8F9FA] border-r border-zinc-200 w-1/2 italic text-zinc-600">Online Registration Portal Starts</td>
+                          <td className="px-5 py-3 font-medium">April 20, 2026</td>
+                        </tr>
+                        <tr>
+                          <td className="px-5 py-3 bg-[#F8F9FA] border-r border-zinc-200 italic text-zinc-600">Portal Closure for New Requests</td>
+                          <td className="px-5 py-3 font-medium">May 05, 2026</td>
+                        </tr>
+                        <tr>
+                          <td className="px-5 py-3 bg-[#F8F9FA] border-r border-zinc-200 italic text-zinc-600 text-blue-900 font-medium">Training Operations Start</td>
+                          <td className="px-5 py-3 text-[#002147] font-semibold">May 10, 2026</td>
+                        </tr>
+                        <tr>
+                          <td className="px-5 py-3 bg-[#F8F9FA] border-r border-zinc-200 italic text-zinc-600">Final Assessment & Closure</td>
+                          <td className="px-5 py-3 font-medium">June 10, 2026</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </section>
+
+                {/* Section 4: Comprehensive Syllabus (Full Stack Track) */}
+                <section>
+                  <div className="bg-[#F8F9FA] px-4 py-2 border-l-4 border-[#002147] mb-6 shadow-sm">
+                    <h2 className="text-[15px] sm:text-[16px] font-semibold text-[#002147]">4. Comprehensive Syllabus (Full Stack Track)</h2>
+                  </div>
+                  
+                  <div className="space-y-10">
+                    {/* Week 1 & 2 */}
+                    <div className="space-y-4">
+                      <div className="bg-[#002147] text-white px-4 py-1.5 text-[12px] font-medium">Weeks 1 & 2: Frontend Engineering & UI/UX</div>
+                      <div className="overflow-x-auto border border-zinc-200">
+                        <table className="w-full text-left text-[13px] min-w-[550px]">
+                          <thead className="bg-[#F8F9FA] border-b border-zinc-200 text-[#002147]">
+                            <tr>
+                              <th className="px-4 py-2 font-semibold border-r border-zinc-200">Ref</th>
+                              <th className="px-4 py-2 font-semibold border-r border-zinc-200">Lesson Name</th>
+                              <th className="px-4 py-2 font-semibold border-r border-zinc-200">Level</th>
+                              <th className="px-4 py-2 font-semibold text-center">T-Time</th>
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-zinc-200">
+                            <tr><td className="px-4 py-2 border-r">M-02</td><td className="px-4 py-2 border-r">JavaScript ES6 Essentials</td><td className="px-4 py-2 border-r">Beginner</td><td className="px-4 py-2 text-center">30m</td></tr>
+                            <tr><td className="px-4 py-2 border-r">M-02</td><td className="px-4 py-2 border-r">React Introduction and Setup</td><td className="px-4 py-2 border-r">Beginner</td><td className="px-4 py-2 text-center">20m</td></tr>
+                            <tr><td className="px-4 py-2 border-r">M-02</td><td className="px-4 py-2 border-r">Components, Props and State</td><td className="px-4 py-2 border-r">Intermediate</td><td className="px-4 py-2 text-center">25m</td></tr>
+                            <tr><td className="px-4 py-2 border-r">M-02</td><td className="px-4 py-2 border-r">React Hooks (useState, useEffect)</td><td className="px-4 py-2 border-r">Intermediate</td><td className="px-4 py-2 text-center">30m</td></tr>
+                            <tr><td className="px-4 py-2 border-r">M-02</td><td className="px-4 py-2 border-r">Routing with React Router</td><td className="px-4 py-2 border-r">Intermediate</td><td className="px-4 py-2 text-center">20m</td></tr>
+                            <tr><td className="px-4 py-2 border-r">M-02</td><td className="px-4 py-2 border-r">Next.js Fundamentals</td><td className="px-4 py-2 border-r">Intermediate</td><td className="px-4 py-2 text-center">25m</td></tr>
+                            <tr><td className="px-4 py-2 border-r">M-02</td><td className="px-4 py-2 border-r">Styling with Tailwind CSS</td><td className="px-4 py-2 border-r">Beginner</td><td className="px-4 py-2 text-center">20m</td></tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+
+                    {/* Week 3 */}
+                    <div className="space-y-4">
+                      <div className="bg-[#002147] text-white px-4 py-1.5 text-[12px] font-medium">Week 3: Backend Systems & API Design</div>
+                      <div className="overflow-x-auto border border-zinc-200">
+                        <table className="w-full text-left text-[13px] min-w-[550px]">
+                          <thead className="bg-[#F8F9FA] border-b border-zinc-200 text-[#002147]">
+                            <tr>
+                              <th className="px-4 py-2 font-semibold border-r border-zinc-200">Ref</th>
+                              <th className="px-4 py-2 font-semibold border-r border-zinc-200">Lesson Name</th>
+                              <th className="px-4 py-2 font-semibold border-r border-zinc-200">Level</th>
+                              <th className="px-4 py-2 font-semibold text-center">T-Time</th>
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-zinc-200">
+                            <tr><td className="px-4 py-2 border-r">M-03</td><td className="px-4 py-2 border-r">Introduction to Node.js</td><td className="px-4 py-2 border-r">Intermediate</td><td className="px-4 py-2 text-center">20m</td></tr>
+                            <tr><td className="px-4 py-2 border-r">M-03</td><td className="px-4 py-2 border-r">Express.js Framework Basics</td><td className="px-4 py-2 border-r">Intermediate</td><td className="px-4 py-2 text-center">25m</td></tr>
+                            <tr><td className="px-4 py-2 border-r">M-03</td><td className="px-4 py-2 border-r">Creating REST APIs</td><td className="px-4 py-2 border-r">Intermediate</td><td className="px-4 py-2 text-center">30m</td></tr>
+                            <tr><td className="px-4 py-2 border-r">M-03</td><td className="px-4 py-2 border-r">Middleware in Express</td><td className="px-4 py-2 border-r">Intermediate</td><td className="px-4 py-2 text-center">20m</td></tr>
+                            <tr><td className="px-4 py-2 border-r">M-03</td><td className="px-4 py-2 border-r">Authentication with JWT</td><td className="px-4 py-2 border-r">Intermediate</td><td className="px-4 py-2 text-center">30m</td></tr>
+                            <tr><td className="px-4 py-2 border-r">M-03</td><td className="px-4 py-2 border-r">API Testing using Postman</td><td className="px-4 py-2 border-r">Beginner</td><td className="px-4 py-2 text-center">15m</td></tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+
+                    {/* Week 4 */}
+                    <div className="space-y-4">
+                      <div className="bg-[#002147] text-white px-4 py-1.5 text-[12px] font-medium">Week 4: Database Integration & Assessment</div>
+                      <div className="overflow-x-auto border border-zinc-200">
+                        <table className="w-full text-left text-[13px] min-w-[550px]">
+                          <thead className="bg-[#F8F9FA] border-b border-zinc-200 text-[#002147]">
+                            <tr>
+                              <th className="px-4 py-2 font-semibold border-r border-zinc-200">Ref</th>
+                              <th className="px-4 py-2 font-semibold border-r border-zinc-200">Lesson Name</th>
+                              <th className="px-4 py-2 font-semibold border-r border-zinc-200">Level</th>
+                              <th className="px-4 py-2 font-semibold text-center">T-Time</th>
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-zinc-200">
+                            <tr><td className="px-4 py-2 border-r">M-04</td><td className="px-4 py-2 border-r">SQL vs NoSQL Databases</td><td className="px-4 py-2 border-r">Beginner</td><td className="px-4 py-2 text-center">15m</td></tr>
+                            <tr><td className="px-4 py-2 border-r">M-04</td><td className="px-4 py-2 border-r">MongoDB Basics and Setup</td><td className="px-4 py-2 border-r">Intermediate</td><td className="px-4 py-2 text-center">25m</td></tr>
+                            <tr><td className="px-4 py-2 border-r">M-04</td><td className="px-4 py-2 border-r">CRUD Operations in MongoDB</td><td className="px-4 py-2 border-r">Intermediate</td><td className="px-4 py-2 text-center">30m</td></tr>
+                            <tr><td className="px-4 py-2 border-r">M-04</td><td className="px-4 py-2 border-r">Mongoose (Schema and Models)</td><td className="px-4 py-2 border-r">Intermediate</td><td className="px-4 py-2 text-center">25m</td></tr>
+                            <tr><td className="px-4 py-2 border-r">M-04</td><td className="px-4 py-2 border-r">Connecting Database with Backend</td><td className="px-4 py-2 border-r">Intermediate</td><td className="px-4 py-2 text-center">20m</td></tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div className="bg-[#F8F9FA] border border-zinc-200 p-4">
+                         <div className="text-[11px] font-semibold text-zinc-400 mb-2 uppercase tracking-wide underline underline-offset-4 decoration-[#002147]">Required Assessments</div>
+                         <div className="flex flex-col sm:flex-row gap-4">
+                            <div className="flex-1 bg-white p-3 border border-zinc-200 text-[12px] shadow-sm"><strong>MCQ Test:</strong> Concepts Week 1-4 (20m)</div>
+                            <div className="flex-1 bg-white p-3 border border-zinc-200 text-[12px] shadow-sm"><strong>Coding:</strong> API Integration (45m)</div>
+                            <div className="flex-1 bg-white p-3 border border-zinc-200 text-[12px] shadow-sm"><strong>Project:</strong> Full Submission (60m)</div>
+                         </div>
+                      </div>
+                    </div>
+
+                    {/* Week 5 */}
+                    <div className="space-y-4">
+                      <div className="bg-[#002147] text-white px-4 py-1.5 text-[12px] font-medium">Week 5: Real-Time Project Implementation</div>
+                      <div className="p-4 border border-zinc-200 bg-white text-[14px] leading-relaxed italic text-zinc-600 shadow-sm">
+                        Week 5 focuses on building a real-time full stack project through structured, text-based guidance. Students will implement authentication, CRUD operations, API integration, and deployment, resulting in a complete, production-ready application for their portfolio.
+                      </div>
+                    </div>
+                  </div>
+                </section>
+
+                {/* Section 5: Certification Requirements */}
+                <section>
+                  <div className="bg-[#F8F9FA] px-4 py-2 border-l-4 border-[#002147] mb-4 shadow-sm">
+                    <h2 className="text-[15px] sm:text-[16px] font-semibold text-[#002147]">5. Certification Requirements</h2>
+                  </div>
+                  <div className="flex flex-col md:flex-row gap-0 border border-zinc-200 shadow-sm">
+                    <div className="flex-1 p-6 border-b md:border-b-0 md:border-r border-zinc-200">
+                      <h3 className="text-[12px] font-semibold mb-4 text-[#002147]">Weekly Training Schedule</h3>
+                      <ul className="space-y-3 text-[14px]">
+                        <li className="flex justify-between border-b border-zinc-50 pb-2"><span>Live Instructional Hours</span><span className="font-medium text-[#002147]">4 Days</span></li>
+                        <li className="flex justify-between border-b border-zinc-50 pb-2"><span>Assignment Practicum</span><span className="font-medium text-[#002147]">2 Days</span></li>
+                        <li className="flex justify-between"><span>Mandatory Assessment</span><span className="font-medium text-[#002147]">1 Day</span></li>
+                      </ul>
+                    </div>
+                    <div className="flex-1 p-6 bg-[#F8F9FA]">
+                      <h3 className="text-[12px] font-semibold mb-4 text-[#002147]">Mandatory Criteria</h3>
+                      <ol className="space-y-2 text-[13px] list-decimal pl-5 text-zinc-600 font-medium">
+                        <li>Minimum 75% system-recorded attendance.</li>
+                        <li>Submission of valid Capstone Project.</li>
+                        <li>Qualification score of 60% in final examination.</li>
+                      </ol>
+                    </div>
+                  </div>
+                </section>
+
+                {/* Section 6: Industry Immersion (MNC Visit) */}
+                <section>
+                  <div className="bg-[#F8F9FA] px-4 py-2 border-l-4 border-[#002147] mb-4 shadow-sm">
+                    <h2 className="text-[15px] sm:text-[16px] font-semibold text-[#002147]">6. Industry Immersion (MNC Visit)</h2>
+                  </div>
+                  <div className="p-6 border border-zinc-200 bg-white text-[14px] sm:text-[15px] leading-relaxed shadow-sm">
+                    All valid candidates will participate in a one-day office immersion at a designated Multi-National Corporation.
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-6">
+                      <div className="p-4 bg-white border border-zinc-200 text-[11px] font-medium text-[#002147] flex items-center gap-3"><div className="w-1.5 h-1.5 bg-[#002147] rotate-45" /> Corporate Protocol Training</div>
+                      <div className="p-4 bg-white border border-zinc-200 text-[11px] font-medium text-[#002147] flex items-center gap-3"><div className="w-1.5 h-1.5 bg-[#002147] rotate-45" /> Operational Workflow Audit</div>
+                      <div className="p-4 bg-white border border-zinc-200 text-[11px] font-medium text-[#002147] flex items-center gap-3"><div className="w-1.5 h-1.5 bg-[#002147] rotate-45" /> Infrastructure Exposure</div>
+                      <div className="p-4 bg-white border border-zinc-200 text-[11px] font-medium text-[#002147] flex items-center gap-3"><div className="w-1.5 h-1.5 bg-[#002147] rotate-45" /> Industry Expert Dialogue</div>
+                    </div>
+                  </div>
+                </section>
               </div>
 
-              {/* Multi-Step Form Card */}
-              <div className="flex-shrink-0 w-full lg:w-[400px]">
-                <div className="p-8 border border-zinc-100 rounded-none bg-white shadow-xl shadow-zinc-100/50 min-h-[460px] flex flex-col">
+              {/* Registration Form Block */}
+              <div className="w-full lg:w-[420px] shrink-0 lg:sticky lg:top-4">
+                <div className="border-[4px] border-[#002147] bg-white p-6 mb-4 shadow-lg">
+                  <div className="bg-[#002147] text-white p-5 mb-6 text-center -mx-6 -mt-6">
+                    <h2 className="text-lg sm:text-xl font-semibold">Enrollment Portal</h2>
+                    <p className="text-[10px] text-zinc-400 mt-1 font-medium">Secure Admission System</p>
+                  </div>
+
                   {step === 4 ? (
-                    <div className="flex-1 flex flex-col items-center justify-center text-center">
-                      <div className="w-12 h-12 bg-emerald-50 border border-emerald-100 flex items-center justify-center mb-4">
-                        <CheckCircle2 className="w-6 h-6 text-emerald-500" />
+                    <div className="py-12 text-center space-y-6 animate-in zoom-in duration-500">
+                      <div className="w-16 h-16 border-2 border-[#002147] flex items-center justify-center mx-auto bg-emerald-50 border-emerald-500">
+                        <CheckCircle2 className="w-8 h-8 text-emerald-600" />
                       </div>
-                      <h2 className="text-xl font-medium text-zinc-900">Success</h2>
-                      <p className="text-zinc-400 text-[13px] mt-2">Registration confirmed. Check email for details.</p>
-                      <button onClick={() => setStep(1)} className="mt-8 text-[12px] font-medium text-blue-600/70 hover:underline">New Registration</button>
+                      <div>
+                        <h3 className="text-xl font-semibold text-[#002147]">Application Logged</h3>
+                        <p className="text-[13px] text-zinc-500 mt-2 leading-relaxed font-medium">Your request has been saved. Please check your email for the acknowledgement slip.</p>
+                      </div>
+                      <button onClick={() => setStep(1)} className="px-8 py-2.5 bg-[#002147] text-white text-[12px] font-medium hover:bg-black transition-all">New Application</button>
                     </div>
                   ) : (
-                    <>
-                      <div className="mb-8">
-                        <div className="flex items-center gap-2 text-zinc-400 text-[11px] font-medium mb-1">
-                          Step {step} of 3
+                    <div className="space-y-6">
+                      <div className="flex justify-between items-center border-b border-zinc-100 pb-3 mb-6">
+                        <span className="text-[11px] font-semibold text-[#002147]">Status: Step {step} / 3</span>
+                        <div className="flex gap-1.5">
+                          {[1, 2, 3].map(s => (
+                            <div key={s} className={`w-4 h-1.5 ${s <= step ? 'bg-[#002147]' : 'bg-zinc-100'}`} />
+                          ))}
                         </div>
-                        <h2 className="text-xl font-medium text-black tracking-tight">
-                          {step === 1 && "Basic Information"}
-                          {step === 2 && "Payment via QR"}
-                          {step === 3 && "Confirm Payment"}
-                        </h2>
                       </div>
 
-                      <div className="flex-1">
-                        {step === 1 && (
+                      {step === 1 && (
+                        <div className="space-y-4">
                           <div className="space-y-4">
                             <div className="space-y-1">
-                              <label className="text-[10px] font-medium text-zinc-400 px-1">Your Name</label>
-                              <input required value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} className="w-full h-10 bg-zinc-50 border border-zinc-100 px-4 text-[13px] outline-none focus:border-zinc-300 transition-all" placeholder="Enter name" />
+                              <label className="text-[11px] font-medium text-zinc-500">1.1 Applicant Full Name</label>
+                              <input required value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} className="w-full h-11 border border-zinc-200 bg-zinc-50 px-4 text-[14px] focus:bg-white focus:border-[#002147] outline-none font-medium placeholder:text-zinc-300" placeholder="Type here..." />
                             </div>
-                            <div className="grid grid-cols-2 gap-3">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                               <div className="space-y-1">
-                                <label className="text-[10px] font-medium text-zinc-400 px-1">College</label>
-                                <input required value={formData.college} onChange={(e) => setFormData({ ...formData, college: e.target.value })} className="w-full h-10 bg-zinc-50 border border-zinc-100 px-4 text-[13px] outline-none focus:border-zinc-300 transition-all" placeholder="Institution" />
+                                <label className="text-[11px] font-medium text-zinc-500">1.2 Institution Name</label>
+                                <input required value={formData.college} onChange={(e) => setFormData({ ...formData, college: e.target.value })} className="w-full h-11 border border-zinc-200 bg-zinc-50 px-4 text-[14px] focus:bg-white focus:border-[#002147] outline-none font-medium" />
                               </div>
                               <div className="space-y-1">
-                                <label className="text-[10px] font-medium text-zinc-400 px-1">Branch</label>
-                                <input required value={formData.branch} onChange={(e) => setFormData({ ...formData, branch: e.target.value })} className="w-full h-10 bg-zinc-50 border border-zinc-100 px-4 text-[13px] outline-none focus:border-zinc-300 transition-all" placeholder="Major" />
+                                <label className="text-[11px] font-medium text-zinc-500">1.3 Stream / Group</label>
+                                <input required value={formData.branch} onChange={(e) => setFormData({ ...formData, branch: e.target.value })} className="w-full h-11 border border-zinc-200 bg-zinc-50 px-4 text-[14px] focus:bg-white focus:border-[#002147] outline-none font-medium" />
                               </div>
                             </div>
-                            <div className="grid grid-cols-2 gap-3">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                               <div className="space-y-1">
-                                <label className="text-[10px] font-medium text-zinc-400 px-1">Phone</label>
-                                <input required type="tel" value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} className="w-full h-10 bg-zinc-50 border border-zinc-100 px-4 text-[13px] outline-none focus:border-zinc-300 transition-all" placeholder="Phone number" />
+                                <label className="text-[11px] font-medium text-zinc-500">1.4 Primary Email</label>
+                                <input required type="email" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} className="w-full h-11 border border-zinc-200 bg-zinc-50 px-4 text-[14px] focus:bg-white focus:border-[#002147] outline-none font-medium" />
                               </div>
                               <div className="space-y-1">
-                                <label className="text-[10px] font-medium text-zinc-400 px-1">Year</label>
-                                <select value={formData.year} onChange={(e) => setFormData({ ...formData, year: e.target.value })} className="w-full h-10 bg-zinc-50 border border-zinc-100 px-3 text-[13px] outline-none appearance-none">
-                                  <option>1st Year</option><option>2nd Year</option><option>3rd Year</option><option>4th Year</option>
-                                </select>
+                                <label className="text-[11px] font-medium text-zinc-500">1.5 Primary Mobile</label>
+                                <input required type="tel" value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} className="w-full h-11 border border-zinc-200 bg-zinc-50 px-4 text-[14px] focus:bg-white focus:border-[#002147] outline-none font-medium" placeholder="+91" />
                               </div>
                             </div>
-                            <div className="space-y-1">
-                              <label className="text-[10px] font-medium text-zinc-400 px-1">Email</label>
-                              <input required type="email" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} className="w-full h-10 bg-zinc-50 border border-zinc-100 px-4 text-[13px] outline-none focus:border-zinc-300 transition-all" placeholder="Enter email" />
-                            </div>
-                            <button onClick={nextStep} disabled={!formData.name || !formData.email} className="w-full h-11 bg-black text-white text-[13px] font-medium mt-4 hover:bg-zinc-800 disabled:opacity-50">Next: Pay Fee</button>
                           </div>
-                        )}
+                          <button onClick={nextStep} disabled={!formData.name || !formData.email} className="w-full h-12 bg-[#002147] text-white text-[13px] font-medium transition-all hover:bg-black flex items-center justify-center gap-3">Continue to Payment <ArrowRight className="w-5 h-5" /></button>
+                        </div>
+                      )}
 
-                        {step === 2 && (
-                          <div className="space-y-6 text-center">
-                            <div className="p-4 border border-zinc-100 bg-white inline-block">
-                              <img
-                                src={`https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent("upi://pay?pa=6302933597@hdfc&pn=StudentForge&am=599&cu=INR")}`}
-                                alt="Payment QR"
-                                className="w-48 h-48 block"
-                              />
-                            </div>
-                            <div className="space-y-1">
-                              <p className="text-[16px] font-medium text-black tracking-tight">Amount: ₹599</p>
-                              <p className="text-zinc-500 text-[12px]">Scan this QR to pay directly</p>
-                            </div>
-                            <div className="flex gap-3 mt-8">
-                              <button onClick={prevStep} className="flex-1 h-11 border border-zinc-100 text-[13px] font-medium hover:bg-zinc-50">Back</button>
-                              <button onClick={nextStep} className="flex-1 h-11 bg-black text-white text-[13px] font-medium hover:bg-zinc-800">I have paid</button>
-                            </div>
+                      {step === 2 && (
+                        <div className="space-y-8 text-center py-4">
+                          <div className="p-3 bg-white border border-[#002147] inline-block shadow-md">
+                            <img
+                              src={`https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent("upi://pay?pa=6302933597@hdfc&pn=StudentForge&am=599&cu=INR")}`}
+                              alt="Secure QR"
+                              className="w-44 h-44 block grayscale contrast-125"
+                            />
                           </div>
-                        )}
+                          <div className="space-y-1 bg-[#F8F9FA] border border-zinc-200 py-4">
+                            <p className="text-[10px] font-medium text-zinc-400">Enrollment Fee</p>
+                            <p className="text-[28px] font-semibold text-[#002147]">₹599.00</p>
+                            <p className="text-emerald-700 text-[10px] font-medium">Verified: StudentForge</p>
+                          </div>
+                          <div className="flex gap-4">
+                            <button onClick={prevStep} className="flex-1 h-12 border border-zinc-200 text-zinc-900 text-[11px] font-medium hover:bg-zinc-50">Go Back</button>
+                            <button onClick={nextStep} className="flex-1 h-12 bg-[#002147] text-white text-[11px] font-medium hover:bg-black shadow-lg shadow-blue-900/10">I've Done Payment</button>
+                          </div>
+                        </div>
+                      )}
 
-                        {step === 3 && (
-                          <div className="space-y-6">
-                            <div className="p-4 bg-zinc-50 border border-zinc-100">
-                              <p className="text-[12px] text-zinc-500 leading-relaxed font-normal">
-                                Enter the Transaction ID / UTR number from your payment app to confirm your enrollment.
-                              </p>
-                            </div>
-                            <div className="space-y-1.5 px-1">
-                              <label className="text-[10px] font-medium text-zinc-400">Transaction ID</label>
-                              <input
-                                required
-                                value={formData.transactionId}
-                                onChange={(e) => setFormData({ ...formData, transactionId: e.target.value })}
-                                className="w-full h-11 bg-zinc-50 border border-zinc-100 px-4 text-[13px] outline-none focus:border-zinc-300 transition-all font-sans"
-                                placeholder="UTR / Txn ID"
-                              />
-                            </div>
-                            <div className="flex gap-3 mt-8">
-                              <button onClick={prevStep} className="flex-1 h-11 border border-zinc-100 text-[13px] font-medium hover:bg-zinc-50">Back</button>
-                              <button onClick={handleSubmit} disabled={isSubmitting || !formData.transactionId} className="flex-1 h-11 bg-black text-white text-[13px] font-medium hover:bg-zinc-800 disabled:opacity-50">
-                                {isSubmitting ? "Sanding..." : "Confirm & Join"}
-                              </button>
-                            </div>
+                      {step === 3 && (
+                        <div className="space-y-6 text-left">
+                          <div className="p-4 bg-amber-50 border border-amber-100 text-amber-900">
+                            <p className="text-[12px] font-semibold mb-1">Final Verification:</p>
+                            <p className="text-[11px] leading-relaxed">Incorrect info will lead to rejection without refund.</p>
                           </div>
-                        )}
-                      </div>
-                    </>
+                          <div className="space-y-1">
+                            <label className="text-[11px] font-medium text-zinc-500">Payment Reference (UTR / ID)</label>
+                            <input
+                              required
+                              value={formData.transactionId}
+                              onChange={(e) => setFormData({ ...formData, transactionId: e.target.value })}
+                              className="w-full h-12 border border-zinc-200 bg-zinc-50 px-4 text-[14px] focus:bg-white focus:border-[#002147] outline-none font-medium"
+                              placeholder="Transaction ID"
+                            />
+                          </div>
+                          <div className="flex gap-4">
+                            <button onClick={prevStep} className="flex-1 h-12 border border-zinc-200 text-zinc-900 text-[11px] font-medium hover:bg-zinc-50">Back</button>
+                            <button
+                              onClick={handleSubmit}
+                              disabled={isSubmitting || !formData.transactionId}
+                              className="flex-1 h-12 bg-[#002147] text-white text-[11px] font-medium hover:bg-black"
+                            >
+                              {isSubmitting ? "Sending..." : "Submit Form"}
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   )}
                 </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Full Program Manifesto */}
-        <div className="mx-auto max-w-6xl px-6 pt-20 space-y-24">
-          
-          {/* Section: Courses & Objectives */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-20">
-            <section className="space-y-12">
-              <div>
-                <h3 className="text-[11px] font-bold text-zinc-900 uppercase tracking-[0.2em] mb-6 italic border-b border-zinc-100 pb-2 inline-block">Courses Offered</h3>
-                <div className="grid grid-cols-1 gap-2">
-                  {["Full Stack Development", "UI/UX Design", "Programming and Problem Solving"].map((c, i) => (
-                    <div key={i} className="px-5 py-4 bg-zinc-50 border border-zinc-100 text-[14px] font-bold text-zinc-800 flex items-center gap-3">
-                      <div className="w-1.5 h-1.5 bg-blue-500" /> {c}
-                    </div>
-                  ))}
+                <div className="bg-[#002147] text-white p-4 text-center text-[10px] font-medium shadow-md">
+                  Authorized Student Forge Access System
                 </div>
-              </div>
-
-              <div>
-                <h3 className="text-[11px] font-bold text-zinc-900 uppercase tracking-[0.2em] mb-6 italic border-b border-zinc-100 pb-2 inline-block">Objectives</h3>
-                <div className="space-y-4">
-                  {[
-                    { t: "Education", d: "Affordable and accessible technical education." },
-                    { t: "Skills", d: "Build job-ready skills through practical training." },
-                    { t: "Projects", d: "Real-time project development experience." },
-                    { t: "Exposure", d: "Industry exposure through an MNC visit." }
-                  ].map((obj, i) => (
-                    <div key={i} className="flex gap-4">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-500 mt-0.5" />
-                      <div>
-                        <p className="text-[14px] font-bold text-black leading-none">{obj.t}</p>
-                        <p className="text-[12px] text-zinc-500 mt-1.5 font-medium">{obj.d}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </section>
-
-            <section className="space-y-12">
-               <div>
-                <h3 className="text-[11px] font-bold text-zinc-900 uppercase tracking-[0.2em] mb-6 italic border-b border-zinc-100 pb-2 inline-block">Program Structure</h3>
-                <div className="bg-zinc-900 p-8 text-white space-y-8">
-                  <div className="flex items-center justify-between border-b border-white/10 pb-4">
-                    <span className="text-[12px] font-bold uppercase tracking-widest text-zinc-500">Total Duration</span>
-                    <span className="text-xl font-bold">30 Days</span>
-                  </div>
-                  <div className="space-y-4">
-                    <p className="text-[11px] font-bold text-zinc-500 uppercase tracking-widest">Weekly Cycle (4-2-1)</p>
-                    <div className="grid gap-2">
-                      <div className="flex justify-between items-center text-[13px]"><span className="text-zinc-400">Trainer-led sessions</span><span className="font-bold">4 Days</span></div>
-                      <div className="flex justify-between items-center text-[13px]"><span className="text-zinc-400">Practice and assignments</span><span className="font-bold">2 Days</span></div>
-                      <div className="flex justify-between items-center text-[13px]"><span className="text-zinc-400">Test and evaluation</span><span className="font-bold">1 Day</span></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <h3 className="text-[11px] font-bold text-zinc-900 uppercase tracking-[0.2em] mb-6 italic border-b border-zinc-100 pb-2 inline-block">MNC Visit Details</h3>
-                <div className="p-6 bg-blue-50/30 border border-blue-100 space-y-4">
-                  <div className="flex items-center gap-2 text-[12px] font-bold text-blue-800">
-                    <Building className="w-4 h-4" /> 1-Day Physical Interaction
-                  </div>
-                  <ul className="grid grid-cols-2 gap-x-4 gap-y-2 text-[11px] text-zinc-600 font-medium italic">
-                    <li>• Company introduction</li>
-                    <li>• Workplace exposure</li>
-                    <li>• Expert interaction</li>
-                    <li>• Professional Q&A</li>
-                  </ul>
-                </div>
-              </div>
-            </section>
-          </div>
-
-          {/* Section: Course Flow Timeline */}
-          <section>
-            <h3 className="text-[11px] font-bold text-zinc-900 uppercase tracking-[0.2em] mb-8 italic border-b border-zinc-100 pb-2 inline-block">Course Flow</h3>
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-              {[
-                { wk: "01", t: "Basics", d: "Fundamentals, logic building, loops, conditions and basic exercises.", c: "bg-amber-50" },
-                { wk: "02", t: "Core Skills", d: "Functions, arrays, problem-solving techniques and mini tasks.", c: "bg-sky-50" },
-                { wk: "03", t: "Practical", d: "Web development, UI/UX principles and mini project dev.", c: "bg-indigo-50" },
-                { wk: "04", t: "Final Phase", d: "Project completion, resume building and final examination.", c: "bg-rose-50" }
-              ].map((step, i) => (
-                <div key={i} className={`p-6 border border-zinc-100 ${step.c} space-y-4 flex flex-col justify-between`}>
-                  <div className="space-y-4">
-                    <span className="text-[10px] font-bold uppercase tracking-widest opacity-40 italic">Week {step.wk}</span>
-                    <p className="text-[15px] font-bold text-black border-l-2 border-black/10 pl-3 leading-none uppercase tracking-tight">{step.t}</p>
-                    <p className="text-[11px] text-zinc-600 font-medium leading-relaxed">{step.d}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
-
-          {/* Section: Process Flow & Criteria */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-            <div className="lg:col-span-2">
-              <h3 className="text-[11px] font-bold text-zinc-900 uppercase tracking-[0.2em] mb-8 italic border-b border-zinc-100 pb-2 inline-block">Program Process Flow</h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {[
-                  "Student Registration", "Enrollment & Fee (₹599)", "Training Kick-off", "Weekly Tests & Tasks", "MNC Exposure Visit", "Project Submission", "Final Examination", "Evaluation & Certification"
-                ].map((step, i) => (
-                  <div key={i} className="flex items-center gap-4 bg-white border border-zinc-100 p-4">
-                    <span className="text-[11px] font-mono font-bold text-zinc-300">0{i+1}</span>
-                    <span className="text-[12px] font-bold text-zinc-800">{step}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div>
-              <h3 className="text-[11px] font-bold text-zinc-900 uppercase tracking-[0.2em] mb-8 italic border-b border-zinc-100 pb-2 inline-block">Certification Criteria</h3>
-              <div className="space-y-4 p-8 border border-zinc-100 bg-zinc-50/50">
-                {[
-                  { l: "Attendance", v: "Min 75% required" },
-                  { l: "Project", v: "Successful submission" },
-                  { l: "Final Exam", v: "Minimum pass marks" }
-                ].map((c, i) => (
-                  <div key={i} className="space-y-1">
-                    <p className="text-[10px] text-zinc-400 font-bold uppercase tracking-widest">{c.l}</p>
-                    <p className="text-[13px] text-zinc-900 font-bold">{c.v}</p>
-                  </div>
-                ))}
               </div>
             </div>
           </div>
 
-          {/* Benefits & Registration Footer */}
-          <section className="bg-zinc-50 border border-zinc-100 p-10 flex flex-col lg:flex-row gap-16 items-center">
-            <div className="flex-1 space-y-6">
-              <h3 className="text-2xl font-bold tracking-tighter text-black leading-none">Registration Information</h3>
-              <div className="grid grid-cols-2 gap-6 text-[13px]">
-                <div className="space-y-1"><p className="text-zinc-400 font-medium">Registration Starts</p><p className="font-bold">April 20</p></div>
-                <div className="space-y-1"><p className="text-zinc-400 font-medium">Registration Ends</p><p className="font-bold">May 05</p></div>
+          {/* Official Footer Section */}
+          <div className="mt-12 px-6 sm:px-10 lg:px-12 py-12 bg-[#F9FAFB] border-t-2 border-zinc-200">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 text-[12px] text-zinc-600">
+              <div className="col-span-1 lg:col-span-2 space-y-4">
+                <div className="flex items-center gap-2 text-[#002147] font-semibold tracking-wide">
+                  <div className="w-1.5 h-4 bg-[#002147]" />
+                  <span>Important Legal Disclosures</span>
+                </div>
+                <div className="h-px bg-zinc-200 w-full" />
+                <ul className="space-y-3 list-disc pl-4 italic opacity-85 leading-relaxed">
+                  <li>This program is an educational initiative and does not guarantee job placement or employment.</li>
+                  <li>All enrollment fees are non-refundable. Candidates must verify eligibility prior to registration.</li>
+                  <li>Strict adherence to corporate protocols is mandatory during MNC office visits.</li>
+                </ul>
               </div>
-              <div className="p-4 bg-emerald-50 text-emerald-700 text-[12px] font-bold border border-emerald-100 inline-block">
-                Limited seats available. Secure your slot now.
+              <div className="space-y-4">
+                <div className="flex items-center gap-2 text-[#002147] font-semibold tracking-wide">
+                  <div className="w-1.5 h-4 bg-[#002147]" />
+                  <span>Contact Information</span>
+                </div>
+                <div className="h-px bg-zinc-200 w-full" />
+                <div className="space-y-2">
+                  <p className="font-medium">Primary: info@studentforge.com</p>
+                  <p className="font-medium">Support: forgedigitaltechnologies@gmail.com</p>
+                  <p className="font-medium text-[#002147]">Desk: +91 6304 218 064</p>
+                </div>
+              </div>
+              <div className="space-y-4">
+                <div className="flex items-center gap-2 text-[#002147] font-semibold tracking-wide">
+                  <div className="w-1.5 h-4 bg-[#002147]" />
+                  <span>Issuing Authority</span>
+                </div>
+                <div className="h-px bg-zinc-200 w-full" />
+                <div className="space-y-1">
+                  <p className="font-semibold text-zinc-800">Student Forge Technologies Private Limited.</p>
+                  <p className="text-[10px] text-zinc-400">Document Ref: SF-TECH-2026-F1</p>
+                  <p className="text-[10px] text-zinc-400">Date: April 19, 2026</p>
+                </div>
               </div>
             </div>
-
-            <div className="w-full lg:w-1/2 space-y-8">
-              <h3 className="text-[11px] font-bold text-zinc-900 uppercase tracking-widest italic border-b border-zinc-100 pb-2 inline-block">Benefits</h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-4 gap-x-10">
-                {["Real-time project experience", "MNC Industry Exposure", "Career guidance loop", "Professional Certification"].map((b, i) => (
-                  <div key={i} className="flex items-center gap-3 text-[13px] font-bold text-zinc-700">
-                    <Zap className="w-3.5 h-3.5 text-amber-500" /> {b}
-                  </div>
-                ))}
-              </div>
+            <div className="mt-12 pt-8 border-t border-zinc-200 text-center">
+              <p className="text-[#002147] text-[11px] font-medium tracking-[0.3em]">
+                © 2026 Student Forge Technologies Private Limited. All Rights Reserved.
+              </p>
             </div>
-          </section>
+          </div>
         </div>
+
+
+
       </main>
 
       <Footer />
     </div>
   );
 }
+
+
+
