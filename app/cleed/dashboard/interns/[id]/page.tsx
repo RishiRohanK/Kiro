@@ -42,10 +42,13 @@ interface InternData {
   interestedArea?: string;
   attendancePercentage?: number;
   presentCount?: number;
+  reportingManager?: string;
   tasks: any[];
+  personalTasks: any[];
   scheduleSubmissions: any[];
   attendances: any[];
   examSessions: any[];
+  feedback?: any[];
 }
 
 export default function InternProfilePage() {
@@ -55,6 +58,7 @@ export default function InternProfilePage() {
     intern: InternData;
     taskSubmissions: any[];
     uiuxSubmissions: any[];
+    feedback: any[];
   } | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeSegment, setActiveSegment] = useState<"overview" | "tasks" | "submissions" | "reports">("overview");
@@ -99,7 +103,7 @@ export default function InternProfilePage() {
     );
   }
 
-  const { intern, taskSubmissions, uiuxSubmissions } = data;
+  const { intern, taskSubmissions, uiuxSubmissions, feedback } = data;
 
   return (
     <div className="min-h-screen bg-zinc-50 pb-20">
@@ -214,6 +218,12 @@ export default function InternProfilePage() {
                   <p className="text-[10px] font-medium text-zinc-400">D.O.B</p>
                   <p className="text-[12px] font-semibold text-zinc-900">{intern.dob || 'N/A'}</p>
                 </div>
+                {intern.reportingManager && (
+                  <div className="col-span-2">
+                    <p className="text-[10px] font-medium text-zinc-400">Reporting Manager</p>
+                    <p className="text-[12px] font-semibold text-zinc-900">{intern.reportingManager}</p>
+                  </div>
+                )}
                 <div className="col-span-2">
                   <p className="text-[10px] font-medium text-zinc-400">Interest Areas</p>
                   <p className="text-[12px] font-semibold text-zinc-900">{intern.interestedArea || 'None'}</p>
@@ -366,6 +376,25 @@ export default function InternProfilePage() {
                         </div>
                       ))
                     )}
+                    {/* Personal Tasks */}
+                    {intern.personalTasks && intern.personalTasks.length > 0 && (
+                      <div className="pt-8 space-y-4">
+                        <h3 className="text-[11px] font-semibold tracking-[0.2em] text-[#003366] flex items-center gap-2">
+                          <CheckCircle2 size={14} /> Personal Directives
+                        </h3>
+                        {intern.personalTasks.map((ptask: any) => (
+                          <div key={ptask.id} className="bg-white border border-zinc-200 p-6 flex items-center justify-between">
+                            <div>
+                              <p className="text-[14px] font-semibold text-zinc-900">{ptask.title}</p>
+                              <p className="text-[11px] text-zinc-500 mt-1">{ptask.description || 'No description provided.'}</p>
+                            </div>
+                            <div className={`text-[10px] font-semibold px-2 py-1 rounded-sm ${ptask.status === 'DONE' ? 'bg-emerald-50 text-emerald-600' : 'bg-zinc-50 text-zinc-500'}`}>
+                              {ptask.status}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </motion.div>
                 )}
 
@@ -517,12 +546,12 @@ export default function InternProfilePage() {
                           <p className="text-2xl font-semibold text-zinc-900">{intern.scheduleSubmissions.length + taskSubmissions.length + uiuxSubmissions.length}</p>
                         </div>
                         <div className="p-6 bg-zinc-50 border border-zinc-100 text-center">
-                          <p className="text-[9px] font-semibold text-zinc-400 mb-1">Days Present</p>
-                          <p className="text-2xl font-semibold text-zinc-900">{intern.presentCount || 0}d</p>
+                          <p className="text-[9px] font-semibold text-zinc-400 mb-1">Presence</p>
+                          <p className="text-2xl font-semibold text-zinc-900">{intern.presentCount || 0}d <span className="text-[10px] opacity-40">/ {intern.attendances.length}</span></p>
                         </div>
                         <div className="p-6 bg-zinc-50 border border-zinc-100 text-center">
-                          <p className="text-[9px] font-semibold text-zinc-400 mb-1">Days Absent</p>
-                          <p className="text-2xl font-semibold text-red-600">{intern.attendances.filter((a:any) => a.status === 'ABSENT').length}d</p>
+                          <p className="text-[9px] font-semibold text-zinc-400 mb-1">Violations</p>
+                          <p className="text-2xl font-semibold text-red-600">{intern.examSessions.reduce((acc, s) => acc + (s.violations || 0), 0)}</p>
                         </div>
                       </div>
 
@@ -535,7 +564,7 @@ export default function InternProfilePage() {
                           {intern.attendances.slice(0, 35).map((att:any, i:number) => {
                              const dateObj = new Date(att.date);
                              return (
-                              <div key={i} className={`h-10 border flex flex-col items-center justify-center text-[8px] font-medium ${att.status === 'PRESENT' ? 'bg-emerald-50 border-emerald-100 text-emerald-700' : 'bg-red-50 border-red-100 text-red-700'}`}>
+                              <div key={i} title={att.workSummary || 'No summary'} className={`h-10 border flex flex-col items-center justify-center text-[8px] font-medium transition-all hover:scale-105 cursor-help ${att.status === 'PRESENT' ? 'bg-emerald-50 border-emerald-100 text-emerald-700' : 'bg-red-50 border-red-100 text-red-700'}`}>
                                 <span>{dateObj.getDate()}/{dateObj.getMonth()+1}</span>
                                 <span className="text-[6px] font-semibold opacity-50">{att.status === 'PRESENT' ? 'IN' : 'ABS'}</span>
                               </div>
@@ -543,6 +572,37 @@ export default function InternProfilePage() {
                           })}
                         </div>
                       </div>
+
+                      {/* Signals & Feedback */}
+                      {feedback && feedback.length > 0 && (
+                        <div className="space-y-6 pt-12 border-t border-zinc-100">
+                          <div className="flex items-center justify-between">
+                            <h4 className="text-[11px] font-semibold tracking-widest text-[#003366]">Intern Feedback</h4>
+                            <p className="text-[10px] font-medium text-zinc-400">Post-Exam Sentiment</p>
+                          </div>
+                          <div className="space-y-4">
+                            {feedback.map((f: any) => (
+                              <div key={f.id} className="bg-zinc-50 border border-zinc-100 p-6 space-y-4">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-4 border-b border-zinc-200/50">
+                                  <div>
+                                    <p className="text-[9px] font-semibold text-zinc-400 mb-1">Exam Experience</p>
+                                    <p className="text-[13px] font-medium text-zinc-700">"{f.examExperience}"</p>
+                                  </div>
+                                  <div>
+                                    <p className="text-[9px] font-semibold text-zinc-400 mb-1">Learning Goals</p>
+                                    <p className="text-[13px] font-medium text-zinc-700">{f.learningGoals}</p>
+                                  </div>
+                                </div>
+                                <div>
+                                  <p className="text-[9px] font-semibold text-zinc-400 mb-1">Suggestions for Upgrades</p>
+                                  <p className="text-[13px] font-medium text-zinc-700 italic">"{f.upgradeSuggestions}"</p>
+                                </div>
+                                <p className="text-[9px] text-zinc-400 text-right">{new Date(f.createdAt).toLocaleDateString()}</p>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
 
                       <div className="pt-12 flex justify-center border-t border-zinc-100">
                         <div className="text-center">

@@ -14,6 +14,9 @@ export async function GET(
         tasks: {
           orderBy: { createdAt: 'desc' }
         },
+        personalTasks: {
+          orderBy: { createdAt: 'desc' }
+        },
         scheduleSubmissions: {
           include: {
             schedule: true
@@ -33,7 +36,7 @@ export async function GET(
       return NextResponse.json({ error: "Intern not found" }, { status: 404 });
     }
 
-    // Also fetch other potential submissions
+    // Fetch other potential submissions
     const taskSubmissions = await prisma.taskSubmission.findMany({
       where: { email: intern.email },
       orderBy: { createdAt: 'desc' }
@@ -44,11 +47,17 @@ export async function GET(
       orderBy: { createdAt: 'desc' }
     });
 
+    const feedback = await prisma.feedback.findMany({
+      where: { userId: intern.id },
+      orderBy: { createdAt: 'desc' }
+    });
+
     return NextResponse.json({
       success: true,
       intern,
       taskSubmissions,
-      uiuxSubmissions
+      uiuxSubmissions,
+      feedback
     });
   } catch (error) {
     console.error("Error fetching intern details:", error);
