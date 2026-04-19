@@ -47,20 +47,46 @@ function InternDashboardLayoutContent({
 
     useEffect(() => {
         setMounted(true);
-        const storedUser = localStorage.getItem("intern_user");
-        if (!storedUser) {
-            router.push("/intern/signin");
-            return;
-        }
-        const userData = JSON.parse(storedUser);
-        setUser(userData);
-        setHandRaised(userData.handRaised || false);
+        const initSession = async () => {
+            let userData = null;
+            const storedUser = localStorage.getItem("intern_user");
+            
+            if (storedUser) {
+                userData = JSON.parse(storedUser);
+            } else {
+                // If local storage is empty, try to sync with server (OAuth case)
+                try {
+                    const res = await fetch("/api/intern/me");
+                    const data = await res.json();
+                    if (data.success) {
+                        userData = data.user;
+                        localStorage.setItem("intern_user", JSON.stringify(userData));
+                    } else {
+                        router.push("/intern/signin");
+                        return;
+                    }
+                } catch (err) {
+                    router.push("/intern/signin");
+                    return;
+                }
+            }
 
-        // Check for profile completion
-        const requiredFields = ['name', 'college', 'year', 'department', 'dob', 'graduationYear', 'interestedArea', 'profileImage'];
-        const completed = requiredFields.every(field => userData[field] && userData[field].toString().trim() !== "");
-        setIsProfileComplete(completed);
-        setCheckingProfile(false);
+            if (!userData) {
+                router.push("/intern/signin");
+                return;
+            }
+
+            setUser(userData);
+            setHandRaised(userData.handRaised || false);
+
+            // Check for profile completion
+            const requiredFields = ['name', 'college', 'year', 'department', 'dob', 'graduationYear', 'interestedArea', 'profileImage'];
+            const completed = requiredFields.every(field => userData[field] && userData[field].toString().trim() !== "");
+            setIsProfileComplete(completed);
+            setCheckingProfile(false);
+        };
+
+        initSession();
     }, [router]);
 
     useEffect(() => {

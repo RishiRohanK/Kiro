@@ -23,6 +23,7 @@ export default function InternProfile() {
     const [uploading, setUploading] = useState(false);
     const [dragActive, setDragActive] = useState(false);
     const [uploadError, setUploadError] = useState<string | null>(null);
+    const [submitError, setSubmitError] = useState<string | null>(null);
 
     useEffect(() => {
         const storedUser = localStorage.getItem("intern_user");
@@ -111,6 +112,7 @@ export default function InternProfile() {
         }
 
         setSubmitting(true);
+        setSubmitError(null);
         try {
             const res = await fetch("/api/intern/profile", {
                 method: "PUT",
@@ -127,9 +129,12 @@ export default function InternProfile() {
                 
                 // Refresh to clear the overlay in layout if it was blocking
                 window.location.reload();
+            } else {
+                setSubmitError(data.error || "Update failed. Please check your data.");
             }
         } catch (error) {
             console.error("Failed to update profile");
+            setSubmitError("Connection error. Please try again.");
         } finally {
             setSubmitting(false);
         }
@@ -321,28 +326,37 @@ export default function InternProfile() {
                     </div>
                 </section>
 
-                <div className="pt-8 flex items-center gap-6">
-                  <button 
-                     disabled={submitting}
-                     type="submit"
-                     className="bg-black text-white px-10 py-4 text-[12px] font-bold uppercase tracking-widest hover:bg-zinc-800 transition-all flex items-center gap-3 disabled:opacity-50"
-                  >
-                     {submitting ? <RefreshCw className="animate-spin" size={16} /> : <Save size={16} />}
-                     Save Changes
-                  </button>
+                <div className="pt-8 space-y-4">
+                  <div className="flex items-center gap-6">
+                    <button 
+                       disabled={submitting}
+                       type="submit"
+                       className="bg-black text-white px-10 py-4 text-[12px] font-bold uppercase tracking-widest hover:bg-zinc-800 transition-all flex items-center gap-3 disabled:opacity-50"
+                    >
+                       {submitting ? <RefreshCw className="animate-spin" size={16} /> : <Save size={16} />}
+                       Save Changes
+                    </button>
 
-                  <AnimatePresence>
-                     {success && (
-                        <motion.div 
-                           initial={{ opacity: 0, x: -10 }} 
-                           animate={{ opacity: 1, x: 0 }} 
-                           className="flex items-center gap-2 text-emerald-600 font-bold text-[11px] uppercase tracking-wider"
-                        >
-                           <CheckCircle2 size={16} />
-                           Updated
-                        </motion.div>
-                     )}
-                  </AnimatePresence>
+                    <AnimatePresence>
+                       {success && (
+                          <motion.div 
+                             initial={{ opacity: 0, x: -10 }} 
+                             animate={{ opacity: 1, x: 0 }} 
+                             className="flex items-center gap-2 text-emerald-600 font-bold text-[11px] uppercase tracking-wider"
+                          >
+                             <CheckCircle2 size={16} />
+                             Updated
+                          </motion.div>
+                       )}
+                    </AnimatePresence>
+                  </div>
+
+                  {submitError && (
+                    <div className="p-4 bg-red-50 border border-red-100 text-red-600 text-[11px] font-bold uppercase tracking-wider flex items-center gap-2 max-w-2xl">
+                       <X size={14} />
+                       {submitError}
+                    </div>
+                  )}
                 </div>
             </form>
         </div>
