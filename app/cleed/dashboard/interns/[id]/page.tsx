@@ -43,6 +43,7 @@ interface InternData {
   attendancePercentage?: number;
   presentCount?: number;
   reportingManager?: string;
+  joiningDate?: string | Date;
   tasks: any[];
   personalTasks: any[];
   scheduleSubmissions: any[];
