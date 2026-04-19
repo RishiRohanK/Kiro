@@ -105,6 +105,11 @@ export default function InternProfilePage() {
 
   const { intern, taskSubmissions, uiuxSubmissions, feedback } = data;
 
+  // Real-time stats calculation
+  const presentCount = intern.attendances.filter((a: any) => a.status === 'PRESENT').length;
+  const totalDays = intern.attendances.length;
+  const attendancePercentage = totalDays > 0 ? Math.round((presentCount / totalDays) * 100) : 0;
+
   return (
     <div className="min-h-screen bg-zinc-50 pb-20">
       {/* Header */}
@@ -179,11 +184,11 @@ export default function InternProfilePage() {
                 <div className="mt-8 pt-8 border-t border-zinc-100 grid grid-cols-2 gap-4">
                   <div className="p-4 bg-zinc-50 border border-zinc-100">
                     <p className="text-[9px] font-medium text-zinc-400 tracking-widest mb-1">Performance</p>
-                    <p className="text-xl font-semibold text-zinc-900 leading-none">{intern.attendancePercentage || 0}%</p>
+                    <p className="text-xl font-semibold text-zinc-900 leading-none">{attendancePercentage}%</p>
                   </div>
                   <div className="p-4 bg-zinc-50 border border-zinc-100">
                     <p className="text-[9px] font-medium text-zinc-400 tracking-widest mb-1">Days Present</p>
-                    <p className="text-xl font-semibold text-zinc-900 leading-none">{intern.presentCount || 0}d</p>
+                    <p className="text-xl font-semibold text-zinc-900 leading-none">{presentCount}d</p>
                   </div>
                 </div>
               </div>
@@ -547,11 +552,11 @@ export default function InternProfilePage() {
                         </div>
                         <div className="p-6 bg-zinc-50 border border-zinc-100 text-center">
                           <p className="text-[9px] font-semibold text-zinc-400 mb-1">Presence</p>
-                          <p className="text-2xl font-semibold text-zinc-900">{intern.presentCount || 0}d <span className="text-[10px] opacity-40">/ {intern.attendances.length}</span></p>
+                          <p className="text-2xl font-semibold text-zinc-900">{presentCount}d <span className="text-[10px] opacity-40">/ {totalDays}</span></p>
                         </div>
                         <div className="p-6 bg-zinc-50 border border-zinc-100 text-center">
                           <p className="text-[9px] font-semibold text-zinc-400 mb-1">Violations</p>
-                          <p className="text-2xl font-semibold text-red-600">{intern.examSessions.reduce((acc, s) => acc + (s.violations || 0), 0)}</p>
+                          <p className="text-2xl font-semibold text-red-600">{intern.examSessions.reduce((acc: number, s: any) => acc + (s.violations || 0), 0)}</p>
                         </div>
                       </div>
 
