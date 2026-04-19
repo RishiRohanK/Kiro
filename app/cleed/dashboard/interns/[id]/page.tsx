@@ -82,7 +82,7 @@ export default function InternProfilePage() {
       <div className="min-h-screen bg-zinc-50 flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
           <div className="h-12 w-12 border-4 border-zinc-200 border-t-zinc-900 rounded-full animate-spin" />
-          <p className="text-[12px] font-bold text-zinc-500 tracking-widest">Loading details...</p>
+          <p className="text-[12px] font-semibold text-zinc-500 tracking-widest">Loading details...</p>
         </div>
       </div>
     );
@@ -92,8 +92,8 @@ export default function InternProfilePage() {
     return (
       <div className="min-h-screen bg-zinc-50 flex items-center justify-center">
         <div className="text-center space-y-4">
-          <p className="text-zinc-500 font-bold">Intern not found in registry.</p>
-          <button onClick={() => router.back()} className="text-zinc-900 underline font-bold text-sm">Return to Dashboard</button>
+          <p className="text-zinc-500 font-semibold">Intern not found in registry.</p>
+          <button onClick={() => router.back()} className="text-zinc-900 underline font-semibold text-sm">Return to Dashboard</button>
         </div>
       </div>
     );
@@ -110,14 +110,14 @@ export default function InternProfilePage() {
             <div className="flex items-center gap-4">
               <button 
                 onClick={() => router.back()}
-                className="h-9 w-9 flex items-center justify-center hover:bg-zinc-100 transition-colors border border-zinc-200"
+                className="h-9 w-9 flex items-center justify-center bg-white border border-zinc-200 text-[#003366] hover:bg-zinc-50 transition-all rounded-sm"
               >
                 <ChevronLeft size={18} />
               </button>
-              <h1 className="text-sm font-black tracking-tighter text-zinc-900">Intern Profile</h1>
+              <h1 className="text-sm font-semibold tracking-tighter text-zinc-900">Intern Profile</h1>
             </div>
             <div className="flex items-center gap-3">
-              <div className={`px-3 py-1 text-[10px] font-bold border ${intern.isApproved ? 'bg-emerald-50 text-emerald-700 border-emerald-100' : 'bg-amber-50 text-amber-600 border-amber-100'}`}>
+              <div className={`px-3 py-1 text-[10px] font-medium border ${intern.isApproved ? 'bg-emerald-50 text-emerald-700 border-emerald-100' : 'bg-amber-50 text-amber-600 border-amber-100'}`}>
                 {intern.isApproved ? 'Approved' : 'Pending Review'}
               </div>
             </div>
@@ -146,8 +146,8 @@ export default function InternProfilePage() {
                 </div>
                 
                 <div className="space-y-1">
-                  <h2 className="text-2xl font-black text-zinc-900 tracking-tight leading-none">{intern.name}</h2>
-                  <p className="text-[12px] font-bold text-zinc-500 tracking-widest">{intern.batch || 'Batch Active'}</p>
+                  <h2 className="text-2xl font-semibold text-zinc-900 tracking-tight leading-none">{intern.name}</h2>
+                  <p className="text-[12px] font-medium text-zinc-500 tracking-widest">{intern.batch || 'Batch Active'}</p>
                 </div>
 
                 <div className="mt-8 space-y-4">
@@ -166,7 +166,7 @@ export default function InternProfilePage() {
                     <span className="text-[13px] font-medium">{intern.college || 'Undeclared'}</span>
                   </div>
                   {intern.githubLink && (
-                    <a href={intern.githubLink} target="_blank" className="flex items-center gap-3 text-zinc-900 hover:text-black hover:underline transition-colors uppercase font-bold text-[11px]">
+                    <a href={intern.githubLink} target="_blank" className="flex items-center gap-3 text-zinc-900 hover:text-black hover:underline transition-colors uppercase font-medium text-[11px]">
                       <Github size={16} /> GitHub Profile <ExternalLink size={10} />
                     </a>
                   )}
@@ -174,37 +174,49 @@ export default function InternProfilePage() {
 
                 <div className="mt-8 pt-8 border-t border-zinc-100 grid grid-cols-2 gap-4">
                   <div className="p-4 bg-zinc-50 border border-zinc-100">
-                    <p className="text-[9px] font-bold text-zinc-400 tracking-widest mb-1">Performance</p>
-                    <p className="text-xl font-black text-zinc-900 leading-none">{intern.attendancePercentage || 0}%</p>
+                    <p className="text-[9px] font-medium text-zinc-400 tracking-widest mb-1">Performance</p>
+                    <p className="text-xl font-semibold text-zinc-900 leading-none">{intern.attendancePercentage || 0}%</p>
                   </div>
                   <div className="p-4 bg-zinc-50 border border-zinc-100">
-                    <p className="text-[9px] font-bold text-zinc-400 tracking-widest mb-1">Attendance</p>
-                    <p className="text-xl font-black text-zinc-900 leading-none">{intern.presentCount || 0}d</p>
+                    <p className="text-[9px] font-medium text-zinc-400 tracking-widest mb-1">Days Present</p>
+                    <p className="text-xl font-semibold text-zinc-900 leading-none">{intern.presentCount || 0}d</p>
                   </div>
                 </div>
               </div>
             </div>
 
             <div className="bg-white border border-zinc-200 p-6">
-              <h3 className="text-[11px] font-black tracking-[0.2em] text-zinc-400 mb-6 flex items-center gap-2">
+              <h3 className="text-[11px] font-semibold tracking-[0.2em] text-[#003366] mb-6 flex items-center gap-2">
                 <Shield size={12} /> Profile Details
               </h3>
-              <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-x-4 gap-y-4">
                 <div>
-                  <p className="text-[10px] font-bold text-zinc-400">Department</p>
-                  <p className="text-[13px] font-bold text-zinc-900">{intern.department || intern.branch || 'None'}</p>
+                  <p className="text-[10px] font-medium text-zinc-400">Department</p>
+                  <p className="text-[12px] font-semibold text-zinc-900">{intern.department || intern.branch || 'None'}</p>
                 </div>
                 <div>
-                  <p className="text-[10px] font-bold text-zinc-400">Academic Year</p>
-                  <p className="text-[13px] font-bold text-zinc-900">{intern.year || 'N/A'}</p>
+                  <p className="text-[10px] font-medium text-zinc-400">Joined On</p>
+                  <p className="text-[12px] font-semibold text-zinc-900">{intern.joiningDate ? new Date(intern.joiningDate).toLocaleDateString() : 'N/A'}</p>
                 </div>
                 <div>
-                  <p className="text-[10px] font-bold text-zinc-400">Date of Birth</p>
-                  <p className="text-[13px] font-bold text-zinc-900">{intern.dob || 'Not Disclosed'}</p>
+                  <p className="text-[10px] font-medium text-zinc-400">Phone</p>
+                  <p className="text-[12px] font-semibold text-zinc-900">{intern.phoneNumber || 'N/A'}</p>
                 </div>
                 <div>
-                  <p className="text-[10px] font-bold text-zinc-400">Interested Area</p>
-                  <p className="text-[13px] font-bold text-zinc-900">{intern.interestedArea || 'None Specific'}</p>
+                  <p className="text-[10px] font-medium text-zinc-400">Graduation</p>
+                  <p className="text-[12px] font-semibold text-zinc-900">{intern.graduationYear || 'N/A'}</p>
+                </div>
+                <div>
+                  <p className="text-[10px] font-medium text-zinc-400">College</p>
+                  <p className="text-[12px] font-semibold text-zinc-900 line-clamp-1">{intern.college || 'N/A'}</p>
+                </div>
+                <div>
+                  <p className="text-[10px] font-medium text-zinc-400">D.O.B</p>
+                  <p className="text-[12px] font-semibold text-zinc-900">{intern.dob || 'N/A'}</p>
+                </div>
+                <div className="col-span-2">
+                  <p className="text-[10px] font-medium text-zinc-400">Interest Areas</p>
+                  <p className="text-[12px] font-semibold text-zinc-900">{intern.interestedArea || 'None'}</p>
                 </div>
               </div>
             </div>
@@ -217,13 +229,13 @@ export default function InternProfilePage() {
               {[
                 { id: "overview", label: "Overview", icon: Zap },
                 { id: "tasks", label: "Tasks", icon: Briefcase },
-                { id: "submissions", label: "Submissions", icon: CheckCircle2 },
-                { id: "reports", label: "Summary", icon: FileText }
+                { id: "submissions", label: "Work Logs", icon: CheckCircle2 },
+                { id: "reports", label: "Analytics", icon: FileText }
               ].map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() => setActiveSegment(tab.id as any)}
-                  className={`flex-1 flex items-center justify-center gap-2 py-3 text-[10px] font-black tracking-wider transition-all ${
+                  className={`flex-1 flex items-center justify-center gap-2 py-3 text-[10px] font-semibold tracking-wider transition-all ${
                     activeSegment === tab.id 
                     ? 'bg-[#E0E7FF] text-[#003366]' 
                     : 'text-zinc-500 hover:bg-zinc-50 hover:text-zinc-900'
@@ -251,11 +263,11 @@ export default function InternProfilePage() {
                         <div className="h-10 w-10 bg-[#E0E7FF] text-[#003366] flex items-center justify-center shadow-sm border border-[#003366]/10">
                           <Trophy size={20} />
                         </div>
-                        <h3 className="text-lg font-black tracking-tight text-zinc-900">Task Progress</h3>
+                        <h3 className="text-lg font-semibold tracking-tight text-zinc-900">Task Progress</h3>
                         <p className="text-sm text-zinc-500 leading-relaxed font-medium">Tracking all tasks and project goals assigned to the intern.</p>
                       </div>
                       <div className="mt-8">
-                        <p className="text-3xl font-black text-zinc-900">{intern.tasks.length} <span className="text-xs font-bold text-zinc-400 tracking-widest ml-1">Total Tasks</span></p>
+                        <p className="text-3xl font-semibold text-zinc-900">{intern.tasks.length} <span className="text-xs font-medium text-zinc-400 tracking-widest ml-1">Total Tasks</span></p>
                       </div>
                     </div>
 
@@ -264,17 +276,17 @@ export default function InternProfilePage() {
                         <div className="h-10 w-10 bg-[#E0E7FF] text-[#003366] flex items-center justify-center shadow-sm border border-[#003366]/10">
                           <CheckCircle2 size={20} />
                         </div>
-                        <h3 className="text-lg font-black tracking-tight text-zinc-900">Work Integrity</h3>
+                        <h3 className="text-lg font-semibold tracking-tight text-zinc-900">Work Integrity</h3>
                         <p className="text-sm text-zinc-500 leading-relaxed font-medium">Verification of weekly submissions and work milestones.</p>
                       </div>
                       <div className="mt-8">
-                        <p className="text-3xl font-black text-zinc-900">{intern.scheduleSubmissions.length} <span className="text-xs font-bold text-zinc-400 tracking-widest ml-1">Submissions</span></p>
+                        <p className="text-3xl font-semibold text-zinc-900">{intern.scheduleSubmissions.length} <span className="text-xs font-medium text-zinc-400 tracking-widest ml-1">Submissions</span></p>
                       </div>
                     </div>
 
                     {/* Recent Activity */}
                     <div className="md:col-span-2 bg-white border border-zinc-200 p-8">
-                      <h3 className="text-sm font-black tracking-[0.2em] text-[#003366] mb-8 flex items-center gap-3">
+                      <h3 className="text-sm font-semibold tracking-[0.2em] text-[#003366] mb-8 flex items-center gap-3">
                         <Clock size={16} /> Recent Activity
                       </h3>
                       <div className="space-y-6">
@@ -288,10 +300,10 @@ export default function InternProfilePage() {
                                 <div className="w-[1px] flex-1 bg-zinc-100" />
                               </div>
                               <div className="flex-1">
-                                <p className="text-xs font-bold text-zinc-400 tracking-widest mb-1">
+                                <p className="text-xs font-medium text-zinc-400 tracking-widest mb-1">
                                   {new Date(activity.createdAt).toLocaleDateString()}
                                 </p>
-                                <p className="text-[13px] font-bold text-zinc-900">
+                                <p className="text-[13px] font-semibold text-zinc-900">
                                   {'title' in activity ? `Assigned: ${activity.title}` : `Submitted: ${activity.schedule?.week || 'Work'}`}
                                 </p>
                                 <p className="text-[11px] text-zinc-500 font-medium mt-1">
@@ -318,7 +330,7 @@ export default function InternProfilePage() {
                   >
                     {intern.tasks.length === 0 ? (
                       <div className="bg-white border border-zinc-200 p-12 text-center">
-                        <p className="text-zinc-400 font-bold text-[10px] tracking-widest">No tasks assigned yet.</p>
+                        <p className="text-zinc-400 font-medium text-[10px] tracking-widest">No tasks assigned yet.</p>
                       </div>
                     ) : (
                       intern.tasks.map((task) => (
@@ -326,27 +338,27 @@ export default function InternProfilePage() {
                           <div className="flex items-start justify-between gap-4">
                             <div className="space-y-4 flex-1">
                               <div className="flex items-center gap-3">
-                                <div className="px-2 py-0.5 bg-[#E0E7FF] text-[#003366] text-[9px] font-black tracking-widest border border-[#003366]/5">
+                                <div className="px-2 py-0.5 bg-[#E0E7FF] text-[#003366] text-[9px] font-semibold tracking-widest border border-[#003366]/5">
                                   {task.batch || 'General'}
                                 </div>
-                                <span className="text-[10px] font-bold text-zinc-400 tabular-nums">
+                                <span className="text-[10px] font-medium text-zinc-400 tabular-nums">
                                   ID: {task.id.slice(-8)}
                                 </span>
                               </div>
-                              <h3 className="text-lg font-black tracking-tight text-zinc-900 leading-none">{task.title}</h3>
+                              <h3 className="text-lg font-semibold tracking-tight text-zinc-900 leading-none">{task.title}</h3>
                               <p className="text-sm text-zinc-500 font-medium leading-relaxed max-w-2xl">{task.description}</p>
                               <div className="flex items-center gap-6 pt-2">
-                                <div className="flex items-center gap-2 text-[11px] font-bold text-zinc-400">
+                                <div className="flex items-center gap-2 text-[11px] font-medium text-zinc-400">
                                   <Clock size={12} /> {new Date(task.createdAt).toLocaleDateString()}
                                 </div>
-                                <div className={`flex items-center gap-2 text-[11px] font-black ${task.status === 'completed' ? 'text-emerald-600' : 'text-amber-500'}`}>
+                                <div className={`flex items-center gap-2 text-[11px] font-semibold ${task.status === 'completed' ? 'text-emerald-600' : 'text-amber-500'}`}>
                                   {task.status === 'completed' ? <CheckCircle2 size={12} /> : <div className="h-2 w-2 rounded-full bg-amber-500 animate-pulse" />}
                                   {task.status}
                                 </div>
                               </div>
                             </div>
                             {task.attachmentUrl && (
-                              <a href={task.attachmentUrl} target="_blank" className="h-10 px-4 bg-[#E0E7FF] border border-[#003366]/10 text-[#003366] flex items-center gap-2 text-[10px] font-black tracking-wider hover:bg-[#003366] hover:text-white transition-all">
+                              <a href={task.attachmentUrl} target="_blank" className="h-10 px-4 bg-[#E0E7FF] border border-[#003366]/10 text-[#003366] flex items-center gap-2 text-[10px] font-semibold tracking-wider hover:bg-[#003366] hover:text-white transition-all">
                                 <FileText size={14} /> View Task
                               </a>
                             )}
@@ -367,26 +379,26 @@ export default function InternProfilePage() {
                   >
                     {/* Exam Sessions */}
                     <div className="space-y-4">
-                      <h3 className="text-[11px] font-black tracking-[0.2em] text-zinc-400 flex items-center gap-2">
+                      <h3 className="text-[11px] font-semibold tracking-[0.2em] text-[#003366] flex items-center gap-2">
                         <ShieldCheck size={14} /> Exam History
                       </h3>
                       {intern.examSessions.length === 0 ? (
                         <div className="bg-white border border-zinc-200 p-8 text-center italic text-zinc-400 text-xs">No exam records found.</div>
                       ) : (
                         intern.examSessions.map((exam) => (
-                          <div key={exam.id} className="bg-white border border-zinc-200 p-4 flex items-center justify-between">
+                          <div key={exam.id} className="bg-white border border-zinc-200 p-6 flex items-center justify-between">
                             <div className="flex items-center gap-4">
-                              <div className="h-10 w-10 bg-zinc-50 border border-zinc-200 flex items-center justify-center text-zinc-400">
+                              <div className="h-10 w-10 bg-zinc-50 border border-zinc-100 flex items-center justify-center text-[#003366]">
                                 <FileBadge size={18} />
                               </div>
                               <div>
-                                <p className="text-[13px] font-black text-zinc-900">{exam.examType || 'General'} Exam</p>
-                                <p className="text-[10px] font-bold text-zinc-400">{new Date(exam.startedAt).toLocaleDateString()}</p>
+                                <p className="text-[13px] font-semibold text-zinc-900">{exam.examType || 'General'} Exam</p>
+                                <p className="text-[10px] font-medium text-zinc-400">{new Date(exam.startedAt).toLocaleDateString()}</p>
                               </div>
                             </div>
                             <div className="text-right">
-                              <p className="text-sm font-black text-zinc-900">{exam.score !== null ? `${exam.score} Pts` : 'Pending'}</p>
-                              <p className={`text-[9px] font-bold ${exam.status === 'SUBMITTED' ? 'text-emerald-600' : 'text-red-600'}`}>
+                              <p className="text-sm font-semibold text-zinc-900">{exam.score !== null ? `${exam.score} Pts` : 'Pending'}</p>
+                              <p className={`text-[9px] font-medium ${exam.status === 'SUBMITTED' ? 'text-emerald-600' : 'text-red-600'}`}>
                                 {exam.status}
                               </p>
                             </div>
@@ -397,7 +409,7 @@ export default function InternProfilePage() {
 
                     {/* Weekly Submissions */}
                     <div className="space-y-4">
-                      <h3 className="text-[11px] font-black tracking-[0.2em] text-zinc-400 flex items-center gap-2">
+                      <h3 className="text-[11px] font-semibold tracking-[0.2em] text-[#003366] flex items-center gap-2">
                         <BookOpen size={14} /> Weekly Work
                       </h3>
                       {intern.scheduleSubmissions.length === 0 ? (
@@ -408,28 +420,28 @@ export default function InternProfilePage() {
                             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                               <div className="space-y-3">
                                 <div className="flex items-center gap-3">
-                                  <span className="text-[10px] font-black text-red-600 bg-red-50 border border-red-100 px-2 py-0.5">
+                                  <span className="text-[10px] font-semibold text-red-600 bg-red-50 border border-red-100 px-2 py-0.5">
                                     {sub.schedule?.week || 'Week'}
                                   </span>
-                                  <h4 className="text-[15px] font-black text-zinc-900 tracking-tight">{sub.schedule?.projectName || 'Weekly Work'}</h4>
+                                  <h4 className="text-[15px] font-semibold text-zinc-900 tracking-tight">{sub.schedule?.projectName || 'Weekly Work'}</h4>
                                 </div>
                                 <div className="flex items-center gap-6">
-                                  <a href={sub.githubLink} target="_blank" className="flex items-center gap-2 text-[11px] font-bold text-zinc-500 hover:text-black hover:underline underline-offset-4">
-                                    <Github size={12} /> Repository Link
+                                  <a href={sub.githubLink} target="_blank" className="flex items-center gap-2 text-[11px] font-medium text-zinc-500 hover:text-black hover:underline underline-offset-4">
+                                    <Github size={12} /> GitHub Source
                                   </a>
-                                  <a href={sub.submissionLink} target="_blank" className="flex items-center gap-2 text-[11px] font-bold text-zinc-500 hover:text-black hover:underline underline-offset-4">
-                                    <ExternalLink size={12} /> Deployment
+                                  <a href={sub.liveLink} target="_blank" className="flex items-center gap-2 text-[11px] font-medium text-zinc-500 hover:text-black hover:underline underline-offset-4">
+                                    <ExternalLink size={12} /> Live Link
                                   </a>
                                 </div>
                               </div>
                               <div className="text-right flex flex-col items-end gap-2">
-                                <span className="text-[10px] font-black text-zinc-400 tabular-nums">
+                                <span className="text-[10px] font-semibold text-zinc-400 tabular-nums">
                                   Submitted: {new Date(sub.createdAt).toLocaleString()}
                                 </span>
                                 {sub.marks && (
                                   <div className="flex items-center gap-2">
-                                    <span className="text-[9px] font-black text-zinc-400">Score:</span>
-                                    <span className="text-sm font-black text-zinc-900">{sub.marks}/100</span>
+                                    <span className="text-[9px] font-medium text-zinc-400">Score:</span>
+                                    <span className="text-sm font-semibold text-zinc-900">{sub.marks}/100</span>
                                   </div>
                                 )}
                               </div>
@@ -437,7 +449,7 @@ export default function InternProfilePage() {
                             {sub.review && (
                               <div className="mt-4 p-4 bg-zinc-50 border-l-2 border-[#003366] text-[12px] font-medium text-zinc-600 italic">
                                 "{sub.review}"
-                                {sub.reviewedBy && <span className="block mt-2 font-black text-[9px] text-zinc-400 not-italic">— {sub.reviewedBy}</span>}
+                                {sub.reviewedBy && <span className="block mt-2 font-semibold text-[9px] text-zinc-400 not-italic">— {sub.reviewedBy}</span>}
                               </div>
                             )}
                           </div>
@@ -448,29 +460,29 @@ export default function InternProfilePage() {
                     {/* Other Submissions */}
                     {(taskSubmissions.length > 0 || uiuxSubmissions.length > 0) && (
                       <div className="space-y-4 pt-8">
-                        <h3 className="text-[11px] font-black tracking-[0.2em] text-zinc-400 flex items-center gap-2">
+                        <h3 className="text-[11px] font-semibold tracking-[0.2em] text-[#003366] flex items-center gap-2">
                           <CheckCircle2 size={14} /> Other Submissions
                         </h3>
                         {taskSubmissions.map((sub, idx) => (
                           <div key={idx} className="bg-white border border-zinc-200 p-6 flex items-center justify-between">
                             <div>
-                              <p className="text-[13px] font-black text-zinc-900">{sub.taskAllocated}</p>
-                              <p className="text-[10px] font-bold text-zinc-400 mt-1">Task Submission</p>
+                              <p className="text-[13px] font-semibold text-zinc-900">{sub.taskAllocated}</p>
+                              <p className="text-[10px] font-medium text-zinc-400 mt-1">Task Submission</p>
                             </div>
                             <div className="flex items-center gap-4">
-                              <a href={sub.githubLink} target="_blank" className="h-9 w-9 flex items-center justify-center bg-zinc-50 border border-zinc-200 text-zinc-900"><Github size={14} /></a>
-                              <a href={sub.liveLink} target="_blank" className="h-9 w-9 flex items-center justify-center bg-zinc-50 border border-zinc-200 text-zinc-900"><ExternalLink size={14} /></a>
+                              <a href={sub.githubLink} target="_blank" className="h-9 w-9 flex items-center justify-center bg-zinc-50 border border-zinc-200 text-zinc-900 rounded-sm"><Github size={14} /></a>
+                              <a href={sub.liveLink} target="_blank" className="h-9 w-9 flex items-center justify-center bg-zinc-50 border border-zinc-200 text-zinc-900 rounded-sm"><ExternalLink size={14} /></a>
                             </div>
                           </div>
                         ))}
                         {uiuxSubmissions.map((sub, idx) => (
                           <div key={idx} className="bg-white border border-zinc-200 p-6 flex items-center justify-between">
                             <div>
-                              <p className="text-[13px] font-black text-zinc-900">{sub.taskName}</p>
-                              <p className="text-[10px] font-bold text-zinc-400 mt-1">Design Submission</p>
+                              <p className="text-[13px] font-semibold text-zinc-900">{sub.taskName}</p>
+                              <p className="text-[10px] font-medium text-zinc-400 mt-1">Design Submission</p>
                             </div>
                             <div className="flex items-center gap-4">
-                              <a href={sub.taskLink} target="_blank" className="h-9 w-9 flex items-center justify-center bg-zinc-50 border border-zinc-200 text-zinc-900"><ExternalLink size={14} /></a>
+                              <a href={sub.taskLink} target="_blank" className="h-9 w-9 flex items-center justify-center bg-zinc-50 border border-zinc-200 text-zinc-900 rounded-sm"><ExternalLink size={14} /></a>
                             </div>
                           </div>
                         ))}
@@ -487,46 +499,58 @@ export default function InternProfilePage() {
                     exit={{ opacity: 0, scale: 0.98 }}
                     className="bg-white border border-zinc-200 p-8"
                   >
-                    <div className="max-w-3xl mx-auto space-y-12">
-                      <div className="text-center space-y-4">
-                        <h3 className="text-2xl font-black text-zinc-900 tracking-tighter">Performance Summary</h3>
-                        <p className="text-xs font-bold text-zinc-400 tracking-[0.3em]">Detailed Statistics</p>
+                    <div className="max-w-4xl mx-auto space-y-12">
+                      <div className="text-center space-y-2">
+                        <h3 className="text-2xl font-semibold text-zinc-900 tracking-tighter">Performance Analytics</h3>
+                        <p className="text-[10px] font-medium text-zinc-400 uppercase tracking-[0.3em]">Comprehensive Activity Profile</p>
                       </div>
 
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        <div className="text-center space-y-2">
-                          <p className="text-[10px] font-black text-zinc-400">Task Reliability</p>
-                          <p className="text-3xl font-black text-zinc-900">{Math.min(100, (intern.presentCount || 0) * 10 / (intern.tasks.length || 1)).toFixed(1)}%</p>
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                        <div className="p-6 bg-zinc-50 border border-zinc-100 text-center">
+                          <p className="text-[9px] font-semibold text-zinc-400 mb-1">Success Rate</p>
+                          <p className="text-2xl font-semibold text-zinc-900">
+                             {Math.round(((intern.tasks.filter((t:any) => t.status==='completed').length + intern.scheduleSubmissions.length) / (intern.tasks.length || 1)) * 100)}%
+                          </p>
                         </div>
-                        <div className="text-center space-y-2">
-                          <p className="text-[10px] font-black text-zinc-400">Days Active</p>
-                          <p className="text-3xl font-black text-zinc-900">{Math.floor((new Date().getTime() - new Date(intern.tasks[intern.tasks.length-1]?.createdAt || new Date()).getTime()) / (1000 * 60 * 60 * 24))}d</p>
+                        <div className="p-6 bg-zinc-50 border border-zinc-100 text-center">
+                          <p className="text-[9px] font-semibold text-zinc-400 mb-1">Total Submits</p>
+                          <p className="text-2xl font-semibold text-zinc-900">{intern.scheduleSubmissions.length + taskSubmissions.length + uiuxSubmissions.length}</p>
                         </div>
-                        <div className="text-center space-y-2">
-                          <p className="text-[10px] font-black text-zinc-400">System Status</p>
-                          <p className="text-xl font-black text-emerald-600">Verified</p>
+                        <div className="p-6 bg-zinc-50 border border-zinc-100 text-center">
+                          <p className="text-[9px] font-semibold text-zinc-400 mb-1">Days Present</p>
+                          <p className="text-2xl font-semibold text-zinc-900">{intern.presentCount || 0}d</p>
+                        </div>
+                        <div className="p-6 bg-zinc-50 border border-zinc-100 text-center">
+                          <p className="text-[9px] font-semibold text-zinc-400 mb-1">Days Absent</p>
+                          <p className="text-2xl font-semibold text-red-600">{intern.attendances.filter((a:any) => a.status === 'ABSENT').length}d</p>
                         </div>
                       </div>
 
                       <div className="space-y-6">
-                        <h4 className="text-[11px] font-black tracking-widest text-zinc-400 border-b border-zinc-100 pb-2">Attendance Logs</h4>
-                        <div className="grid grid-cols-7 gap-2">
-                          {intern.attendances.slice(0, 35).map((att, i) => (
-                            <div key={i} className={`h-8 border flex items-center justify-center text-[9px] font-bold ${att.status === 'PRESENT' ? 'bg-emerald-50 border-emerald-100 text-emerald-700' : 'bg-red-50 border-red-100 text-red-700'}`}>
-                              {new Date(att.date).getDate()}/{new Date(att.date).getMonth()+1}
-                            </div>
-                          ))}
+                        <div className="flex items-center justify-between border-b border-zinc-100 pb-2">
+                          <h4 className="text-[11px] font-semibold tracking-widest text-[#003366]">Attendance Breakdown</h4>
+                          <p className="text-[10px] font-medium text-zinc-400 italic">Showing last 35 active sessions</p>
                         </div>
-                        <p className="text-[10px] text-zinc-400 italic font-medium">Historical attendance is tracked daily.</p>
+                        <div className="grid grid-cols-7 gap-2">
+                          {intern.attendances.slice(0, 35).map((att:any, i:number) => {
+                             const dateObj = new Date(att.date);
+                             return (
+                              <div key={i} className={`h-10 border flex flex-col items-center justify-center text-[8px] font-medium ${att.status === 'PRESENT' ? 'bg-emerald-50 border-emerald-100 text-emerald-700' : 'bg-red-50 border-red-100 text-red-700'}`}>
+                                <span>{dateObj.getDate()}/{dateObj.getMonth()+1}</span>
+                                <span className="text-[6px] font-semibold opacity-50">{att.status === 'PRESENT' ? 'IN' : 'ABS'}</span>
+                              </div>
+                             )
+                          })}
+                        </div>
                       </div>
 
-                      <div className="pt-12 flex justify-center">
+                      <div className="pt-12 flex justify-center border-t border-zinc-100">
                         <div className="text-center">
-                          <div className="h-20 w-20 border-[6px] border-[#003366] flex items-center justify-center mx-auto mb-4">
-                            <Shield size={40} className="text-[#003366]" />
+                          <div className="h-16 w-16 border-[4px] border-[#003366] flex items-center justify-center mx-auto mb-4">
+                            <Shield size={32} className="text-[#003366]" />
                           </div>
-                          <p className="text-[10px] font-black text-[#003366] tracking-widest">Student Forge Certified</p>
-                          <p className="text-[8px] font-bold text-zinc-400 mt-1">LMS Verification</p>
+                          <p className="text-[10px] font-semibold text-[#003366] tracking-widest">Student Forge Certified</p>
+                          <p className="text-[8px] font-medium text-zinc-400 mt-1">LMS Verification Profile</p>
                         </div>
                       </div>
                     </div>
