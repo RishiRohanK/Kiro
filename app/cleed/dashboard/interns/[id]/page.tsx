@@ -1,0 +1,542 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import { useParams, useRouter } from "next/navigation";
+import {
+  ChevronLeft,
+  Mail,
+  Phone,
+  Building2,
+  Calendar,
+  Github,
+  Trophy,
+  Clock,
+  CheckCircle2,
+  FileText,
+  ExternalLink,
+  Shield,
+  ShieldCheck,
+  FileBadge,
+  User as UserIcon,
+  Briefcase,
+  Zap,
+  BookOpen
+} from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+
+interface InternData {
+  id: string;
+  name: string;
+  email: string;
+  profileImage?: string;
+  college?: string;
+  department?: string;
+  branch?: string;
+  year?: string;
+  graduationYear?: string;
+  batch?: string;
+  isApproved: boolean;
+  githubLink?: string;
+  phoneNumber?: string;
+  dob?: string;
+  interestedArea?: string;
+  attendancePercentage?: number;
+  presentCount?: number;
+  tasks: any[];
+  scheduleSubmissions: any[];
+  attendances: any[];
+  examSessions: any[];
+}
+
+export default function InternProfilePage() {
+  const { id } = useParams();
+  const router = useRouter();
+  const [data, setData] = useState<{
+    intern: InternData;
+    taskSubmissions: any[];
+    uiuxSubmissions: any[];
+  } | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [activeSegment, setActiveSegment] = useState<"overview" | "tasks" | "submissions" | "reports">("overview");
+
+  useEffect(() => {
+    const fetchInternDetails = async () => {
+      try {
+        const res = await fetch(`/api/cleed/interns/${id}`);
+        const result = await res.json();
+        if (result.success) {
+          setData(result);
+        }
+      } catch (error) {
+        console.error("Failed to fetch intern details");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchInternDetails();
+  }, [id]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-zinc-50 flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <div className="h-12 w-12 border-4 border-zinc-200 border-t-zinc-900 rounded-full animate-spin" />
+          <p className="text-[12px] font-bold text-zinc-500 uppercase tracking-widest">Synchronizing Data...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!data) {
+    return (
+      <div className="min-h-screen bg-zinc-50 flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <p className="text-zinc-500 font-bold">Intern not found in registry.</p>
+          <button onClick={() => router.back()} className="text-zinc-900 underline font-bold text-sm">Return to Dashboard</button>
+        </div>
+      </div>
+    );
+  }
+
+  const { intern, taskSubmissions, uiuxSubmissions } = data;
+
+  return (
+    <div className="min-h-screen bg-zinc-50 pb-20">
+      {/* Header */}
+      <div className="bg-white border-b border-zinc-200 sticky top-0 z-40">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            <div className="flex items-center gap-4">
+              <button 
+                onClick={() => router.back()}
+                className="h-9 w-9 flex items-center justify-center hover:bg-zinc-100 transition-colors border border-zinc-200"
+              >
+                <ChevronLeft size={18} />
+              </button>
+              <h1 className="text-sm font-black uppercase tracking-tighter text-zinc-900">Intern Profile Portal</h1>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className={`px-3 py-1 text-[10px] font-bold uppercase border ${intern.isApproved ? 'bg-emerald-50 text-emerald-700 border-emerald-100' : 'bg-amber-50 text-amber-600 border-amber-100'}`}>
+                {intern.isApproved ? 'Authorized' : 'Review Required'}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          
+          {/* Sidebar / Profile Info */}
+          <div className="lg:col-span-4 space-y-6">
+            <div className="bg-white border border-zinc-200 overflow-hidden">
+              <div className="h-32 bg-zinc-900 relative">
+                <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]" />
+              </div>
+              <div className="px-6 pb-8">
+                <div className="relative -mt-16 mb-6">
+                  <div className="h-32 w-32 bg-zinc-100 border-4 border-white shadow-md overflow-hidden flex items-center justify-center">
+                    {intern.profileImage ? (
+                      <img src={intern.profileImage} alt={intern.name} className="h-full w-full object-cover" />
+                    ) : (
+                      <UserIcon size={48} className="text-zinc-300" />
+                    )}
+                  </div>
+                </div>
+                
+                <div className="space-y-1">
+                  <h2 className="text-2xl font-black text-zinc-900 tracking-tight uppercase leading-none">{intern.name}</h2>
+                  <p className="text-[12px] font-bold text-zinc-500 uppercase tracking-widest">{intern.batch || 'Batch Active'}</p>
+                </div>
+
+                <div className="mt-8 space-y-4">
+                  <div className="flex items-center gap-3 text-zinc-600">
+                    <Mail size={16} />
+                    <span className="text-[13px] font-medium">{intern.email}</span>
+                  </div>
+                  {intern.phoneNumber && (
+                    <div className="flex items-center gap-3 text-zinc-600">
+                      <Phone size={16} />
+                      <span className="text-[13px] font-medium">{intern.phoneNumber}</span>
+                    </div>
+                  )}
+                  <div className="flex items-center gap-3 text-zinc-600">
+                    <Building2 size={16} />
+                    <span className="text-[13px] font-medium">{intern.college || 'Undeclared'}</span>
+                  </div>
+                  {intern.githubLink && (
+                    <a href={intern.githubLink} target="_blank" className="flex items-center gap-3 text-zinc-900 hover:text-black hover:underline transition-colors uppercase font-bold text-[11px]">
+                      <Github size={16} /> GitHub Profile <ExternalLink size={10} />
+                    </a>
+                  )}
+                </div>
+
+                <div className="mt-8 pt-8 border-t border-zinc-100 grid grid-cols-2 gap-4">
+                  <div className="p-4 bg-zinc-50 border border-zinc-100">
+                    <p className="text-[9px] font-bold text-zinc-400 uppercase tracking-widest mb-1">Performance</p>
+                    <p className="text-xl font-black text-zinc-900 leading-none">{intern.attendancePercentage || 0}%</p>
+                  </div>
+                  <div className="p-4 bg-zinc-50 border border-zinc-100">
+                    <p className="text-[9px] font-bold text-zinc-400 uppercase tracking-widest mb-1">Attendance</p>
+                    <p className="text-xl font-black text-zinc-900 leading-none">{intern.presentCount || 0}d</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white border border-zinc-200 p-6">
+              <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-zinc-400 mb-6 flex items-center gap-2">
+                <Shield size={12} /> Registry Authentication
+              </h3>
+              <div className="space-y-4">
+                <div>
+                  <p className="text-[10px] font-bold text-zinc-400 uppercase">Department</p>
+                  <p className="text-[13px] font-bold text-zinc-900">{intern.department || intern.branch || 'None'}</p>
+                </div>
+                <div>
+                  <p className="text-[10px] font-bold text-zinc-400 uppercase">Academic Year</p>
+                  <p className="text-[13px] font-bold text-zinc-900">{intern.year || 'N/A'}</p>
+                </div>
+                <div>
+                  <p className="text-[10px] font-bold text-zinc-400 uppercase">Date of Birth</p>
+                  <p className="text-[13px] font-bold text-zinc-900">{intern.dob || 'Not Disclosed'}</p>
+                </div>
+                <div>
+                  <p className="text-[10px] font-bold text-zinc-400 uppercase">Interested Area</p>
+                  <p className="text-[13px] font-bold text-zinc-900">{intern.interestedArea || 'None Specific'}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Main Content Area */}
+          <div className="lg:col-span-8 space-y-8">
+            {/* Tabs */}
+            <div className="flex bg-white border border-zinc-200 p-1 gap-1">
+              {[
+                { id: "overview", label: "Overview", icon: Zap },
+                { id: "tasks", label: "Tasks Given", icon: Briefcase },
+                { id: "submissions", label: "Submissions", icon: CheckCircle2 },
+                { id: "reports", label: "Reports", icon: FileText }
+              ].map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveSegment(tab.id as any)}
+                  className={`flex-1 flex items-center justify-center gap-2 py-3 text-[10px] font-black uppercase tracking-wider transition-all ${
+                    activeSegment === tab.id 
+                    ? 'bg-zinc-900 text-white' 
+                    : 'text-zinc-500 hover:bg-zinc-50 hover:text-zinc-900'
+                  }`}
+                >
+                  <tab.icon size={14} />
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+
+            {/* Content Segments */}
+            <div className="min-h-[500px]">
+              <AnimatePresence mode="wait">
+                {activeSegment === "overview" && (
+                  <motion.div
+                    key="overview"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="grid grid-cols-1 md:grid-cols-2 gap-6"
+                  >
+                    <div className="bg-white border border-zinc-200 p-6 flex flex-col justify-between">
+                      <div className="space-y-4">
+                        <div className="h-10 w-10 bg-zinc-900 text-white flex items-center justify-center shadow-lg">
+                          <Trophy size={20} />
+                        </div>
+                        <h3 className="text-lg font-black uppercase tracking-tight text-zinc-900">Task Completion</h3>
+                        <p className="text-sm text-zinc-500 leading-relaxed font-medium">Tracking all allocated organizational tasks and objectives handled by the intern node.</p>
+                      </div>
+                      <div className="mt-8">
+                        <p className="text-3xl font-black text-zinc-900">{intern.tasks.length} <span className="text-xs font-bold text-zinc-400 uppercase tracking-widest ml-1">Total Tasks</span></p>
+                      </div>
+                    </div>
+
+                    <div className="bg-white border border-zinc-200 p-6 flex flex-col justify-between">
+                      <div className="space-y-4">
+                        <div className="h-10 w-10 bg-zinc-900 text-white flex items-center justify-center shadow-lg">
+                          <CheckCircle2 size={20} />
+                        </div>
+                        <h3 className="text-lg font-black uppercase tracking-tight text-zinc-900">Work Integrity</h3>
+                        <p className="text-sm text-zinc-500 leading-relaxed font-medium">Verification of weekly submissions and project milestones achieved during the tenure.</p>
+                      </div>
+                      <div className="mt-8">
+                        <p className="text-3xl font-black text-zinc-900">{intern.scheduleSubmissions.length} <span className="text-xs font-bold text-zinc-400 uppercase tracking-widest ml-1">Submissions</span></p>
+                      </div>
+                    </div>
+
+                    {/* Recent Activity */}
+                    <div className="md:col-span-2 bg-white border border-zinc-200 p-8">
+                      <h3 className="text-sm font-black uppercase tracking-[0.2em] text-zinc-900 mb-8 flex items-center gap-3">
+                        <Clock size={16} /> Recent Node Activity
+                      </h3>
+                      <div className="space-y-6">
+                        {[...intern.tasks, ...intern.scheduleSubmissions]
+                          .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+                          .slice(0, 5)
+                          .map((activity, idx) => (
+                            <div key={idx} className="flex gap-6 pb-6 border-b border-zinc-100 last:border-0 last:pb-0">
+                              <div className="flex flex-col items-center gap-2">
+                                <div className={`h-2 w-2 rounded-full mt-1.5 ${'title' in activity ? 'bg-zinc-900' : 'bg-red-600'}`} />
+                                <div className="w-[1px] flex-1 bg-zinc-100" />
+                              </div>
+                              <div className="flex-1">
+                                <p className="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-1">
+                                  {new Date(activity.createdAt).toLocaleDateString()}
+                                </p>
+                                <p className="text-[13px] font-bold text-zinc-900">
+                                  {'title' in activity ? `Assigned: ${activity.title}` : `Submitted: ${activity.schedule?.week || 'Work'}`}
+                                </p>
+                                <p className="text-[11px] text-zinc-500 font-medium mt-1">
+                                  {'title' in activity ? activity.description : `Project: ${activity.schedule?.projectName || 'General Work'}`}
+                                </p>
+                              </div>
+                            </div>
+                          ))}
+                        {intern.tasks.length === 0 && intern.scheduleSubmissions.length === 0 && (
+                          <div className="py-12 text-center border-2 border-dashed border-zinc-100 italic text-zinc-400 text-sm">No recent signals recorded.</div>
+                        )}
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+
+                {activeSegment === "tasks" && (
+                  <motion.div
+                    key="tasks"
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    className="space-y-4"
+                  >
+                    {intern.tasks.length === 0 ? (
+                      <div className="bg-white border border-zinc-200 p-12 text-center">
+                        <p className="text-zinc-400 font-bold uppercase text-[10px] tracking-widest">Zero tasks allocated to this intern.</p>
+                      </div>
+                    ) : (
+                      intern.tasks.map((task) => (
+                        <div key={task.id} className="bg-white border border-zinc-200 p-6 hover:border-zinc-400 transition-colors group">
+                          <div className="flex items-start justify-between gap-4">
+                            <div className="space-y-4 flex-1">
+                              <div className="flex items-center gap-3">
+                                <div className="px-2 py-0.5 bg-zinc-900 text-white text-[9px] font-black uppercase tracking-widest">
+                                  {task.batch || 'General'}
+                                </div>
+                                <span className="text-[10px] font-bold text-zinc-400 uppercase tabular-nums">
+                                  ID: {task.id.slice(-8)}
+                                </span>
+                              </div>
+                              <h3 className="text-lg font-black uppercase tracking-tight text-zinc-900 leading-none">{task.title}</h3>
+                              <p className="text-sm text-zinc-500 font-medium leading-relaxed max-w-2xl">{task.description}</p>
+                              <div className="flex items-center gap-6 pt-2">
+                                <div className="flex items-center gap-2 text-[11px] font-bold uppercase text-zinc-400">
+                                  <Clock size={12} /> {new Date(task.createdAt).toLocaleDateString()}
+                                </div>
+                                <div className={`flex items-center gap-2 text-[11px] font-black uppercase ${task.status === 'completed' ? 'text-emerald-600' : 'text-amber-500'}`}>
+                                  {task.status === 'completed' ? <CheckCircle2 size={12} /> : <div className="h-2 w-2 rounded-full bg-amber-500 animate-pulse" />}
+                                  {task.status}
+                                </div>
+                              </div>
+                            </div>
+                            {task.attachmentUrl && (
+                              <a href={task.attachmentUrl} target="_blank" className="h-10 px-4 bg-zinc-50 border border-zinc-200 text-zinc-900 flex items-center gap-2 text-[10px] font-black uppercase tracking-wider hover:bg-zinc-900 hover:text-white transition-all">
+                                <FileText size={14} /> Brief
+                              </a>
+                            )}
+                          </div>
+                        </div>
+                      ))
+                    )}
+                  </motion.div>
+                )}
+
+                {activeSegment === "submissions" && (
+                  <motion.div
+                    key="submissions"
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    className="space-y-8"
+                  >
+                    {/* Exam Sessions */}
+                    <div className="space-y-4">
+                      <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-zinc-400 flex items-center gap-2">
+                        <ShieldCheck size={14} /> Assessment History
+                      </h3>
+                      {intern.examSessions.length === 0 ? (
+                        <div className="bg-white border border-zinc-200 p-8 text-center italic text-zinc-400 text-xs">No exam records found.</div>
+                      ) : (
+                        intern.examSessions.map((exam) => (
+                          <div key={exam.id} className="bg-white border border-zinc-200 p-4 flex items-center justify-between">
+                            <div className="flex items-center gap-4">
+                              <div className="h-10 w-10 bg-zinc-50 border border-zinc-200 flex items-center justify-center text-zinc-400">
+                                <FileBadge size={18} />
+                              </div>
+                              <div>
+                                <p className="text-[13px] font-black text-zinc-900 uppercase">{exam.examType || 'General'} Assessment</p>
+                                <p className="text-[10px] font-bold text-zinc-400 uppercase">{new Date(exam.startedAt).toLocaleDateString()}</p>
+                              </div>
+                            </div>
+                            <div className="text-right">
+                              <p className="text-sm font-black text-zinc-900">{exam.score !== null ? `${exam.score} PTS` : 'PENDING'}</p>
+                              <p className={`text-[9px] font-bold uppercase ${exam.status === 'SUBMITTED' ? 'text-emerald-600' : 'text-red-600'}`}>
+                                {exam.status}
+                              </p>
+                            </div>
+                          </div>
+                        ))
+                      )}
+                    </div>
+
+                    {/* Weekly Schedule Submissions */}
+                    <div className="space-y-4">
+                      <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-zinc-400 flex items-center gap-2">
+                        <BookOpen size={14} /> Weekly Work Nodes
+                      </h3>
+                      {intern.scheduleSubmissions.length === 0 ? (
+                        <div className="bg-white border border-zinc-200 p-8 text-center italic text-zinc-400 text-xs">No weekly logs found.</div>
+                      ) : (
+                        intern.scheduleSubmissions.map((sub) => (
+                          <div key={sub.id} className="bg-white border border-zinc-200 p-6">
+                            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                              <div className="space-y-3">
+                                <div className="flex items-center gap-3">
+                                  <span className="text-[10px] font-black uppercase text-red-600 bg-red-50 border border-red-100 px-2 py-0.5">
+                                    {sub.schedule?.week || 'Week X'}
+                                  </span>
+                                  <h4 className="text-[15px] font-black uppercase text-zinc-900 tracking-tight">{sub.schedule?.projectName || 'Weekly Assignment'}</h4>
+                                </div>
+                                <div className="flex items-center gap-6">
+                                  <a href={sub.githubLink} target="_blank" className="flex items-center gap-2 text-[11px] font-bold text-zinc-500 hover:text-black hover:underline underline-offset-4">
+                                    <Github size={12} /> Repository Link
+                                  </a>
+                                  <a href={sub.submissionLink} target="_blank" className="flex items-center gap-2 text-[11px] font-bold text-zinc-500 hover:text-black hover:underline underline-offset-4">
+                                    <ExternalLink size={12} /> Deployment
+                                  </a>
+                                </div>
+                              </div>
+                              <div className="text-right flex flex-col items-end gap-2">
+                                <span className="text-[10px] font-black uppercase tracking-widest text-zinc-400 tabular-nums">
+                                  Logged: {new Date(sub.createdAt).toLocaleString()}
+                                </span>
+                                {sub.marks && (
+                                  <div className="flex items-center gap-2">
+                                    <span className="text-[9px] font-black uppercase text-zinc-400">Score:</span>
+                                    <span className="text-sm font-black text-zinc-900">{sub.marks}/100</span>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                            {sub.review && (
+                              <div className="mt-4 p-4 bg-zinc-50 border-l-2 border-zinc-900 text-[12px] font-medium text-zinc-600 italic">
+                                "{sub.review}"
+                                {sub.reviewedBy && <span className="block mt-2 font-black uppercase text-[9px] text-zinc-400 not-italic">— {sub.reviewedBy}</span>}
+                              </div>
+                            )}
+                          </div>
+                        ))
+                      )}
+                    </div>
+
+                    {/* Other Submissions */}
+                    {(taskSubmissions.length > 0 || uiuxSubmissions.length > 0) && (
+                      <div className="space-y-4 pt-8">
+                        <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-zinc-400 flex items-center gap-2">
+                          <CheckCircle2 size={14} /> Auxiliary Submissions
+                        </h3>
+                        {taskSubmissions.map((sub, idx) => (
+                          <div key={idx} className="bg-white border border-zinc-200 p-6 flex items-center justify-between">
+                            <div>
+                              <p className="text-[13px] font-black text-zinc-900 uppercase">{sub.taskAllocated}</p>
+                              <p className="text-[10px] font-bold text-zinc-400 uppercase mt-1">Direct Task Submission</p>
+                            </div>
+                            <div className="flex items-center gap-4">
+                              <a href={sub.githubLink} target="_blank" className="h-9 w-9 flex items-center justify-center bg-zinc-50 border border-zinc-200 text-zinc-900"><Github size={14} /></a>
+                              <a href={sub.liveLink} target="_blank" className="h-9 w-9 flex items-center justify-center bg-zinc-50 border border-zinc-200 text-zinc-900"><ExternalLink size={14} /></a>
+                            </div>
+                          </div>
+                        ))}
+                        {uiuxSubmissions.map((sub, idx) => (
+                          <div key={idx} className="bg-white border border-zinc-200 p-6 flex items-center justify-between">
+                            <div>
+                              <p className="text-[13px] font-black text-zinc-900 uppercase">{sub.taskName}</p>
+                              <p className="text-[10px] font-bold text-zinc-400 uppercase mt-1">UI/UX Protocol Submission</p>
+                            </div>
+                            <div className="flex items-center gap-4">
+                              <a href={sub.taskLink} target="_blank" className="h-9 w-9 flex items-center justify-center bg-zinc-50 border border-zinc-200 text-zinc-900"><ExternalLink size={14} /></a>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </motion.div>
+                )}
+
+                {activeSegment === "reports" && (
+                  <motion.div
+                    key="reports"
+                    initial={{ opacity: 0, scale: 0.98 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.98 }}
+                    className="bg-white border border-zinc-200 p-8"
+                  >
+                    <div className="max-w-3xl mx-auto space-y-12">
+                      <div className="text-center space-y-4">
+                        <h3 className="text-2xl font-black text-zinc-900 uppercase tracking-tighter">Performance Analysis Report</h3>
+                        <p className="text-xs font-bold text-zinc-400 uppercase tracking-[0.3em]">Confidential Operational Metadata</p>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div className="text-center space-y-2">
+                          <p className="text-[10px] font-black text-zinc-400 uppercase">Reliability Index</p>
+                          <p className="text-3xl font-black text-zinc-900">{Math.min(100, (intern.presentCount || 0) * 10 / (intern.tasks.length || 1)).toFixed(1)}%</p>
+                        </div>
+                        <div className="text-center space-y-2">
+                          <p className="text-[10px] font-black text-zinc-400 uppercase">Active Tenure</p>
+                          <p className="text-3xl font-black text-zinc-900">{Math.floor((new Date().getTime() - new Date(intern.tasks[intern.tasks.length-1]?.createdAt || new Date()).getTime()) / (1000 * 60 * 60 * 24))}d</p>
+                        </div>
+                        <div className="text-center space-y-2">
+                          <p className="text-[10px] font-black text-zinc-400 uppercase">Audit Status</p>
+                          <p className="text-xl font-black text-emerald-600 uppercase">SECURE</p>
+                        </div>
+                      </div>
+
+                      <div className="space-y-6">
+                        <h4 className="text-[11px] font-black uppercase tracking-widest text-zinc-400 border-b border-zinc-100 pb-2">Attendance Logs</h4>
+                        <div className="grid grid-cols-7 gap-2">
+                          {intern.attendances.slice(0, 35).map((att, i) => (
+                            <div key={i} className={`h-8 border flex items-center justify-center text-[9px] font-bold ${att.status === 'PRESENT' ? 'bg-emerald-50 border-emerald-100 text-emerald-700' : 'bg-red-50 border-red-100 text-red-700'}`}>
+                              {new Date(att.date).getDate()}/{new Date(att.date).getMonth()+1}
+                            </div>
+                          ))}
+                        </div>
+                        <p className="text-[10px] text-zinc-400 italic font-medium">Historical attendance nodes are synchronized with the primary authentication gateway.</p>
+                      </div>
+
+                      <div className="pt-12 flex justify-center">
+                        <div className="text-center">
+                          <div className="h-20 w-20 border-[6px] border-zinc-900 flex items-center justify-center mx-auto mb-4">
+                            <Shield size={40} className="text-zinc-900" />
+                          </div>
+                          <p className="text-[10px] font-black text-zinc-900 uppercase tracking-widest">Seal of Authentication</p>
+                          <p className="text-[8px] font-bold text-zinc-400 uppercase mt-1">Student Forge Assessment Protocol</p>
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

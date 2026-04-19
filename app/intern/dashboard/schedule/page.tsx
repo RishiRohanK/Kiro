@@ -10,7 +10,8 @@ import {
     Terminal,
     Target,
     RefreshCw,
-    Lock
+    Lock,
+    CheckCircle2
 } from "lucide-react";
 
 interface ScheduleItem {
@@ -293,8 +294,46 @@ export default function SchedulePage() {
                                                 </div>
                                             </div>
 
-                                            <div className={`p-6 rounded-lg ${isClosed ? "bg-red-50 border border-red-200" : "bg-zinc-50"}`}>
-                                                {isClosed ? (
+                                            <div className={`p-6 rounded-lg ${item.isCompleted ? "bg-green-50/50 border border-green-100" : isClosed ? "bg-red-50 border border-red-200" : "bg-zinc-50"}`}>
+                                                {item.isCompleted ? (
+                                                    <div className="space-y-4">
+                                                        <div className="flex items-center gap-2 p-3 bg-green-50 border border-green-200 rounded-lg">
+                                                            <CheckCircle2 size={18} className="text-green-600" />
+                                                            <div>
+                                                                <p className="text-xs font-bold text-green-700">Assignment Submitted</p>
+                                                                <p className="text-[10px] text-green-500">Your work has been safely synchronized. Submission form is locked.</p>
+                                                            </div>
+                                                        </div>
+                                                        <div className="space-y-4">
+                                                            <div>
+                                                                <label className="block text-[11px] text-zinc-500 mb-1">GitHub repository link</label>
+                                                                <div className="w-full p-2 text-sm border border-zinc-200 rounded bg-white font-medium text-zinc-900 flex items-center justify-between">
+                                                                    <span className="truncate">{item.githubLink}</span>
+                                                                    <a href={item.githubLink} target="_blank" className="text-blue-600 hover:text-blue-700 transition-colors">
+                                                                        <ExternalLink size={12} />
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+                                                            <div>
+                                                                <label className="block text-[11px] text-zinc-500 mb-1">Submit link (Deployment/Drive)</label>
+                                                                <div className="w-full p-2 text-sm border border-zinc-200 rounded bg-white font-medium text-zinc-900 flex items-center justify-between">
+                                                                    <span className="truncate">{item.submissionLink}</span>
+                                                                    <a href={item.submissionLink} target="_blank" className="text-blue-600 hover:text-blue-700 transition-colors">
+                                                                        <ExternalLink size={12} />
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+                                                            <div className="pt-2">
+                                                                <button
+                                                                    disabled
+                                                                    className="w-full py-2.5 bg-green-100 text-green-700 text-[10px] font-black uppercase tracking-[0.2em] rounded cursor-not-allowed border border-green-200 shadow-sm"
+                                                                >
+                                                                    Protocol Completed
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                ) : isClosed ? (
                                                     <div className="space-y-4">
                                                         <div className="flex items-center gap-2 p-3 bg-red-100 border border-red-300 rounded-lg">
                                                             <Lock size={18} className="text-black" />
@@ -303,7 +342,6 @@ export default function SchedulePage() {
                                                                 <p className="text-[10px] text-red-500">Deadline has passed. This form is frozen.</p>
                                                             </div>
                                                         </div>
-                                                        {}
                                                         <div className="space-y-4 pointer-events-none select-none opacity-50 grayscale">
                                                             <div>
                                                                 <label className="block text-[11px] text-zinc-500 mb-1">GitHub repository link</label>
@@ -369,13 +407,6 @@ export default function SchedulePage() {
                                                                 {isSubmitting ? "Submitting..." : "Submit All Links"}
                                                             </button>
                                                         </form>
-                                                        {item.githubLink && (
-                                                            <div className="mt-4 pt-4 border-t border-zinc-200 space-y-2">
-                                                                <p className="text-[10px] text-zinc-400">Previous submission:</p>
-                                                                <a href={item.githubLink} target="_blank" className="block text-xs text-blue-600 hover:underline">GitHub Link</a>
-                                                                <a href={item.submissionLink} target="_blank" className="block text-xs text-blue-600 hover:underline">Submission Link</a>
-                                                            </div>
-                                                        )}
                                                     </>
                                                 )}
                                             </div>

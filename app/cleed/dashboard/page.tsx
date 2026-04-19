@@ -2166,7 +2166,7 @@ export default function CleedDashboard() {
                               </div>
                            ) : (
                               [...interns].sort((a, b) => (b.handRaised ? 1 : 0) - (a.handRaised ? 1 : 0)).map((intern) => (
-                                 <div key={intern.id} onClick={() => setViewingIntern(intern)} className={`p-5 bg-white border flex flex-col md:flex-row md:items-center justify-between gap-6 hover:border-zinc-400 transition-all rounded-none cursor-pointer group/row ${intern.handRaised ? "border-l-4 border-red-600 bg-red-50/10" : "border-zinc-200"}`}>
+                                 <div key={intern.id} onClick={() => router.push(`/cleed/dashboard/interns/${intern.id}`)} className={`p-5 bg-white border flex flex-col md:flex-row md:items-center justify-between gap-6 hover:border-zinc-400 transition-all rounded-none cursor-pointer group/row ${intern.handRaised ? "border-l-4 border-red-600 bg-red-50/10" : "border-zinc-200"}`}>
                                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 flex-1 gap-6 md:gap-12">
                                        <div className="flex items-center gap-4">
                                           <div className="relative h-12 w-12 flex-shrink-0">
