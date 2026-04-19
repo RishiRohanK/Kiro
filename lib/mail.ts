@@ -134,7 +134,7 @@ export const sendTeamAssignmentEmail = async (email: string, name: string, proje
 export const sendInterviewEmail = async (email: string, name: string, position: string, timing: string) => {
     const title = "Interview Invitation";
     const content = `Hello ${name},<br/><br/>Congratulations! Your application for the <b>${position}</b> position has been shortlisted. We would like to invite you for an interview to further discuss your profile.<br/><br/><b>Interview Timing:</b> ${timing}<br/><b>Location:</b> STUDENT FORGE Corporate office in Hyderabad, Telangana<br/><b>Address:</b> HF2R+CCV, Devender Colony, Kompally, Hyderabad, Telangana 500100<br/><br/>Please confirm your availability by replying to this email. We look forward to meeting you.`;
-    const ctaUrl = "https://maps.app.goo.gl/6EGvQ1jbTURoiA1a8"; 
+    const ctaUrl = "https://maps.app.goo.gl/6EGvQ1jbTURoiA1a8";
     const html = getSimpleTemplate(title, content, "View Directions", ctaUrl, "HR Team");
 
     try {
@@ -177,7 +177,7 @@ export const sendRescheduleEmail = async (email: string, name: string, position:
 export const sendBootcampRegistrationEmail = async (email: string, name: string) => {
     const title = "Bootcamp Registration Verified";
     const content = `Hello ${name},<br/><br/>Thank you for registering for the <b>Summer Boot Camp 2026</b>. Your application and transaction details have been successfully received and are currently under review by our administration team.<br/><br/>We are excited to have you as part of this interactive technical training initiative. You will receive further updates regarding the orientation and training schedule shortly.`;
-    const ctaUrl = "https://studentforge.in/bootcamp"; 
+    const ctaUrl = "https://platform.studentforge.in/bootcamp";
     const html = getSimpleTemplate(title, content, "View Program Details", ctaUrl, "Learn Grid Division");
 
     try {
