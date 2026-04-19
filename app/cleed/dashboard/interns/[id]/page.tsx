@@ -131,8 +131,8 @@ export default function InternProfilePage() {
           {/* Sidebar / Profile Info */}
           <div className="lg:col-span-4 space-y-6">
             <div className="bg-white border border-zinc-200 overflow-hidden">
-              <div className="h-32 bg-zinc-900 relative">
-                <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]" />
+              <div className="h-32 bg-[#E0E7FF] relative">
+                <div className="absolute inset-0 opacity-20 bg-[radial-gradient(#003366_1px,transparent_1px)] [background-size:16px_16px]" />
               </div>
               <div className="px-6 pb-8">
                 <div className="relative -mt-16 mb-6">
@@ -225,7 +225,7 @@ export default function InternProfilePage() {
                   onClick={() => setActiveSegment(tab.id as any)}
                   className={`flex-1 flex items-center justify-center gap-2 py-3 text-[10px] font-black tracking-wider transition-all ${
                     activeSegment === tab.id 
-                    ? 'bg-zinc-900 text-white' 
+                    ? 'bg-[#E0E7FF] text-[#003366]' 
                     : 'text-zinc-500 hover:bg-zinc-50 hover:text-zinc-900'
                   }`}
                 >
@@ -248,7 +248,7 @@ export default function InternProfilePage() {
                   >
                     <div className="bg-white border border-zinc-200 p-6 flex flex-col justify-between">
                       <div className="space-y-4">
-                        <div className="h-10 w-10 bg-zinc-900 text-white flex items-center justify-center shadow-lg">
+                        <div className="h-10 w-10 bg-[#E0E7FF] text-[#003366] flex items-center justify-center shadow-sm border border-[#003366]/10">
                           <Trophy size={20} />
                         </div>
                         <h3 className="text-lg font-black tracking-tight text-zinc-900">Task Progress</h3>
@@ -261,7 +261,7 @@ export default function InternProfilePage() {
 
                     <div className="bg-white border border-zinc-200 p-6 flex flex-col justify-between">
                       <div className="space-y-4">
-                        <div className="h-10 w-10 bg-zinc-900 text-white flex items-center justify-center shadow-lg">
+                        <div className="h-10 w-10 bg-[#E0E7FF] text-[#003366] flex items-center justify-center shadow-sm border border-[#003366]/10">
                           <CheckCircle2 size={20} />
                         </div>
                         <h3 className="text-lg font-black tracking-tight text-zinc-900">Work Integrity</h3>
@@ -274,7 +274,7 @@ export default function InternProfilePage() {
 
                     {/* Recent Activity */}
                     <div className="md:col-span-2 bg-white border border-zinc-200 p-8">
-                      <h3 className="text-sm font-black tracking-[0.2em] text-zinc-900 mb-8 flex items-center gap-3">
+                      <h3 className="text-sm font-black tracking-[0.2em] text-[#003366] mb-8 flex items-center gap-3">
                         <Clock size={16} /> Recent Activity
                       </h3>
                       <div className="space-y-6">
@@ -326,7 +326,7 @@ export default function InternProfilePage() {
                           <div className="flex items-start justify-between gap-4">
                             <div className="space-y-4 flex-1">
                               <div className="flex items-center gap-3">
-                                <div className="px-2 py-0.5 bg-zinc-900 text-white text-[9px] font-black tracking-widest">
+                                <div className="px-2 py-0.5 bg-[#E0E7FF] text-[#003366] text-[9px] font-black tracking-widest border border-[#003366]/5">
                                   {task.batch || 'General'}
                                 </div>
                                 <span className="text-[10px] font-bold text-zinc-400 tabular-nums">
@@ -346,7 +346,7 @@ export default function InternProfilePage() {
                               </div>
                             </div>
                             {task.attachmentUrl && (
-                              <a href={task.attachmentUrl} target="_blank" className="h-10 px-4 bg-zinc-50 border border-zinc-200 text-zinc-900 flex items-center gap-2 text-[10px] font-black tracking-wider hover:bg-zinc-900 hover:text-white transition-all">
+                              <a href={task.attachmentUrl} target="_blank" className="h-10 px-4 bg-[#E0E7FF] border border-[#003366]/10 text-[#003366] flex items-center gap-2 text-[10px] font-black tracking-wider hover:bg-[#003366] hover:text-white transition-all">
                                 <FileText size={14} /> View Task
                               </a>
                             )}
@@ -435,7 +435,7 @@ export default function InternProfilePage() {
                               </div>
                             </div>
                             {sub.review && (
-                              <div className="mt-4 p-4 bg-zinc-50 border-l-2 border-zinc-900 text-[12px] font-medium text-zinc-600 italic">
+                              <div className="mt-4 p-4 bg-zinc-50 border-l-2 border-[#003366] text-[12px] font-medium text-zinc-600 italic">
                                 "{sub.review}"
                                 {sub.reviewedBy && <span className="block mt-2 font-black text-[9px] text-zinc-400 not-italic">— {sub.reviewedBy}</span>}
                               </div>
@@ -522,10 +522,10 @@ export default function InternProfilePage() {
 
                       <div className="pt-12 flex justify-center">
                         <div className="text-center">
-                          <div className="h-20 w-20 border-[6px] border-zinc-900 flex items-center justify-center mx-auto mb-4">
-                            <Shield size={40} className="text-zinc-900" />
+                          <div className="h-20 w-20 border-[6px] border-[#003366] flex items-center justify-center mx-auto mb-4">
+                            <Shield size={40} className="text-[#003366]" />
                           </div>
-                          <p className="text-[10px] font-black text-zinc-900 tracking-widest">Student Forge Certified</p>
+                          <p className="text-[10px] font-black text-[#003366] tracking-widest">Student Forge Certified</p>
                           <p className="text-[8px] font-bold text-zinc-400 mt-1">LMS Verification</p>
                         </div>
                       </div>
