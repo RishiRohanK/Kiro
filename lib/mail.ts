@@ -173,3 +173,23 @@ export const sendRescheduleEmail = async (email: string, name: string, position:
         return false;
     }
 }
+
+export const sendBootcampRegistrationEmail = async (email: string, name: string) => {
+    const title = "Bootcamp Registration Verified";
+    const content = `Hello ${name},<br/><br/>Thank you for registering for the <b>Summer Boot Camp 2026</b>. Your application and transaction details have been successfully received and are currently under review by our administration team.<br/><br/>We are excited to have you as part of this interactive technical training initiative. You will receive further updates regarding the orientation and training schedule shortly.`;
+    const ctaUrl = "https://studentforge.in/bootcamp"; 
+    const html = getSimpleTemplate(title, content, "View Program Details", ctaUrl, "Learn Grid Division");
+
+    try {
+        await transporter.sendMail({
+            from: '"Student Forge" <studentforgetechnologies@gmail.com>',
+            to: email,
+            subject: `Registration Confirmed: Summer Boot Camp 2026`,
+            html: html,
+        });
+        return true;
+    } catch (error: any) {
+        console.error("Bootcamp Mail Error:", error.message || error);
+        return false;
+    }
+};

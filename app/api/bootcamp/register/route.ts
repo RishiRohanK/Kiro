@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { sendBootcampRegistrationEmail } from "@/lib/mail";
 
 export async function POST(req: Request) {
   try {
@@ -26,6 +27,9 @@ export async function POST(req: Request) {
         paymentStatus: "paid"
       },
     });
+
+    // Send confirmation email
+    await sendBootcampRegistrationEmail(email, name);
 
     return NextResponse.json(
       { message: "Registration successful", registration },
