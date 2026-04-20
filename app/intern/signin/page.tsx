@@ -210,6 +210,7 @@ export default function InternSigninPage() {
                     </div>
                 </div>
             </div>
+            </div>
 
             {/* Footer Section */}
             <footer className="absolute bottom-0 left-0 w-full bg-zinc-100 border-t border-zinc-200 py-6 px-6">
