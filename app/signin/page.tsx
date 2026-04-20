@@ -24,9 +24,7 @@ export default function SignInPage() {
     };
 
     return (
-        <div className="min-h-screen bg-white text-zinc-900 font-sans selection:bg-zinc-100 flex flex-col items-center">
-            <MaintenanceBanner />
-            <div className="w-full flex-1 flex flex-col">
+        <div className="min-h-screen bg-white text-zinc-900 font-sans selection:bg-zinc-100">
             {}
             <nav className="sticky top-0 z-50 w-full border-b border-zinc-100 bg-white/95 backdrop-blur-sm">
                 <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-6 lg:px-10">
@@ -101,15 +99,15 @@ export default function SignInPage() {
                             </div>
 
                             <button
-                                disabled={true}
+                                disabled={loading}
                                 type="submit"
-                                className="w-full bg-zinc-400 text-white h-14 flex items-center justify-center gap-3 text-[12px] font-bold uppercase tracking-widest cursor-not-allowed mt-4"
+                                className="w-full bg-black text-white h-14 flex items-center justify-center gap-3 text-[12px] font-bold uppercase tracking-widest hover:bg-zinc-800 transition-all mt-4"
                             >
                                 {loading ? (
                                     <Loader2 className="w-4 h-4 animate-spin" />
                                 ) : (
                                     <>
-                                        Login (Frozen) <ArrowRight size={16} />
+                                        Login <ArrowRight size={16} />
                                     </>
                                 )}
                             </button>
@@ -132,7 +130,6 @@ export default function SignInPage() {
             </main>
 
             <Footer />
-            </div>
         </div>
     );
 }

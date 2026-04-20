@@ -10,16 +10,7 @@ export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const method = request.method.toUpperCase();
 
-  // 1. BREACH LOCKDOWN: Block all API mutations during the security incident
-  // Allow /api/admin/commits so we can monitor logs
-  if (pathname.startsWith('/api/') && !pathname.startsWith('/api/admin/commits')) {
-    if (['POST', 'PUT', 'DELETE', 'PATCH'].includes(method)) {
-        return new NextResponse(
-            JSON.stringify({ error: "System Locked: Security Breach Protocol Active" }),
-            { status: 403, headers: { 'Content-Type': 'application/json' } }
-        );
-    }
-  }
+  // Lockdown deactivated: Systems returned to normal operation
   
   if (pathname.startsWith('/cleed/dashboard') || pathname.startsWith('/api/cleed')) {
     

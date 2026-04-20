@@ -28,9 +28,7 @@ export default function AdminExamLogin() {
     };
 
     return (
-        <div className="min-h-screen bg-white text-zinc-900 font-sans flex flex-col items-center selection:bg-zinc-100">
-            <MaintenanceBanner />
-            <div className="flex-1 flex items-center justify-center p-6 w-full">
+        <div className="min-h-screen bg-white text-zinc-900 font-sans flex items-center justify-center p-6 selection:bg-zinc-100">
             <div className="w-full max-w-[360px] space-y-8">
                 <div className="space-y-4">
                     <h1 className="text-xl font-bold uppercase tracking-tight">Exam Admin Portal</h1>
@@ -57,16 +55,15 @@ export default function AdminExamLogin() {
                     )}
 
                     <button
-                        disabled={true}
-                        className="w-full h-12 bg-zinc-400 text-white text-[11px] font-bold uppercase tracking-widest cursor-not-allowed transition-all rounded-none flex items-center justify-center gap-2"
+                        disabled={loading}
+                        className="w-full h-12 bg-black text-white text-[11px] font-bold uppercase tracking-widest hover:bg-zinc-800 transition-all rounded-none flex items-center justify-center gap-2 active:scale-[0.98]"
                     >
-                        {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Access System (Frozen)"}
+                        {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Access System"}
                     </button>
                 </form>
 
                 <div className="pt-8 border-t border-zinc-100 text-[10px] text-zinc-400 font-bold uppercase tracking-tighter">
                     Student Forge // System Terminal
-                </div>
                 </div>
             </div>
         </div>
