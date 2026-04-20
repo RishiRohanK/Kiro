@@ -54,9 +54,9 @@ export default function LogsPage() {
                         <span className="text-sm font-medium tracking-tight">Deployments</span>
                     </div>
                     <div className="flex items-center gap-3">
-                        <div className="flex items-center gap-2 bg-red-500/10 text-red-500 border border-red-500/20 px-3 py-1 text-[11px] font-bold uppercase tracking-widest rounded-full">
+                        <div className="flex items-center gap-2 bg-red-500/10 text-red-500 border border-red-500/20 px-3 py-1 text-[11px] font-bold tracking-widest rounded-full uppercase">
                             <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
-                            CRITICAL ERROR
+                            System incident detected
                         </div>
                     </div>
                 </div>
@@ -109,12 +109,12 @@ export default function LogsPage() {
                                                     {commit.commit.message}
                                                 </h3>
                                                 {index === 0 && (
-                                                    <span className="text-[10px] font-bold bg-red-600 px-2 py-0.5 rounded text-white uppercase tracking-wider whitespace-nowrap">
+                                                    <span className="text-[10px] font-bold bg-red-600 px-2 py-0.5 rounded text-white tracking-wider whitespace-nowrap">
                                                         Failed
                                                     </span>
                                                 )}
                                                 {index !== 0 && (
-                                                    <span className="text-[10px] font-bold bg-green-950/30 px-2 py-0.5 rounded text-green-500 border border-green-900/30 uppercase tracking-wider whitespace-nowrap">
+                                                    <span className="text-[10px] font-bold bg-green-950/30 px-2 py-0.5 rounded text-green-500 border border-green-900/30 tracking-wider whitespace-nowrap">
                                                         Ready
                                                     </span>
                                                 )}
@@ -161,7 +161,7 @@ export default function LogsPage() {
                     <div className="flex items-start gap-4">
                         <AlertCircle className="text-red-500 shrink-0" size={20} />
                         <div className="space-y-1">
-                            <h4 className="text-sm font-bold text-red-500 uppercase tracking-widest">Incident Notice</h4>
+                            <h4 className="text-sm font-bold text-red-500 tracking-widest">Incident Notice</h4>
                             <p className="text-xs text-zinc-400 leading-relaxed">
                                 Our production environment is currently experiencing a critical disruption. 
                                 The latest deployment failed to pass final health checks, causing a partial system crash. 
@@ -174,10 +174,10 @@ export default function LogsPage() {
 
             <footer className="py-12 border-t border-zinc-900 mt-12 bg-[#050505]">
                 <div className="max-w-5xl mx-auto px-6 flex items-center justify-between">
-                    <div className="flex items-center gap-4 text-xs font-bold text-zinc-600 uppercase tracking-widest">
-                        <span>STUDENT FORGE</span>
+                    <div className="flex items-center gap-4 text-xs font-bold text-zinc-600 tracking-widest">
+                        <span>Student Forge</span>
                         <span>•</span>
-                        <span>SYSTEM LOGS</span>
+                        <span>System Logs</span>
                     </div>
                     <span className="text-[10px] text-zinc-700 font-bold uppercase tracking-[0.2em]">Platform Version 2.0.41-stable</span>
                 </div>
