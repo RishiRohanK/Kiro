@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { GitCommit, Clock, CheckCircle2, XCircle, AlertCircle, ExternalLink, ArrowLeft, GitBranch } from "lucide-react";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import MaintenanceBanner from "@/app/components/MaintenanceBanner";
 
 interface Commit {
     sha: string;
