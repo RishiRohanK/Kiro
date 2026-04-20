@@ -7,6 +7,7 @@ const withPWA = require("next-pwa")({
 
 module.exports = withWorkflow(withPWA({
   reactStrictMode: true,
+  poweredByHeader: false, // Security: Remove X-Powered-By header
   images: {
     remotePatterns: [
       { protocol: 'https', hostname: 'images.unsplash.com' },
@@ -14,6 +15,9 @@ module.exports = withWorkflow(withPWA({
       { protocol: 'https', hostname: 'thumbs.dreamstime.com' },
       { protocol: 'https', hostname: 'www.usnews.com' },
     ],
+  },
+  experimental: {
+    // Enable any relevant security features if available
   },
   turbopack: {},
 }));

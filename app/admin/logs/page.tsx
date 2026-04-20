@@ -66,8 +66,8 @@ export default function LogsPage() {
                 {/* Deployment Header */}
                 <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-zinc-800">
                     <div className="space-y-1">
-                        <h1 className="text-3xl font-bold tracking-tight">Production Deployments</h1>
-                        <p className="text-zinc-400 text-sm">Showing the last 5 deployment logs directly from source control.</p>
+                        <h1 className="text-3xl font-bold tracking-tight">Security & Breach Logs</h1>
+                        <p className="text-zinc-400 text-sm">Monitoring production deployments and security updates in real-time during lockdown.</p>
                     </div>
                     <Link href="/intern/signin" className="flex items-center gap-2 text-xs font-medium text-zinc-500 hover:text-white transition-colors">
                         <ArrowLeft size={14} />

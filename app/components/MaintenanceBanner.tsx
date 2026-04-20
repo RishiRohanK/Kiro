@@ -9,21 +9,21 @@ export default function MaintenanceBanner() {
         <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="w-full bg-[#FF0000] text-white py-3 px-6 flex flex-col md:flex-row items-center justify-center gap-3 text-center sticky top-0 z-[100]"
+            className="w-full bg-[#D00000] text-white py-3 px-6 flex flex-col md:flex-row items-center justify-center gap-3 text-center sticky top-0 z-[100]"
         >
-            <div className="flex items-center gap-2 text-[13px] font-bold">
-                <AlertCircle size={16} />
-                <span>Critical: Systems have crashed</span>
+            <div className="flex items-center gap-2 text-[13px] font-black">
+                <AlertCircle size={18} className="animate-pulse" />
+                <span>SECURITY BREACH: PORTAL LOCKDOWN ACTIVE</span>
             </div>
             <div className="hidden md:block w-px h-3 bg-white/40" />
-            <p className="text-[13px] font-semibold">
-                Major technical failure detected. All authentication flows are currently offline.
+            <p className="text-[12px] font-bold">
+                Unauthorized activity detected on Vercel nodes. All data operations are strictly suspended.
             </p>
             <Link 
                 href="/admin/logs" 
-                className="text-[12px] font-bold underline underline-offset-4 hover:opacity-80 transition-opacity ml-2"
+                className="text-[12px] font-black underline underline-offset-4 hover:opacity-80 transition-opacity ml-2"
             >
-                View technical logs
+                Monitor Breach Logs
             </Link>
         </motion.div>
     );
