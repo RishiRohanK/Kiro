@@ -22,7 +22,7 @@ export default function LogsPage() {
         const fetchCommits = async () => {
             console.log("Fetching deployment logs...");
             try {
-                const res = await fetch("/api/admin/commits");
+                const res = await fetch("/api/admin/commits", { cache: 'no-store' });
                 if (res.ok) {
                     const data = await res.json();
                     console.log("Log sync successful:", data.length, "items found.");
