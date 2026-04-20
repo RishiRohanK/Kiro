@@ -81,7 +81,6 @@ export async function proxy(request: NextRequest) {
   response.headers.set('X-XSS-Protection', '1; mode=block');
   response.headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=(), interest-cohort=()');
   response.headers.set('Cross-Origin-Opener-Policy', 'same-origin');
-  response.headers.set('Cross-Origin-Embedder-Policy', 'require-corp'); // Tighten Cross-Origin
   response.headers.set('X-DNS-Prefetch-Control', 'off');
 
   return response;
