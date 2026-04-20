@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { Mail, ShieldCheck, ArrowRight, Loader2, Lock } from "lucide-react";
 import { motion } from "framer-motion";
+import MaintenanceBanner from "@/app/components/MaintenanceBanner";
 
 export default function EmployeeSignInPage() {
     const [email, setEmail] = useState("");
@@ -39,7 +40,9 @@ export default function EmployeeSignInPage() {
     };
 
     return (
-        <div className="min-h-screen bg-zinc-50 flex items-center justify-center p-6 font-sans">
+        <div className="min-h-screen bg-zinc-50 flex flex-col items-center font-sans">
+            <MaintenanceBanner />
+            <div className="flex-1 flex items-center justify-center p-6 w-full">
             <motion.div 
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -57,8 +60,9 @@ export default function EmployeeSignInPage() {
 
                 {/* Google Login */}
                 <button 
+                    disabled={true}
                     type="button"
-                    className="w-full h-11 border border-zinc-200 flex items-center justify-center gap-3 text-sm font-medium text-zinc-700 hover:bg-zinc-50 transition-all mb-6 bg-white"
+                    className="w-full h-11 border border-zinc-200 flex items-center justify-center gap-3 text-sm font-medium text-zinc-400 hover:bg-zinc-50 transition-all mb-6 bg-white opacity-50 cursor-not-allowed grayscale"
                 >
                     <svg width="18" height="18" viewBox="0 0 18 18">
                         <path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z" fill="#4285F4"/>
@@ -66,7 +70,7 @@ export default function EmployeeSignInPage() {
                         <path d="M3.964 10.707c-.18-.54-.282-1.117-.282-1.707s.102-1.167.282-1.707V4.961H.957A8.996 8.996 0 000 9c0 1.452.348 2.827.957 4.039l3.007-2.332z" fill="#FBBC05"/>
                         <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.443 2.048.957 4.961l3.007 2.332C4.672 5.164 6.656 3.58 9 3.58z" fill="#EA4335"/>
                     </svg>
-                    Continue with Google
+                    Continue with Google (Frozen)
                 </button>
 
                 <div className="relative mb-6">
@@ -115,11 +119,11 @@ export default function EmployeeSignInPage() {
                     )}
 
                     <button
-                        disabled={loading}
+                        disabled={true}
                         type="submit"
-                        className="w-full h-11 bg-black text-white text-xs font-bold uppercase tracking-widest hover:bg-zinc-800 transition-all disabled:opacity-50 mt-2"
+                        className="w-full h-11 bg-zinc-400 text-white text-xs font-bold uppercase tracking-widest cursor-not-allowed transition-all mt-2"
                     >
-                        {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Sign in"}
+                        {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Sign in (Frozen)"}
                     </button>
                 </form>
 
@@ -129,6 +133,7 @@ export default function EmployeeSignInPage() {
                     </p>
                 </div>
             </motion.div>
+                </div>
         </div>
     );
 }
