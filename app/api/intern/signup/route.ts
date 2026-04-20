@@ -1,6 +1,12 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import bcrypt from "bcryptjs";
+/**
+ * Security Patch 2026-04-20:
+ * - Upgraded Bcrypt Hash Cost to 12 rounds (Defense against Brute Force)
+ * - Automatic Salting (Defense against Rainbow Attacks)
+ * - HSTS/CSP Protected via central Proxy
+ */
 import { Role } from "@prisma/client";
 
 export async function POST(req: Request) {
@@ -21,8 +27,8 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: "User already exists with this email." }, { status: 400 });
         }
 
-        // Hash password
-        const hashedPassword = await bcrypt.hash(password, 10);
+        // Hashed with Salt Rounds 12 (Security Patch 2026-04-20)
+        const hashedPassword = await bcrypt.hash(password, 12);
 
         // Create user with Batch 3 classification
         const newUser = await prisma.user.create({

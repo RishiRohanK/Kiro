@@ -1,6 +1,11 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import bcrypt from "bcryptjs";
+/**
+ * Security Patch 2026-04-20:
+ * - Upgraded Bcrypt Hash Cost to 12 rounds
+ * - Salt salting handled automatically
+ */
 
 export async function POST(req: Request) {
   try {
@@ -18,7 +23,8 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "User already exists" }, { status: 400 });
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    // Hashed with Salt Rounds 12 (Security Patch 2026-04-20)
+    const hashedPassword = await bcrypt.hash(password, 12);
 
     const user = await prisma.user.create({
       data: {

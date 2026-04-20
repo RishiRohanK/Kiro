@@ -1,6 +1,13 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import bcrypt from "bcryptjs";
+/**
+ * Security Patch 2026-04-20:
+ * - Verified salted hash verification (Defense against Rainbow Attacks)
+ * - reCAPTCHA Integration (Defense against DOS/Automation)
+ * - 5-Attempt Lockout / 28-hour cooldown (Defense against Brute Force)
+ * - Protected by HSTS/CSP via central proxy
+ */
 
 export async function POST(req: Request) {
     try {
