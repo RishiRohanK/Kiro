@@ -40,7 +40,9 @@ export default function LogsPage() {
     }, []);
 
     return (
-        <div className="min-h-screen bg-black text-white font-sans selection:bg-zinc-800">
+        <div className="min-h-screen bg-black text-white font-sans selection:bg-zinc-800 flex flex-col items-center">
+            <MaintenanceBanner />
+            <div className="w-full flex-1 flex flex-col">
             {/* Vercel-style Navbar */}
             <nav className="border-b border-zinc-800 bg-black sticky top-0 z-50">
                 <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
@@ -54,9 +56,9 @@ export default function LogsPage() {
                         <span className="text-sm font-medium tracking-tight">Deployments</span>
                     </div>
                     <div className="flex items-center gap-3">
-                        <div className="flex items-center gap-2 bg-red-500/10 text-red-500 border border-red-500/20 px-3 py-1 text-[11px] font-bold tracking-widest rounded-full uppercase">
-                            <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
-                            System incident detected
+                        <div className="flex items-center gap-2 bg-green-500/10 text-green-500 border border-green-500/20 px-3 py-1 text-[11px] font-bold tracking-widest rounded-full uppercase">
+                            <span className="w-1.5 h-1.5 rounded-full bg-green-500" />
+                            All systems normal
                         </div>
                     </div>
                 </div>
@@ -66,8 +68,8 @@ export default function LogsPage() {
                 {/* Deployment Header */}
                 <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-zinc-800">
                     <div className="space-y-1">
-                        <h1 className="text-3xl font-bold tracking-tight">Security & Breach Logs</h1>
-                        <p className="text-zinc-400 text-sm">Monitoring production deployments and security updates in real-time during lockdown.</p>
+                        <h1 className="text-3xl font-bold tracking-tight">System Reliability Logs</h1>
+                        <p className="text-zinc-400 text-sm">Real-time health monitoring and deployment history. All systems verified.</p>
                     </div>
                     <Link href="/intern/signin" className="flex items-center gap-2 text-xs font-medium text-zinc-500 hover:text-white transition-colors">
                         <ArrowLeft size={14} />
@@ -93,31 +95,18 @@ export default function LogsPage() {
                                 <div className="p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
                                     <div className="flex items-start gap-4 flex-1">
                                         <div className="mt-1">
-                                            {index === 0 ? (
-                                                <div className="w-10 h-10 rounded-full border border-red-900/50 bg-red-950/30 flex items-center justify-center text-red-500">
-                                                    <XCircle size={20} />
-                                                </div>
-                                            ) : (
-                                                <div className="w-10 h-10 rounded-full border border-zinc-800 bg-zinc-900/50 flex items-center justify-center text-zinc-400 group-hover:text-white transition-colors">
-                                                    <CheckCircle2 size={20} />
-                                                </div>
-                                            )}
+                                            <div className="w-10 h-10 rounded-full border border-green-900/50 bg-green-950/30 flex items-center justify-center text-green-500">
+                                                 <CheckCircle2 size={20} />
+                                             </div>
                                         </div>
                                         <div className="space-y-1 fex-1">
                                             <div className="flex items-center gap-3">
                                                 <h3 className="text-[15px] font-semibold text-zinc-100 line-clamp-1">
                                                     {commit.commit.message}
                                                 </h3>
-                                                {index === 0 && (
-                                                    <span className="text-[10px] font-bold bg-red-600 px-2 py-0.5 rounded text-white tracking-wider whitespace-nowrap">
-                                                        Failed
-                                                    </span>
-                                                )}
-                                                {index !== 0 && (
-                                                    <span className="text-[10px] font-bold bg-green-950/30 px-2 py-0.5 rounded text-green-500 border border-green-900/30 tracking-wider whitespace-nowrap">
-                                                        Ready
-                                                    </span>
-                                                )}
+                                                <span className="text-[10px] font-bold bg-green-950/30 px-2 py-0.5 rounded text-green-500 border border-green-900/30 tracking-wider whitespace-nowrap">
+                                                    Ready
+                                                </span>
                                             </div>
                                             <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-zinc-500">
                                                 <div className="flex items-center gap-1.5 font-medium">
@@ -156,16 +145,16 @@ export default function LogsPage() {
                     )}
                 </div>
 
-                {/* Bottom simple notice */}
-                <div className="mt-12 p-8 bg-red-600/5 border border-red-600/20 rounded-md">
+                {/* Bottom success notice */}
+                <div className="mt-12 p-8 bg-green-600/5 border border-green-600/20 rounded-md">
                     <div className="flex items-start gap-4">
-                        <AlertCircle className="text-red-500 shrink-0" size={20} />
+                        <CheckCircle2 className="text-green-500 shrink-0" size={20} />
                         <div className="space-y-1">
-                            <h4 className="text-sm font-bold text-red-500 tracking-widest">Incident Notice</h4>
+                            <h4 className="text-sm font-bold text-green-500 tracking-widest">System Integrity Verified</h4>
                             <p className="text-xs text-zinc-400 leading-relaxed">
-                                Our production environment is currently experiencing a critical disruption. 
-                                The latest deployment failed to pass final health checks, causing a partial system crash. 
-                                Automated recovery is in progress. Check individual deployment logs for more information.
+                                Our production environment health checks have passed successfully. 
+                                Full system recovery is complete, and all services are operating at peak performance. 
+                                Security protocols have been updated and remain active.
                             </p>
                         </div>
                     </div>

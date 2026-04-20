@@ -70,7 +70,9 @@ export default function InternSigninPage() {
     };
 
     return (
-        <div className="min-h-screen bg-white text-[#495057] font-sans flex items-center justify-center p-6 lg:p-10 selection:bg-zinc-100">
+        <div className="min-h-screen bg-white text-[#495057] font-sans flex flex-col items-center">
+            <MaintenanceBanner />
+            <div className="flex-1 flex items-center justify-center p-6 lg:p-10 w-full">
             <div className="w-full max-w-[850px] bg-white border border-zinc-200 flex flex-col md:flex-row relative z-10">
 
                 {/* Left Side: Branding & Illustration */}

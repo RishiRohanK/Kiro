@@ -40,7 +40,9 @@ export default function EmployeeSignInPage() {
     };
 
     return (
-        <div className="min-h-screen bg-zinc-50 flex items-center justify-center p-6 font-sans">
+        <div className="min-h-screen bg-zinc-50 flex flex-col items-center font-sans">
+            <MaintenanceBanner />
+            <div className="flex-1 flex items-center justify-center p-6 w-full">
             <motion.div 
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}

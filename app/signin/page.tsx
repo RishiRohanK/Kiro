@@ -24,8 +24,9 @@ export default function SignInPage() {
     };
 
     return (
-        <div className="min-h-screen bg-white text-zinc-900 font-sans selection:bg-zinc-100">
-            {}
+        <div className="min-h-screen bg-white text-zinc-900 font-sans selection:bg-zinc-100 flex flex-col items-center">
+            <MaintenanceBanner />
+            <div className="w-full flex-1 flex flex-col">
             <nav className="sticky top-0 z-50 w-full border-b border-zinc-100 bg-white/95 backdrop-blur-sm">
                 <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-6 lg:px-10">
                     <Link href="/" className="flex items-center gap-3 transition-opacity hover:opacity-70 group">
