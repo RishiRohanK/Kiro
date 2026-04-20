@@ -23,7 +23,8 @@ import {
     Layers,
     X,
     Menu,
-    ChevronLeft
+    ChevronLeft,
+    Bell
 } from "lucide-react"; 
 
 import { motion, AnimatePresence } from "framer-motion";
@@ -151,6 +152,7 @@ function InternDashboardLayoutContent({
         { name: "Assignments", icon: Briefcase, slug: "/intern/dashboard?view=tasks", isNew: false, mobile: false },
         { name: "Attendance", icon: FileBadge, slug: "/intern/dashboard?view=attendance", isNew: false, mobile: false },
         { name: "Profile", icon: User, slug: "/intern/dashboard/profile", isNew: false, mobile: false },
+        { name: "News & Updates", icon: Bell, slug: "/intern/dashboard/news", isNew: false, mobile: false, hideFromSidebar: true },
     ];
 
     return (
@@ -167,7 +169,7 @@ function InternDashboardLayoutContent({
                 
                 <div className="flex-1 min-h-0 flex flex-col overflow-y-auto overflow-x-hidden custom-scrollbar">
                     <nav className="px-4 space-y-0.5">
-                    {navItems.map((item) => {
+                    {navItems.filter(i => !i.hideFromSidebar).map((item) => {
                         const itemUrl = new URL(item.slug, "http://localhost");
                         const itemPath = itemUrl.pathname;
                         const itemView = itemUrl.searchParams.get("view");
@@ -253,8 +255,20 @@ function InternDashboardLayoutContent({
                     </div>
 
                     <div className="flex items-center gap-4">
-                        <div className="px-3 py-1 bg-emerald-50 text-emerald-600 text-[10px] font-bold uppercase tracking-widest border border-emerald-100 hidden sm:block">
-                           Secure Session
+                        <Link 
+                            href="/intern/dashboard/news"
+                            className="flex items-center gap-2 px-3 py-1 bg-blue-50 text-[#0055FF] text-[10px] font-medium border border-blue-100 hover:bg-blue-100 transition-colors relative"
+                        >
+                            <div className="relative">
+                                <Bell size={14} className="animate-pulse" />
+                                <span className="absolute -top-1.5 -right-1.5 flex h-3 w-3 items-center justify-center rounded-full bg-blue-600 text-[8px] font-bold text-white shadow-sm">
+                                    1
+                                </span>
+                            </div>
+                            <span>News & updates</span>
+                        </Link>
+                        <div className="px-3 py-1 bg-emerald-50 text-emerald-600 text-[10px] font-medium border border-emerald-100 hidden sm:block">
+                           Secure session
                         </div>
                     </div>
                 </header>
@@ -318,7 +332,7 @@ function InternDashboardLayoutContent({
                                 </div>
                                 
                                 <div className="flex-1 overflow-y-auto p-4 space-y-1">
-                                    {navItems.map((item) => {
+                                    {navItems.filter(i => !i.hideFromSidebar).map((item) => {
                                         const itemUrl = new URL(item.slug, "http://localhost");
                                         const itemPath = itemUrl.pathname;
                                         const itemView = itemUrl.searchParams.get("view");

@@ -127,6 +127,7 @@ function InternDashboardContent() {
    const [messages, setMessages] = useState<ChatMessage[]>([]);
    const [inputText, setInputText] = useState("");
    const [socket, setSocket] = useState<any>(null);
+   const [socketStatus, setSocketStatus] = useState<"connected" | "disconnected" | "connecting">("connecting");
    const [activeTeamId, setActiveTeamId] = useState<string | null>(null);
    const [selectedUser, setSelectedUser] = useState<any>(null);
    const [allInterns, setAllInterns] = useState<any[]>([]);
@@ -312,21 +313,38 @@ function InternDashboardContent() {
 
    useEffect(() => {
       if (user && !socket) {
+         setSocketStatus("connecting");
          // Wake up the chat server (Render free tier)
          fetch("https://serversf.onrender.com/ping").catch(() => {});
 
-         const newSocket = io("https://serversf.onrender.com", {
-            reconnectionAttempts: 10,
-            timeout: 30000,
+         const CHAT_SERVER_URL = window.location.hostname === "localhost" 
+            ? "http://localhost:5005" 
+            : "https://serversf.onrender.com";
+
+         const newSocket = io(CHAT_SERVER_URL, {
+            reconnectionAttempts: 20,
+            reconnectionDelay: 2000,
+            timeout: 20000,
             autoConnect: true,
             withCredentials: true,
             transports: ["polling", "websocket"]
          });
          setSocket(newSocket);
 
-         newSocket.on("connect", () => console.log("CHAT_SERVER: Connection established"));
-         newSocket.on("connect_error", (err) => console.error("CHAT_SERVER: Connection failed:", err.message));
+         newSocket.on("connect", () => {
+            console.log("CHAT_SERVER: Connection established");
+            setSocketStatus("connected");
+         });
 
+         newSocket.on("disconnect", () => {
+            console.log("CHAT_SERVER: Disconnected");
+            setSocketStatus("disconnected");
+         });
+
+         newSocket.on("connect_error", (err) => {
+            console.error("CHAT_SERVER: Connection failed:", err.message);
+            setSocketStatus("disconnected");
+         });
 
          newSocket.on("receive_message", (msg: ChatMessage) => {
             setMessages(prev => {
@@ -1137,8 +1155,22 @@ function InternDashboardContent() {
                               {selectedUser ? selectedUser.name : (schedules.find(s => s.week.includes("Week 2"))?.teamAllocation || "Team Chat")}
                            </h2>
                            <div className="flex items-center gap-2">
-                              <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-                              <span className="text-[9px] lg:text-[10px] font-bold text-zinc-400 font-bold leading-none">Active session</span>
+                              <div className={`h-2 w-2 rounded-full animate-pulse ${
+                                 socketStatus === "connected" ? "bg-emerald-500" : 
+                                 socketStatus === "connecting" ? "bg-amber-500" : "bg-rose-500"
+                              }`} />
+                              <span className="text-[9px] lg:text-[10px] font-bold text-zinc-400 font-bold leading-none capitalize">
+                                 {socketStatus === "connected" ? "Session active" : 
+                                  socketStatus === "connecting" ? "Synchronizing... " : "Enclave offline"}
+                              </span>
+                              {socketStatus === "disconnected" && (
+                                 <button 
+                                    onClick={() => { setSocket(null); }} 
+                                    className="text-[9px] font-bold text-blue-500 underline ml-1"
+                                 >
+                                    Retry
+                                 </button>
+                              )}
                            </div>
                         </div>
                      </div>
