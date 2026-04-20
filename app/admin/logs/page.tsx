@@ -70,12 +70,39 @@ export default function LogsPage() {
                 <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-zinc-800">
                     <div className="space-y-1">
                         <h1 className="text-3xl font-bold tracking-tight">System Reliability Logs</h1>
-                        <p className="text-zinc-400 text-sm">Real-time health monitoring and deployment history. All systems verified.</p>
+                        <div className="flex items-center gap-3">
+                            <p className="text-zinc-400 text-sm">Real-time health monitoring and deployment history. All systems verified.</p>
+                            <span className="h-4 w-px bg-zinc-800" />
+                            <div className="flex items-center gap-1.5 text-[10px] font-bold text-blue-400 uppercase tracking-widest">
+                                <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
+                                Security V3 Active
+                            </div>
+                        </div>
                     </div>
                     <Link href="/intern/signin" className="flex items-center gap-2 text-xs font-medium text-zinc-500 hover:text-white transition-colors">
                         <ArrowLeft size={14} />
                         Exit to Login
                     </Link>
+                </div>
+
+                {/* Security Status Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    {[
+                        { title: "Sensitive Shield", status: "V3 Active", desc: "Blocking unauthorized .env & .git access.", color: "blue" },
+                        { title: "Payload Policy", status: "1MB Cap", desc: "Strict API request body validation.", color: "blue" },
+                        { title: "Rate Limiting", status: "Dynamic", desc: "DOS mitigation active on auth flow.", color: "blue" },
+                        { title: "Proctor Hub", status: "Isolated", desc: "WebRTC signaling node verified.", color: "emerald" }
+                    ].map((item, i) => (
+                        <div key={i} className="p-4 bg-zinc-900/20 border border-zinc-800/40 rounded-md space-y-2 hover:bg-zinc-900/40 transition-colors">
+                            <div className="flex items-center justify-between">
+                                <h4 className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">{item.title}</h4>
+                                <span className={`text-[9px] font-medium px-1.5 py-0.5 ${item.color === 'blue' ? 'bg-blue-500/10 text-blue-400 border-blue-500/20' : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'} border rounded`}>
+                                    {item.status}
+                                </span>
+                            </div>
+                            <p className="text-[11px] text-zinc-500 leading-snug">{item.desc}</p>
+                        </div>
+                    ))}
                 </div>
 
                 {/* Deployments List */}
@@ -151,11 +178,14 @@ export default function LogsPage() {
                     <div className="flex items-start gap-4">
                         <CheckCircle2 className="text-green-500 shrink-0" size={20} />
                         <div className="space-y-1">
-                            <h4 className="text-sm font-bold text-green-500 tracking-widest">System Integrity Verified</h4>
+                            <div className="flex items-center gap-2">
+                                <h4 className="text-sm font-bold text-green-500 tracking-widest">System Integrity Verified</h4>
+                                <span className="text-[10px] font-bold text-zinc-600 uppercase tracking-tighter">Instance: 2.0.41-S</span>
+                            </div>
                             <p className="text-xs text-zinc-400 leading-relaxed">
                                 Our production environment health checks have passed successfully. 
                                 Full system recovery is complete, and all services are operating at peak performance. 
-                                Security protocols have been updated and remain active.
+                                Security protocols (V3 sensitive filter, HSTS, and CSP) have been updated and remain active.
                             </p>
                         </div>
                     </div>
