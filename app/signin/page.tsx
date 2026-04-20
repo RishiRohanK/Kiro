@@ -131,6 +131,7 @@ export default function SignInPage() {
             </main>
 
             <Footer />
+            </div>
         </div>
     );
 }
