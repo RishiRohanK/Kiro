@@ -61,15 +61,6 @@ export default function BootcampPage() {
       <Navbar />
       <SubNavbar />
 
-      {/* Official Top Bar */}
-      <div className="bg-[#1D4E89] text-white py-1.5 px-6 text-[11px] font-medium flex justify-between items-center uppercase tracking-wider">
-        <span>Learn Grid An initiative by Student Forge Technologies Private Limited.</span>
-        <div className="flex gap-4">
-          <span>Batch: SUMMER-2026</span>
-
-        </div>
-      </div>
-
       <main className="w-full bg-[#F0F2F5] min-h-screen py-1">
         {/* Banner Section */}
         <div className="w-full bg-white border-b border-zinc-200">
@@ -171,9 +162,35 @@ export default function BootcampPage() {
                   </div>
 
                   <div className="space-y-10">
+                    {/* Week 1: Fundamentals */}
+                    <div className="space-y-4">
+                      <div className="bg-[#002147] text-white px-4 py-1.5 text-[12px] font-medium">Week 1: Web Fundamentals & UI Design Foundations</div>
+                      <div className="overflow-x-auto border border-zinc-200">
+                        <table className="w-full text-left text-[13px] min-w-[550px]">
+                          <thead className="bg-[#F8F9FA] border-b border-zinc-200 text-[#002147]">
+                            <tr>
+                              <th className="px-4 py-2 font-semibold border-r border-zinc-200">Ref</th>
+                              <th className="px-4 py-2 font-semibold border-r border-zinc-200">Lesson Name</th>
+                              <th className="px-4 py-2 font-semibold border-r border-zinc-200">Level</th>
+                              <th className="px-4 py-2 font-semibold text-center">T-Time</th>
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-zinc-200">
+                            <tr><td className="px-4 py-2 border-r">M-01</td><td className="px-4 py-2 border-r">Introduction to Web Development</td><td className="px-4 py-2 border-r">Beginner</td><td className="px-4 py-2 text-center">10m</td></tr>
+                            <tr><td className="px-4 py-2 border-r">M-01</td><td className="px-4 py-2 border-r">How the Web Works (Browser, Server, HTTP)</td><td className="px-4 py-2 border-r">Beginner</td><td className="px-4 py-2 text-center">15m</td></tr>
+                            <tr><td className="px-4 py-2 border-r">M-01</td><td className="px-4 py-2 border-r">HTML5 Fundamentals</td><td className="px-4 py-2 border-r">Beginner</td><td className="px-4 py-2 text-center">25m</td></tr>
+                            <tr><td className="px-4 py-2 border-r">M-01</td><td className="px-4 py-2 border-r">CSS3 Basics (Flexbox and Grid)</td><td className="px-4 py-2 border-r">Beginner</td><td className="px-4 py-2 text-center">30m</td></tr>
+                            <tr><td className="px-4 py-2 border-r">M-01</td><td className="px-4 py-2 border-r">Responsive Design Principles</td><td className="px-4 py-2 border-r">Beginner</td><td className="px-4 py-2 text-center">20m</td></tr>
+                            <tr><td className="px-4 py-2 border-r">M-01</td><td className="px-4 py-2 border-r">UI vs UX Fundamentals</td><td className="px-4 py-2 border-r">Beginner</td><td className="px-4 py-2 text-center">15m</td></tr>
+                            <tr><td className="px-4 py-2 border-r">M-01</td><td className="px-4 py-2 border-r">Introduction to Figma (Wireframing)</td><td className="px-4 py-2 border-r">Beginner</td><td className="px-4 py-2 text-center">20m</td></tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+
                     {/* Week 1 & 2 */}
                     <div className="space-y-4">
-                      <div className="bg-[#002147] text-white px-4 py-1.5 text-[12px] font-medium">Weeks 1 & 2: Frontend Engineering & UI/UX</div>
+                      <div className="bg-[#002147] text-white px-4 py-1.5 text-[12px] font-medium">Week 2: Frontend Engineering & UI/UX</div>
                       <div className="overflow-x-auto border border-zinc-200">
                         <table className="w-full text-left text-[13px] min-w-[550px]">
                           <thead className="bg-[#F8F9FA] border-b border-zinc-200 text-[#002147]">
