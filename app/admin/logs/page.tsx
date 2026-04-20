@@ -171,6 +171,7 @@ export default function LogsPage() {
                     <span className="text-[10px] text-zinc-700 font-bold uppercase tracking-[0.2em]">Platform Version 2.0.41-stable</span>
                 </div>
             </footer>
+            </div>
 
             <style jsx global>{`
                 body { background-color: black; }
