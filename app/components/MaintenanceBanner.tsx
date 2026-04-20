@@ -14,6 +14,7 @@ export default function MaintenanceBanner() {
             <div className="flex items-center gap-2 text-[13px] font-bold">
                 <CheckCircle2 size={18} />
                 <span>Status Update: All systems are operational</span>
+                <span className="ml-2 bg-white/20 px-2 py-0.5 rounded-full text-[9px] font-black tracking-widest">PATCH V3.0.41 VERIFIED</span>
             </div>
             <div className="hidden md:block w-px h-3 bg-white/40" />
             <p className="text-[12px] font-medium">
