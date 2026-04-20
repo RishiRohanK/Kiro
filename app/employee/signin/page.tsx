@@ -132,6 +132,7 @@ export default function EmployeeSignInPage() {
                     </p>
                 </div>
             </motion.div>
+            </div>
         </div>
     );
 }
