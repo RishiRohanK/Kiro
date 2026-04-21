@@ -2264,7 +2264,7 @@ export default function CleedDashboard() {
                                        <div className="flex items-center gap-4">
                                           <div className="relative h-12 w-12 flex-shrink-0">
                                              {intern.profileImage ? (
-                                                <img src={intern.profileImage} alt={intern.name} className="h-full w-full object-cover rounded-none grayscale group-hover/row:grayscale-0 transition-all" />
+                                                <img src={intern.profileImage} alt={intern.name} className="h-full w-full object-cover rounded-none transition-all" />
                                              ) : (
                                                 <div className="h-full w-full bg-zinc-900 text-white flex items-center justify-center text-sm font-bold">
                                                    {intern.name?.charAt(0) || "U"}
