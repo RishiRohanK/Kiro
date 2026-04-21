@@ -411,6 +411,93 @@ export default function CleedDashboard() {
       printWindow.document.close();
    };
 
+   const downloadInternsPdf = () => {
+      const printWindow = window.open('', '_blank');
+      if (!printWindow) return;
+
+      const html = `
+         <html>
+         <head>
+            <title>Interns Directory Report</title>
+            <style>
+               body { font-family: sans-serif; padding: 40px; color: #18181b; }
+               h1 { color: #000; font-size: 24px; font-weight: 900; text-transform: uppercase; letter-spacing: -0.02em; border-bottom: 4px solid #000; padding-bottom: 10px; margin-bottom: 30px; }
+               .header-meta { font-size: 10px; color: #71717a; margin-bottom: 40px; display: flex; justify-content: space-between; }
+               .intern-card { border: 1px solid #e4e4e7; padding: 20px; margin-bottom: 20px; display: flex; gap: 24px; page-break-inside: avoid; }
+               .profile-image { width: 120px; height: 120px; background: #f4f4f5; object-fit: cover; flex-shrink: 0; border: 1px solid #000; }
+               .placeholder-image { width: 120px; height: 120px; background: #000; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 40px; font-weight: bold; flex-shrink: 0; }
+               .info { flex: 1; display: grid; grid-template-cols: 1fr 1fr; gap: 15px; }
+               .field { display: flex; flex-direction: column; gap: 2px; }
+               .label { font-size: 8px; font-weight: bold; color: #a1a1aa; text-transform: uppercase; letter-spacing: 0.1em; }
+               .value { font-size: 12px; font-weight: bold; color: #18181b; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+               .status-badge { display: inline-block; padding: 2px 6px; font-size: 9px; font-weight: bold; text-transform: uppercase; background: #000; color: #fff; }
+            </style>
+         </head>
+         <body>
+            <h1>Interns Protocol Directory</h1>
+            <div class="header-meta">
+               <span>Generated: ${new Date().toLocaleString()}</span>
+               <span>Total Records: ${interns.length}</span>
+            </div>
+            ${interns.map(intern => `
+               <div class="intern-card">
+                  ${intern.profileImage ? 
+                     `<img src="${intern.profileImage}" class="profile-image" />` : 
+                     `<div class="placeholder-image">${intern.name?.charAt(0) || 'U'}</div>`
+                  }
+                  <div class="info">
+                     <div class="field" style="grid-column: span 2">
+                        <span class="label">Full Name</span>
+                        <span class="value" style="font-size: 16px; text-transform: uppercase;">${intern.name}</span>
+                     </div>
+                     <div class="field">
+                        <span class="label">Email Identity</span>
+                        <span class="value">${intern.email}</span>
+                     </div>
+                     <div class="field">
+                        <span class="label">Institution</span>
+                        <span class="value">${intern.college || 'N/A'}</span>
+                     </div>
+                     <div class="field">
+                        <span class="label">Department / Year</span>
+                        <span class="value">${intern.department || intern.branch || 'N/A'} / ${intern.year || 'N/A'}</span>
+                     </div>
+                     <div class="field">
+                        <span class="label">Batch</span>
+                        <span class="value">${intern.batch || 'Batch 1'}</span>
+                     </div>
+                     <div class="field">
+                        <span class="label">Date of Birth</span>
+                        <span class="value">${intern.dob || 'N/A'}</span>
+                     </div>
+                     <div class="field">
+                        <span class="label">Graduation Goal</span>
+                        <span class="value">${intern.graduationYear || 'N/A'}</span>
+                     </div>
+                     <div class="field">
+                        <span class="label">Standing</span>
+                        <span class="value"><span class="status-badge">${intern.isApproved ? 'Approved' : 'Review'}</span></span>
+                     </div>
+                     <div class="field" style="grid-column: span 2">
+                        <span class="label">Tech Stack / Interest</span>
+                        <span class="value" style="white-space: normal;">${intern.interestedArea || 'N/A'}</span>
+                     </div>
+                  </div>
+               </div>
+            `).join('')}
+            <script>
+               window.onload = () => {
+                  window.print();
+                  setTimeout(() => window.close(), 500);
+               };
+            </script>
+         </body>
+         </html>
+      `;
+      printWindow.document.write(html);
+      printWindow.document.close();
+   };
+
    useEffect(() => {
       fetchData();
       const interval = setInterval(fetchData, 60000); // 1 minute interval for fresh data
@@ -2142,7 +2229,13 @@ export default function CleedDashboard() {
                               <p className="text-[12px] text-zinc-500 font-medium tracking-tight">View and manage all intern records, approvals, and performance metrics.</p>
                            </div>
                            <div className="flex flex-wrap items-center gap-2 font-bold">
-                              {raisedHandsCount > 0 && (
+                               <button
+                                   onClick={downloadInternsPdf}
+                                   className="bg-zinc-900 text-white px-4 h-9 text-[10px] tracking-widest transition-all active:scale-95 flex items-center gap-2 rounded-none hover:bg-black"
+                               >
+                                   <Download size={12} /> Export PDF
+                               </button>
+                               {raisedHandsCount > 0 && (
                                  <button
                                     onClick={handleLowerAllSignals}
                                     className="bg-black text-white px-4 h-9 text-[10px] tracking-widest transition-all active:scale-95 flex items-center gap-2 rounded-none"
