@@ -32,8 +32,8 @@ export default function Footer() {
             </Link>
             <div className="h-4 w-[1px] bg-zinc-200" />
             <img 
-              src="https://ik.imagekit.io/dypkhqxip/learngrid"
-              alt="Learn Grid"
+              src="https://ik.imagekit.io/dypkhqxip/platform?updatedAt=1776791557303"
+              alt="Platform"
               className="h-6 w-auto object-contain greyscale opacity-80 hover:opacity-100 transition-opacity"
             />
           </div>

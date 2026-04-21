@@ -79,7 +79,7 @@ export default function BootcampPage() {
           <div className="border-b-2 border-[#002147] pb-6 mb-6 text-center pt-8 px-6">
             <h1 className="text-xl sm:text-2xl font-semibold text-[#002147] mb-2">Summer Boot Camp 2026 - Training Notification</h1>
             <div className="inline-block px-3 py-0.5 bg-[#002147] text-white text-[11px] font-medium mb-3">Official Release</div>
-            <p className="text-[13px] sm:text-[14px] font-medium text-zinc-500">Learn Grid An initiative by Student Forge</p>
+            <p className="text-[13px] sm:text-[14px] font-medium text-zinc-500">Platform An initiative by Student Forge</p>
           </div>
 
           <div className="px-6 sm:px-10 lg:px-12 pb-12">

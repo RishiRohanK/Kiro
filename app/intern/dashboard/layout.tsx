@@ -164,8 +164,8 @@ function InternDashboardLayoutContent({
             <aside className="hidden lg:flex fixed left-0 top-0 bottom-0 w-64 flex-col bg-[#E0E7FF] border-r border-[#003366]/5 z-50">
                 <div className="p-8 pb-10 flex flex-col items-start bg-[#E0E7FF] z-10">
                     <img 
-                        src="https://ik.imagekit.io/dypkhqxip/learngrid?updatedAt=1775552006855" 
-                        alt="Learn Grid" 
+                        src="https://ik.imagekit.io/dypkhqxip/platform?updatedAt=1776791557303" 
+                        alt="Platform" 
                         className="h-8 w-auto"
                     />
                 </div>
@@ -325,8 +325,8 @@ function InternDashboardLayoutContent({
                             >
                                 <div className="p-6 border-b border-zinc-200 flex items-center justify-between bg-white">
                                     <img 
-                                        src="https://ik.imagekit.io/dypkhqxip/learngrid" 
-                                        alt="Learn Grid Logo" 
+                                        src="https://ik.imagekit.io/dypkhqxip/platform?updatedAt=1776791557303" 
+                                        alt="Platform Logo" 
                                         className="h-6 w-auto"
                                     />
                                     <button onClick={() => setIsMobileMenuOpen(false)} className="p-2 text-zinc-400">

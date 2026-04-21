@@ -77,7 +77,7 @@ export default function InternSigninPage() {
                 <div className="md:w-5/12 bg-[#D1E0FF] p-8 md:p-10 flex flex-col justify-center relative overflow-hidden">
                     <div className="space-y-4 relative z-10">
                         <img
-                            src="https://ik.imagekit.io/dypkhqxip/learngrid?updatedAt=1775552006855"
+                            src="https://ik.imagekit.io/dypkhqxip/platform?updatedAt=1776791557303"
                             alt="Student Forge"
                             className="h-8 w-auto mb-6"
                         />

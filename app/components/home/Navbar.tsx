@@ -57,8 +57,8 @@ export default function Navbar() {
 
               { }
               <img
-                src="https://ik.imagekit.io/dypkhqxip/learngrid"
-                alt="Learn Grid Logo"
+                src="https://ik.imagekit.io/dypkhqxip/platform?updatedAt=1776791557303"
+                alt="Platform Logo"
                 className="h-5 sm:h-7 w-auto object-contain"
               />
             </Link>

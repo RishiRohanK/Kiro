@@ -1,6 +1,6 @@
 <div align="center">
 
-# STUDENT FORGE | LEARN GRID ECOSYSTEM
+# STUDENT FORGE | PLATFORM ECOSYSTEM
 **Industrial standard internship & assessment infrastructure**
 
 Student Forge is a high-density, secure ecosystem designed for institutional learning and performance tracking. The platform integrates industrial examination terminals, real-time administrative observability, and automated task validation nodes.

@@ -30,7 +30,7 @@ export default function GetStartedPage() {
                 <span className="text-blue-500">career moving.</span>
               </h1>
               <p className="text-[16px] md:text-[17px] text-zinc-400 leading-relaxed font-normal max-w-lg">
-                Welcome to Learn Grid by Student Forge. Your journey from academic learning to professional excellence starts here.
+                Welcome to Platform by Student Forge. Your journey from academic learning to professional excellence starts here.
               </p>
             </div>
           </div>
@@ -42,11 +42,11 @@ export default function GetStartedPage() {
             <div className="max-w-3xl mb-8">
               <h2 className="text-3xl md:text-5xl font-normal tracking-tight text-zinc-900 leading-[1.15] mb-6">
                 Building the <span className="text-violet-500">future</span> of <span className="text-emerald-500">engineering</span> <br />
-                with the <span className="text-blue-500">Learn Grid</span> <span className="text-orange-400">infrastructure</span>.
+                with the <span className="text-blue-500">Platform</span> <span className="text-orange-400">infrastructure</span>.
               </h2>
               
               <p className="text-[16px] md:text-[17px] text-zinc-500 leading-relaxed font-normal mb-8">
-                Created by <span className="font-bold text-zinc-900">Student Forge</span>, Learn Grid is the world's most 
+                Created by <span className="font-bold text-zinc-900">Student Forge</span>, Platform is the world's most 
                 complete ecosystem for professional growth. We replace disjointed learning platforms with a single, 
                 <span className="text-zinc-900 font-medium"> high-performance system</span> that integrates learning, 
                 building, and career placement directly into your workflow.
@@ -86,11 +86,11 @@ export default function GetStartedPage() {
                   The Ecosystem
                 </div>
                 <h2 className="text-4xl font-medium tracking-tighter text-zinc-900 leading-none">
-                  About <br /> <span className="text-blue-600">Learn Grid.</span>
+                  About <br /> <span className="text-blue-600">Platform.</span>
                 </h2>
                 <div className="space-y-4 max-w-md">
                   <p className="text-[15px] text-zinc-500 leading-relaxed font-normal">
-                    The Learn Grid is a specialized vertical infrastructure built for the next generation of engineers. 
+                    The Platform is a specialized vertical infrastructure built for the next generation of engineers. 
                     It's not just a platform; it's a verifiable pipeline from learning to placement.
                   </p>
                   <div className="pt-2 grid grid-cols-2 gap-6">
@@ -123,7 +123,7 @@ export default function GetStartedPage() {
                   </div>
                   
                   <div className="space-y-3 mb-8">
-                    <h3 className="text-[24px] font-bold tracking-tighter text-zinc-900">Join the Learn Grid</h3>
+                    <h3 className="text-[24px] font-bold tracking-tighter text-zinc-900">Join the Platform</h3>
                     <p className="text-[14px] text-zinc-500 leading-relaxed font-medium max-w-sm">
                       Access your dashboard, track mastery, and unlock exclusive internship opportunities.
                     </p>

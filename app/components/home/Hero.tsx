@@ -22,7 +22,7 @@ export default function Hero() {
         <div className="mb-8 inline-flex items-center gap-2 border border-zinc-800 bg-black px-4 py-1.5 ">
           <span className="h-1.5 w-1.5 rounded-full bg-white animate-pulse" />
           <span className="text-[12px] font-medium text-white tracking-wide uppercase">
-            Introducing Learn Grid
+            Introducing Platform
           </span>
         </div>
 
@@ -32,7 +32,7 @@ export default function Hero() {
         </h1>
 
         <p className="max-w-2xl text-[17px] md:text-[18px] leading-relaxed text-zinc-500 font-normal mb-8">
-          Learn Grid by <span className="font-semibold text-zinc-800">Student Forge</span> is a structured learning & internship ecosystem
+          Platform by <span className="font-semibold text-zinc-800">Student Forge</span> is a structured learning & internship ecosystem
           where students acquire job-ready skills and earn verifiable credentials.
         </p>
 

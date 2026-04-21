@@ -35,7 +35,7 @@ export default function CTA() {
           </h2>
 
           <p className="max-w-2xl mx-auto text-[15px] md:text-[16px] text-zinc-500 leading-relaxed font-normal">
-            Join the <span className="text-zinc-900 font-bold">learn grid</span> operations hub and bridge the gap between 
+            Join the <span className="text-zinc-900 font-bold">platform</span> operations hub and bridge the gap between 
             academic theory and high-performance industry placement.
           </p>
 

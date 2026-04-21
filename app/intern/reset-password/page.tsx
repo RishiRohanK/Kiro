@@ -153,8 +153,8 @@ export default function InternResetPasswordPage() {
                 {}
                 <div className="flex flex-col items-center mb-8">
                     <img
-                        src="https://ik.imagekit.io/dypkhqxip/learngrid"
-                        alt="Learn Grid"
+                        src="https://ik.imagekit.io/dypkhqxip/platform?updatedAt=1776791557303"
+                        alt="Platform"
                         className="h-10 w-auto mb-4"
                     />
 

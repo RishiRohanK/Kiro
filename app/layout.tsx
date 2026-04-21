@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Student Forge | Learn Grid",
+  title: "Student Forge | Platform",
   description: "Secure high-performance learning & internship ecosystem.",
   manifest: "/manifest.json",
   icons: {

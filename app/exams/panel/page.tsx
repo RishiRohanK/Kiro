@@ -335,7 +335,7 @@ function ExamPanelContent() {
       <header className="h-16 bg-violet-600 text-white px-8 flex justify-between items-center shadow-md relative z-20">
         <div className="flex items-center gap-5">
            <div className="h-10 w-10 bg-white rounded flex items-center justify-center overflow-hidden">
-               <img src="https://ik.imagekit.io/dypkhqxip/learngrid?updatedAt=1775552006855" className="h-full w-full object-cover" alt="Logo" />
+               <img src="https://ik.imagekit.io/dypkhqxip/platform?updatedAt=1776791557303" className="h-full w-full object-cover" alt="Logo" />
            </div>
            <div>
               <h1 className="text-lg font-bold tracking-tight">

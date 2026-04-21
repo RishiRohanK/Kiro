@@ -68,8 +68,8 @@ export default function InternSignupPage() {
                 <div className="w-full flex flex-col items-start gap-6 relative z-20">
                     <div className="flex items-center gap-4">
                         <img 
-                            src="https://ik.imagekit.io/dypkhqxip/learngrid?updatedAt=1775552006855" 
-                            alt="LearnGrid" 
+                            src="https://ik.imagekit.io/dypkhqxip/platform?updatedAt=1776791557303" 
+                            alt="Student Forge Platform" 
                             className="h-8 w-auto"
                         />
                         <div className="h-6 w-px bg-[#003366]/20"></div>
@@ -80,7 +80,7 @@ export default function InternSignupPage() {
                         />
                     </div>
                     <div className="space-y-1">
-                        <h2 className="text-[#003366] text-xl font-bold">LearnGrid Workspace</h2>
+                        <h2 className="text-[#003366] text-xl font-bold">Platform Workspace</h2>
                         <p className="text-[#003366]/60 text-[14px] font-medium">An official Student Forge Initiative</p>
                     </div>
                 </div>

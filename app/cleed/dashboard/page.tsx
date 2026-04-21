@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import {
    Users,
+   Activity,
    Send,
    History,
    Plus,
@@ -1542,6 +1543,10 @@ export default function CleedDashboard() {
                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3 w-3 text-zinc-500" />
                      <input className="h-8 w-48 bg-zinc-50 border border-zinc-300 pl-8 pr-4 text-[11px] outline-none focus:border-zinc-500 transition-all rounded-none font-medium text-zinc-700" placeholder="Search..." />
                   </div>
+                  <Link href="/cleed/dashboard/health" className="px-4 h-8 bg-black text-white text-[10px] font-bold uppercase flex items-center gap-2 hover:bg-zinc-800 transition-all rounded-none shadow-sm">
+                     <Activity size={12} />
+                     Health
+                  </Link>
                   <div className="h-4 w-[1px] bg-zinc-300" />
                   <Link href="/" className="px-5 h-8 bg-red-600 text-white text-[10px] font-bold uppercase flex items-center hover:bg-red-700 transition-all rounded-none shadow-sm">
                      Logout
