@@ -82,7 +82,10 @@ function InternDashboardLayoutContent({
 
             // Check for profile completion
             const requiredFields = ['name', 'college', 'year', 'department', 'dob', 'graduationYear', 'interestedArea', 'profileImage'];
-            const completed = requiredFields.every(field => userData[field] && userData[field].toString().trim() !== "");
+            const completed = requiredFields.every(field => {
+                const val = userData[field];
+                return val !== null && val !== undefined && val.toString().trim() !== "";
+            });
             setIsProfileComplete(completed);
             setCheckingProfile(false);
         };

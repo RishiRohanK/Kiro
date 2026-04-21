@@ -45,7 +45,11 @@ export default function InternProfile() {
                 profileImage: parsed.profileImage || ""
             });
 
-            const isComplete = parsed.name && parsed.college && parsed.profileImage;
+            const requiredFields = ['name', 'college', 'year', 'department', 'dob', 'graduationYear', 'interestedArea', 'profileImage'];
+            const isComplete = requiredFields.every(field => {
+                const val = parsed[field];
+                return val !== null && val !== undefined && val.toString().trim() !== "";
+            });
             setViewMode(isComplete ? "profile" : "edit");
             
             fetchDetailedData(parsed.id);
@@ -151,6 +155,8 @@ export default function InternProfile() {
                     setSuccess(false);
                     setViewMode("profile");
                     fetchDetailedData(user.id);
+                    // Force reload to update layout state
+                    window.location.reload();
                 }, 1500);
             } else {
                 setSubmitError(data.error || "Failed to update.");
@@ -254,6 +260,23 @@ export default function InternProfile() {
                                       <option value="Graduated">Graduated</option>
                                    </select>
                                 </div>
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div className="space-y-1.5">
+                                   <label className="text-[9px] font-semibold text-zinc-400">Date of Birth</label>
+                                   <input required type="date" value={formData.dob} onChange={e => setFormData({...formData, dob: e.target.value})} className="w-full bg-white border border-zinc-200 p-3 rounded-none text-[12px] font-medium text-zinc-900 focus:outline-none focus:border-zinc-900 transition-all" />
+                                </div>
+                                <div className="space-y-1.5">
+                                   <label className="text-[9px] font-semibold text-zinc-400">Graduation Year</label>
+                                   <input required type="number" placeholder="2026" value={formData.graduationYear} onChange={e => setFormData({...formData, graduationYear: e.target.value})} className="w-full bg-white border border-zinc-200 p-3 rounded-none text-[12px] font-medium text-zinc-900 focus:outline-none focus:border-zinc-900 transition-all" />
+                                </div>
+                            </div>
+
+                            <div className="space-y-1.5">
+                               <label className="text-[9px] font-semibold text-zinc-400">Interested Areas</label>
+                               <input required type="text" placeholder="Fullstack, Backend, UI/UX..." value={formData.interestedArea} onChange={e => setFormData({...formData, interestedArea: e.target.value})} className="w-full bg-white border border-zinc-200 p-3 rounded-none text-[12px] font-medium text-zinc-900 focus:outline-none focus:border-zinc-900 transition-all" />
+                               <p className="text-[8px] text-zinc-400 font-medium italic">Separate multiple areas with commas.</p>
                             </div>
                         </div>
                     </section>

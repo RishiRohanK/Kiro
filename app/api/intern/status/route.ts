@@ -20,6 +20,14 @@ export async function GET(req: Request) {
           letterUrl: true,
           offerLetterUrl: true,
           isApproved: true,
+          college: true,
+          year: true,
+          department: true,
+          dob: true,
+          graduationYear: true,
+          interestedArea: true,
+          profileImage: true,
+          batch: true,
       }
     });
 
