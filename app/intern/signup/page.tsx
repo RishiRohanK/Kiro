@@ -104,18 +104,19 @@ export default function InternSignupPage() {
 
                     <div className="flex flex-col gap-6">
                         <h1 className="text-[#003366] text-2xl font-bold uppercase tracking-tight">Register account</h1>
-                        <div className="p-3 border-l-4 border-[#003366] bg-[#003366]/5">
-                            <p className="text-zinc-600 text-[13px] font-bold italic">Batch 3 registrations are now officially started!</p>
+                        <div className="p-3 border-l-4 border-amber-500 bg-amber-50">
+                            <p className="text-amber-700 text-[13px] font-bold italic">Registration is currently frozen. Please check back later.</p>
                         </div>
                     </div>
 
-                    <form onSubmit={handleSignup} className="space-y-5">
+                    <form onSubmit={(e) => e.preventDefault()} className="space-y-5 opacity-60 pointer-events-none">
                         <div className="grid grid-cols-2 gap-4">
                             <div className="relative group">
                                 <span className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 group-focus-within:text-[#003366]">
                                     <User size={16} />
                                 </span>
                                 <input
+                                    disabled
                                     required
                                     type="text"
                                     value={firstName}
@@ -129,6 +130,7 @@ export default function InternSignupPage() {
                                     <User size={16} />
                                 </span>
                                 <input
+                                    disabled
                                     required
                                     type="text"
                                     value={lastName}
@@ -144,6 +146,7 @@ export default function InternSignupPage() {
                                 <Phone size={16} />
                             </span>
                             <input
+                                disabled
                                 required
                                 type="tel"
                                 value={phone}
@@ -158,6 +161,7 @@ export default function InternSignupPage() {
                                 <School size={16} />
                             </span>
                             <select
+                                disabled
                                 required
                                 value={college}
                                 onChange={(e) => setCollege(e.target.value)}
@@ -176,6 +180,7 @@ export default function InternSignupPage() {
                                     <Mail size={16} />
                                 </span>
                                 <input
+                                    disabled
                                     required
                                     type="email"
                                     value={email}
@@ -189,6 +194,7 @@ export default function InternSignupPage() {
                                     <Lock size={16} />
                                 </span>
                                 <input
+                                    disabled
                                     required
                                     type={showPassword ? "text" : "password"}
                                     value={password}
@@ -207,7 +213,7 @@ export default function InternSignupPage() {
                         </div>
 
                         <div className="flex items-start gap-2 pt-2">
-                            <input type="checkbox" required className="mt-1 w-3.5 h-3.5 border-zinc-300 rounded-none text-[#003366] focus:ring-0" />
+                            <input disabled type="checkbox" required className="mt-1 w-3.5 h-3.5 border-zinc-300 rounded-none text-[#003366] focus:ring-0" />
                             <p className="text-[12px] text-zinc-500 font-medium">
                                 By registering you agree to the Student Forge <Link href="/terms" className="text-[#003366] font-bold hover:underline">Terms of Use</Link>
                             </p>
@@ -221,11 +227,11 @@ export default function InternSignupPage() {
                         )}
 
                         <button
-                            disabled={loading}
-                            type="submit"
-                            className="w-full h-12 bg-[#003366] text-white text-[14px] font-bold transition-all hover:bg-[#002244] active:scale-[0.98] flex items-center justify-center gap-2 disabled:opacity-50 rounded-none"
+                            disabled
+                            type="button"
+                            className="w-full h-12 bg-zinc-400 text-white text-[14px] font-bold cursor-not-allowed flex items-center justify-center gap-2 rounded-none"
                         >
-                            {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Register"}
+                            Registration Frozen
                         </button>
                     </form>
 

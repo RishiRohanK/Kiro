@@ -10,6 +10,11 @@ import bcrypt from "bcryptjs";
 import { Role } from "@prisma/client";
 
 export async function POST(req: Request) {
+    // REGISTRATION FREEZE - 2026-04-23
+    return NextResponse.json(
+        { error: "Registration is currently frozen. Please contact administration for more details." }, 
+        { status: 403 }
+    );
     
     try {
         const { name, email, password, college, phone } = await req.json();
