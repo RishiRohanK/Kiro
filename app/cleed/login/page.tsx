@@ -6,7 +6,7 @@ import { Shield, Lock, Mail, ArrowRight, Loader2, RefreshCw } from "lucide-react
 import { motion, AnimatePresence } from "framer-motion";
 import { PWAInstallButton } from "@/app/components/PWAInstallButton";
 
-import { BottomBanner } from "@/app/components/BottomBanner";
+import BottomBanner from "@/app/components/BottomBanner";
 
 export default function CleedLoginPage() {
   const [email, setEmail] = useState("");
