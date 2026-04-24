@@ -115,6 +115,7 @@ function InternDashboardContent() {
    const [userStatus, setUserStatus] = useState<any>(null);
    const [showLetterModal, setShowLetterModal] = useState(false);
    const [showOfferLetterModal, setShowOfferLetterModal] = useState(false);
+   const [showSupportModal, setShowSupportModal] = useState(false);
 
 
    const [personalTasks, setPersonalTasks] = useState<PersonalTask[]>([]);
@@ -734,13 +735,20 @@ function InternDashboardContent() {
                               Get PDF <Download size={14} />
                            </a>
                         </div>
-                     ) : null}
                   </div>
+               </div>
+
+               {/* No Prompts Section */}
+               <div className="mt-6 py-12 bg-zinc-50 border border-dashed border-zinc-200 flex flex-col items-center justify-center space-y-2">
+                  <div className="h-10 w-10 rounded-full bg-zinc-100 flex items-center justify-center">
+                     <Terminal size={18} className="text-zinc-300" />
+                  </div>
+                  <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-[0.2em]">No prompts available !</p>
                </div>
 
                {/* Custom Floating Chat Icon */}
                <button 
-                  onClick={() => router.push("?view=chat")}
+                  onClick={() => setShowSupportModal(true)}
                   className="fixed bottom-8 right-8 z-[60] w-16 h-16 bg-[#1A3797] shadow-xl flex items-center justify-center transition-all hover:scale-110 active:scale-95 group overflow-hidden"
                   style={{
                      borderRadius: '32px 32px 5px 32px' // Leaf shape
@@ -755,6 +763,82 @@ function InternDashboardContent() {
                   {/* Subtle Shadow Effect */}
                   <div className="absolute inset-0 shadow-[inset_0_2px_4px_rgba(255,255,255,0.2)] pointer-events-none" />
                </button>
+
+               {/* Support Window (Message Us) */}
+               <AnimatePresence>
+                  {showSupportModal && (
+                     <div className="fixed inset-0 z-[100] flex items-end justify-end p-6 pointer-events-none">
+                        <motion.div 
+                           initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                           animate={{ opacity: 1, y: 0, scale: 1 }}
+                           exit={{ opacity: 0, y: 20, scale: 0.95 }}
+                           className="w-full max-w-[340px] bg-white shadow-2xl rounded-2xl overflow-hidden border border-zinc-100 pointer-events-auto flex flex-col mb-20 mr-2"
+                        >
+                           {/* Header */}
+                           <div className="bg-[#1A3797] p-6 relative">
+                              <button 
+                                 onClick={() => setShowSupportModal(false)}
+                                 className="absolute top-4 right-4 h-8 w-8 bg-black/20 text-white rounded-full flex items-center justify-center hover:bg-black/40 transition-colors"
+                              >
+                                 <X size={16} />
+                              </button>
+                              
+                              <div className="h-10 w-10 bg-emerald-500 rounded-lg flex items-center justify-center mb-4 shadow-lg shadow-emerald-900/20">
+                                 <MessageSquare className="text-white" size={20} />
+                              </div>
+                              
+                              <h3 className="text-xl font-bold text-white tracking-tight">Message Us</h3>
+                           </div>
+
+                           {/* List Items */}
+                           <div className="p-4 bg-zinc-50/50">
+                              <div className="bg-white border border-zinc-100 rounded-xl overflow-hidden shadow-sm">
+                                 <a 
+                                    href="https://redlix.co.in/resourse/supoer" 
+                                    target="_blank"
+                                    className="p-4 flex items-center gap-4 hover:bg-zinc-50 transition-colors group"
+                                 >
+                                    <div className="h-10 w-10 rounded-lg bg-[#9C7F6E] flex items-center justify-center text-white font-bold shrink-0">
+                                       R
+                                    </div>
+                                    <div className="flex-1">
+                                       <h4 className="text-[13px] font-bold text-zinc-800">Support Resources</h4>
+                                       <p className="text-[11px] text-zinc-400 font-medium">Hi, We are here to help you ...</p>
+                                    </div>
+                                 </a>
+                                 
+                                 <div className="h-px bg-zinc-100 mx-4" />
+
+                                 <a 
+                                    href="https://redlix.co.in/support" 
+                                    target="_blank"
+                                    className="p-4 flex items-center gap-4 hover:bg-zinc-50 transition-colors group"
+                                 >
+                                    <div className="h-10 w-10 rounded-lg bg-[#E66B5B] flex items-center justify-center text-white font-bold shrink-0">
+                                       C
+                                    </div>
+                                    <div className="flex-1">
+                                       <h4 className="text-[13px] font-bold text-zinc-800">Chat with us</h4>
+                                       <p className="text-[11px] text-zinc-400 font-medium">Hello there! Need help? Reac...</p>
+                                    </div>
+                                 </a>
+                              </div>
+                           </div>
+
+                           {/* Footer */}
+                           <div className="p-4 flex items-center justify-center gap-1.5 opacity-50 border-t border-zinc-50">
+                              <span className="text-[10px] font-bold text-zinc-400">Powered by</span>
+                              <div className="flex items-center gap-1">
+                                 <div className="h-3.5 w-3.5 bg-emerald-500 rounded-full flex items-center justify-center">
+                                    <div className="w-1.5 h-1 bg-white rounded-full" />
+                                 </div>
+                                 <span className="text-[10px] font-bold text-emerald-600">Freshchat</span>
+                              </div>
+                           </div>
+                        </motion.div>
+                     </div>
+                  )}
+               </AnimatePresence>
             </motion.div>
          )}
 
