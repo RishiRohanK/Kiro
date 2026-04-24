@@ -105,18 +105,23 @@ export default function PortalPage() {
         />
       </div>
 
-      <div className="absolute top-4 md:top-6 right-4 md:right-8 z-50 flex items-center gap-2 md:gap-4">
+      <div className="absolute top-4 md:top-6 right-4 md:right-8 z-50 flex items-center gap-0">
         <button
           onClick={() => setShowGuide(true)}
-          className="flex items-center gap-2 px-3 md:px-6 py-1.5 md:py-2 bg-red-600 text-[10px] md:text-[12px] font-bold text-white rounded-full shadow-lg shadow-red-100 hover:bg-red-700 hover:shadow-red-200 transition-all border border-red-500"
+          className="relative flex items-center gap-2 px-4 md:px-6 py-2 md:py-3 border border-zinc-100 bg-white text-[10px] md:text-[12px] font-bold text-zinc-500 hover:text-black hover:border-zinc-300 transition-all rounded-none"
         >
-          <HelpCircle size={14} className="animate-pulse shrink-0" />
+          <HelpCircle size={14} className="shrink-0" />
           <span className="hidden sm:inline">Platform Guide</span>
           <span className="sm:hidden">Guide</span>
+          
+          {/* Notification Badge */}
+          <span className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-red-600 text-white text-[9px] font-bold rounded-full flex items-center justify-center border-2 border-white shadow-sm">
+            1
+          </span>
         </button>
         <Link
           href="/support"
-          className="flex items-center gap-2 px-3 md:px-4 py-1.5 md:py-2 border border-zinc-100 bg-white text-[10px] md:text-[12px] font-medium text-zinc-500 hover:text-black hover:border-zinc-300 transition-all rounded-full"
+          className="flex items-center gap-2 px-4 md:px-6 py-2 md:py-3 border border-zinc-100 bg-white text-[10px] md:text-[12px] font-medium text-zinc-500 hover:text-black hover:border-zinc-300 transition-all rounded-none border-l-0"
         >
           <span className="hidden sm:inline">Technical Support</span>
           <span className="sm:hidden">Support</span>
@@ -194,7 +199,7 @@ export default function PortalPage() {
 
                 <button 
                   onClick={() => setShowGuide(false)}
-                  className="w-full py-3 md:py-3.5 bg-zinc-900 text-white text-[10px] md:text-[11px] font-bold uppercase tracking-widest hover:bg-emerald-600 transition-colors shadow-lg shadow-zinc-200"
+                  className="w-full py-3 md:py-3.5 bg-zinc-900 text-white text-[10px] md:text-[11px] font-bold uppercase tracking-widest hover:bg-emerald-600 transition-colors shadow-lg shadow-zinc-200 rounded-none"
                 >
                   Explore Update
                 </button>
@@ -316,7 +321,7 @@ export default function PortalPage() {
               </div>
               <button 
                 onClick={acceptCookies}
-                className="px-5 py-2 bg-zinc-900 text-white text-[10px] font-bold uppercase tracking-widest hover:bg-emerald-600 transition-colors shrink-0"
+                className="px-5 py-2 bg-zinc-900 text-white text-[10px] font-bold uppercase tracking-widest hover:bg-emerald-600 transition-colors shrink-0 rounded-none"
               >
                 Got it
               </button>
@@ -348,7 +353,7 @@ function CardContent({ option, isFrozen }: { option: any, isFrozen: boolean }) {
         </div>
 
         <div className="shrink-0 w-full md:w-auto">
-          <div className={`inline-flex w-full md:w-auto items-center justify-center px-8 md:px-10 py-2.5 md:py-3 text-[12px] md:text-[13px] font-medium transition-all ${
+          <div className={`inline-flex w-full md:w-auto items-center justify-center px-8 md:px-10 py-2.5 md:py-3 text-[12px] md:text-[13px] font-medium transition-all rounded-none ${
             isFrozen 
             ? 'bg-white/50 text-zinc-400 cursor-not-allowed border border-zinc-200' 
             : `bg-zinc-900 text-white ${option.hoverColor} group-hover:shadow-xl group-hover:-translate-y-0.5`
