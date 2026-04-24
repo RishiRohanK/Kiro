@@ -14,6 +14,7 @@ module.exports = withWorkflow(withPWA({
       { protocol: 'https', hostname: 'ik.imagekit.io' },
       { protocol: 'https', hostname: 'thumbs.dreamstime.com' },
       { protocol: 'https', hostname: 'www.usnews.com' },
+      { protocol: 'https', hostname: 'res.cloudinary.com' },
     ],
   },
   experimental: {
