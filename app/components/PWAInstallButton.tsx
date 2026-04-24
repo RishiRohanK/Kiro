@@ -64,29 +64,29 @@ export function PWAInstallButton() {
       <AnimatePresence>
         {isVisible && !isIOS && (
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="w-full"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 20 }}
+            className="flex items-center"
           >
             <button
               onClick={handleInstallClick}
-              className="w-full h-11 flex items-center justify-center gap-3 bg-zinc-900 text-white px-6 rounded-none font-bold text-[11px] tracking-widest hover:bg-black transition-all"
+              className="flex items-center gap-2 px-6 py-2 bg-white text-zinc-950 hover:bg-zinc-100 transition-all duration-300 text-[13px] font-medium rounded-none shadow-sm whitespace-nowrap"
             >
               <Download size={14} />
-              <span>Install CLEED app</span>
+              <span>Install App</span>
             </button>
           </motion.div>
         )}
 
         {showIOSPrompt && isIOS && (
           <motion.div
-            initial={{ opacity: 0, y: 10 }}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 10 }}
-            className="w-full"
+            exit={{ opacity: 0, y: 20 }}
+            className="fixed bottom-24 right-4 md:right-8 z-[100] w-[calc(100vw-32px)] md:w-80"
           >
-            <div className="bg-zinc-50 border border-zinc-200 p-4 relative">
+            <div className="bg-white border border-zinc-200 p-4 shadow-2xl relative">
               <button 
                 onClick={() => setShowIOSPrompt(false)}
                 className="absolute top-2 right-2 p-1 text-zinc-400 hover:text-black"
@@ -101,7 +101,7 @@ export function PWAInstallButton() {
                 <div className="space-y-1">
                   <h3 className="font-bold text-[11px] text-zinc-900">Install Dashboard</h3>
                   <p className="text-[10px] text-zinc-500 leading-tight font-medium">
-                    Tap <Share size={12} className="inline mx-0.5 text-zinc-900" /> then <PlusSquare size={12} className="inline mx-0.5 text-zinc-900" /> <span className="font-bold text-black">"Add to Home Screen"</span>
+                    Tap <Share size={12} className="inline mx-0.5 text-zinc-900" /> then <PlusSquare size={12} className="inline mx-0.5 text-zinc-900" /> <span className="font-bold text-black text-[11px]">"Add to Home Screen"</span>
                   </p>
                 </div>
               </div>

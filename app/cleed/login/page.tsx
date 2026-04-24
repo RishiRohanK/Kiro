@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Shield, Lock, Mail, ArrowRight, Loader2, RefreshCw } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { PWAInstallButton } from "@/app/components/PWAInstallButton";
 
 import BottomBanner from "@/app/components/BottomBanner";
 
@@ -226,7 +225,6 @@ export default function CleedLoginPage() {
               <p className="text-center text-zinc-400 text-[10px] font-medium leading-relaxed">
                 Administrative access only. Technical activity is synchronized and monitored.
               </p>
-              <PWAInstallButton />
             </div>
           </div>
         </motion.div>

@@ -2,6 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
+import { PWAInstallButton } from "@/app/components/PWAInstallButton";
 
 const BottomBanner = () => {
   return (
@@ -39,7 +40,8 @@ const BottomBanner = () => {
             </div>
           </div>
 
-          <div className="flex flex-wrap items-center justify-center md:justify-end gap-4">
+          <div className="flex flex-wrap items-center justify-center md:justify-end gap-3 md:gap-4">
+            <PWAInstallButton />
             <a
               href="https://redlix.co.in/support"
               target="_blank"
