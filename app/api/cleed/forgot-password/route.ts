@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { sendCleedPasswordResetEmail } from "@/lib/mail";
 import crypto from "crypto";
-import { tokenStore } from "@/lib/cleed-tokens";
+import prisma from "@/lib/prisma";
 
 export async function POST(req: Request) {
   try {
@@ -15,9 +15,16 @@ export async function POST(req: Request) {
     }
 
     const token = crypto.randomBytes(32).toString("hex");
-    const expires = Date.now() + 15 * 60 * 1000; // 15 mins
+    const expires = new Date(Date.now() + 15 * 60 * 1000); // 15 mins
 
-    tokenStore.set(token, { email, expires });
+    // Persist token in database for stateless recovery (Vercel/Production)
+    await prisma.resetToken.create({
+      data: {
+        token,
+        email: normalizedEmail,
+        expires
+      }
+    });
 
     const success = await sendCleedPasswordResetEmail(email, token);
 

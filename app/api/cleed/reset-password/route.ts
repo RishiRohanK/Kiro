@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { tokenStore } from "@/lib/cleed-tokens";
+import prisma from "@/lib/prisma";
 import { updateCleedPassword } from "@/lib/cleed-auth";
 
 export async function POST(req: Request) {
@@ -10,14 +10,17 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Security token required" }, { status: 400 });
     }
 
-    const resetData = tokenStore.get(token);
+    // Verify token from database for stateless recovery
+    const resetData = await prisma.resetToken.findUnique({
+      where: { token }
+    });
 
     if (!resetData) {
       return NextResponse.json({ error: "Security token invalid or expired" }, { status: 401 });
     }
 
-    if (Date.now() > resetData.expires) {
-      tokenStore.delete(token);
+    if (new Date() > resetData.expires) {
+      await prisma.resetToken.delete({ where: { token } }).catch(() => {});
       return NextResponse.json({ error: "Security token expired" }, { status: 401 });
     }
 
@@ -25,8 +28,8 @@ export async function POST(req: Request) {
     await updateCleedPassword(password);
     console.log(`Password reset successful for ${resetData.email}.`);
 
-    // Revoke the token
-    tokenStore.delete(token);
+    // Revoke the token from database
+    await prisma.resetToken.delete({ where: { token } }).catch(() => {});
 
     return NextResponse.json({ success: true, message: "Administrative access synchronized" });
   } catch (error) {
