@@ -26,7 +26,7 @@ export async function proxy(request: NextRequest) {
 
   // Admin and Cleed protection
   if (pathname.startsWith('/cleed/dashboard') || pathname.startsWith('/api/cleed')) {
-    if (pathname !== '/api/cleed/login' && pathname !== '/api/cleed/forgot-password') {
+    if (pathname !== '/api/cleed/login' && pathname !== '/api/cleed/forgot-password' && pathname !== '/api/cleed/reset-password') {
       const session = request.cookies.get('cleed_session');
       if (!session || session.value !== 'authenticated_admin') {
         if (pathname.startsWith('/api/')) {
