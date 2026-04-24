@@ -3,21 +3,28 @@
 import { useEffect, useState } from "react";
 import { Download, Share, PlusSquare, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { usePathname } from "next/navigation";
 
 export function PWAInstallButton() {
+  const pathname = usePathname();
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [isVisible, setIsVisible] = useState(false);
   const [isIOS, setIsIOS] = useState(false);
   const [showIOSPrompt, setShowIOSPrompt] = useState(false);
 
   useEffect(() => {
+    // Only proceed if we are on the CLEED login page
+    if (pathname !== "/cleed/login") {
+      setIsVisible(false);
+      setShowIOSPrompt(false);
+      return;
+    }
     
     const isIOSDevice = 
       /iPad|iPhone|iPod/.test(navigator.userAgent) || 
       (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
     setIsIOS(isIOSDevice);
 
-    
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
     if (isStandalone) {
         return;
@@ -31,7 +38,6 @@ export function PWAInstallButton() {
 
     window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
 
-    
     if (isIOSDevice && !isStandalone) {
       setTimeout(() => setShowIOSPrompt(true), 3000);
     }
@@ -39,7 +45,9 @@ export function PWAInstallButton() {
     return () => {
       window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
     };
-  }, []);
+  }, [pathname]);
+
+  if (pathname !== "/cleed/login") return null;
 
   const handleInstallClick = async () => {
     if (!deferredPrompt) return;
