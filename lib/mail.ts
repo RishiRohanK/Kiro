@@ -197,7 +197,48 @@ export const sendCleedPasswordResetEmail = async (email: string, token: string) 
     const title = "Administrative Recovery Request";
     const content = "A password recovery sequence has been initiated for the CLEED administrative portal. Click the button below to access the secure recovery terminal. This link will expire in 15 minutes.";
     const resetLink = `${BASE_URL}/cleed/reset-password?token=${token}`;
-    const html = getSimpleTemplate(title, content, "Access Recovery Terminal", resetLink, "System Integrity Division");
+    
+    // Custom template with Cleed Logo
+    const html = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #1a1a1a; margin: 0; padding: 0; background-color: #f8f9fa; }
+            .wrapper { padding: 40px 20px; background-color: #f8f9fa; }
+            .container { max-width: 500px; margin: 0 auto; background: #ffffff; border: 1px solid #eeeeee; padding: 40px; border-radius: 0px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+            .logo { margin-bottom: 30px; text-align: center; }
+            h1 { font-size: 22px; font-weight: 700; margin: 0 0 16px; color: #000; letter-spacing: -0.02em; text-align: center; }
+            p { font-size: 14px; margin: 0 0 24px; color: #666; text-align: center; line-height: 1.8; }
+            .button-container { text-align: center; }
+            .button { display: inline-block; background: #000; color: #fff !important; padding: 14px 28px; text-decoration: none; font-size: 13px; font-weight: 700; border-radius: 0px; text-transform: uppercase; letter-spacing: 0.1em; }
+            .footer { margin-top: 40px; padding-top: 24px; border-top: 1px solid #eee; font-size: 11px; color: #999; text-align: center; }
+            .team { font-weight: 700; color: #000; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.05em; }
+        </style>
+    </head>
+    <body>
+        <div class="wrapper">
+            <div class="container">
+                <div class="logo">
+                    <img src="https://platform.studentforge.in/clledlogo.png" alt="CLEED" height="60" />
+                </div>
+                <h1>${title}</h1>
+                <p>${content}</p>
+                <div class="button-container">
+                    <a href="${resetLink}" class="button">Access Recovery Terminal</a>
+                </div>
+                <div class="footer">
+                    <div class="team">System Integrity Division</div>
+                    <div>CLEED Administrative Portal</div>
+                    <div style="margin-top: 10px;">&copy; 2026 Student Forge Technologies Pvt. Ltd.</div>
+                </div>
+            </div>
+        </div>
+    </body>
+    </html>
+    `;
 
     try {
         await transporter.sendMail({

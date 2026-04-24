@@ -1,9 +1,7 @@
 import { NextResponse } from "next/server";
 import { sendCleedPasswordResetEmail } from "@/lib/mail";
 import crypto from "crypto";
-
-// In-memory token store for demonstration (in production, use Redis or Database)
-const resetTokens = new Map<string, { email: string, expires: number }>();
+import { tokenStore } from "@/lib/cleed-tokens";
 
 export async function POST(req: Request) {
   try {
@@ -19,7 +17,7 @@ export async function POST(req: Request) {
     const token = crypto.randomBytes(32).toString("hex");
     const expires = Date.now() + 15 * 60 * 1000; // 15 mins
 
-    resetTokens.set(token, { email, expires });
+    tokenStore.set(token, { email, expires });
 
     const success = await sendCleedPasswordResetEmail(email, token);
 
@@ -33,5 +31,4 @@ export async function POST(req: Request) {
   }
 }
 
-// Export for usage in reset-password route
-export { resetTokens };
+
