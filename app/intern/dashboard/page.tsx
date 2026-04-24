@@ -735,6 +735,7 @@ function InternDashboardContent() {
                            </a>
                         </div>
                      ) : null}
+                  </div>
                </div>
 
                {/* Custom Floating Chat Icon */}
