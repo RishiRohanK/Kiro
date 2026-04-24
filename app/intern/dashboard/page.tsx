@@ -640,37 +640,6 @@ function InternDashboardContent() {
       <div key={activeTab} className="p-4 lg:p-6 max-w-[1600px] w-full mx-auto bg-white min-h-screen pb-24 lg:pb-6">
          {activeTab === "overview" && (
             <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} className="space-y-4">
-               {/* Attendance Notification Banner */}
-               <AnimatePresence>
-                  {showAttendanceAlert && (
-                     <motion.div 
-                        initial={{ opacity: 0, y: -10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, height: 0, margin: 0 }}
-                        className="bg-red-50 border border-red-200 p-4 flex items-center justify-between group overflow-hidden"
-                     >
-                        <div className="flex items-center gap-4">
-                           <div className="flex-shrink-0 w-10 h-10 bg-red-100 flex items-center justify-center">
-                              <Hand className="text-red-600" size={20} />
-                           </div>
-                           <div>
-                              <p className="text-[13px] font-bold text-red-900 leading-tight">Attendance Requirement</p>
-                              <p className="text-[12px] font-medium text-red-800/80 mt-0.5">
-                                 Please raise your hand at the sidebar bottom button to make the regular attendance.
-                              </p>
-                           </div>
-                        </div>
-                        <button 
-                           onClick={() => setShowAttendanceAlert(false)}
-                           className="p-2 text-red-300 hover:text-red-500 transition-colors"
-                        >
-                           <X size={18} />
-                        </button>
-                     </motion.div>
-                  )}
-               </AnimatePresence>
-
-
                {/* Hero Bento Section */}
                <div className="grid grid-cols-12 gap-4 text-left">
                   {/* Left Column: Greeting & Stats */}
@@ -769,104 +738,7 @@ function InternDashboardContent() {
                   </div>
                </div>
 
-               {/* Roadmap Bento Section */}
-               <div className="grid grid-cols-12 gap-4 pt-2 text-left">
-                  {/* Left Bento: Weekly Timeline */}
-                  <div className="col-span-12 lg:col-span-7 bg-white border border-zinc-100 p-6 shadow-sm">
-                     <div className="flex items-center justify-between mb-8 pb-4 border-b border-zinc-50">
-                        <div>
-                           <h2 className="text-[11px] font-semibold text-[#003366] uppercase tracking-[0.3em]">Weekly Roadmap</h2>
-                           <p className="text-[9px] text-zinc-400 font-semibold uppercase mt-1">Timeline for current track</p>
-                        </div>
-                        <Link href="/intern/dashboard/schedule" className="h-8 w-8 rounded-full border border-zinc-100 flex items-center justify-center hover:bg-zinc-50 transition-all text-zinc-400">
-                           <ChevronRight size={16} />
-                        </Link>
-                     </div>
-
-                     <div className="space-y-3">
-                        {schedules.length > 0 ? schedules.slice(0, 3).map((item, i) => {
-                           const colors = [
-                              { bg: "bg-blue-600", accent: "bg-white/20", text: "text-white", border: 'border-blue-700/50' },
-                              { bg: "bg-emerald-600", accent: "bg-white/20", text: "text-white", border: 'border-emerald-700/50' },
-                              { bg: "bg-violet-600", accent: "bg-white/20", text: "text-white", border: 'border-violet-700/50' }
-                           ];
-                           const theme = colors[i % colors.length];
-
-                           return (
-                              <div key={item.id} className={`group p-4 ${theme.bg} ${theme.border} border transition-all flex items-center gap-5 shadow-sm`}>
-                                 <div className={`h-11 w-11 flex flex-col items-center justify-center font-semibold ${theme.accent} ${theme.text}`}>
-                                    <span className="text-[10px] uppercase leading-none mb-1 opacity-70">Wk</span>
-                                    <span className="text-xl leading-none">{item.week.match(/\d+/)?.[0]}</span>
-                                 </div>
-                                 <div className="flex-1 overflow-hidden">
-                                    <h4 className={`text-[13px] font-semibold ${theme.text} transition-colors truncate`}>{item.typeOfWork}</h4>
-                                    <div className="flex items-center gap-3 mt-1.5 capitalize">
-                                       <span className={`text-[9px] font-semibold ${theme.text} opacity-70 uppercase leading-none`}>Due {item.deadline.split('T')[0]}</span>
-                                       <div className="h-1 w-1 rounded-full bg-white/40" />
-                                       <span className={`text-[9px] font-semibold uppercase leading-none ${item.isCompleted ? 'text-white' : 'text-white/90'}`}>
-                                          {item.isCompleted ? 'Task Done' : 'In Progress'}
-                                       </span>
-                                    </div>
-                                 </div>
-                                 {item.isCompleted ? (
-                                    <CheckCircle2 size={18} className="text-white" />
-                                 ) : (
-                                    <div className="h-5 w-5 rounded-full border border-white/30 flex items-center justify-center">
-                                       <div className="h-1.5 w-1.5 rounded-full bg-white animate-pulse" />
-                                    </div>
-                                 )}
-                              </div>
-                           );
-                        }) : (
-                           <div className="py-20 text-center opacity-30">
-                              <Map size={32} className="mx-auto mb-3" />
-                              <p className="text-xs font-bold uppercase">Loading roadmap...</p>
-                           </div>
-                        )}
-                     </div>
-                  </div>
-
-                  {/* Right Bento: Tech Flows */}
-                  <div className="col-span-12 lg:col-span-5 bg-zinc-100 border border-zinc-200 p-6 shadow-sm overflow-hidden relative group">
-                     <div className="flex items-center justify-between mb-8 pb-4 border-b border-zinc-200 relative z-10">
-                        <div>
-                           <h2 className="text-[11px] font-semibold text-[#003366] uppercase tracking-[0.3em]">Stack Flow</h2>
-                           <p className="text-[9px] text-zinc-400 font-semibold uppercase mt-1">Official Industry Paths</p>
-                        </div>
-                        <Link href="/intern/dashboard/stack-flow" className="text-[10px] font-bold text-[#003366] hover:underline uppercase tracking-tighter">Enter Hub</Link>
-                     </div>
-
-                     <div className="grid grid-cols-1 gap-2">
-                        {[
-                           { title: "Frontend Engineering", logo: "https://www.vectorlogo.zone/logos/w3_html5/w3_html5-icon.svg", bg: "bg-blue-50/50", pdf: "https://ik.imagekit.io/dypkhqxip/frontend.pdf" },
-                           { title: "Mobile Engineering", logo: "https://www.vectorlogo.zone/logos/flutterio/flutterio-icon.svg", bg: "bg-violet-50/50", pdf: "https://ik.imagekit.io/dypkhqxip/android.pdf" },
-                           { title: "Backend Core Systems", logo: "https://cdn.worldvectorlogo.com/logos/nodejs-icon.svg", bg: "bg-emerald-50/50", pdf: "https://ik.imagekit.io/dypkhqxip/backend.pdf" }
-                        ].map((roadmap, i) => (
-                           <a
-                              key={i}
-                              href={roadmap.pdf}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="group p-3 hover:bg-zinc-50 transition-all flex items-center gap-4"
-                           >
-                              <div className={`h-12 w-12 flex items-center justify-center ${roadmap.bg} p-2.5 flex-shrink-0 group-hover:scale-105 transition-transform`}>
-                                 <img src={roadmap.logo} alt={roadmap.title} className="w-full h-full object-contain" />
-                              </div>
-                              <div className="flex-1 min-w-0">
-                                 <h3 className="text-[12px] font-semibold text-zinc-900 group-hover:text-[#003366] transition-colors truncate">{roadmap.title}</h3>
-                                 <div className="flex items-center gap-1.5 mt-1">
-                                    <span className="text-[9px] font-semibold text-zinc-400 uppercase">Guide ready</span>
-                                    <Download size={10} className="text-zinc-300" />
-                                 </div>
-                              </div>
-                              <div className="h-6 w-6 rounded-none bg-blue-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                                 <ArrowUpRight size={12} className="text-[#003366]" />
-                              </div>
-                           </a>
-                        ))}
-                     </div>
-                  </div>
-               </div>
+            </motion.div>
             </motion.div>
          )}
 
