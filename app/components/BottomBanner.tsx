@@ -24,6 +24,7 @@ const BottomBanner = () => {
                   alt="Technical Partner Logo"
                   width={120}
                   height={32}
+                  unoptimized
                   className="h-8 w-auto transition-transform hover:scale-105 duration-300"
                 />
               </a>
