@@ -1484,32 +1484,26 @@ export default function CleedDashboard() {
          {/* Main Content Area */}
          <main className="md:pl-20 lg:pl-[260px] min-h-screen pt-[calc(4rem+env(safe-area-inset-top))] md:pt-0">
             {/* Grey Top Banner Group */}
-            <div className="sticky top-0 z-40 bg-zinc-100 border-b border-zinc-200">
-               <header className="h-16 flex items-center justify-between px-6 md:px-8">
-                  <div className="flex items-center gap-3">
-                     <div className="md:hidden flex items-center gap-2 mr-2">
-                        <span className="text-xl font-black text-zinc-900 tracking-tighter uppercase leading-none">Cleed</span>
-                        <div className="h-1.5 w-1.5 bg-[#F5332C] rounded-none" />
-                     </div>
-                     <div className="hidden md:flex items-center gap-2 overflow-hidden">
-                        <span className="text-zinc-500 text-[11px] font-bold tracking-tight">Admin panel</span>
-                        <ChevronRight size={10} className="text-zinc-400" />
-                        <span className="text-zinc-900 font-bold text-[11px] tracking-tight">
-                           {activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}
-                        </span>
-                     </div>
+            <div className="sticky top-16 md:top-0 z-40 bg-zinc-100 border-b border-zinc-200">
+               <header className="h-14 md:h-16 flex items-center justify-between px-4 md:px-8">
+                  <div className="flex items-center gap-2 overflow-hidden">
+                     <span className="text-zinc-500 text-[10px] md:text-[11px] font-bold tracking-tight">Admin panel</span>
+                     <ChevronRight size={10} className="text-zinc-400" />
+                     <span className="text-zinc-900 font-bold text-[10px] md:text-[11px] tracking-tight truncate">
+                        {activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}
+                     </span>
                   </div>
 
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-2 md:gap-4">
                      <div className="relative group hidden md:block">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3 w-3 text-zinc-400" />
                         <input className="h-9 w-64 bg-white border border-zinc-200 pl-9 pr-4 text-[12px] outline-none focus:border-red-600 transition-all rounded-none font-medium text-zinc-900" placeholder="Search system records..." />
                      </div>
-                     <Link href="/cleed/dashboard/health" className="px-5 h-9 bg-zinc-900 text-white text-[10px] font-bold flex items-center gap-2 hover:bg-black transition-all rounded-none shadow-sm">
-                        System health
+                     <Link href="/cleed/dashboard/health" className="px-3 md:px-5 h-8 md:h-9 bg-zinc-900 text-white text-[9px] md:text-[10px] font-bold flex items-center justify-center hover:bg-black transition-all rounded-none shadow-sm whitespace-nowrap">
+                        Health
                      </Link>
-                     <div className="h-5 w-[1px] bg-zinc-200 mx-1" />
-                     <Link href="/" className="px-6 h-9 bg-[#F5332C] text-white text-[10px] font-bold flex items-center hover:bg-red-700 transition-all rounded-none shadow-sm">
+                     <div className="h-4 md:h-5 w-[1px] bg-zinc-200" />
+                     <Link href="/" className="px-3 md:px-6 h-8 md:h-9 bg-[#F5332C] text-white text-[9px] md:text-[10px] font-bold flex items-center justify-center hover:bg-red-700 transition-all rounded-none shadow-sm whitespace-nowrap">
                         Sign out
                      </Link>
                   </div>
