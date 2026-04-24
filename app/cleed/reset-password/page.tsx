@@ -18,14 +18,14 @@ function ResetPasswordForm() {
 
   useEffect(() => {
     if (!token) {
-      setError("Security token missing. Access denied.");
+      setError("Missing reset link. Access denied.");
     }
   }, [token]);
 
   const handleReset = async (e: React.FormEvent) => {
     e.preventDefault();
     if (password !== confirmPassword) {
-      setError("Security keys do not match.");
+      setError("Passwords do not match.");
       return;
     }
 
@@ -46,10 +46,10 @@ function ResetPasswordForm() {
         }, 3000);
       } else {
         const data = await res.json();
-        setError(data.error || "Recovery sequence failed.");
+        setError(data.error || "Reset failed.");
       }
     } catch (err) {
-      setError("System failure. Access denied.");
+      setError("System error. Access denied.");
     } finally {
       setIsLoading(false);
     }
@@ -69,8 +69,8 @@ function ResetPasswordForm() {
             <div className="flex flex-col items-center gap-6">
                <img src="/clledlogo.png" alt="Cleed Logo" className="h-16 w-16 object-contain" />
                <div className="text-center space-y-1">
-                 <h2 className="text-2xl font-bold tracking-tight text-zinc-900">Recovery</h2>
-                 <p className="text-zinc-500 text-[13px] font-medium leading-none">Security Key Reset</p>
+                 <h2 className="text-2xl font-bold tracking-tight text-zinc-900">Reset Password</h2>
+                 <p className="text-zinc-500 text-[13px] font-medium leading-none">Update Password</p>
                </div>
             </div>
 
@@ -84,8 +84,8 @@ function ResetPasswordForm() {
                   <CheckCircle2 className="h-12 w-12 text-emerald-500" />
                 </div>
                 <div className="text-center space-y-2">
-                  <p className="text-emerald-700 font-bold text-sm">Security Key Synchronized</p>
-                  <p className="text-zinc-400 text-[11px]">Redirecting to administrative portal...</p>
+                  <p className="text-emerald-700 font-bold text-sm">Password Updated</p>
+                  <p className="text-zinc-400 text-[11px]">Redirecting to login page...</p>
                 </div>
               </motion.div>
             ) : (
@@ -138,7 +138,7 @@ function ResetPasswordForm() {
                   {isLoading ? (
                     <Loader2 className="h-4 w-4 animate-spin" />
                   ) : (
-                    <>Update Access <ArrowRight size={14} /></>
+                    <>Save Password <ArrowRight size={14} /></>
                   )}
                 </button>
               </form>
@@ -146,7 +146,7 @@ function ResetPasswordForm() {
 
             <div className="pt-6 border-t border-zinc-100 flex flex-col items-center">
               <p className="text-center text-zinc-400 text-[10px] font-medium leading-relaxed">
-                System integrity monitored. Unauthorized access attempts are recorded.
+                All activity is monitored. Unauthorized access is not allowed.
               </p>
             </div>
           </div>

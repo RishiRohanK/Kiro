@@ -43,10 +43,10 @@ export default function CleedLoginPage() {
         router.push("/cleed/dashboard");
       } else {
         const data = await res.json();
-        setError(data.error || "Access denied. Check credentials.");
+        setError(data.error || "Reset failed.");
       }
     } catch (err) {
-      setError("Communication failure. Try again.");
+      setError("System error. Access denied.");
     } finally {
       setIsLoading(false);
     }
@@ -94,10 +94,10 @@ export default function CleedLoginPage() {
                <img src="/clledlogo.png" alt="Cleed Logo" className="h-16 w-16 object-contain" />
                <div className="text-center space-y-1">
                  <h2 className="text-2xl font-bold tracking-tight text-zinc-900">
-                    {isForgot ? "Recovery" : "Login"}
+                    {isForgot ? "Reset Password" : "Login"}
                  </h2>
                  <p className="text-zinc-500 text-[13px] font-medium leading-none">
-                    {isForgot ? "Administrative reset" : "Administrative portal"}
+                    {isForgot ? "Update Password" : "Admin Portal"}
                  </p>
                </div>
             </div>
@@ -224,9 +224,9 @@ export default function CleedLoginPage() {
               </form>
             )}
 
-            <div className="pt-6 border-t border-zinc-100 flex flex-col items-center gap-6">
+            <div className="pt-6 border-t border-zinc-100 flex flex-col items-center">
               <p className="text-center text-zinc-400 text-[10px] font-medium leading-relaxed">
-                Administrative access only. Technical activity is synchronized and monitored.
+                All activity is monitored. Unauthorized access is not allowed.
               </p>
             </div>
           </div>

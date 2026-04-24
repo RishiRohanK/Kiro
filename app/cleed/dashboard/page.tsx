@@ -1391,7 +1391,7 @@ export default function CleedDashboard() {
                      ))}
                   </div>
                   <div className="mt-12 pt-8 border-t border-white/10 text-center pb-20">
-                     <p className="text-white/40 text-[9px] font-bold tracking-widest uppercase">Cleed Management Terminal</p>
+                     <p className="text-white/40 text-[9px] font-bold tracking-widest uppercase">Cleed Admin</p>
                   </div>
                </motion.div>
             )}
@@ -1408,7 +1408,7 @@ export default function CleedDashboard() {
             <nav className="flex-1 mt-6 px-3 overflow-y-auto space-y-4 custom-scrollbar pb-8">
                <details open className="group">
                   <summary className="hidden lg:flex items-center justify-between text-[11px] font-bold text-white/60 uppercase tracking-widest px-3 py-2 cursor-pointer hover:text-white transition-colors select-none list-none [&::-webkit-details-marker]:hidden">
-                     Registry
+                     Records
                      <ChevronDown size={14} className="group-open:rotate-180 transition-transform text-white/40" />
                   </summary>
                   <div className="mt-1 space-y-1 ml-2 border-l border-white/10 pl-2">
@@ -1487,7 +1487,7 @@ export default function CleedDashboard() {
             <div className="sticky top-16 md:top-0 z-40 bg-zinc-100 border-b border-zinc-200">
                <header className="h-14 md:h-16 flex items-center justify-between px-4 md:px-8">
                   <div className="flex items-center gap-2 overflow-hidden">
-                     <span className="text-zinc-500 text-[10px] md:text-[11px] font-bold tracking-tight">Admin panel</span>
+                     <span className="text-zinc-500 text-[10px] md:text-[11px] font-bold tracking-tight">Admin Panel</span>
                      <ChevronRight size={10} className="text-zinc-400" />
                      <span className="text-zinc-900 font-bold text-[10px] md:text-[11px] tracking-tight truncate">
                         {activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}
@@ -1495,9 +1495,9 @@ export default function CleedDashboard() {
                   </div>
 
                   <div className="flex items-center gap-2 md:gap-4">
-                     <div className="relative group hidden md:block">
+                      <div className="relative group hidden md:block">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3 w-3 text-zinc-400" />
-                        <input className="h-9 w-64 bg-white border border-zinc-200 pl-9 pr-4 text-[12px] outline-none focus:border-red-600 transition-all rounded-none font-medium text-zinc-900" placeholder="Search system records..." />
+                        <input className="h-9 w-64 bg-white border border-zinc-200 pl-9 pr-4 text-[12px] outline-none focus:border-red-600 transition-all rounded-none font-medium text-zinc-900" placeholder="Search records..." />
                      </div>
                      <Link href="/cleed/dashboard/health" className="px-3 md:px-5 h-8 md:h-9 bg-zinc-900 text-white text-[9px] md:text-[10px] font-bold flex items-center justify-center hover:bg-black transition-all rounded-none shadow-sm whitespace-nowrap">
                         Health
@@ -1518,7 +1518,7 @@ export default function CleedDashboard() {
                      { id: "exams", label: "Exams" },
                      { id: "submissions", label: "Submissions" },
                      { id: "attendance", label: "Attendance" },
-                     { id: "history", label: "System logs" }
+                     { id: "history", label: "Logs" }
                   ].map((tab) => (
                      <button
                         key={tab.id}

@@ -194,8 +194,8 @@ export const sendBootcampRegistrationEmail = async (email: string, name: string)
     }
 };
 export const sendCleedPasswordResetEmail = async (email: string, token: string) => {
-    const title = "Administrative Recovery Request";
-    const content = "A password recovery sequence has been initiated for the CLEED administrative portal. Click the button below to access the secure recovery terminal. This link will expire in 15 minutes.";
+    const title = "Password Reset Request";
+    const content = "You requested to reset your password for the CLEED portal. Click the button below to set a new password. This link expires in 15 minutes.";
     const resetLink = `${BASE_URL}/cleed/reset-password?token=${token}`;
     
     // Custom template with Cleed Logo
@@ -227,11 +227,11 @@ export const sendCleedPasswordResetEmail = async (email: string, token: string) 
                 <h1>${title}</h1>
                 <p>${content}</p>
                 <div class="button-container">
-                    <a href="${resetLink}" class="button">Access Recovery Terminal</a>
+                    <a href="${resetLink}" class="button">Reset Password</a>
                 </div>
                 <div class="footer">
-                    <div class="team">System Integrity Division</div>
-                    <div>CLEED Administrative Portal</div>
+                    <div class="team">Admin Team</div>
+                    <div>CLEED Admin</div>
                     <div style="margin-top: 10px;">&copy; 2026 Student Forge Technologies Pvt. Ltd.</div>
                 </div>
             </div>
@@ -242,9 +242,9 @@ export const sendCleedPasswordResetEmail = async (email: string, token: string) 
 
     try {
         await transporter.sendMail({
-            from: '"System Recovery" <studentforgetechnologies@gmail.com>',
+            from: '"Admin Support" <studentforgetechnologies@gmail.com>',
             to: email,
-            subject: "SECURITY ALERT: CLEED Password Recovery",
+            subject: "Password Reset Link for CLEED",
             html: html,
         });
         return true;
