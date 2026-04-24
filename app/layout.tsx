@@ -19,9 +19,9 @@ export const metadata: Metadata = {
   manifest: "/manifest.json",
   icons: {
     icon: [
-      { url: "/clledlogo.png", type: "image/png" }
+      { url: "/sf-next-logo.png", type: "image/png" }
     ],
-    shortcut: "/clledlogo.png",
+    shortcut: "/sf-next-logo.png",
     apple: "/clledlogo.png",
   },
 };
