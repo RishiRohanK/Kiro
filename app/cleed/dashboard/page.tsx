@@ -1408,32 +1408,6 @@ export default function CleedDashboard() {
             <nav className="flex-1 mt-6 px-3 overflow-y-auto space-y-4 custom-scrollbar pb-8">
                <details open className="group">
                   <summary className="hidden lg:flex items-center justify-between text-[11px] font-bold text-white/60 uppercase tracking-widest px-3 py-2 cursor-pointer hover:text-white transition-colors select-none list-none [&::-webkit-details-marker]:hidden">
-                     Management
-                     <ChevronDown size={14} className="group-open:rotate-180 transition-transform text-white/40" />
-                  </summary>
-                  <div className="mt-1 space-y-1 ml-2 border-l border-white/10 pl-2">
-                     {[
-                        { id: "overview", icon: LayoutDashboard, label: "Home" },
-                        { id: "interns", icon: Users, label: "Intern List" },
-                        { id: "hiring", icon: Briefcase, label: "Hiring Hub" },
-                     ].map((item) => (
-                        <button
-                           key={item.id}
-                           onClick={() => setActiveTab(item.id)}
-                           className={`w-full h-10 flex items-center px-3 gap-3 transition-all rounded-none ${activeTab === item.id
-                              ? "bg-white/10 text-white font-bold border-l-2 border-white -ml-[9px] pl-[10px]"
-                              : "text-white/70 hover:text-white hover:bg-white/5"
-                              }`}
-                        >
-                           <item.icon size={16} strokeWidth={activeTab === item.id ? 2.5 : 2} />
-                           <span className={`hidden lg:block text-[13px]`}>{item.label}</span>
-                        </button>
-                     ))}
-                  </div>
-               </details>
-
-               <details open className="group">
-                  <summary className="hidden lg:flex items-center justify-between text-[11px] font-bold text-white/60 uppercase tracking-widest px-3 py-2 cursor-pointer hover:text-white transition-colors select-none list-none [&::-webkit-details-marker]:hidden">
                      Registry
                      <ChevronDown size={14} className="group-open:rotate-180 transition-transform text-white/40" />
                   </summary>
