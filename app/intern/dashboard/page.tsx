@@ -735,10 +735,25 @@ function InternDashboardContent() {
                            </a>
                         </div>
                      ) : null}
-                  </div>
                </div>
 
-            </motion.div>
+               {/* Custom Floating Chat Icon */}
+               <button 
+                  onClick={() => router.push("?view=chat")}
+                  className="fixed bottom-8 right-8 z-[60] w-16 h-16 bg-[#1A3797] shadow-xl flex items-center justify-center transition-all hover:scale-110 active:scale-95 group overflow-hidden"
+                  style={{
+                     borderRadius: '32px 32px 5px 32px' // Leaf shape
+                  }}
+               >
+                  <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <div className="relative w-7 h-6 bg-white rounded-[6px] flex flex-col justify-center items-start px-1.5 gap-0.5">
+                     <div className="w-4 h-0.5 bg-[#1A3797] rounded-full" />
+                     <div className="w-2.5 h-0.5 bg-[#1A3797] rounded-full" />
+                  </div>
+                  
+                  {/* Subtle Shadow Effect */}
+                  <div className="absolute inset-0 shadow-[inset_0_2px_4px_rgba(255,255,255,0.2)] pointer-events-none" />
+               </button>
             </motion.div>
          )}
 
@@ -1239,24 +1254,6 @@ function InternDashboardContent() {
                      </table>
                   </div>
                </div>
-
-               {/* Custom Floating Chat Icon */}
-               <button 
-                  onClick={() => router.push("?view=chat")}
-                  className="fixed bottom-8 right-8 z-[60] w-16 h-16 bg-[#1A3797] shadow-xl flex items-center justify-center transition-all hover:scale-110 active:scale-95 group overflow-hidden"
-                  style={{
-                     borderRadius: '32px 32px 5px 32px' // Leaf shape
-                  }}
-               >
-                  <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity" />
-                  <div className="relative w-7 h-6 bg-white rounded-[6px] flex flex-col justify-center items-start px-1.5 gap-0.5">
-                     <div className="w-4 h-0.5 bg-[#1A3797] rounded-full" />
-                     <div className="w-2.5 h-0.5 bg-[#1A3797] rounded-full" />
-                  </div>
-                  
-                  {/* Subtle Shadow Effect */}
-                  <div className="absolute inset-0 shadow-[inset_0_2px_4px_rgba(255,255,255,0.2)] pointer-events-none" />
-               </button>
             </motion.div>
          )}
 
