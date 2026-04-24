@@ -19,10 +19,10 @@ export const metadata: Metadata = {
   manifest: "/manifest.json",
   icons: {
     icon: [
-      { url: "https://ik.imagekit.io/dypkhqxip/sf-next-logo?updatedAt=1772993490660", type: "image/png" }
+      { url: "/clledlogo.png", type: "image/png" }
     ],
-    shortcut: "https://ik.imagekit.io/dypkhqxip/sf-next-logo?updatedAt=1772993490660",
-    apple: "https://ik.imagekit.io/dypkhqxip/sf-next-logo?updatedAt=1772993490660",
+    shortcut: "/clledlogo.png",
+    apple: "/clledlogo.png",
   },
 };
 
@@ -41,7 +41,7 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="apple-mobile-web-app-title" content="Student Forge" />
-        <link rel="apple-touch-icon" href="https://ik.imagekit.io/dypkhqxip/sf-next-logo?updatedAt=1772993490660" />
+        <link rel="apple-touch-icon" href="/clledlogo.png" />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased selection:bg-zinc-50 selection:text-black`}
