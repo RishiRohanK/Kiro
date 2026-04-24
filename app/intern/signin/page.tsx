@@ -69,7 +69,16 @@ export default function InternSigninPage() {
     };
 
     return (
-        <div className="min-h-screen bg-white text-[#495057] font-sans flex flex-col items-center">
+        <div className="min-h-screen bg-white text-[#495057] font-sans flex flex-col items-center selection:bg-blue-50">
+            {/* Breadcrumbs */}
+            <div className="w-full max-w-[850px] pt-8 px-6 flex justify-start">
+                <nav className="flex items-center gap-2 text-[13px] font-medium text-zinc-400">
+                    <Link href="/" className="hover:text-black transition-colors">Portal</Link>
+                    <span className="text-zinc-200 text-[10px]">/</span>
+                    <span className="text-zinc-900">Intern Login</span>
+                </nav>
+            </div>
+
             <div className="flex-1 flex items-center justify-center p-6 lg:p-10 w-full">
             <div className="w-full max-w-[850px] bg-white border border-zinc-200 flex flex-col md:flex-row relative z-10">
 
@@ -211,15 +220,17 @@ export default function InternSigninPage() {
             </div>
 
             {/* Footer Section */}
-            <footer className="absolute bottom-0 left-0 w-full bg-zinc-100 border-t border-zinc-200 py-6 px-6">
-                <div className="max-w-[850px] mx-auto flex flex-col items-center gap-2">
-                    <p className="text-[11px] text-[#6c757d] font-medium text-center">
-                        © 2025-2026 Student Forge Technologies Private Limited. All Rights Reserved. 
-                        Unauthorized access or use of this platform is strictly prohibited.
-                    </p>
-                    <p className="text-[10px] text-zinc-400 font-bold text-center">
-                        platform.studentforge.in is a registered trademark. Secured with enterprise-grade encryption.
-                    </p>
+            <footer className="w-full bg-zinc-50 border-t border-zinc-100 py-10 px-6 mt-auto">
+                <div className="max-w-[850px] mx-auto flex flex-col items-center gap-4 text-center">
+                    <div className="space-y-3">
+                        <p className="text-[11px] text-zinc-500 font-medium leading-relaxed">
+                            © 2025-2026 Student Forge Technologies Private Limited. All Rights Reserved. 
+                            Unauthorized access or use of this platform is strictly prohibited.
+                        </p>
+                        <p className="text-[10px] text-zinc-400 font-bold uppercase tracking-widest">
+                            platform.studentforge.in is a registered trademark. Secured with enterprise-grade encryption.
+                        </p>
+                    </div>
                 </div>
             </footer>
         </div>
