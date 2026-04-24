@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { tokenStore } from "@/lib/cleed-tokens";
+import { updateCleedPassword } from "@/lib/cleed-auth";
 
 export async function POST(req: Request) {
   try {
@@ -20,10 +21,9 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Security token expired" }, { status: 401 });
     }
 
-    // In a real application, you would update the database here.
-    // For this prototype using .env, we simulate success.
-    // To make this permanent, we would need to write to the database.
-    console.log(`Password reset successful for ${resetData.email}. New password: ${password}`);
+    // Persist the new password
+    updateCleedPassword(password);
+    console.log(`Password reset successful for ${resetData.email}.`);
 
     // Revoke the token
     tokenStore.delete(token);

@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server";
+import { getCleedPassword } from "@/lib/cleed-auth";
 
 export async function POST(req: Request) {
   try {
     const { email, password } = await req.json();
 
     const cleedEmail = process.env.CLEED_EMAIL;
-    const cleedPassword = process.env.CLEED_PASSWORD;
+    const cleedPassword = getCleedPassword();
 
     if (email === cleedEmail && password === cleedPassword) {
        const response = NextResponse.json({ success: true, user: { email, role: "CLEED" } });

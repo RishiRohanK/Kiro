@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Shield, Lock, Mail, ArrowRight, Loader2, RefreshCw } from "lucide-react";
+import { Shield, Lock, Mail, ArrowRight, Loader2, RefreshCw, Eye, EyeOff } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 import BottomBanner from "@/app/components/BottomBanner";
@@ -15,6 +15,11 @@ export default function CleedLoginPage() {
   const [isForgot, setIsForgot] = useState(false);
   const [forgotEmail, setForgotEmail] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showForgotEmail, setShowForgotEmail] = useState(false); // Not needed but for completeness
+  const [showRecoveryKey, setShowRecoveryKey] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -137,12 +142,19 @@ export default function CleedLoginPage() {
                     <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400 group-focus-within:text-[#F5332C] transition-colors" />
                     <input 
                       required
-                      type="password" 
+                      type={showPassword ? "text" : "password"} 
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       placeholder="Enter password"
-                      className="w-full h-12 bg-zinc-50 border border-zinc-200 pl-12 pr-4 text-sm font-bold text-zinc-900 outline-none focus:border-[#F5332C] focus:bg-white transition-all rounded-none"
+                      className="w-full h-12 bg-zinc-50 border border-zinc-200 pl-12 pr-12 text-sm font-bold text-zinc-900 outline-none focus:border-[#F5332C] focus:bg-white transition-all rounded-none"
                     />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-[#F5332C] transition-colors"
+                    >
+                      {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                    </button>
                   </div>
                 </div>
 

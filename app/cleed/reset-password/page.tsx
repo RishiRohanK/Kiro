@@ -3,7 +3,7 @@
 import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
-import { Lock, Shield, ArrowRight, Loader2, CheckCircle2 } from "lucide-react";
+import { Lock, Shield, ArrowRight, Loader2, CheckCircle2, Eye, EyeOff } from "lucide-react";
 import BottomBanner from "@/app/components/BottomBanner";
 
 function ResetPasswordForm() {
@@ -12,6 +12,8 @@ function ResetPasswordForm() {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
@@ -96,12 +98,19 @@ function ResetPasswordForm() {
                     <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400 group-focus-within:text-[#F5332C] transition-colors" />
                     <input 
                       required
-                      type="password" 
+                      type={showPassword ? "text" : "password"} 
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       placeholder="Enter new key"
-                      className="w-full h-12 bg-zinc-50 border border-zinc-200 pl-12 pr-4 text-sm font-bold text-zinc-900 outline-none focus:border-[#F5332C] focus:bg-white transition-all rounded-none"
+                      className="w-full h-12 bg-zinc-50 border border-zinc-200 pl-12 pr-12 text-sm font-bold text-zinc-900 outline-none focus:border-[#F5332C] focus:bg-white transition-all rounded-none"
                     />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-[#F5332C] transition-colors"
+                    >
+                      {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                    </button>
                   </div>
                 </div>
 
@@ -111,12 +120,19 @@ function ResetPasswordForm() {
                     <Shield className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400 group-focus-within:text-[#F5332C] transition-colors" />
                     <input 
                       required
-                      type="password" 
+                      type={showConfirmPassword ? "text" : "password"} 
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
                       placeholder="Confirm new key"
-                      className="w-full h-12 bg-zinc-50 border border-zinc-200 pl-12 pr-4 text-sm font-bold text-zinc-900 outline-none focus:border-[#F5332C] focus:bg-white transition-all rounded-none"
+                      className="w-full h-12 bg-zinc-50 border border-zinc-200 pl-12 pr-12 text-sm font-bold text-zinc-900 outline-none focus:border-[#F5332C] focus:bg-white transition-all rounded-none"
                     />
+                    <button
+                      type="button"
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-[#F5332C] transition-colors"
+                    >
+                      {showConfirmPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                    </button>
                   </div>
                 </div>
 
