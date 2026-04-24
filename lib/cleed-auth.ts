@@ -1,35 +1,39 @@
-import fs from 'fs';
-import path from 'path';
+import { prisma } from "@/lib/prisma";
 
-// Using a local JSON file to persist the administrative password override
-// In a full production system, this would be in a secured database.
-const AUTH_FILE = path.join(process.cwd(), 'cleed-auth.json');
+// Using the database (Prisma) to persist administrative settings
+// This replaces the temporary local JSON file for industrial-grade synchronization.
 
-interface AuthData {
-  passwordOverride?: string;
-}
-
-export function getCleedPassword(): string {
+export async function getCleedPassword(): Promise<string> {
   try {
-    if (fs.existsSync(AUTH_FILE)) {
-      const data = JSON.parse(fs.readFileSync(AUTH_FILE, 'utf-8')) as AuthData;
-      if (data.passwordOverride) {
-        return data.passwordOverride;
-      }
+    const setting = await prisma.cleedSettings.findUnique({
+      where: { settingKey: "admin_password" }
+    });
+    
+    if (setting) {
+      return setting.settingValue;
     }
   } catch (error) {
-    console.error("Failed to read CLEED auth file:", error);
+    console.error("Failed to read CLEED settings from database:", error);
   }
-  return process.env.CLEED_PASSWORD || "admin123";
+  
+  // Fallback to environment variable if database entry is missing
+  return process.env.CLEED_PASSWORD || "devhacksender@123";
 }
 
-export function updateCleedPassword(newPassword: string): void {
+export async function updateCleedPassword(newPassword: string): Promise<void> {
   try {
-    const data: AuthData = { passwordOverride: newPassword };
-    fs.writeFileSync(AUTH_FILE, JSON.stringify(data, null, 2));
-    console.log("CLEED password synchronized successfully.");
+    await prisma.cleedSettings.upsert({
+      where: { settingKey: "admin_password" },
+      update: { settingValue: newPassword, updatedAt: new Date() },
+      create: { 
+        id: "cleed_pwd_sync", 
+        settingKey: "admin_password", 
+        settingValue: newPassword 
+      }
+    });
+    console.log("CLEED password synchronized in database.");
   } catch (error) {
-    console.error("Failed to update CLEED auth file:", error);
+    console.error("Failed to update CLEED settings in database:", error);
     throw new Error("Synchronization failure.");
   }
 }

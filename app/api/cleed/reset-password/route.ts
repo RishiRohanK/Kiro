@@ -22,7 +22,7 @@ export async function POST(req: Request) {
     }
 
     // Persist the new password
-    updateCleedPassword(password);
+    await updateCleedPassword(password);
     console.log(`Password reset successful for ${resetData.email}.`);
 
     // Revoke the token

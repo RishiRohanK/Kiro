@@ -546,3 +546,10 @@ model RichQuestion {
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 }
+
+model CleedSettings {
+  id           String   @id @default(cuid())
+  settingKey   String   @unique
+  settingValue String
+  updatedAt    DateTime @default(now()) @updatedAt
+}

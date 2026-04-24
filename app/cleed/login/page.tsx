@@ -16,10 +16,8 @@ export default function CleedLoginPage() {
   const [forgotEmail, setForgotEmail] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [showForgotEmail, setShowForgotEmail] = useState(false); // Not needed but for completeness
+  const [showForgotEmail, setShowForgotEmail] = useState(false); 
   const [showRecoveryKey, setShowRecoveryKey] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
