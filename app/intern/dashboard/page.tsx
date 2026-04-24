@@ -773,67 +773,68 @@ function InternDashboardContent() {
                            initial={{ opacity: 0, y: 20, scale: 0.95 }}
                            animate={{ opacity: 1, y: 0, scale: 1 }}
                            exit={{ opacity: 0, y: 20, scale: 0.95 }}
-                           className="w-full max-w-[340px] bg-white shadow-2xl rounded-2xl overflow-hidden border border-zinc-100 pointer-events-auto flex flex-col mb-20 mr-2"
+                           className="w-full max-w-[350px] h-[540px] bg-white shadow-2xl rounded-2xl overflow-hidden border border-zinc-100 pointer-events-auto flex flex-col mb-20 mr-2"
                         >
                            {/* Header */}
-                           <div className="bg-[#1A3797] p-6 relative">
+                           <div className="bg-[#1A3797] p-8 relative flex flex-col items-start">
                               <button 
                                  onClick={() => setShowSupportModal(false)}
-                                 className="absolute top-4 right-4 h-8 w-8 bg-black/20 text-white rounded-full flex items-center justify-center hover:bg-black/40 transition-colors"
+                                 className="absolute top-6 right-6 h-8 w-8 bg-black/20 text-white rounded-full flex items-center justify-center hover:bg-black/40 transition-colors"
                               >
                                  <X size={16} />
                               </button>
                               
-                              <div className="h-10 w-10 bg-emerald-500 rounded-lg flex items-center justify-center mb-4 shadow-lg shadow-emerald-900/20">
-                                 <MessageSquare className="text-white" size={20} />
+                              <div className="h-12 w-12 bg-emerald-500 rounded-xl flex items-center justify-center mb-6 shadow-lg shadow-emerald-900/20">
+                                 <MessageSquare className="text-white" size={24} />
                               </div>
                               
-                              <h3 className="text-xl font-bold text-white tracking-tight">Message Us</h3>
+                              <h3 className="text-2xl font-bold text-white tracking-tight">Message Us</h3>
+                              <p className="text-white/60 text-sm mt-1 font-medium">We're here to help you</p>
                            </div>
 
-                           {/* List Items */}
-                           <div className="p-4 bg-zinc-50/50">
-                              <div className="bg-white border border-zinc-100 rounded-xl overflow-hidden shadow-sm">
+                           {/* List Items - Centered vertically in the available space */}
+                           <div className="flex-1 p-5 bg-zinc-50/30 flex flex-col justify-center">
+                              <div className="bg-white border border-zinc-100 rounded-2xl overflow-hidden shadow-sm">
                                  <a 
                                     href="https://redlix.co.in/resourse/supoer" 
                                     target="_blank"
-                                    className="p-4 flex items-center gap-4 hover:bg-zinc-50 transition-colors group"
+                                    className="p-5 flex items-center gap-5 hover:bg-zinc-50 transition-all group"
                                  >
-                                    <div className="h-10 w-10 rounded-lg bg-[#9C7F6E] flex items-center justify-center text-white font-bold shrink-0">
+                                    <div className="h-12 w-12 rounded-xl bg-[#9C7F6E] flex items-center justify-center text-white text-lg font-bold shrink-0 shadow-sm">
                                        R
                                     </div>
                                     <div className="flex-1">
-                                       <h4 className="text-[13px] font-bold text-zinc-800">Support Resources</h4>
-                                       <p className="text-[11px] text-zinc-400 font-medium">Hi, We are here to help you ...</p>
+                                       <h4 className="text-[14px] font-bold text-zinc-800">Support Resources</h4>
+                                       <p className="text-[12px] text-zinc-400 font-medium leading-relaxed">Hi, We are here to help you ...</p>
                                     </div>
                                  </a>
                                  
-                                 <div className="h-px bg-zinc-100 mx-4" />
+                                 <div className="h-px bg-zinc-100 mx-5" />
 
                                  <a 
                                     href="https://redlix.co.in/support" 
                                     target="_blank"
-                                    className="p-4 flex items-center gap-4 hover:bg-zinc-50 transition-colors group"
+                                    className="p-5 flex items-center gap-5 hover:bg-zinc-50 transition-all group"
                                  >
-                                    <div className="h-10 w-10 rounded-lg bg-[#E66B5B] flex items-center justify-center text-white font-bold shrink-0">
+                                    <div className="h-12 w-12 rounded-xl bg-[#E66B5B] flex items-center justify-center text-white text-lg font-bold shrink-0 shadow-sm">
                                        C
                                     </div>
                                     <div className="flex-1">
-                                       <h4 className="text-[13px] font-bold text-zinc-800">Chat with us</h4>
-                                       <p className="text-[11px] text-zinc-400 font-medium">Hello there! Need help? Reac...</p>
+                                       <h4 className="text-[14px] font-bold text-zinc-800">Chat with us</h4>
+                                       <p className="text-[12px] text-zinc-400 font-medium leading-relaxed">Hello there! Need help? Reac...</p>
                                     </div>
                                  </a>
                               </div>
                            </div>
 
                            {/* Footer */}
-                           <div className="p-4 flex items-center justify-center gap-1.5 opacity-50 border-t border-zinc-50">
-                              <span className="text-[10px] font-bold text-zinc-400">Powered by</span>
-                              <div className="flex items-center gap-1">
-                                 <div className="h-3.5 w-3.5 bg-emerald-500 rounded-full flex items-center justify-center">
-                                    <div className="w-1.5 h-1 bg-white rounded-full" />
+                           <div className="p-5 flex items-center justify-center gap-2 border-t border-zinc-50 bg-white">
+                              <span className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest">Powered by</span>
+                              <div className="flex items-center gap-1.5">
+                                 <div className="h-4 w-4 bg-[#1A3797] rounded-md flex items-center justify-center">
+                                    <div className="w-2 h-2 bg-white rounded-full scale-50" />
                                  </div>
-                                 <span className="text-[10px] font-bold text-emerald-600">Freshchat</span>
+                                 <span className="text-[11px] font-black text-[#1A3797] uppercase tracking-tighter">REDLIX</span>
                               </div>
                            </div>
                         </motion.div>
