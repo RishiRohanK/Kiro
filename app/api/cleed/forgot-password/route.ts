@@ -8,10 +8,11 @@ const resetTokens = new Map<string, { email: string, expires: number }>();
 export async function POST(req: Request) {
   try {
     const { email } = await req.json();
-    const registeredEmail = process.env.CLEED_EMAIL;
+    const normalizedEmail = email?.trim().toLowerCase();
+    const registeredEmail = process.env.CLEED_EMAIL?.trim().toLowerCase();
 
-    if (email !== registeredEmail) {
-      // Security: Don't reveal if email exists, but here the user specifically asked to fix it
+    if (normalizedEmail !== registeredEmail) {
+      // Security: Don't reveal if email exists
       return NextResponse.json({ error: "Unauthorized recovery request" }, { status: 403 });
     }
 

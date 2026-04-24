@@ -124,7 +124,10 @@ export default function CleedLoginPage() {
                     <label className="text-[11px] font-bold text-zinc-400">Security key</label>
                     <button 
                       type="button"
-                      onClick={() => setIsForgot(true)}
+                      onClick={() => {
+                        setIsForgot(true);
+                        setError("");
+                      }}
                       className="text-[10px] font-bold text-[#F5332C] hover:underline"
                     >
                       Forgot?
