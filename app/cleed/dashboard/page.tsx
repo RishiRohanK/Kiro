@@ -1487,10 +1487,10 @@ export default function CleedDashboard() {
                         <div className="h-1.5 w-1.5 bg-[#F5332C] rounded-none" />
                      </div>
                      <div className="hidden md:flex items-center gap-2 overflow-hidden">
-                        <span className="text-zinc-500 text-[11px] font-bold tracking-tight uppercase">Admin</span>
+                        <span className="text-zinc-500 text-[11px] font-bold tracking-tight">Admin panel</span>
                         <ChevronRight size={10} className="text-zinc-400" />
-                        <span className="text-zinc-900 font-bold text-[11px] tracking-tight uppercase">
-                           {activeTab}
+                        <span className="text-zinc-900 font-bold text-[11px] tracking-tight">
+                           {activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}
                         </span>
                      </div>
                   </div>
@@ -1500,13 +1500,12 @@ export default function CleedDashboard() {
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3 w-3 text-zinc-400" />
                         <input className="h-9 w-64 bg-white border border-zinc-200 pl-9 pr-4 text-[12px] outline-none focus:border-red-600 transition-all rounded-none font-medium text-zinc-900" placeholder="Search system records..." />
                      </div>
-                     <Link href="/cleed/dashboard/health" className="px-4 h-9 bg-zinc-900 text-white text-[10px] font-bold uppercase flex items-center gap-2 hover:bg-black transition-all rounded-none shadow-sm">
-                        <Activity size={12} />
-                        Health
+                     <Link href="/cleed/dashboard/health" className="px-5 h-9 bg-zinc-900 text-white text-[10px] font-bold flex items-center gap-2 hover:bg-black transition-all rounded-none shadow-sm">
+                        System health
                      </Link>
                      <div className="h-5 w-[1px] bg-zinc-200 mx-1" />
-                     <Link href="/" className="px-5 h-9 bg-[#F5332C] text-white text-[10px] font-bold uppercase flex items-center hover:bg-red-700 transition-all rounded-none shadow-sm">
-                        Logout
+                     <Link href="/" className="px-6 h-9 bg-[#F5332C] text-white text-[10px] font-bold flex items-center hover:bg-red-700 transition-all rounded-none shadow-sm">
+                        Sign out
                      </Link>
                   </div>
                </header>
@@ -1520,12 +1519,12 @@ export default function CleedDashboard() {
                      { id: "exams", label: "Exams" },
                      { id: "submissions", label: "Submissions" },
                      { id: "attendance", label: "Attendance" },
-                     { id: "history", label: "System Logs" }
+                     { id: "history", label: "System logs" }
                   ].map((tab) => (
                      <button
                         key={tab.id}
                         onClick={() => setActiveTab(tab.id)}
-                        className={`h-12 px-5 text-[11px] font-bold uppercase tracking-widest transition-all border-b-2 whitespace-nowrap ${activeTab === tab.id
+                        className={`h-12 px-5 text-[11px] font-bold tracking-tight transition-all border-b-2 whitespace-nowrap ${activeTab === tab.id
                            ? "border-[#F5332C] text-[#F5332C]"
                            : "border-transparent text-zinc-500 hover:text-zinc-900 hover:border-zinc-300"
                            }`}
