@@ -193,3 +193,22 @@ export const sendBootcampRegistrationEmail = async (email: string, name: string)
         return false;
     }
 };
+export const sendCleedPasswordResetEmail = async (email: string, token: string) => {
+    const title = "Administrative Recovery Request";
+    const content = "A password recovery sequence has been initiated for the CLEED administrative portal. Click the button below to access the secure recovery terminal. This link will expire in 15 minutes.";
+    const resetLink = `${BASE_URL}/cleed/reset-password?token=${token}`;
+    const html = getSimpleTemplate(title, content, "Access Recovery Terminal", resetLink, "System Integrity Division");
+
+    try {
+        await transporter.sendMail({
+            from: '"System Recovery" <studentforgetechnologies@gmail.com>',
+            to: email,
+            subject: "SECURITY ALERT: CLEED Password Recovery",
+            html: html,
+        });
+        return true;
+    } catch (error) {
+        console.error("Cleed recovery mail error:", error);
+        return false;
+    }
+};

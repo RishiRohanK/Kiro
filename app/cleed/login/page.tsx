@@ -13,6 +13,9 @@ export default function CleedLoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isForgot, setIsForgot] = useState(false);
+  const [forgotEmail, setForgotEmail] = useState("");
+  const [successMsg, setSuccessMsg] = useState("");
   const router = useRouter();
 
   useEffect(() => {
@@ -50,10 +53,36 @@ export default function CleedLoginPage() {
     }
   };
 
+  const handleForgotPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setError("");
+    setSuccessMsg("");
+
+    try {
+      const res = await fetch("/api/cleed/forgot-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: forgotEmail }),
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        setSuccessMsg(data.message);
+      } else {
+        setError(data.error || "Recovery failed.");
+      }
+    } catch (err) {
+      setError("System failure. Try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#F5F7FA] flex flex-col relative overflow-hidden">
       <div className="flex-1 flex flex-col items-center justify-center p-6">
-        {}
+        {/* Top Accent Bar */}
         <div className="absolute top-0 left-0 w-full h-1 bg-[#F5332C]" />
         
         <motion.div 
@@ -65,64 +94,133 @@ export default function CleedLoginPage() {
             <div className="flex flex-col items-center gap-6">
                <img src="/clledlogo.png" alt="Cleed Logo" className="h-16 w-16 object-contain" />
                <div className="text-center space-y-1">
-                 <h2 className="text-2xl font-bold tracking-tight text-zinc-900">Login</h2>
-                 <p className="text-zinc-500 text-[13px] font-medium leading-none">Administrative portal</p>
+                 <h2 className="text-2xl font-bold tracking-tight text-zinc-900">
+                    {isForgot ? "Recovery" : "Login"}
+                 </h2>
+                 <p className="text-zinc-500 text-[13px] font-medium leading-none">
+                    {isForgot ? "Administrative reset" : "Administrative portal"}
+                 </p>
                </div>
             </div>
 
-            <form onSubmit={handleLogin} className="space-y-6">
-              <div className="space-y-2">
-                <label className="text-[11px] font-bold text-zinc-400">Email address</label>
-                <div className="relative group">
-                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400 group-focus-within:text-[#F5332C] transition-colors" />
-                  <input 
-                    required
-                    type="email" 
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="admin@cleed.com"
-                    className="w-full h-12 bg-zinc-50 border border-zinc-200 pl-12 pr-4 text-sm font-bold text-zinc-900 outline-none focus:border-[#F5332C] focus:bg-white transition-all rounded-none"
-                  />
+            {!isForgot ? (
+              <form onSubmit={handleLogin} className="space-y-6">
+                <div className="space-y-2">
+                  <label className="text-[11px] font-bold text-zinc-400">Email address</label>
+                  <div className="relative group">
+                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400 group-focus-within:text-[#F5332C] transition-colors" />
+                    <input 
+                      required
+                      type="email" 
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="admin@cleed.com"
+                      className="w-full h-12 bg-zinc-50 border border-zinc-200 pl-12 pr-4 text-sm font-bold text-zinc-900 outline-none focus:border-[#F5332C] focus:bg-white transition-all rounded-none"
+                    />
+                  </div>
                 </div>
-              </div>
 
-              <div className="space-y-2">
-                <label className="text-[11px] font-bold text-zinc-400">Security key</label>
-                <div className="relative group">
-                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400 group-focus-within:text-[#F5332C] transition-colors" />
-                  <input 
-                    required
-                    type="password" 
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Enter password"
-                    className="w-full h-12 bg-zinc-50 border border-zinc-200 pl-12 pr-4 text-sm font-bold text-zinc-900 outline-none focus:border-[#F5332C] focus:bg-white transition-all rounded-none"
-                  />
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <label className="text-[11px] font-bold text-zinc-400">Security key</label>
+                    <button 
+                      type="button"
+                      onClick={() => setIsForgot(true)}
+                      className="text-[10px] font-bold text-[#F5332C] hover:underline"
+                    >
+                      Forgot?
+                    </button>
+                  </div>
+                  <div className="relative group">
+                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400 group-focus-within:text-[#F5332C] transition-colors" />
+                    <input 
+                      required
+                      type="password" 
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder="Enter password"
+                      className="w-full h-12 bg-zinc-50 border border-zinc-200 pl-12 pr-4 text-sm font-bold text-zinc-900 outline-none focus:border-[#F5332C] focus:bg-white transition-all rounded-none"
+                    />
+                  </div>
                 </div>
-              </div>
 
-              {error && (
-                <motion.div 
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="bg-red-50 border border-red-100 p-3"
-                >
-                  <p className="text-red-600 text-[11px] font-bold text-center">{error}</p>
-                </motion.div>
-              )}
-
-              <button 
-                disabled={isLoading}
-                type="submit"
-                className="w-full h-12 bg-zinc-900 text-white text-[11px] font-bold tracking-widest hover:bg-black transition-all disabled:opacity-50 flex items-center justify-center gap-2 rounded-none"
-              >
-                {isLoading ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : (
-                  <>Sign in <ArrowRight size={14} /></>
+                {error && (
+                  <motion.div 
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="bg-red-50 border border-red-100 p-3"
+                  >
+                    <p className="text-red-600 text-[11px] font-bold text-center">{error}</p>
+                  </motion.div>
                 )}
-              </button>
-            </form>
+
+                <button 
+                  disabled={isLoading}
+                  type="submit"
+                  className="w-full h-12 bg-zinc-900 text-white text-[11px] font-bold tracking-widest hover:bg-black transition-all disabled:opacity-50 flex items-center justify-center gap-2 rounded-none"
+                >
+                  {isLoading ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <>Sign in <ArrowRight size={14} /></>
+                  )}
+                </button>
+              </form>
+            ) : (
+              <form onSubmit={handleForgotPassword} className="space-y-6">
+                <div className="space-y-2">
+                  <label className="text-[11px] font-bold text-zinc-400">Registered email</label>
+                  <div className="relative group">
+                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400 group-focus-within:text-[#F5332C] transition-colors" />
+                    <input 
+                      required
+                      type="email" 
+                      value={forgotEmail}
+                      onChange={(e) => setForgotEmail(e.target.value)}
+                      placeholder="Enter registered mail"
+                      className="w-full h-12 bg-zinc-50 border border-zinc-200 pl-12 pr-4 text-sm font-bold text-zinc-900 outline-none focus:border-[#F5332C] focus:bg-white transition-all rounded-none"
+                    />
+                  </div>
+                </div>
+
+                {error && (
+                  <div className="bg-red-50 border border-red-100 p-3">
+                    <p className="text-red-600 text-[11px] font-bold text-center">{error}</p>
+                  </div>
+                )}
+
+                {successMsg && (
+                  <div className="bg-emerald-50 border border-emerald-100 p-3">
+                    <p className="text-emerald-600 text-[11px] font-bold text-center">{successMsg}</p>
+                  </div>
+                )}
+
+                <div className="space-y-3">
+                  <button 
+                    disabled={isLoading || !!successMsg}
+                    type="submit"
+                    className="w-full h-12 bg-zinc-900 text-white text-[11px] font-bold tracking-widest hover:bg-black transition-all disabled:opacity-50 flex items-center justify-center gap-2 rounded-none"
+                  >
+                    {isLoading ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <>Send link <ArrowRight size={14} /></>
+                    )}
+                  </button>
+                  <button 
+                    type="button"
+                    onClick={() => {
+                      setIsForgot(false);
+                      setSuccessMsg("");
+                      setError("");
+                    }}
+                    className="w-full text-center text-zinc-400 text-[11px] font-bold hover:text-black transition-colors"
+                  >
+                    Back to login
+                  </button>
+                </div>
+              </form>
+            )}
 
             <div className="pt-6 border-t border-zinc-100 flex flex-col items-center gap-6">
               <p className="text-center text-zinc-400 text-[10px] font-medium leading-relaxed">
