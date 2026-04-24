@@ -71,23 +71,23 @@ export default function PortalPage() {
             initial={{ y: -100, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: -100, opacity: 0 }}
-            className="fixed top-4 md:top-6 left-1/2 -translate-x-1/2 z-[200] w-[95%] max-w-xl"
+            className="fixed top-2 md:top-6 left-0 right-0 z-[200] px-4"
           >
-            <div className="bg-blue-600 shadow-2xl px-4 md:px-6 py-3 md:py-4 flex items-center justify-between gap-4 rounded-xl border border-blue-500">
-              <div className="flex items-center gap-3 md:gap-4">
+            <div className="bg-blue-600 shadow-2xl px-4 md:px-6 py-3 md:py-4 flex items-center justify-between gap-3 rounded-xl border border-blue-500 max-w-2xl mx-auto">
+              <div className="flex items-center gap-3">
                 <div className="w-8 h-8 md:w-10 md:h-10 bg-white/10 rounded-full flex items-center justify-center shrink-0">
                   <Bell size={16} className="text-white animate-pulse" />
                 </div>
-                <div className="space-y-0.5">
-                  <p className="text-[12px] md:text-[13px] text-white font-bold tracking-tight">System updated</p>
-                  <p className="text-[10px] md:text-[11px] text-blue-100 font-medium">We made the login better. Updated: April 24, 2026 at 7:52 PM</p>
+                <div className="space-y-0.5 overflow-hidden">
+                  <p className="text-[11px] md:text-[13px] text-white font-bold tracking-tight">System updated</p>
+                  <p className="text-[9px] md:text-[11px] text-blue-100 font-medium truncate">Better login. Updated: April 24, 7:52 PM</p>
                 </div>
               </div>
               <button 
                 onClick={() => setShowUpdateToast(false)}
-                className="w-8 h-8 flex items-center justify-center text-blue-200 hover:text-white hover:bg-white/10 rounded-full transition-all shrink-0"
+                className="w-7 h-7 md:w-8 md:h-8 flex items-center justify-center text-blue-200 hover:text-white hover:bg-white/10 rounded-full transition-all shrink-0"
               >
-                <X size={18} />
+                <X size={16} />
               </button>
             </div>
           </motion.div>
@@ -105,26 +105,25 @@ export default function PortalPage() {
         />
       </div>
 
-      <div className="absolute top-4 md:top-6 right-4 md:right-8 z-50 flex items-center gap-0">
+      <div className="fixed md:absolute top-auto bottom-20 md:bottom-auto md:top-6 left-4 right-4 md:left-auto md:right-8 z-50 flex items-center justify-center md:justify-end gap-0">
         <button
           onClick={() => setShowGuide(true)}
-          className="relative flex items-center gap-2 px-4 md:px-6 py-2 md:py-3 border border-zinc-100 bg-white text-[10px] md:text-[12px] font-bold text-zinc-500 hover:text-black hover:border-zinc-300 transition-all rounded-none"
+          className="flex-1 md:flex-none relative flex items-center justify-center gap-2 px-3 md:px-6 py-2.5 md:py-3 border border-zinc-200 bg-white text-[10px] md:text-[12px] font-bold text-zinc-600 hover:text-black hover:border-zinc-300 transition-all rounded-none shadow-sm md:shadow-none"
         >
           <HelpCircle size={14} className="shrink-0" />
-          <span className="hidden sm:inline">Platform Guide</span>
-          <span className="sm:hidden">Guide</span>
+          <span>Guide</span>
+          <span className="hidden md:inline ml-1">Platform</span>
           
-          {/* Notification Badge */}
           <span className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-red-600 text-white text-[9px] font-bold rounded-full flex items-center justify-center border-2 border-white shadow-sm">
             1
           </span>
         </button>
         <Link
           href="/support"
-          className="flex items-center gap-2 px-4 md:px-6 py-2 md:py-3 border border-zinc-100 bg-white text-[10px] md:text-[12px] font-medium text-zinc-500 hover:text-black hover:border-zinc-300 transition-all rounded-none border-l-0"
+          className="flex-1 md:flex-none flex items-center justify-center gap-2 px-3 md:px-6 py-2.5 md:py-3 border border-zinc-200 bg-white text-[10px] md:text-[12px] font-medium text-zinc-600 hover:text-black hover:border-zinc-300 transition-all rounded-none border-l-0 shadow-sm md:shadow-none"
         >
-          <span className="hidden sm:inline">Technical Support</span>
-          <span className="sm:hidden">Support</span>
+          <span>Support</span>
+          <span className="hidden md:inline ml-1">Technical</span>
         </Link>
       </div>
 
@@ -209,7 +208,7 @@ export default function PortalPage() {
         )}
       </AnimatePresence>
 
-      <div className="flex-1 flex flex-col items-start justify-center px-4 md:px-24 py-6 md:py-8 relative z-10 overflow-hidden">
+      <div className="flex-1 flex flex-col items-start justify-center px-6 md:px-24 py-12 md:py-8 relative z-10 overflow-hidden">
         <div className="w-full max-w-5xl flex flex-col items-start">
 
           {/* Header */}
@@ -277,25 +276,25 @@ export default function PortalPage() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5 }}
-        className="w-full bg-zinc-50 border-t border-zinc-100 py-4 px-6 relative z-10"
+        className="w-full bg-zinc-50 border-t border-zinc-100 py-6 px-6 relative z-10 mt-auto"
       >
-        <div className="max-w-5xl mx-auto flex flex-col items-center gap-2 text-center">
-          <div className="space-y-0.5">
-            <p className="text-[10px] text-zinc-500 font-medium leading-relaxed">
-              © 2025-2026 Student Forge Technologies Private Limited. All Rights Reserved. 
+        <div className="max-w-5xl mx-auto flex flex-col items-center gap-4 text-center">
+          <div className="space-y-1">
+            <p className="text-[9px] md:text-[10px] text-zinc-500 font-medium leading-relaxed max-w-lg">
+              © 2025-2026 Student Forge Technologies Private Limited. 
               Unauthorized access or use of this platform is strictly prohibited.
             </p>
-            <p className="text-[9px] text-zinc-400 font-bold uppercase tracking-widest">
-              platform.studentforge.in • Secured with enterprise-grade encryption
+            <p className="text-[8px] md:text-[9px] text-zinc-400 font-bold uppercase tracking-widest">
+              platform.studentforge.in • Enterprise-grade encryption
             </p>
           </div>
 
-          <div className="flex items-center gap-6 pt-2 border-t border-zinc-100 w-full justify-center">
-            <Link href="/home" className="text-[10px] font-bold text-zinc-400 hover:text-black transition-colors uppercase tracking-widest">
-              Public Home
+          <div className="flex items-center gap-6 pt-4 border-t border-zinc-100 w-full justify-center">
+            <Link href="/home" className="text-[9px] md:text-[10px] font-bold text-zinc-400 hover:text-black transition-colors uppercase tracking-widest">
+              Home
             </Link>
-            <Link href="/support" className="text-[10px] font-bold text-zinc-400 hover:text-black transition-colors uppercase tracking-widest">
-              Technical Support
+            <Link href="/support" className="text-[9px] md:text-[10px] font-bold text-zinc-400 hover:text-black transition-colors uppercase tracking-widest">
+              Support
             </Link>
           </div>
         </div>
@@ -308,20 +307,20 @@ export default function PortalPage() {
             initial={{ y: 100, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 100, opacity: 0 }}
-            className="fixed bottom-8 left-1/2 -translate-x-1/2 z-[100] w-[90%] max-w-md"
+            className="fixed bottom-4 md:bottom-8 left-0 right-0 z-[100] px-4"
           >
-            <div className="bg-white border border-zinc-100 shadow-2xl p-5 flex items-center justify-between gap-6">
-              <div className="flex items-center gap-4">
-                <div className="w-10 h-10 bg-emerald-50 rounded-full flex items-center justify-center shrink-0">
-                  <ShieldCheck size={18} className="text-emerald-600" />
+            <div className="bg-white border border-zinc-200 shadow-2xl p-4 md:p-5 flex flex-col sm:flex-row items-center justify-between gap-4 max-w-2xl mx-auto">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 bg-emerald-50 rounded-full flex items-center justify-center shrink-0">
+                  <ShieldCheck size={16} className="text-emerald-600" />
                 </div>
-                <p className="text-[12px] text-zinc-500 font-medium leading-tight">
+                <p className="text-[11px] md:text-[12px] text-zinc-500 font-medium leading-tight">
                   We use essential cookies to ensure the best portal experience.
                 </p>
               </div>
               <button 
                 onClick={acceptCookies}
-                className="px-5 py-2 bg-zinc-900 text-white text-[10px] font-bold uppercase tracking-widest hover:bg-emerald-600 transition-colors shrink-0 rounded-none"
+                className="w-full sm:w-auto px-6 py-2 bg-zinc-900 text-white text-[10px] font-bold uppercase tracking-widest hover:bg-emerald-600 transition-colors shrink-0 rounded-none"
               >
                 Got it
               </button>
@@ -337,28 +336,28 @@ function CardContent({ option, isFrozen }: { option: any, isFrozen: boolean }) {
   return (
     <div className="flex flex-col md:flex-row items-center h-auto md:h-28">
       {/* Text Area (Main Content) */}
-      <div className="flex-1 p-5 md:p-6 md:px-12 flex flex-col md:flex-row items-center justify-between gap-4 md:gap-6">
+      <div className="flex-1 p-5 md:p-6 md:px-12 flex flex-col md:flex-row items-center justify-between gap-4 md:gap-6 w-full">
         <div className="text-center md:text-left space-y-1">
           <h3 className="text-lg md:text-xl font-bold text-zinc-900 flex items-center gap-3 justify-center md:justify-start">
             {option.title}
             {isFrozen && (
-              <span className="text-[9px] md:text-[10px] bg-white px-2 py-0.5 border border-zinc-200 text-zinc-400 font-bold uppercase tracking-widest">
+              <span className="text-[8px] md:text-[10px] bg-white px-2 py-0.5 border border-zinc-200 text-zinc-400 font-bold uppercase tracking-widest">
                 Maintenance
               </span>
             )}
           </h3>
-          <p className="text-zinc-500 text-[12px] md:text-[13px] font-medium leading-relaxed max-w-lg">
-            {isFrozen ? "This portal is currently undergoing scheduled maintenance for infrastructure upgrades." : option.description}
+          <p className="text-zinc-500 text-[11px] md:text-[13px] font-medium leading-relaxed max-w-lg">
+            {isFrozen ? "Scheduled maintenance for infrastructure upgrades." : option.description}
           </p>
         </div>
 
-        <div className="shrink-0 w-full md:w-auto">
-          <div className={`inline-flex w-full md:w-auto items-center justify-center px-8 md:px-10 py-2.5 md:py-3 text-[12px] md:text-[13px] font-medium transition-all rounded-none ${
+        <div className="shrink-0 w-full md:w-auto mt-2 md:mt-0">
+          <div className={`inline-flex w-full md:w-auto items-center justify-center px-6 md:px-10 py-2.5 md:py-3 text-[11px] md:text-[13px] font-medium transition-all rounded-none ${
             isFrozen 
             ? 'bg-white/50 text-zinc-400 cursor-not-allowed border border-zinc-200' 
             : `bg-zinc-900 text-white ${option.hoverColor} group-hover:shadow-xl group-hover:-translate-y-0.5`
           }`}>
-            {isFrozen ? "Locked" : "Enter portal"} {!isFrozen && <ArrowUpRight size={16} className="ml-2 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform shrink-0" />}
+            {isFrozen ? "Locked" : "Enter portal"} {!isFrozen && <ArrowUpRight size={14} className="ml-2 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform shrink-0" />}
           </div>
         </div>
       </div>
