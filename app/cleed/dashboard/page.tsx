@@ -1416,9 +1416,6 @@ export default function CleedDashboard() {
                         { id: "overview", icon: LayoutDashboard, label: "Home" },
                         { id: "interns", icon: Users, label: "Intern List" },
                         { id: "hiring", icon: Briefcase, label: "Hiring Hub" },
-                        { id: "exams", icon: FileText, label: "Exams" },
-                        { id: "attendance", icon: CalendarCheck, label: "Attendance" },
-                        { id: "submissions", icon: ExternalLink, label: "Audit" },
                      ].map((item) => (
                         <button
                            key={item.id}
@@ -1437,15 +1434,49 @@ export default function CleedDashboard() {
 
                <details open className="group">
                   <summary className="hidden lg:flex items-center justify-between text-[11px] font-bold text-white/60 uppercase tracking-widest px-3 py-2 cursor-pointer hover:text-white transition-colors select-none list-none [&::-webkit-details-marker]:hidden">
-                     Programs
+                     Registry
                      <ChevronDown size={14} className="group-open:rotate-180 transition-transform text-white/40" />
                   </summary>
                   <div className="mt-1 space-y-1 ml-2 border-l border-white/10 pl-2">
                      {[
+                        { id: "interns", icon: Users, label: "Interns" },
+                        { id: "authorizations", icon: ShieldCheck, label: "Approvals" },
+                        { id: "employees", icon: ShieldCheck, label: "Employees" },
+                        { id: "certification", icon: FileBadge, label: "Certificates" },
+                        { id: "exams", icon: FileText, label: "Exams" },
+                        { id: "resources", icon: BookOpen, label: "Resources" },
                         { id: "bootcamp", icon: Zap, label: "Bootcamp" },
-                        { id: "events", icon: LayoutDashboard, label: "Events" },
-                        { id: "ideas", icon: Globe, label: "Ideas" },
-                        { id: "internships", icon: Briefcase, label: "Programs" },
+                        { id: "attendance", icon: CalendarCheck, label: "Attendance" },
+                        { id: "vault", icon: Shield, label: "Vault" },
+                     ].map((item) => (
+                        <button
+                           key={item.id}
+                           onClick={() => setActiveTab(item.id)}
+                           className={`w-full h-10 flex items-center px-3 gap-3 transition-all rounded-none ${activeTab === item.id
+                              ? "bg-white/10 text-white font-bold border-l-2 border-white -ml-[9px] pl-[10px]"
+                              : "text-white/70 hover:text-white hover:bg-white/5"
+                              }`}
+                        >
+                           <item.icon size={16} strokeWidth={activeTab === item.id ? 2.5 : 2} />
+                           <span className={`hidden lg:block text-[13px]`}>{item.label}</span>
+                        </button>
+                     ))}
+                  </div>
+               </details>
+
+               <details open className="group">
+                  <summary className="hidden lg:flex items-center justify-between text-[11px] font-bold text-white/60 uppercase tracking-widest px-3 py-2 cursor-pointer hover:text-white transition-colors select-none list-none [&::-webkit-details-marker]:hidden">
+                     Tracking
+                     <ChevronDown size={14} className="group-open:rotate-180 transition-transform text-white/40" />
+                  </summary>
+                  <div className="mt-1 space-y-1 ml-2 border-l border-white/10 pl-2">
+                     {[
+                        { id: "schedule", icon: Calendar, label: "Daily Plan" },
+                        { id: "manage_schedules", icon: Settings, label: "Manage" },
+                        { id: "assign", icon: Send, label: "Assign" },
+                        { id: "submissions", icon: ExternalLink, label: "Audit" },
+                        { id: "mentorship", icon: Users, label: "Mentors" },
+                        { id: "history", icon: History, label: "Log" }
                      ].map((item) => (
                         <button
                            key={item.id}
