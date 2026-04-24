@@ -61,7 +61,7 @@ export default function PortalPage() {
     localStorage.setItem("sf_cookie_consent", "true");
     setShowCookies(false);
   };
-
+  return (
     <div className="min-h-screen md:h-screen bg-white flex flex-col selection:bg-zinc-100 selection:text-black relative overflow-hidden font-sans">
       
       {/* System Update Notification */}
