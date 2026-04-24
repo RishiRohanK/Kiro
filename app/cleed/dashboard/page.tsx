@@ -1398,77 +1398,34 @@ export default function CleedDashboard() {
          </AnimatePresence>
 
          { }
-         <aside className="hidden md:flex fixed left-0 top-0 h-full w-20 lg:w-[260px] border-r border-red-700 z-50 flex-col pt-[env(safe-area-inset-top)]" style={{ backgroundColor: '#F5332C' }}>
+         {/* Clean Desktop Sidebar */}
+         <aside className="hidden md:flex fixed left-0 top-0 h-full w-20 lg:w-[260px] border-r border-zinc-200 z-50 flex-col pt-[env(safe-area-inset-top)] bg-white">
             <div className="p-8 pb-4 flex items-center justify-start gap-2">
-               <span className="text-2xl font-black text-white tracking-tighter uppercase leading-none select-none">Cleed</span>
-               <div className="h-1.5 w-1.5 bg-white rounded-none" />
+               <span className="text-2xl font-black text-zinc-900 tracking-tighter uppercase leading-none select-none">Cleed</span>
+               <div className="h-1.5 w-1.5 bg-[#F5332C] rounded-none" />
             </div>
 
             <nav className="flex-1 mt-6 px-3 overflow-y-auto space-y-4 custom-scrollbar pb-8">
-
                <details open className="group">
-                  <summary className="hidden lg:flex items-center justify-between text-[11px] font-bold text-white/60 tracking-widest px-3 py-2 cursor-pointer hover:text-white transition-colors select-none list-none [&::-webkit-details-marker]:hidden">
-                     Hub
-                     <ChevronDown size={14} className="group-open:rotate-180 transition-transform text-white/40" />
+                  <summary className="hidden lg:flex items-center justify-between text-[11px] font-bold text-zinc-400 uppercase tracking-widest px-3 py-2 cursor-pointer hover:text-zinc-900 transition-colors select-none list-none [&::-webkit-details-marker]:hidden">
+                     Management
+                     <ChevronDown size={14} className="group-open:rotate-180 transition-transform text-zinc-300" />
                   </summary>
-                  <div className="mt-1 space-y-1 ml-2 border-l border-white/10 pl-2">
+                  <div className="mt-1 space-y-1 ml-2 border-l border-zinc-100 pl-2">
                      {[
                         { id: "overview", icon: LayoutDashboard, label: "Home" },
-                        { id: "events", icon: LayoutDashboard, label: "Events" },
-                        { id: "ideas", icon: Globe, label: "Ideas" }
-                     ].map((item) => (
-                        <button
-                           key={item.id}
-                           onClick={() => {
-                              if (item.id === "vault") {
-                                 router.push("/cleed/dashboard/submissions");
-                              } else {
-                                 setActiveTab(item.id);
-                              }
-                           }}
-                           className={`w-full h-10 flex items-center px-3 gap-3 transition-all rounded-none ${activeTab === item.id
-                              ? "bg-white/10 text-white font-bold border-l-2 border-white -ml-[9px] pl-[10px]"
-                              : "text-white/70 hover:text-white hover:bg-white/5"
-                              }`}
-                        >
-                           <item.icon size={16} strokeWidth={activeTab === item.id ? 2.5 : 2} />
-                           <span className={`hidden lg:block text-[13px]`}>{item.label}</span>
-                        </button>
-                     ))}
-                  </div>
-               </details>
-
-               <details open className="group">
-                  <summary className="hidden lg:flex items-center justify-between text-[11px] font-bold text-white/60 uppercase tracking-widest px-3 py-2 cursor-pointer hover:text-white transition-colors select-none list-none [&::-webkit-details-marker]:hidden">
-                     Registry
-                     <ChevronDown size={14} className="group-open:rotate-180 transition-transform text-white/40" />
-                  </summary>
-                  <div className="mt-1 space-y-1 ml-2 border-l border-white/10 pl-2">
-                     {[
-                        { id: "interns", icon: Users, label: "Interns" },
-                        { id: "authorizations", icon: ShieldCheck, label: "Approvals" },
-                        { id: "hiring", icon: Briefcase, label: "Hiring" },
-                        { id: "internships", icon: Briefcase, label: "Programs" },
-                        { id: "employees", icon: ShieldCheck, label: "Employees" },
-                        { id: "certification", icon: FileBadge, label: "Certificates" },
+                        { id: "interns", icon: Users, label: "Intern List" },
+                        { id: "hiring", icon: Briefcase, label: "Hiring Hub" },
                         { id: "exams", icon: FileText, label: "Exams" },
-                        { id: "resources", icon: BookOpen, label: "Resources" },
-                        { id: "bootcamp", icon: Zap, label: "Bootcamp" },
                         { id: "attendance", icon: CalendarCheck, label: "Attendance" },
-                        { id: "vault", icon: Shield, label: "Vault" },
+                        { id: "submissions", icon: ExternalLink, label: "Audit" },
                      ].map((item) => (
                         <button
                            key={item.id}
-                           onClick={() => {
-                              if (item.id === "vault") {
-                                 router.push("/cleed/dashboard/submissions");
-                              } else {
-                                 setActiveTab(item.id);
-                              }
-                           }}
+                           onClick={() => setActiveTab(item.id)}
                            className={`w-full h-10 flex items-center px-3 gap-3 transition-all rounded-none ${activeTab === item.id
-                              ? "bg-white/10 text-white font-bold border-l-2 border-white -ml-[9px] pl-[10px]"
-                              : "text-white/70 hover:text-white hover:bg-white/5"
+                              ? "bg-zinc-50 text-[#F5332C] font-bold border-l-2 border-[#F5332C] -ml-[9px] pl-[10px]"
+                              : "text-zinc-500 hover:text-zinc-900 hover:bg-zinc-50"
                               }`}
                         >
                            <item.icon size={16} strokeWidth={activeTab === item.id ? 2.5 : 2} />
@@ -1479,31 +1436,23 @@ export default function CleedDashboard() {
                </details>
 
                <details open className="group">
-                  <summary className="hidden lg:flex items-center justify-between text-[11px] font-bold text-white/60 uppercase tracking-widest px-3 py-2 cursor-pointer hover:text-white transition-colors select-none list-none [&::-webkit-details-marker]:hidden">
-                     Tracking
-                     <ChevronDown size={14} className="group-open:rotate-180 transition-transform text-white/40" />
+                  <summary className="hidden lg:flex items-center justify-between text-[11px] font-bold text-zinc-400 uppercase tracking-widest px-3 py-2 cursor-pointer hover:text-zinc-900 transition-colors select-none list-none [&::-webkit-details-marker]:hidden">
+                     Programs
+                     <ChevronDown size={14} className="group-open:rotate-180 transition-transform text-zinc-300" />
                   </summary>
-                  <div className="mt-1 space-y-1 ml-2 border-l border-white/10 pl-2">
+                  <div className="mt-1 space-y-1 ml-2 border-l border-zinc-100 pl-2">
                      {[
-                        { id: "schedule", icon: Calendar, label: "Daily Plan" },
-                        { id: "manage_schedules", icon: Settings, label: "Manage" },
-                        { id: "assign", icon: Send, label: "Assign" },
-                        { id: "submissions", icon: ExternalLink, label: "Audit" },
-                        { id: "mentorship", icon: Users, label: "Mentors" },
-                        { id: "history", icon: History, label: "Log" }
+                        { id: "bootcamp", icon: Zap, label: "Bootcamp" },
+                        { id: "events", icon: LayoutDashboard, label: "Events" },
+                        { id: "ideas", icon: Globe, label: "Ideas" },
+                        { id: "internships", icon: Briefcase, label: "Programs" },
                      ].map((item) => (
                         <button
                            key={item.id}
-                           onClick={() => {
-                              if (item.id === "vault") {
-                                 router.push("/cleed/dashboard/submissions");
-                              } else {
-                                 setActiveTab(item.id);
-                              }
-                           }}
+                           onClick={() => setActiveTab(item.id)}
                            className={`w-full h-10 flex items-center px-3 gap-3 transition-all rounded-none ${activeTab === item.id
-                              ? "bg-white/10 text-white font-bold border-l-2 border-white -ml-[9px] pl-[10px]"
-                              : "text-white/70 hover:text-white hover:bg-white/5"
+                              ? "bg-zinc-50 text-[#F5332C] font-bold border-l-2 border-[#F5332C] -ml-[9px] pl-[10px]"
+                              : "text-zinc-500 hover:text-zinc-900 hover:bg-zinc-50"
                               }`}
                         >
                            <item.icon size={16} strokeWidth={activeTab === item.id ? 2.5 : 2} />
@@ -1514,45 +1463,78 @@ export default function CleedDashboard() {
                </details>
             </nav>
 
-            <div className="p-5 border-t border-white/10">
+            <div className="p-5 border-t border-zinc-100">
                <div className="flex items-center gap-3">
-                  <div className="h-8 w-8 bg-white/10 flex items-center justify-center text-white rounded-none">
+                  <div className="h-8 w-8 bg-zinc-100 flex items-center justify-center text-zinc-500 rounded-none">
                      <Users size={16} />
                   </div>
                   <div className="hidden lg:block text-left overflow-hidden">
-                     <p className="text-[12px] text-white font-bold truncate">Dashboard Admin</p>
-                     <p className="text-[10px] text-white/50 truncate uppercase tracking-widest leading-none mt-1">Operator</p>
+                     <p className="text-[12px] text-zinc-900 font-bold truncate">Dashboard Admin</p>
+                     <p className="text-[10px] text-zinc-400 truncate uppercase tracking-widest leading-none mt-1">Operator</p>
                   </div>
                </div>
             </div>
          </aside>
 
-         { }
-         <main className="md:pl-20 lg:pl-64 min-h-screen pt-[calc(4rem+env(safe-area-inset-top))] md:pt-0">
-            <header className="h-14 border-b border-zinc-200 flex items-center justify-between px-6 md:px-8 sticky top-[calc(4rem+env(safe-area-inset-top))] md:top-0 z-40" style={{ backgroundColor: '#CCC8B9' }}>
-               <div className="flex items-center gap-2 overflow-hidden">
-                  <span className="text-zinc-900 text-[10px] md:text-[11px] font-bold tracking-tight whitespace-nowrap">Home</span>
-                  <ChevronRight size={10} className="text-zinc-700 flex-shrink-0" />
-                  <span className="text-zinc-950 font-bold text-[11px] truncate tracking-tight">
-                     {activeTab === "internships" ? "Internships" : activeTab === "employees" ? "Employees" : activeTab === "interns" ? "Intern List" : activeTab === "assign" ? "Tasks" : activeTab === "certification" ? "Certificates" : activeTab === "authorizations" ? "Approvals" : activeTab === "mentorship" ? "Mentors" : activeTab === "schedule" ? "Schedules" : activeTab === "hiring" ? "Hiring" : activeTab === "submissions" ? "Submissions" : activeTab === "events" ? "Events" : activeTab === "ideas" ? "Ideas" : activeTab === "attendance" ? "Attendance" : activeTab === "bootcamp" ? "Bootcamp" : "Log"}
-                  </span>
-               </div>
-
-               <div className="flex items-center gap-4">
-                  <div className="relative group hidden md:block">
-                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3 w-3 text-zinc-500" />
-                     <input className="h-8 w-48 bg-zinc-50 border border-zinc-300 pl-8 pr-4 text-[11px] outline-none focus:border-zinc-500 transition-all rounded-none font-medium text-zinc-700" placeholder="Search..." />
+         {/* Main Content Area */}
+         <main className="md:pl-20 lg:pl-[260px] min-h-screen pt-[calc(4rem+env(safe-area-inset-top))] md:pt-0">
+            {/* Top Subnavbar / Header Group */}
+            <div className="sticky top-0 z-40 bg-white border-b border-zinc-200">
+               <header className="h-16 flex items-center justify-between px-6 md:px-8">
+                  <div className="flex items-center gap-3">
+                     <div className="md:hidden flex items-center gap-2 mr-2">
+                        <span className="text-xl font-black text-zinc-900 tracking-tighter uppercase leading-none">Cleed</span>
+                        <div className="h-1.5 w-1.5 bg-[#F5332C] rounded-none" />
+                     </div>
+                     <div className="hidden md:flex items-center gap-2 overflow-hidden">
+                        <span className="text-zinc-400 text-[11px] font-bold tracking-tight uppercase">Admin</span>
+                        <ChevronRight size={10} className="text-zinc-300" />
+                        <span className="text-zinc-900 font-bold text-[11px] tracking-tight uppercase">
+                           {activeTab}
+                        </span>
+                     </div>
                   </div>
-                  <Link href="/cleed/dashboard/health" className="px-4 h-8 bg-black text-white text-[10px] font-bold uppercase flex items-center gap-2 hover:bg-zinc-800 transition-all rounded-none shadow-sm">
-                     <Activity size={12} />
-                     Health
-                  </Link>
-                  <div className="h-4 w-[1px] bg-zinc-300" />
-                  <Link href="/" className="px-5 h-8 bg-red-600 text-white text-[10px] font-bold uppercase flex items-center hover:bg-red-700 transition-all rounded-none shadow-sm">
-                     Logout
-                  </Link>
+
+                  <div className="flex items-center gap-4">
+                     <div className="relative group hidden md:block">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3 w-3 text-zinc-400" />
+                        <input className="h-9 w-64 bg-zinc-50 border border-zinc-200 pl-9 pr-4 text-[12px] outline-none focus:border-zinc-400 transition-all rounded-none font-medium text-zinc-900" placeholder="Search system records..." />
+                     </div>
+                     <Link href="/cleed/dashboard/health" className="px-4 h-9 bg-zinc-900 text-white text-[10px] font-bold uppercase flex items-center gap-2 hover:bg-black transition-all rounded-none shadow-sm">
+                        <Activity size={12} />
+                        Health
+                     </Link>
+                     <div className="h-5 w-[1px] bg-zinc-200 mx-1" />
+                     <Link href="/" className="px-5 h-9 bg-[#F5332C] text-white text-[10px] font-bold uppercase flex items-center hover:bg-red-700 transition-all rounded-none shadow-sm">
+                        Logout
+                     </Link>
+                  </div>
+               </header>
+
+               {/* New Dynamic Subnavbar */}
+               <div className="flex px-8 border-t border-zinc-50 overflow-x-auto scrollbar-hide">
+                  {[
+                     { id: "overview", label: "Overview" },
+                     { id: "interns", label: "Interns" },
+                     { id: "hiring", label: "Applications" },
+                     { id: "exams", label: "Exams" },
+                     { id: "submissions", label: "Submissions" },
+                     { id: "attendance", label: "Attendance" },
+                     { id: "history", label: "System Logs" }
+                  ].map((tab) => (
+                     <button
+                        key={tab.id}
+                        onClick={() => setActiveTab(tab.id)}
+                        className={`h-12 px-5 text-[11px] font-bold uppercase tracking-widest transition-all border-b-2 whitespace-nowrap ${activeTab === tab.id
+                           ? "border-[#F5332C] text-[#F5332C]"
+                           : "border-transparent text-zinc-400 hover:text-zinc-600 hover:border-zinc-200"
+                           }`}
+                     >
+                        {tab.label}
+                     </button>
+                  ))}
                </div>
-            </header>
+            </div>
 
             <div className="p-4 md:p-8 lg:p-12 max-w-7xl mx-auto space-y-8 pb-[env(safe-area-inset-bottom,20px)]">
                { }
