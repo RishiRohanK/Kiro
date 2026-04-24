@@ -64,44 +64,44 @@ export function PWAInstallButton() {
       <AnimatePresence>
         {isVisible && !isIOS && (
           <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 50 }}
-            className="fixed bottom-6 right-6 z-[60]"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="w-full"
           >
             <button
               onClick={handleInstallClick}
-              className="group flex items-center gap-3 bg-[#0055FF] text-white px-6 py-4 rounded-none font-bold text-sm shadow-2xl hover:bg-black transition-all active:scale-95"
+              className="w-full h-11 flex items-center justify-center gap-3 bg-zinc-900 text-white px-6 rounded-none font-bold text-[11px] tracking-widest hover:bg-black transition-all"
             >
-              <Download size={18} className="animate-bounce" />
-              <span>INSTALL DASHBOARD APP</span>
+              <Download size={14} />
+              <span>Install CLEED app</span>
             </button>
           </motion.div>
         )}
 
         {showIOSPrompt && isIOS && (
           <motion.div
-            initial={{ opacity: 0, y: 50 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 50 }}
-            className="fixed bottom-6 left-6 right-6 z-[60] md:left-auto md:right-6 md:w-80"
+            exit={{ opacity: 0, y: 10 }}
+            className="w-full"
           >
-            <div className="bg-white border-2 border-black p-6 shadow-2xl relative">
+            <div className="bg-zinc-50 border border-zinc-200 p-4 relative">
               <button 
                 onClick={() => setShowIOSPrompt(false)}
-                className="absolute top-2 right-2 p-2 text-zinc-400 hover:text-black"
+                className="absolute top-2 right-2 p-1 text-zinc-400 hover:text-black"
               >
-                <X size={16} />
+                <X size={14} />
               </button>
               
-              <div className="flex items-start gap-4">
-                <div className="bg-[#0055FF] p-2 text-white">
-                    <Download size={20} />
+              <div className="flex items-start gap-4 pr-6">
+                <div className="bg-zinc-900 p-2 text-white shrink-0">
+                    <Download size={16} />
                 </div>
-                <div className="space-y-2">
-                  <h3 className="font-bold text-sm uppercase tracking-tight">Install Dashboard</h3>
-                  <p className="text-[11px] text-zinc-500 leading-relaxed font-medium">
-                    Install this app on your iPhone: tap <Share size={14} className="inline mx-0.5 text-[#0055FF]" /> then <PlusSquare size={14} className="inline mx-0.5 text-[#0055FF]" /> <span className="font-bold text-black">"Add to Home Screen"</span>
+                <div className="space-y-1">
+                  <h3 className="font-bold text-[11px] text-zinc-900">Install Dashboard</h3>
+                  <p className="text-[10px] text-zinc-500 leading-tight font-medium">
+                    Tap <Share size={12} className="inline mx-0.5 text-zinc-900" /> then <PlusSquare size={12} className="inline mx-0.5 text-zinc-900" /> <span className="font-bold text-black">"Add to Home Screen"</span>
                   </p>
                 </div>
               </div>
