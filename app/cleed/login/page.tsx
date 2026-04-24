@@ -59,22 +59,13 @@ export default function CleedLoginPage() {
         animate={{ opacity: 1, y: 0 }}
         className="w-full max-w-sm"
       >
-        <div className="bg-white border border-zinc-200 p-10 rounded-none shadow-sm space-y-8 relative overflow-hidden">
-          {}
-          <div className="absolute top-0 right-0 h-4 w-4" style={{ backgroundColor: '#F5332C' }} />
-
-          <div className="flex items-center gap-2">
-             <span className="text-2xl font-black text-zinc-900 tracking-tighter uppercase leading-none select-none">Cleed</span>
-             <div className="h-2 w-2 rounded-none" style={{ backgroundColor: '#F5332C' }} />
-          </div>
-
-          <div className="space-y-4">
-            <div className="space-y-1">
-              <h2 className="text-xl font-bold tracking-tight text-zinc-900">Log in</h2>
-              <p className="text-zinc-500 text-[13px] font-medium leading-none mb-4">Access the administrative terminal.</p>
-            </div>
-            {}
-            <div className="h-[1px] w-full bg-zinc-100" />
+        <div className="bg-white border border-zinc-200 p-10 rounded-none shadow-sm space-y-10 relative">
+          <div className="flex flex-col items-center gap-6">
+             <img src="/clledlogo.png" alt="Cleed Logo" className="h-16 w-16 object-contain" />
+             <div className="text-center space-y-1">
+               <h2 className="text-2xl font-bold tracking-tight text-zinc-900">Login</h2>
+               <p className="text-zinc-500 text-[13px] font-medium leading-none">Administrative portal</p>
+             </div>
           </div>
 
           <form onSubmit={handleLogin} className="space-y-6">
