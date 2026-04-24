@@ -267,7 +267,7 @@ export default function PortalPage() {
       </div>
 
       {/* Full-Width Grey Footer */}
-      <motion.footer 
+      <motion.footer
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5 }}
@@ -276,7 +276,7 @@ export default function PortalPage() {
         <div className="max-w-5xl mx-auto flex flex-col items-center gap-2 text-center">
           <div className="space-y-0.5">
             <p className="text-[10px] text-zinc-500 font-medium leading-relaxed">
-              © 2025-2026 Student Forge Technologies Private Limited. All Rights Reserved. 
+              © 2025-2026 Student Forge Technologies Private Limited. All Rights Reserved.
               Unauthorized access or use of this platform is strictly prohibited.
             </p>
             <p className="text-[9px] text-zinc-400 font-bold uppercase tracking-widest">
@@ -313,7 +313,7 @@ export default function PortalPage() {
                   We use essential cookies to ensure the best portal experience.
                 </p>
               </div>
-              <button 
+              <button
                 onClick={acceptCookies}
                 className="px-5 py-2 bg-zinc-900 text-white text-[10px] font-bold uppercase tracking-widest hover:bg-emerald-600 transition-colors shrink-0"
               >
@@ -347,11 +347,10 @@ function CardContent({ option, isFrozen }: { option: any, isFrozen: boolean }) {
         </div>
 
         <div className="shrink-0">
-          <div className={`inline-flex items-center justify-center px-10 py-3 text-[13px] font-medium transition-all ${
-            isFrozen 
-            ? 'bg-white/50 text-zinc-400 cursor-not-allowed border border-zinc-200' 
-            : `bg-zinc-900 text-white ${option.hoverColor} group-hover:shadow-xl group-hover:-translate-y-0.5`
-          }`}>
+          <div className={`inline-flex items-center justify-center px-10 py-3 text-[13px] font-medium transition-all ${isFrozen
+              ? 'bg-white/50 text-zinc-400 cursor-not-allowed border border-zinc-200'
+              : `bg-zinc-900 text-white ${option.hoverColor} group-hover:shadow-xl group-hover:-translate-y-0.5`
+            }`}>
             {isFrozen ? "Locked" : "Enter portal"} {!isFrozen && <ArrowUpRight size={16} className="ml-2 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />}
           </div>
         </div>
