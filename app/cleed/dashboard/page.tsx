@@ -1398,20 +1398,20 @@ export default function CleedDashboard() {
          </AnimatePresence>
 
          { }
-         {/* Clean Desktop Sidebar */}
-         <aside className="hidden md:flex fixed left-0 top-0 h-full w-20 lg:w-[260px] border-r border-zinc-200 z-50 flex-col pt-[env(safe-area-inset-top)] bg-white">
+         {/* Desktop Sidebar (Red) */}
+         <aside className="hidden md:flex fixed left-0 top-0 h-full w-20 lg:w-[260px] border-r border-red-700 z-50 flex-col pt-[env(safe-area-inset-top)]" style={{ backgroundColor: '#F5332C' }}>
             <div className="p-8 pb-4 flex items-center justify-start gap-2">
-               <span className="text-2xl font-black text-zinc-900 tracking-tighter uppercase leading-none select-none">Cleed</span>
-               <div className="h-1.5 w-1.5 bg-[#F5332C] rounded-none" />
+               <span className="text-2xl font-black text-white tracking-tighter uppercase leading-none select-none">Cleed</span>
+               <div className="h-1.5 w-1.5 bg-white rounded-none" />
             </div>
 
             <nav className="flex-1 mt-6 px-3 overflow-y-auto space-y-4 custom-scrollbar pb-8">
                <details open className="group">
-                  <summary className="hidden lg:flex items-center justify-between text-[11px] font-bold text-zinc-400 uppercase tracking-widest px-3 py-2 cursor-pointer hover:text-zinc-900 transition-colors select-none list-none [&::-webkit-details-marker]:hidden">
+                  <summary className="hidden lg:flex items-center justify-between text-[11px] font-bold text-white/60 uppercase tracking-widest px-3 py-2 cursor-pointer hover:text-white transition-colors select-none list-none [&::-webkit-details-marker]:hidden">
                      Management
-                     <ChevronDown size={14} className="group-open:rotate-180 transition-transform text-zinc-300" />
+                     <ChevronDown size={14} className="group-open:rotate-180 transition-transform text-white/40" />
                   </summary>
-                  <div className="mt-1 space-y-1 ml-2 border-l border-zinc-100 pl-2">
+                  <div className="mt-1 space-y-1 ml-2 border-l border-white/10 pl-2">
                      {[
                         { id: "overview", icon: LayoutDashboard, label: "Home" },
                         { id: "interns", icon: Users, label: "Intern List" },
@@ -1424,8 +1424,8 @@ export default function CleedDashboard() {
                            key={item.id}
                            onClick={() => setActiveTab(item.id)}
                            className={`w-full h-10 flex items-center px-3 gap-3 transition-all rounded-none ${activeTab === item.id
-                              ? "bg-zinc-50 text-[#F5332C] font-bold border-l-2 border-[#F5332C] -ml-[9px] pl-[10px]"
-                              : "text-zinc-500 hover:text-zinc-900 hover:bg-zinc-50"
+                              ? "bg-white/10 text-white font-bold border-l-2 border-white -ml-[9px] pl-[10px]"
+                              : "text-white/70 hover:text-white hover:bg-white/5"
                               }`}
                         >
                            <item.icon size={16} strokeWidth={activeTab === item.id ? 2.5 : 2} />
@@ -1436,11 +1436,11 @@ export default function CleedDashboard() {
                </details>
 
                <details open className="group">
-                  <summary className="hidden lg:flex items-center justify-between text-[11px] font-bold text-zinc-400 uppercase tracking-widest px-3 py-2 cursor-pointer hover:text-zinc-900 transition-colors select-none list-none [&::-webkit-details-marker]:hidden">
+                  <summary className="hidden lg:flex items-center justify-between text-[11px] font-bold text-white/60 uppercase tracking-widest px-3 py-2 cursor-pointer hover:text-white transition-colors select-none list-none [&::-webkit-details-marker]:hidden">
                      Programs
-                     <ChevronDown size={14} className="group-open:rotate-180 transition-transform text-zinc-300" />
+                     <ChevronDown size={14} className="group-open:rotate-180 transition-transform text-white/40" />
                   </summary>
-                  <div className="mt-1 space-y-1 ml-2 border-l border-zinc-100 pl-2">
+                  <div className="mt-1 space-y-1 ml-2 border-l border-white/10 pl-2">
                      {[
                         { id: "bootcamp", icon: Zap, label: "Bootcamp" },
                         { id: "events", icon: LayoutDashboard, label: "Events" },
@@ -1451,8 +1451,8 @@ export default function CleedDashboard() {
                            key={item.id}
                            onClick={() => setActiveTab(item.id)}
                            className={`w-full h-10 flex items-center px-3 gap-3 transition-all rounded-none ${activeTab === item.id
-                              ? "bg-zinc-50 text-[#F5332C] font-bold border-l-2 border-[#F5332C] -ml-[9px] pl-[10px]"
-                              : "text-zinc-500 hover:text-zinc-900 hover:bg-zinc-50"
+                              ? "bg-white/10 text-white font-bold border-l-2 border-white -ml-[9px] pl-[10px]"
+                              : "text-white/70 hover:text-white hover:bg-white/5"
                               }`}
                         >
                            <item.icon size={16} strokeWidth={activeTab === item.id ? 2.5 : 2} />
@@ -1463,14 +1463,14 @@ export default function CleedDashboard() {
                </details>
             </nav>
 
-            <div className="p-5 border-t border-zinc-100">
+            <div className="p-5 border-t border-white/10">
                <div className="flex items-center gap-3">
-                  <div className="h-8 w-8 bg-zinc-100 flex items-center justify-center text-zinc-500 rounded-none">
+                  <div className="h-8 w-8 bg-white/10 flex items-center justify-center text-white rounded-none">
                      <Users size={16} />
                   </div>
                   <div className="hidden lg:block text-left overflow-hidden">
-                     <p className="text-[12px] text-zinc-900 font-bold truncate">Dashboard Admin</p>
-                     <p className="text-[10px] text-zinc-400 truncate uppercase tracking-widest leading-none mt-1">Operator</p>
+                     <p className="text-[12px] text-white font-bold truncate">Dashboard Admin</p>
+                     <p className="text-[10px] text-white/50 truncate uppercase tracking-widest leading-none mt-1">Operator</p>
                   </div>
                </div>
             </div>
@@ -1478,8 +1478,8 @@ export default function CleedDashboard() {
 
          {/* Main Content Area */}
          <main className="md:pl-20 lg:pl-[260px] min-h-screen pt-[calc(4rem+env(safe-area-inset-top))] md:pt-0">
-            {/* Top Subnavbar / Header Group */}
-            <div className="sticky top-0 z-40 bg-white border-b border-zinc-200">
+            {/* Grey Top Banner Group */}
+            <div className="sticky top-0 z-40 bg-zinc-100 border-b border-zinc-200">
                <header className="h-16 flex items-center justify-between px-6 md:px-8">
                   <div className="flex items-center gap-3">
                      <div className="md:hidden flex items-center gap-2 mr-2">
@@ -1487,8 +1487,8 @@ export default function CleedDashboard() {
                         <div className="h-1.5 w-1.5 bg-[#F5332C] rounded-none" />
                      </div>
                      <div className="hidden md:flex items-center gap-2 overflow-hidden">
-                        <span className="text-zinc-400 text-[11px] font-bold tracking-tight uppercase">Admin</span>
-                        <ChevronRight size={10} className="text-zinc-300" />
+                        <span className="text-zinc-500 text-[11px] font-bold tracking-tight uppercase">Admin</span>
+                        <ChevronRight size={10} className="text-zinc-400" />
                         <span className="text-zinc-900 font-bold text-[11px] tracking-tight uppercase">
                            {activeTab}
                         </span>
@@ -1498,7 +1498,7 @@ export default function CleedDashboard() {
                   <div className="flex items-center gap-4">
                      <div className="relative group hidden md:block">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3 w-3 text-zinc-400" />
-                        <input className="h-9 w-64 bg-zinc-50 border border-zinc-200 pl-9 pr-4 text-[12px] outline-none focus:border-zinc-400 transition-all rounded-none font-medium text-zinc-900" placeholder="Search system records..." />
+                        <input className="h-9 w-64 bg-white border border-zinc-200 pl-9 pr-4 text-[12px] outline-none focus:border-red-600 transition-all rounded-none font-medium text-zinc-900" placeholder="Search system records..." />
                      </div>
                      <Link href="/cleed/dashboard/health" className="px-4 h-9 bg-zinc-900 text-white text-[10px] font-bold uppercase flex items-center gap-2 hover:bg-black transition-all rounded-none shadow-sm">
                         <Activity size={12} />
@@ -1511,8 +1511,8 @@ export default function CleedDashboard() {
                   </div>
                </header>
 
-               {/* New Dynamic Subnavbar */}
-               <div className="flex px-8 border-t border-zinc-50 overflow-x-auto scrollbar-hide">
+               {/* Grey Subnavbar */}
+               <div className="flex px-8 border-t border-zinc-200 overflow-x-auto scrollbar-hide">
                   {[
                      { id: "overview", label: "Overview" },
                      { id: "interns", label: "Interns" },
@@ -1527,7 +1527,7 @@ export default function CleedDashboard() {
                         onClick={() => setActiveTab(tab.id)}
                         className={`h-12 px-5 text-[11px] font-bold uppercase tracking-widest transition-all border-b-2 whitespace-nowrap ${activeTab === tab.id
                            ? "border-[#F5332C] text-[#F5332C]"
-                           : "border-transparent text-zinc-400 hover:text-zinc-600 hover:border-zinc-200"
+                           : "border-transparent text-zinc-500 hover:text-zinc-900 hover:border-zinc-300"
                            }`}
                      >
                         {tab.label}
