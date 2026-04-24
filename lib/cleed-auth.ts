@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/prisma";
+import prisma from "@/lib/prisma";
 
 // Using the database (Prisma) to persist administrative settings
 // This replaces the temporary local JSON file for industrial-grade synchronization.
