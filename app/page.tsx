@@ -8,16 +8,6 @@ import { ArrowRight, HelpCircle, X, ShieldCheck, Bell, GraduationCap, Briefcase,
 export default function PortalPage() {
   const options = [
     {
-      title: "Student Login",
-      description: "Access your courses, community, and events.",
-      href: "/signin",
-      icon: GraduationCap,
-      color: "bg-emerald-50/60",
-      iconColor: "text-emerald-600",
-      hoverColor: "group-hover:bg-emerald-600",
-      delay: 0.1,
-    },
-    {
       title: "Intern Login",
       description: "Manage your tasks, attendance, and progress.",
       href: "/intern/signin",
@@ -39,13 +29,6 @@ export default function PortalPage() {
     },
   ];
 
-  const [showUpdateToast, setShowUpdateToast] = useState(false);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setShowUpdateToast(true), 1200);
-    return () => clearTimeout(timer);
-  }, []);
-
   const [showGuide, setShowGuide] = useState(false);
   const [showCookies, setShowCookies] = useState(false);
 
@@ -64,35 +47,6 @@ export default function PortalPage() {
   return (
     <div className="min-h-screen md:h-screen bg-white flex flex-col selection:bg-zinc-100 selection:text-black relative overflow-hidden font-sans">
       
-      {/* System Update Notification */}
-      <AnimatePresence>
-        {showUpdateToast && (
-          <motion.div
-            initial={{ y: -100, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: -100, opacity: 0 }}
-            className="fixed top-2 md:top-6 left-0 right-0 z-[200] px-4"
-          >
-            <div className="bg-blue-600 shadow-2xl px-4 md:px-6 py-3 md:py-4 flex items-center justify-between gap-3 rounded-xl border border-blue-500 max-w-2xl mx-auto">
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 md:w-10 md:h-10 bg-white/10 rounded-full flex items-center justify-center shrink-0">
-                  <Bell size={16} className="text-white animate-pulse" />
-                </div>
-                <div className="space-y-0.5 overflow-hidden">
-                  <p className="text-[11px] md:text-[13px] text-white font-bold tracking-tight">System Online</p>
-                  <p className="text-[9px] md:text-[11px] text-blue-100 font-medium truncate">Maintenance complete. Updated: April 28, 1:05 AM</p>
-                </div>
-              </div>
-              <button 
-                onClick={() => setShowUpdateToast(false)}
-                className="w-7 h-7 md:w-8 md:h-8 flex items-center justify-center text-blue-200 hover:text-white hover:bg-white/10 rounded-full transition-all shrink-0"
-              >
-                <X size={16} />
-              </button>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
 
       {/* Subtle Grid Background */}
       <div className="absolute inset-0 z-0 pointer-events-none">
@@ -128,7 +82,7 @@ export default function PortalPage() {
       </div>
 
       {/* Decorative Background Illustration */}
-      <div className="absolute right-[-5%] bottom-[-5%] z-0 pointer-events-none select-none">
+      <div className="absolute right-[-5%] bottom-[10%] z-0 pointer-events-none select-none">
         <img 
           src="https://ik.imagekit.io/dypkhqxip/Nerd-bro.svg" 
           alt="Decorative Background" 
@@ -278,18 +232,12 @@ export default function PortalPage() {
         transition={{ delay: 0.5 }}
         className="w-full bg-zinc-50 border-t border-zinc-100 py-6 px-6 relative z-10 mt-auto"
       >
-        <div className="max-w-5xl mx-auto flex flex-col items-center gap-4 text-center">
-          <div className="space-y-1">
-            <p className="text-[9px] md:text-[10px] text-zinc-500 font-medium leading-relaxed max-w-lg">
-              © 2025-2026 Student Forge Technologies Private Limited. 
-              Unauthorized access or use of this platform is strictly prohibited.
-            </p>
-            <p className="text-[8px] md:text-[9px] text-zinc-400 font-bold uppercase tracking-widest">
-              platform.studentforge.in • Enterprise-grade encryption
-            </p>
-          </div>
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+          <p className="text-[9px] md:text-[10px] text-zinc-500 font-medium">
+            © 2025-2026 Student Forge Technologies Private Limited.
+          </p>
 
-          <div className="flex items-center gap-6 pt-4 border-t border-zinc-100 w-full justify-center">
+          <div className="flex items-center gap-6">
             <Link href="/home" className="text-[9px] md:text-[10px] font-bold text-zinc-400 hover:text-black transition-colors uppercase tracking-widest">
               Home
             </Link>

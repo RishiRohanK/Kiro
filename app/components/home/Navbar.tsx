@@ -31,9 +31,7 @@ export default function Navbar() {
 
   const navLinks = [
     { name: "Courses", href: "/courses", icon: Globe },
-    { name: "Docs", href: "/docs", icon: Layout },
     { name: "Support", href: "/support", icon: MessageSquare },
-    { name: "Events", href: "/events", icon: Zap },
   ];
 
   return (

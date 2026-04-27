@@ -24,7 +24,8 @@ import {
     X,
     Menu,
     ChevronLeft,
-    Bell
+    Bell,
+    Globe
 } from "lucide-react"; 
 
 import { motion, AnimatePresence } from "framer-motion";
@@ -146,6 +147,7 @@ function InternDashboardLayoutContent({
 
     const navItems = [
         { name: "Overview", icon: LayoutDashboard, slug: "/intern/dashboard?view=overview", isNew: false, mobile: true },
+        { name: "Courses", icon: Globe, slug: "/courses", isNew: false, mobile: true },
         { name: "Stack Flow", icon: Layers, slug: "/intern/dashboard/stack-flow", isNew: false, mobile: true },
         { name: "Exams", icon: ClipboardCheck, slug: "/intern/dashboard/exams", isNew: false, mobile: true },
         { name: "Resources", icon: BookOpen, slug: "/intern/dashboard/resources", isNew: false, mobile: true },
@@ -257,7 +259,15 @@ function InternDashboardLayoutContent({
                         </div>
                     </div>
 
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-2 lg:gap-6">
+                        <Link 
+                            href="/courses"
+                            className="hidden md:flex items-center gap-2 text-[11px] font-bold text-zinc-500 hover:text-black transition-colors"
+                        >
+                            <Globe size={14} />
+                            <span>Courses</span>
+                        </Link>
+                        <div className="flex items-center gap-4">
                         <Link 
                             href="/intern/dashboard/news"
                             className="flex items-center gap-2 px-3 py-1 bg-blue-50 text-[#0055FF] text-[10px] font-medium border border-blue-100 hover:bg-blue-100 transition-colors relative"
@@ -274,6 +284,7 @@ function InternDashboardLayoutContent({
                            Secure session
                         </div>
                     </div>
+                </div>
                 </header>
 
                 <main className="flex-1 p-4 lg:p-0 pb-20 lg:pb-10">
