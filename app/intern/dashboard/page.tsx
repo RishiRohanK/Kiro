@@ -188,7 +188,7 @@ function InternDashboardContent() {
             fetchSchedules(userData.id, userData.batch);
             fetchExams(userData.id);
             fetchAllInterns();
-         }, 120000);
+         }, 30000);
 
          const cleanup = () => {
             clearInterval(syncInterval);
@@ -666,9 +666,15 @@ function InternDashboardContent() {
                                  Welcome back scholar. You have <span className="text-[#003366] font-semibold">{(Array.isArray(tasks) ? tasks : []).filter(t => t.status === 'pending').length} pending</span> tasks today.
                               </p>
                            </div>
-                           <div className="flex items-center gap-3 bg-white/60 backdrop-blur-md px-4 py-2 border border-white/40">
-                              <span className="text-[10px] font-semibold uppercase tracking-widest text-[#003366]/40">Active Batch</span>
-                              <div className="text-[14px] font-semibold text-[#003366]">{user.batch || "Batch 3"}</div>
+                           <div className="flex items-center gap-3">
+                              <div className="flex items-center gap-2 bg-white/40 backdrop-blur-md px-3 py-1.5 border border-white/30">
+                                 <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                                 <span className="text-[9px] font-bold uppercase tracking-widest text-[#003366]/60">Live Sync</span>
+                              </div>
+                              <div className="flex items-center gap-3 bg-white/60 backdrop-blur-md px-4 py-2 border border-white/40">
+                                 <span className="text-[10px] font-semibold uppercase tracking-widest text-[#003366]/40">Active Batch</span>
+                                 <div className="text-[14px] font-semibold text-[#003366]">{user.batch || "Batch 3"}</div>
+                              </div>
                            </div>
                         </div>
 
