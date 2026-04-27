@@ -804,7 +804,7 @@ function InternDashboardContent() {
                            {/* Support Link */}
                            <div className="flex-1 p-6 flex flex-col justify-center">
                               <a 
-                                 href="https://www.redlix.co.in/support" 
+                                 href="https://www.redlix.co.in/intern-support" 
                                  target="_blank"
                                  className="group p-5 bg-white border border-zinc-100 rounded-none flex items-center gap-4 hover:border-zinc-300 hover:shadow-xl hover:shadow-blue-500/10 transition-all"
                               >
