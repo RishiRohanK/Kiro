@@ -164,6 +164,7 @@ export default function EnrollmentPage() {
                         setStep(4);
                     } else {
                         setFailureDetails({ description: verifyData.error || "Verification failed" });
+                        alert("Transaction Failed: " + (verifyData.error || "Verification failed"));
                         setStep(5);
                     }
                 },
@@ -179,6 +180,7 @@ export default function EnrollmentPage() {
             
             rzp.on('payment.failed', function (response: any) {
                 setFailureDetails(response.error);
+                alert("Transaction Failed: " + (response.error.description || "The payment was not successful."));
                 setStep(5);
             });
 
@@ -231,14 +233,21 @@ export default function EnrollmentPage() {
 
     if (step === 5) {
         return (
-            <div className="min-h-screen bg-white text-zinc-900 flex flex-col items-center justify-center p-6">
-                <div className="w-full max-w-md border border-zinc-200 shadow-xl overflow-hidden animate-in zoom-in-95 duration-500">
+            <div className="min-h-screen bg-white text-zinc-900 flex flex-col items-center justify-center p-6 relative">
+                {/* Critical Status Banner */}
+                <div className="fixed top-0 left-0 right-0 h-1 bg-red-600 z-[100]" />
+                <div className="fixed top-1 left-0 right-0 bg-red-50 border-b border-red-100 py-3 px-6 z-[100] flex items-center justify-center gap-3">
+                    <AlertCircle size={14} className="text-red-600" />
+                    <span className="text-[10px] md:text-[12px] font-bold text-red-600 uppercase tracking-widest">Notification: Payment Transaction Failed</span>
+                </div>
+
+                <div className="w-full max-w-md border border-zinc-200 shadow-xl overflow-hidden animate-in zoom-in-95 duration-500 mt-12">
                     <div className="bg-red-600 p-8 text-white text-center">
                         <div className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-4 backdrop-blur-sm">
                              <XCircle size={32} />
                         </div>
-                        <h2 className="text-2xl font-bold tracking-tight uppercase tracking-widest text-[14px]">Payment Failed</h2>
-                        <p className="text-red-100 text-[12px] font-medium mt-1">Transaction was not successful</p>
+                        <h2 className="text-2xl font-bold tracking-tight uppercase tracking-widest text-[14px]">Your transaction has failed</h2>
+                        <p className="text-red-100 text-[12px] font-medium mt-1">Status: payment not received</p>
                     </div>
 
                     <div className="p-8 bg-white space-y-6">

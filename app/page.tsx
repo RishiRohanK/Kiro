@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRight, HelpCircle, X, ShieldCheck, Bell, GraduationCap, Briefcase, Building2, ArrowUpRight } from "lucide-react";
+import { ArrowRight, HelpCircle, X, ShieldCheck, Bell, GraduationCap, Briefcase, Building2, ArrowUpRight, Globe } from "lucide-react";
 
 export default function PortalPage() {
   const options = [
@@ -60,9 +60,16 @@ export default function PortalPage() {
       </div>
 
       <div className="fixed md:absolute top-auto bottom-20 md:bottom-auto md:top-6 left-4 right-4 md:left-auto md:right-8 z-50 flex items-center justify-center md:justify-end gap-0">
+        <Link
+          href="/courses"
+          className="flex-1 md:flex-none flex items-center justify-center gap-2 px-3 md:px-6 py-2.5 md:py-3 border border-zinc-200 bg-white text-[10px] md:text-[12px] font-bold text-zinc-600 hover:text-black hover:border-zinc-300 transition-all rounded-none shadow-sm md:shadow-none"
+        >
+          <Globe size={14} className="shrink-0" />
+          <span>Courses</span>
+        </Link>
         <button
           onClick={() => setShowGuide(true)}
-          className="flex-1 md:flex-none relative flex items-center justify-center gap-2 px-3 md:px-6 py-2.5 md:py-3 border border-zinc-200 bg-white text-[10px] md:text-[12px] font-bold text-zinc-600 hover:text-black hover:border-zinc-300 transition-all rounded-none shadow-sm md:shadow-none"
+          className="flex-1 md:flex-none relative flex items-center justify-center gap-2 px-3 md:px-6 py-2.5 md:py-3 border border-zinc-200 bg-white text-[10px] md:text-[12px] font-bold text-zinc-600 hover:text-black hover:border-zinc-300 transition-all rounded-none border-l-0 shadow-sm md:shadow-none"
         >
           <HelpCircle size={14} className="shrink-0" />
           <span>Guide</span>
@@ -238,6 +245,9 @@ export default function PortalPage() {
           </p>
 
           <div className="flex items-center gap-6">
+            <Link href="/courses" className="text-[9px] md:text-[10px] font-bold text-zinc-400 hover:text-black transition-colors uppercase tracking-widest">
+              Courses
+            </Link>
             <Link href="/home" className="text-[9px] md:text-[10px] font-bold text-zinc-400 hover:text-black transition-colors uppercase tracking-widest">
               Home
             </Link>
