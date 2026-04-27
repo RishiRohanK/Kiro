@@ -19,6 +19,7 @@ export default function MaintenancePage() {
           
           {/* Lottie Animation on the Left */}
           <div className="hidden md:block w-[450px] h-[450px] flex-shrink-0 animate-in fade-in duration-1000">
+            {/* @ts-ignore */}
             <dotlottie-wc
               src="https://lottie.host/1ccc4870-054d-4dae-bac2-0c0e156ad970/tFd2HvuoPI.lottie"
               style={{ width: '450px', height: '450px' }}
