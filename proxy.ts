@@ -9,21 +9,6 @@ export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const method = request.method.toUpperCase();
 
-  // --- MAINTENANCE MODE ---
-  // Skip static assets, public files, the maintenance page, and intern portal
-  if (
-    !pathname.startsWith('/_next') &&
-    !pathname.startsWith('/api') &&
-    !pathname.startsWith('/static') &&
-    !pathname.startsWith('/intern') && // Allow intern portal access
-    pathname !== '/maintenance' &&
-    !pathname.includes('.')
-  ) {
-    const url = request.nextUrl.clone();
-    url.pathname = '/maintenance';
-    return NextResponse.rewrite(url);
-  }
-  // ------------------------
 
   // 1. SECURITY PATCH V3: Block access to sensitive files and dotfiles
   if (pathname.includes('/.git') || pathname.includes('/.env') || pathname.includes('/.aws') || pathname.includes('/.ssh')) {

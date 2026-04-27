@@ -46,7 +46,10 @@ import {
    Kanban as KanbanIcon,
    MoreVertical,
    FileText as FileTextIcon,
-   Shield
+   Shield,
+   BookOpen,
+   MessageCircle,
+   ArrowRight
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { io } from "socket.io-client";
@@ -773,69 +776,51 @@ function InternDashboardContent() {
                            initial={{ opacity: 0, y: 20, scale: 0.95 }}
                            animate={{ opacity: 1, y: 0, scale: 1 }}
                            exit={{ opacity: 0, y: 20, scale: 0.95 }}
-                           className="w-full max-w-[350px] h-[540px] bg-white shadow-2xl rounded-2xl overflow-hidden border border-zinc-100 pointer-events-auto flex flex-col mb-20 mr-2"
+                           className="w-full max-w-[350px] h-[420px] bg-[#F4F7FF] shadow-2xl rounded-none overflow-hidden border border-zinc-200 pointer-events-auto flex flex-col mb-20 mr-2"
                         >
-                           {/* Header */}
-                           <div className="bg-[#1A3797] p-8 relative flex flex-col items-start">
+                           {/* Window Title Bar */}
+                           <div className="bg-white/70 backdrop-blur-md px-8 py-6 border-b border-zinc-100 relative flex flex-col items-start">
                               <button 
                                  onClick={() => setShowSupportModal(false)}
-                                 className="absolute top-6 right-6 h-8 w-8 bg-black/20 text-white rounded-full flex items-center justify-center hover:bg-black/40 transition-colors"
+                                 className="absolute top-6 right-6 h-8 w-8 bg-zinc-50 text-zinc-400 rounded-none flex items-center justify-center hover:bg-zinc-100 hover:text-black transition-all"
                               >
                                  <X size={16} />
                               </button>
                               
-                              <div className="h-12 w-12 bg-emerald-500 rounded-xl flex items-center justify-center mb-6 shadow-lg shadow-emerald-900/20">
-                                 <MessageSquare className="text-white" size={24} />
+                              <div className="h-9 w-9 bg-zinc-900 text-white rounded-none flex items-center justify-center mb-4 shadow-sm shadow-zinc-200">
+                                 <MessageSquare size={16} />
                               </div>
                               
-                              <h3 className="text-2xl font-bold text-white tracking-tight">Message Us</h3>
-                              <p className="text-white/60 text-sm mt-1 font-medium">We're here to help you</p>
+                              <h3 className="text-base font-bold text-zinc-900 tracking-tight">Help center</h3>
+                              <p className="text-zinc-400 text-[10px] mt-0.5 font-medium">We are here to help you</p>
                            </div>
 
-                           {/* List Items - Centered vertically in the available space */}
-                           <div className="flex-1 p-5 bg-zinc-50/30 flex flex-col justify-center">
-                              <div className="bg-white border border-zinc-100 rounded-2xl overflow-hidden shadow-sm">
-                                 <a 
-                                    href="https://redlix.co.in/resourse/supoer" 
-                                    target="_blank"
-                                    className="p-5 flex items-center gap-5 hover:bg-zinc-50 transition-all group"
-                                 >
-                                    <div className="h-12 w-12 rounded-xl bg-[#9C7F6E] flex items-center justify-center text-white text-lg font-bold shrink-0 shadow-sm">
-                                       R
-                                    </div>
-                                    <div className="flex-1">
-                                       <h4 className="text-[14px] font-bold text-zinc-800">Support Resources</h4>
-                                       <p className="text-[12px] text-zinc-400 font-medium leading-relaxed">Hi, We are here to help you ...</p>
-                                    </div>
-                                 </a>
-                                 
-                                 <div className="h-px bg-zinc-100 mx-5" />
-
-                                 <a 
-                                    href="https://redlix.co.in/support" 
-                                    target="_blank"
-                                    className="p-5 flex items-center gap-5 hover:bg-zinc-50 transition-all group"
-                                 >
-                                    <div className="h-12 w-12 rounded-xl bg-[#E66B5B] flex items-center justify-center text-white text-lg font-bold shrink-0 shadow-sm">
-                                       C
-                                    </div>
-                                    <div className="flex-1">
-                                       <h4 className="text-[14px] font-bold text-zinc-800">Chat with us</h4>
-                                       <p className="text-[12px] text-zinc-400 font-medium leading-relaxed">Hello there! Need help? Reac...</p>
-                                    </div>
-                                 </a>
-                              </div>
+                           {/* Support Link */}
+                           <div className="flex-1 p-6 flex flex-col justify-center">
+                              <a 
+                                 href="https://www.redlix.co.in/support" 
+                                 target="_blank"
+                                 className="group p-5 bg-white border border-zinc-100 rounded-none flex items-center gap-4 hover:border-zinc-300 hover:shadow-xl hover:shadow-blue-500/10 transition-all"
+                              >
+                                 <div className="h-10 w-10 rounded-none bg-zinc-900 text-white flex items-center justify-center text-xs font-bold shrink-0">
+                                    <MessageCircle size={16} />
+                                 </div>
+                                 <div className="flex-1">
+                                    <h4 className="text-[12px] font-bold text-zinc-900 leading-none mb-1.5">Contact support</h4>
+                                    <p className="text-[10px] text-zinc-400 font-medium">Get assistance from our team</p>
+                                 </div>
+                                 <ArrowRight size={14} className="text-zinc-300 group-hover:text-black transition-colors" />
+                              </a>
                            </div>
 
                            {/* Footer */}
-                           <div className="p-5 flex items-center justify-center gap-2 border-t border-zinc-50 bg-white">
-                              <span className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest">Powered by</span>
-                              <div className="flex items-center gap-1.5">
-                                 <div className="h-4 w-4 bg-[#1A3797] rounded-md flex items-center justify-center">
-                                    <div className="w-2 h-2 bg-white rounded-full scale-50" />
-                                 </div>
-                                 <span className="text-[11px] font-black text-[#1A3797] uppercase tracking-tighter">REDLIX</span>
-                              </div>
+                           <div className="p-4 flex items-center justify-center gap-3 border-t border-zinc-100 bg-white/50">
+                              <span className="text-[10px] font-medium text-zinc-400">Powered by</span>
+                              <img 
+                                 src="https://ik.imagekit.io/dypkhqxip/redlixlogo" 
+                                 alt="Redlix" 
+                                 className="h-4 w-auto drop-shadow-sm"
+                              />
                            </div>
                         </motion.div>
                      </div>
@@ -1034,13 +1019,13 @@ function InternDashboardContent() {
 
 
          {activeTab === "chat" && (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="h-[calc(100vh-8rem)] lg:h-[calc(100vh-12rem)] min-h-[500px] flex bg-white border border-zinc-200 rounded-none overflow-hidden text-left mb-6 relative">
+            <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} className="h-[calc(100vh-12rem)] lg:h-[calc(100vh-16rem)] min-h-[500px] flex bg-white border border-zinc-200 rounded-none shadow-2xl shadow-zinc-200/50 overflow-hidden text-left mb-6 relative">
                { }
-               <aside className={`${showChatSidebar ? "flex" : "hidden"} lg:flex absolute inset-0 z-20 lg:relative lg:inset-auto w-full lg:w-64 bg-zinc-50 border-r border-zinc-200 flex-col shrink-0`}>
-                  <div className="p-6 border-b border-zinc-200 bg-white flex items-center justify-between">
+               <aside className={`${showChatSidebar ? "flex" : "hidden"} lg:flex absolute inset-0 z-20 lg:relative lg:inset-auto w-full lg:w-72 bg-zinc-50/50 border-r border-zinc-100 flex-col shrink-0`}>
+                  <div className="p-6 border-b border-zinc-100 bg-white/50 backdrop-blur-sm flex items-center justify-between">
                      <div>
-                        <h3 className="text-xs font-bold text-zinc-900 font-bold leading-none">Your Team</h3>
-                        <p className="text-[10px] text-zinc-400 mt-2 font-medium">Chat with your group members.</p>
+                        <h3 className="text-xs font-bold text-zinc-900 uppercase tracking-widest leading-none">Team Relay</h3>
+                        <p className="text-[10px] text-zinc-400 mt-2 font-medium">Internal communication</p>
                      </div>
                      <button onClick={() => setShowChatSidebar(false)} className="lg:hidden p-2 text-zinc-400">
                         <ChevronRight size={18} />
@@ -1052,9 +1037,9 @@ function InternDashboardContent() {
                      <div className="px-4 mb-6">
                         <button
                            onClick={() => { setSelectedUser(null); setShowChatSidebar(false); }}
-                           className={`w-full flex items-center gap-3 p-3 text-xs font-bold transition-all rounded-none mb-2 ${!selectedUser ? "bg-black text-white" : "hover:bg-zinc-200 text-zinc-600"}`}
+                           className={`w-full flex items-center gap-3 p-3 text-xs font-bold transition-all rounded-none mb-2 ${!selectedUser ? "bg-zinc-900 text-white shadow-lg shadow-zinc-200" : "hover:bg-zinc-200/50 text-zinc-600"}`}
                         >
-                           <Users size={16} /> Team Chat
+                           <Users size={16} /> Group Enclave
                         </button>
 
                         <div className="h-px bg-zinc-200 my-4 mx-2" />
@@ -1081,9 +1066,9 @@ function InternDashboardContent() {
                                     <button
                                        key={i}
                                        onClick={() => { setSelectedUser(peer); setShowChatSidebar(false); }}
-                                       className={`w-full flex items-center gap-3 p-3 transition-all rounded-none ${selectedUser?.id === peer.id ? "bg-white border border-zinc-200 text-black px-4" : "text-zinc-600 hover:bg-zinc-100"}`}
+                                       className={`w-full flex items-center gap-3 p-2.5 transition-all rounded-none mb-1 ${selectedUser?.id === peer.id ? "bg-white border border-zinc-200 shadow-sm text-zinc-900" : "text-zinc-500 hover:bg-white hover:shadow-sm"}`}
                                     >
-                                       <div className="h-8 w-8 bg-zinc-900 text-white flex items-center justify-center text-xs font-bold rounded-none group-hover:scale-105 transition-transform">
+                                       <div className="h-9 w-9 bg-zinc-100 text-zinc-900 flex items-center justify-center text-xs font-bold rounded-none shrink-0">
                                           {peer.name[0]}
                                        </div>
                                        <div className="text-left overflow-hidden">
@@ -1113,38 +1098,29 @@ function InternDashboardContent() {
                   </div>
                </aside>
 
-               { }
-               <div className={`flex-1 flex flex-col bg-white overflow-hidden ${!showChatSidebar ? "flex" : "hidden lg:flex"}`}>
-                  { }
-                  <div className="px-4 lg:px-8 py-4 lg:py-6 border-b border-zinc-100 flex items-center justify-between bg-white/80 backdrop-blur-md sticky top-0 z-10">
-                     <div className="flex items-center gap-3 lg:gap-4 truncate">
+                             <div className={`flex-1 flex flex-col bg-white overflow-hidden ${!showChatSidebar ? "flex" : "hidden lg:flex"}`}>
+                  {/* Window Header */}
+                  <div className="px-6 py-4 border-b border-zinc-100 flex items-center justify-between bg-white sticky top-0 z-10">
+                     <div className="flex items-center gap-4 truncate">
                         <button onClick={() => setShowChatSidebar(true)} className="lg:hidden p-2 -ml-2 text-zinc-400 hover:text-black transition-colors">
                            <ChevronLeft size={20} />
                         </button>
-                        <div className="h-8 w-8 lg:h-10 lg:w-10 bg-black text-white flex items-center justify-center font-bold rounded-none shrink-0">
-                           {selectedUser ? <User size={16} /> : <Users size={16} />}
+                        <div className="h-10 w-10 bg-zinc-900 text-white flex items-center justify-center rounded-none shadow-inner shrink-0">
+                           {selectedUser ? <User size={18} /> : <Users size={18} />}
                         </div>
                         <div className="truncate">
-                           <h2 className="text-sm lg:text-base font-bold text-zinc-900 leading-none mb-1 lg:mb-1.5 truncate">
-                              {selectedUser ? selectedUser.name : (schedules.find(s => s.week.includes("Week 2"))?.teamAllocation || "Team Chat")}
+                           <h2 className="text-sm font-bold text-zinc-900 leading-none mb-1.5 truncate">
+                              {selectedUser ? selectedUser.name : (schedules.find(s => s.week.includes("Week 2"))?.teamAllocation || "Group Enclave")}
                            </h2>
                            <div className="flex items-center gap-2">
-                              <div className={`h-2 w-2 rounded-full animate-pulse ${
-                                 socketStatus === "connected" ? "bg-emerald-500" : 
+                              <div className={`h-1.5 w-1.5 rounded-full ${
+                                 socketStatus === "connected" ? "bg-emerald-500 animate-pulse" : 
                                  socketStatus === "connecting" ? "bg-amber-500" : "bg-rose-500"
                               }`} />
-                              <span className="text-[9px] lg:text-[10px] font-bold text-zinc-400 font-bold leading-none capitalize">
-                                 {socketStatus === "connected" ? "Session active" : 
-                                  socketStatus === "connecting" ? "Synchronizing... " : "Enclave offline"}
+                              <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-tight">
+                                 {socketStatus === "connected" ? "Live session" : 
+                                  socketStatus === "connecting" ? "Syncing... " : "Offline"}
                               </span>
-                              {socketStatus === "disconnected" && (
-                                 <button 
-                                    onClick={() => { setSocket(null); }} 
-                                    className="text-[9px] font-bold text-blue-500 underline ml-1"
-                                 >
-                                    Retry
-                                 </button>
-                              )}
                            </div>
                         </div>
                      </div>
@@ -1177,9 +1153,9 @@ function InternDashboardContent() {
                                           {msg.senderName}
                                        </span>
                                     )}
-                                    <div className={`px-4 lg:px-5 py-3 lg:py-4 border ${isOwn ? "bg-black border-black text-white rounded-none shadow-none" : "bg-white border-zinc-200 text-zinc-900 rounded-none shadow-none"}`}>
-                                       <p className="text-xs lg:text-sm font-medium leading-relaxed">{msg.content}</p>
-                                       <span className={`text-[8px] lg:text-[9px] font-bold block mt-2 lg:mt-3 opacity-40 ${isOwn ? "text-zinc-400" : "text-zinc-500"}`}>
+                                    <div className={`px-4 py-3 ${isOwn ? "bg-zinc-900 text-white rounded-none shadow-sm" : "bg-white border border-zinc-100 text-zinc-900 rounded-none shadow-sm"}`}>
+                                       <p className="text-[13px] font-medium leading-relaxed">{msg.content}</p>
+                                       <span className={`text-[8px] font-bold block mt-2 opacity-50 ${isOwn ? "text-zinc-400" : "text-zinc-500"}`}>
                                           {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                        </span>
                                     </div>
@@ -1191,17 +1167,19 @@ function InternDashboardContent() {
                      <div ref={chatEndRef} />
                   </div>
 
-                  { }
-                  <form onSubmit={handleSendMessage} className="px-4 lg:px-8 py-4 lg:py-6 bg-white border-t border-zinc-100 flex gap-2 lg:gap-4">
-                     <input
-                        type="text"
-                        value={inputText}
-                        onChange={(e) => setInputText(e.target.value)}
-                        className="flex-1 px-4 lg:px-6 h-12 lg:h-14 bg-zinc-50 border border-zinc-200 text-xs lg:text-sm font-semibold rounded-none focus:border-black focus:bg-white outline-none transition-all placeholder:text-zinc-300"
-                        placeholder={selectedUser ? `Message ${selectedUser.name}...` : "Send a message..."}
-                     />
-                     <button type="submit" disabled={!activeTeamId || !inputText.trim()} className="h-12 w-12 lg:h-14 lg:px-10 lg:w-auto bg-black text-white hover:bg-zinc-800 transition-all font-bold text-[10px] lg:text-xs uppercase tracking-widest rounded-none disabled:opacity-30 active:scale-95 flex items-center justify-center gap-2">
-                        <Send size={16} /> <span className="hidden lg:inline">Send</span>
+                  {/* Input Window */}
+                  <form onSubmit={handleSendMessage} className="p-4 bg-zinc-50/50 border-t border-zinc-100 flex gap-3">
+                     <div className="flex-1 relative">
+                        <input
+                           type="text"
+                           value={inputText}
+                           onChange={(e) => setInputText(e.target.value)}
+                           className="w-full pl-6 pr-12 h-12 bg-white border border-zinc-200 text-sm font-medium rounded-none focus:border-zinc-400 outline-none transition-all shadow-sm placeholder:text-zinc-300"
+                           placeholder={selectedUser ? `Reply to ${selectedUser.name.split(' ')[0]}...` : "Message group..."}
+                        />
+                     </div>
+                     <button type="submit" disabled={!activeTeamId || !inputText.trim()} className="h-12 w-12 bg-zinc-900 text-white hover:bg-black transition-all rounded-none disabled:opacity-30 active:scale-95 flex items-center justify-center shadow-lg shadow-zinc-200">
+                        <Send size={18} />
                      </button>
                   </form>
                </div>

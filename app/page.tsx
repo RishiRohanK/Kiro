@@ -79,8 +79,8 @@ export default function PortalPage() {
                   <Bell size={16} className="text-white animate-pulse" />
                 </div>
                 <div className="space-y-0.5 overflow-hidden">
-                  <p className="text-[11px] md:text-[13px] text-white font-bold tracking-tight">System updated</p>
-                  <p className="text-[9px] md:text-[11px] text-blue-100 font-medium truncate">Better login. Updated: April 24, 7:52 PM</p>
+                  <p className="text-[11px] md:text-[13px] text-white font-bold tracking-tight">System Online</p>
+                  <p className="text-[9px] md:text-[11px] text-blue-100 font-medium truncate">Maintenance complete. Updated: April 28, 1:05 AM</p>
                 </div>
               </div>
               <button 
