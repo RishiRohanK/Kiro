@@ -30,16 +30,17 @@ export default function MaintenancePage() {
           {/* Maintenance Message Container on the Right */}
           <div className="w-full max-w-[500px] bg-white border border-zinc-200 p-8 md:p-12 relative z-10 shadow-sm animate-in slide-in-from-right-4 duration-700">
             {/* Logo */}
-            <div className="mb-10 flex items-center gap-4">
+            <div className="mb-10 flex items-center gap-5">
               <img
                 src="https://ik.imagekit.io/dypkhqxip/platform?updatedAt=1776791557303"
                 alt="Student Forge"
-                className="h-16 w-auto mb-6"
+                className="h-12 w-auto"
               />
+              <div className="w-[1px] h-10 bg-zinc-200"></div>
               <img
                 src="https://ik.imagekit.io/dypkhqxip/sflogo?updatedAt=1774952380858"
                 alt="SF Logo"
-                className="h-16 w-auto mb-6"
+                className="h-12 w-auto"
               />
             </div>
 
