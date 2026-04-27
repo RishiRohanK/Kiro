@@ -2,15 +2,6 @@
 
 import React from 'react';
 
-// Declaration for the custom Lottie element to prevent TS errors
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      'dotlottie-wc': any;
-    }
-  }
-}
-
 export default function MaintenancePage() {
   return (
     <div className="min-h-screen bg-white text-[#495057] font-sans flex flex-col items-center selection:bg-blue-50">
