@@ -80,22 +80,22 @@ export default function Navbar() {
           { }
           <div className="flex items-center gap-2 sm:gap-3">
             <div className="hidden items-center gap-3 md:flex">
-              { }
-              <Link
-                href="/intern/signin"
-                className="flex h-8 items-center gap-2 border border-zinc-300 bg-white px-4 text-[12px] font-semibold text-zinc-700 transition-all hover:border-zinc-800 hover:text-black active:bg-zinc-50 rounded-none shadow-sm"
-              >
-                <CircleUser className="h-3.5 w-3.5" />
-                Intern portal
-              </Link>
-
-              { }
+              {/* Get Started Button */}
               <Link
                 href="/get-started"
                 className="group flex h-8 items-center bg-black px-5 text-[12px] font-semibold text-white transition-all hover:bg-zinc-800 active:scale-[0.98] rounded-none"
               >
                 Get started
                 <ArrowRight className="ml-2 h-3 w-3 transition-transform duration-200 group-hover:translate-x-1" />
+              </Link>
+
+              {/* Intern Login Button */}
+              <Link
+                href="/intern/signin"
+                className="flex h-8 items-center gap-2 border border-zinc-300 bg-white px-4 text-[12px] font-semibold text-zinc-700 transition-all hover:border-zinc-800 hover:text-black active:bg-zinc-50 rounded-none shadow-sm"
+              >
+                <CircleUser className="h-3.5 w-3.5" />
+                Intern Login
               </Link>
             </div>
 
@@ -161,10 +161,10 @@ export default function Navbar() {
                   <Link
                     href="/intern/signin"
                     onClick={() => setIsOpen(false)}
-                    className="flex h-14 w-full items-center justify-center gap-3 border border-zinc-200 bg-white text-base font-bold text-zinc-700 shadow-sm active:bg-zinc-50 rounded-none bg-render"
+                    className="flex h-14 w-full items-center justify-center gap-3 border border-zinc-200 bg-white text-base font-bold text-zinc-700 shadow-sm active:bg-zinc-50 rounded-none"
                   >
                     <CircleUser className="h-5 w-5" />
-                    Intern Portal Access
+                    Intern Login
                   </Link>
 
                   <Link

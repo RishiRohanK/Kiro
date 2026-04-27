@@ -10,11 +10,12 @@ export async function proxy(request: NextRequest) {
   const method = request.method.toUpperCase();
 
   // --- MAINTENANCE MODE ---
-  // Skip static assets, public files, and the maintenance page itself
+  // Skip static assets, public files, the maintenance page, and intern portal
   if (
     !pathname.startsWith('/_next') &&
     !pathname.startsWith('/api') &&
     !pathname.startsWith('/static') &&
+    !pathname.startsWith('/intern') && // Allow intern portal access
     pathname !== '/maintenance' &&
     !pathname.includes('.')
   ) {

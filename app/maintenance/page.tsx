@@ -1,17 +1,27 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
+import { CircleUser } from 'lucide-react';
 
 export default function MaintenancePage() {
   return (
     <div className="min-h-screen bg-white text-[#495057] font-sans flex flex-col items-center selection:bg-blue-50">
-      {/* Breadcrumbs-like spacing or header */}
-      <div className="w-full max-w-[900px] pt-12 px-6 flex justify-start opacity-50">
-        <nav className="flex items-center gap-2 text-[13px] font-medium text-zinc-400">
+      {/* Header with Breadcrumbs and Login */}
+      <div className="w-full max-w-[1000px] pt-12 px-6 flex justify-between items-center">
+        <nav className="flex items-center gap-2 text-[13px] font-medium text-zinc-400 opacity-50">
           <span>Portal</span>
           <span className="text-zinc-200 text-[10px]">/</span>
           <span className="text-zinc-900">Maintenance</span>
         </nav>
+
+        <Link
+          href="/intern/signin"
+          className="flex h-9 items-center gap-2 border border-zinc-200 bg-white px-5 text-[12px] font-bold text-zinc-700 transition-all hover:border-zinc-800 hover:text-black active:scale-[0.98] shadow-sm rounded-none"
+        >
+          <CircleUser className="h-4 w-4 text-[#003366]" />
+          Intern Login
+        </Link>
       </div>
 
       <div className="flex-1 flex items-center justify-center p-6 w-full">
