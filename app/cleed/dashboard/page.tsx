@@ -174,6 +174,9 @@ interface BootcampRegistration {
 export default function CleedDashboard() {
    const router = useRouter();
    const [activeTab, setActiveTab] = useState("overview");
+   const [reportMonth, setReportMonth] = useState(new Date().getMonth() + 1);
+   const [reportYear, setReportYear] = useState(new Date().getFullYear());
+   const [isDownloadingReport, setIsDownloadingReport] = useState(false);
    const [viewingIntern, setViewingIntern] = useState<Intern | null>(null);
    const [interns, setInterns] = useState<Intern[]>([]);
    const [hiringApplications, setHiringApplications] = useState<HiringApplication[]>([]);
@@ -600,6 +603,74 @@ export default function CleedDashboard() {
          }
       } catch (err) {
          console.error("Hiring fetch failure");
+      }
+   };
+
+   const handleDownloadMonthlyAttendance = async () => {
+      setIsDownloadingReport(true);
+      try {
+         const res = await fetch(`/api/cleed/attendance/monthly?month=${reportMonth}&year=${reportYear}`);
+         const attendanceData = await res.json();
+         
+         if (!Array.isArray(attendanceData)) {
+            alert("No attendance data found for this period.");
+            return;
+         }
+
+         const daysInMonth = new Date(reportYear, reportMonth, 0).getDate();
+         const headers = ["Intern Name", "Email", "Batch", ...Array.from({ length: daysInMonth }, (_, i) => `Day ${i + 1}`), "Total Present"];
+
+         const userMap = new Map();
+         interns.filter(i => i.isApproved).forEach(intern => {
+            userMap.set(intern.id, {
+               name: intern.name,
+               email: intern.email,
+               batch: intern.batch || "N/A",
+               days: Array(daysInMonth).fill("-"),
+               presentCount: 0
+            });
+         });
+
+         attendanceData.forEach(record => {
+            const intern = userMap.get(record.userId);
+            if (intern) {
+               const day = new Date(record.date).getDate();
+               if (record.status === "PRESENT") {
+                  intern.days[day - 1] = "P";
+                  intern.presentCount++;
+               } else if (record.status === "ABSENT") {
+                  intern.days[day - 1] = "A";
+               }
+            }
+         });
+
+         const rows = Array.from(userMap.values()).map(u => [
+            u.name,
+            u.email,
+            u.batch,
+            ...u.days,
+            u.presentCount
+         ]);
+
+         const csvContent = [
+            headers.join(","),
+            ...rows.map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(","))
+         ].join("\n");
+
+         const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+         const url = URL.createObjectURL(blob);
+         const link = document.createElement("a");
+         link.href = url;
+         const monthName = new Date(reportYear, reportMonth - 1).toLocaleString('default', { month: 'long' });
+         link.setAttribute("download", `Attendance_Report_${monthName}_${reportYear}.csv`);
+         document.body.appendChild(link);
+         link.click();
+         document.body.removeChild(link);
+      } catch (err) {
+         console.error("Report download failed:", err);
+         alert("Failed to generate report.");
+      } finally {
+         setIsDownloadingReport(false);
       }
    };
 
@@ -2545,8 +2616,8 @@ export default function CleedDashboard() {
                            </div>
                         </motion.div>
                      </div>
-                  )}
-               </AnimatePresence>
+                  </motion.div>
+               )}
                { }
                {activeTab === "assign" && (
                   <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-12">
@@ -3258,23 +3329,65 @@ export default function CleedDashboard() {
                { }
                {activeTab === "attendance" && (
                   <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-8 text-left">
-                     <div className="space-y-6">
-                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-zinc-200 pb-6">
+                     <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 border-b border-zinc-200 pb-8">
+                        <div className="space-y-4">
                            <div className="space-y-1">
                               <h2 className="text-2xl font-bold tracking-tighter text-zinc-900">Attendance</h2>
-                              <div className="flex items-center gap-2">
-                                 <span className="text-[12px] text-zinc-500 font-medium">Daily tracking for</span>
-                                 <input type="date" value={selectedDate} onChange={(e) => setSelectedDate(e.target.value)} className="text-[12px] font-bold text-red-600 bg-red-50 px-2 py-0.5 outline-none border border-red-100 rounded-none cursor-pointer" />
-                              </div>
+                              <p className="text-[12px] text-zinc-500 font-medium">Daily tracking and monthly reporting.</p>
                            </div>
-                           <div className="flex flex-wrap items-center gap-2">
-                              <button onClick={() => handleMarkAllAttendance("PRESENT")} className="h-9 px-4 bg-zinc-100 border border-zinc-200 text-zinc-900 text-[10px] font-bold hover:bg-zinc-200 transition-all rounded-none">Mark all present</button>
-                              <button onClick={() => handleMarkAllAttendance("ABSENT")} className="h-9 px-4 bg-zinc-900 text-white text-[10px] font-bold hover:bg-black transition-all rounded-none">Mark all absent</button>
-                              <button onClick={() => handleMarkHandRaisedAttendance()} className="h-9 px-4 bg-red-600 text-white text-[10px] font-bold hover:bg-red-700 transition-all flex items-center gap-2 rounded-none">
-                                 <Hand size={14} /> Quick-Mark Signals
+                           <div className="flex items-center gap-2 bg-zinc-50 p-1 border border-zinc-100 w-fit">
+                              <span className="text-[10px] text-zinc-400 font-bold uppercase pl-2">Select Date:</span>
+                              <input 
+                                 type="date" 
+                                 value={selectedDate} 
+                                 onChange={(e) => setSelectedDate(e.target.value)} 
+                                 className="text-[11px] font-bold text-[#0055FF] bg-white px-3 py-1 outline-none border border-zinc-200 focus:border-[#0055FF] transition-all cursor-pointer" 
+                              />
+                           </div>
+                        </div>
+
+                        <div className="flex flex-col gap-4">
+                           <div className="flex items-center gap-2 bg-zinc-900 p-2 border border-zinc-800">
+                              <div className="flex items-center gap-1">
+                                 <select 
+                                    value={reportMonth} 
+                                    onChange={(e) => setReportMonth(parseInt(e.target.value))}
+                                    className="bg-zinc-800 text-white text-[10px] font-bold px-2 py-1 outline-none border border-zinc-700"
+                                 >
+                                    {Array.from({ length: 12 }, (_, i) => (
+                                       <option key={i + 1} value={i + 1}>
+                                          {new Date(0, i).toLocaleString('default', { month: 'long' })}
+                                       </option>
+                                    ))}
+                                 </select>
+                                 <select 
+                                    value={reportYear} 
+                                    onChange={(e) => setReportYear(parseInt(e.target.value))}
+                                    className="bg-zinc-800 text-white text-[10px] font-bold px-2 py-1 outline-none border border-zinc-700"
+                                 >
+                                    {[2024, 2025, 2026].map(y => (
+                                       <option key={y} value={y}>{y}</option>
+                                    ))}
+                                 </select>
+                              </div>
+                              <button 
+                                 onClick={handleDownloadMonthlyAttendance}
+                                 disabled={isDownloadingReport}
+                                 className="h-7 px-4 bg-[#0055FF] text-white text-[10px] font-bold hover:bg-blue-600 disabled:opacity-50 transition-all flex items-center gap-2"
+                              >
+                                 <Download size={12} /> {isDownloadingReport ? "Generating..." : "Download Report"}
+                              </button>
+                           </div>
+
+                           <div className="flex flex-wrap items-center gap-2 justify-end">
+                              <button onClick={() => handleMarkAllAttendance("PRESENT")} className="h-8 px-4 bg-zinc-100 border border-zinc-200 text-zinc-900 text-[10px] font-bold hover:bg-zinc-200 transition-all">Mark all present</button>
+                              <button onClick={() => handleMarkAllAttendance("ABSENT")} className="h-8 px-4 bg-zinc-900 text-white text-[10px] font-bold hover:bg-black transition-all">Mark all absent</button>
+                              <button onClick={() => handleMarkHandRaisedAttendance()} className="h-8 px-4 bg-red-600 text-white text-[10px] font-bold hover:bg-red-700 transition-all flex items-center gap-2">
+                                 <Hand size={14} /> Quick-Mark
                               </button>
                            </div>
                         </div>
+                     </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                            {interns.filter(i => i.isApproved).map((intern) => {
