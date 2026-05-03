@@ -530,12 +530,7 @@ function InternDashboardLayoutContent({
                                                         }`}
                                                 >
                                                     <item.icon size={20} />
-                                                    <span className="text-[14px] font-semibold">{item.name}</span>
-                                                    {item.count !== undefined && (
-                                                        <span className="ml-auto h-5 min-w-[20px] px-1.5 flex items-center justify-center rounded-full bg-blue-50 text-blue-500 text-[10px] font-bold">
-                                                            {item.count}
-                                                        </span>
-                                                    )}
+                                                    <span className="text-[13px] font-semibold">{item.name}</span>
                                                 </Link>
                                             );
                                         })}
