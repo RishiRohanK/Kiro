@@ -282,6 +282,7 @@ export default function CleedDashboard() {
    const [examIsActive, setExamIsActive] = useState(false);
    const [globalExitKey, setGlobalExitKey] = useState("000000");
    const [isUpdatingExam, setIsUpdatingExam] = useState(false);
+   const [isSchedulingExam, setIsSchedulingExam] = useState(false);
    const [examSessions, setExamSessions] = useState<any[]>([]);
    const [examViewMode, setExamViewMode] = useState<"UI_UX" | "FULLSTACK">("UI_UX");
    const [feedbacks, setFeedbacks] = useState<any[]>([]);
@@ -290,7 +291,7 @@ export default function CleedDashboard() {
    // Scheduled Exams State
    const [examsList, setExamsList] = useState<any[]>([]);
    const [richExamsList, setRichExamsList] = useState<any[]>([]);
-   const [examFormData, setExamFormData] = useState({ title: "", date: "", duration: "", batch: "All" });
+   const [examFormData, setExamFormData] = useState({ title: "", description: "", date: "", duration: "", batch: "All" });
    const [sendingExamForm, setSendingExamForm] = useState(false);
 
    // Resources State
@@ -1258,7 +1259,7 @@ export default function CleedDashboard() {
             body: JSON.stringify(examFormData)
          });
          if (res.ok) {
-            setExamFormData({ title: "", date: "", duration: "", batch: "All" });
+            setExamFormData({ title: "", description: "", date: "", duration: "", batch: "All" });
             const fetchExams = async () => {
                const res = await fetch("/api/cleed/exams");
                const data = await res.json();
@@ -1871,6 +1872,101 @@ export default function CleedDashboard() {
                            </div>
                         </div>
                      </div>
+
+                     <div className="flex items-center justify-between border-b border-zinc-200 pb-5">
+                        <h2 className="text-2xl font-bold tracking-tighter text-zinc-900">Technical Registry</h2>
+                        <button 
+                           onClick={() => setIsSchedulingExam(!isSchedulingExam)}
+                           className="h-10 px-6 bg-[#003366] text-white text-[10px] font-bold uppercase tracking-widest hover:bg-black transition-all rounded-none"
+                        >
+                           {isSchedulingExam ? "Cancel Scheduling" : "Schedule Assessment"}
+                        </button>
+                     </div>
+
+                     <AnimatePresence>
+                        {isSchedulingExam && (
+                           <motion.div 
+                              initial={{ height: 0, opacity: 0 }}
+                              animate={{ height: "auto", opacity: 1 }}
+                              exit={{ height: 0, opacity: 0 }}
+                              className="overflow-hidden"
+                           >
+                              <div className="p-8 bg-zinc-50 border border-zinc-200 mb-8">
+                                 <form onSubmit={handlePostExam} className="space-y-6">
+                                    <div className="grid md:grid-cols-2 gap-6">
+                                       <div className="space-y-1">
+                                          <label className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest">Assessment Title</label>
+                                          <input 
+                                             required 
+                                             value={examFormData.title} 
+                                             onChange={(e) => setExamFormData({ ...examFormData, title: e.target.value })} 
+                                             className="w-full h-11 bg-white border border-zinc-200 px-4 text-sm font-bold outline-none focus:border-[#003366] rounded-none" 
+                                             placeholder="e.g., React Core Evaluation" 
+                                          />
+                                       </div>
+                                       <div className="space-y-1">
+                                          <label className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest">Target Batch</label>
+                                          <select 
+                                             value={examFormData.batch} 
+                                             onChange={(e) => setExamFormData({ ...examFormData, batch: e.target.value })} 
+                                             className="w-full h-11 bg-white border border-zinc-200 px-4 text-sm font-bold outline-none focus:border-[#003366] rounded-none"
+                                          >
+                                             <option value="All">All Batches</option>
+                                             <option value="Batch 1">Batch 1</option>
+                                             <option value="Batch 2">Batch 2</option>
+                                             <option value="Batch 3">Batch 3</option>
+                                          </select>
+                                       </div>
+                                    </div>
+
+                                    <div className="space-y-1">
+                                       <label className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest">Detailed Description / Instructions</label>
+                                       <textarea 
+                                          rows={3}
+                                          value={examFormData.description} 
+                                          onChange={(e) => setExamFormData({ ...examFormData, description: e.target.value })} 
+                                          className="w-full bg-white border border-zinc-200 p-4 text-sm font-bold outline-none focus:border-[#003366] rounded-none resize-none" 
+                                          placeholder="Provide context or rules for the assessment..." 
+                                       />
+                                    </div>
+
+                                    <div className="grid md:grid-cols-2 gap-6">
+                                       <div className="space-y-1">
+                                          <label className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest">Exam Date</label>
+                                          <input 
+                                             required 
+                                             type="date"
+                                             value={examFormData.date} 
+                                             onChange={(e) => setExamFormData({ ...examFormData, date: e.target.value })} 
+                                             className="w-full h-11 bg-white border border-zinc-200 px-4 text-sm font-bold outline-none focus:border-[#003366] rounded-none" 
+                                          />
+                                       </div>
+                                       <div className="space-y-1">
+                                          <label className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest">Duration (Minutes)</label>
+                                          <input 
+                                             required 
+                                             type="number"
+                                             value={examFormData.duration} 
+                                             onChange={(e) => setExamFormData({ ...examFormData, duration: e.target.value })} 
+                                             className="w-full h-11 bg-white border border-zinc-200 px-4 text-sm font-bold outline-none focus:border-[#003366] rounded-none" 
+                                             placeholder="60"
+                                          />
+                                       </div>
+                                    </div>
+
+                                    <div className="pt-4">
+                                       <button 
+                                          disabled={sendingExamForm}
+                                          className="w-full h-12 bg-[#003366] text-white text-[11px] font-bold uppercase tracking-widest hover:bg-black transition-all rounded-none shadow-sm disabled:opacity-50"
+                                       >
+                                          {sendingExamForm ? "Scheduling..." : "Confirm & Schedule Exam"}
+                                       </button>
+                                    </div>
+                                 </form>
+                              </div>
+                           </motion.div>
+                        )}
+                     </AnimatePresence>
 
                      <div className="grid lg:grid-cols-1 gap-8 pt-12">
                         <div className="bg-white border border-zinc-200">

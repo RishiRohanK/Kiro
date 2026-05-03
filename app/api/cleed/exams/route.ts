@@ -15,10 +15,11 @@ export async function GET() {
 export async function POST(req: Request) {
     try {
         const body = await req.json();
-        const { title, date, duration, batch } = body;
+        const { title, description, date, duration, batch } = body;
         const exam = await prisma.scheduledExam.create({
             data: { 
                 title, 
+                description,
                 date, 
                 duration: String(duration), 
                 batch: batch || "All" 

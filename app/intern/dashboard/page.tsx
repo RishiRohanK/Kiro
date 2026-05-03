@@ -648,54 +648,52 @@ function InternDashboardContent() {
                <div className="grid grid-cols-12 gap-4 text-left">
                   {/* Left Column: Greeting & Stats */}
                   <div className="col-span-12 lg:col-span-8 flex flex-col gap-4">
-                     <div className="relative overflow-hidden bg-[#E0E7FF] p-8 text-[#003366] shadow-sm border border-[#003366]/5">
-                        {/* Decorative background accent */}
-                        <div className="absolute top-[-20%] right-[-10%] w-64 h-64 bg-white/50 rounded-full blur-3xl" />
+                      <div className="relative overflow-hidden bg-[#E0E7FF] p-6 text-[#003366] border border-[#003366]/5 rounded-lg">
 
-                        <div className="relative z-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
-                           <div className="space-y-2">
-                              <h1 className="text-3xl md:text-3xl font-semibold tracking-tight leading-none text-[#003366]">
-                                 {(() => {
-                                    const hour = new Date().getHours();
-                                    if (hour < 12) return "Good morning";
-                                    if (hour < 17) return "Good afternoon";
-                                    return "Good evening";
-                                 })()}, <span className="text-[#0055FF]">{user.name.split(' ')[0]}</span>
-                              </h1>
-                              <p className="text-[#003366]/60 text-sm font-medium max-w-sm">
-                                 Welcome back scholar. You have <span className="text-[#003366] font-semibold">{(Array.isArray(tasks) ? tasks : []).filter(t => t.status === 'pending').length} pending</span> tasks today.
-                              </p>
-                           </div>
-                           <div className="flex items-center gap-3">
-                              <div className="flex items-center gap-2 bg-white/40 backdrop-blur-md px-3 py-1.5 border border-white/30">
-                                 <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                                 <span className="text-[9px] font-bold uppercase tracking-widest text-[#003366]/60">Live Sync</span>
-                              </div>
-                              <div className="flex items-center gap-3 bg-white/60 backdrop-blur-md px-4 py-2 border border-white/40">
-                                 <span className="text-[10px] font-semibold uppercase tracking-widest text-[#003366]/40">Active Batch</span>
-                                 <div className="text-[14px] font-semibold text-[#003366]">{user.batch || "Batch 3"}</div>
-                              </div>
-                           </div>
-                        </div>
+                         <div className="relative z-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
+                            <div className="space-y-1">
+                               <h1 className="text-2xl font-bold tracking-tight text-[#003366]">
+                                  {(() => {
+                                     const hour = new Date().getHours();
+                                     if (hour < 12) return "Good morning";
+                                     if (hour < 17) return "Good afternoon";
+                                     return "Good evening";
+                                  })()}, <span className="text-[#0055FF]">{user.name.split(' ')[0]}</span>
+                               </h1>
+                               <p className="text-[#003366]/60 text-[12px] font-medium max-w-sm">
+                                  Welcome back scholar. You have <span className="text-[#003366] font-semibold">{(Array.isArray(tasks) ? tasks : []).filter(t => t.status === 'pending').length} pending</span> tasks today.
+                               </p>
+                            </div>
+                            <div className="flex items-center gap-3">
+                               <div className="flex items-center gap-2 bg-white/40 backdrop-blur-md px-3 py-1.5 border border-white/30">
+                                  <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                                  <span className="text-[9px] font-bold uppercase tracking-widest text-[#003366]/60">Live Sync</span>
+                               </div>
+                               <div className="flex items-center gap-3 bg-white/60 backdrop-blur-md px-4 py-2 border border-white/40">
+                                  <span className="text-[10px] font-semibold uppercase tracking-widest text-[#003366]/40">Active Batch</span>
+                                  <div className="text-[14px] font-semibold text-[#003366]">{user.batch || "Batch 3"}</div>
+                               </div>
+                            </div>
+                         </div>
 
-                        {/* Integrated Stats Row with Separate Containers */}
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-12 pt-10 border-t border-[#003366]/10">
-                           {[
-                              { label: "Attendance", value: `${attendancePercentage}%`, icon: CheckCircle2 },
-                              { label: "Milestones", value: schedules.filter(s => s.isCompleted).length, icon: Target },
-                              { label: "Reports", value: reports.length + examSessions.length, icon: FileTextIcon },
-                              { label: "Warnings", value: examSessions.reduce((acc, s) => acc + (s.violations || 0), 0), icon: AlertCircle }
-                           ].map((stat, i) => (
-                              <div key={i} className="bg-white/40 border border-[#003366]/5 p-4 flex flex-col justify-between group hover:bg-white/60 transition-all">
-                                 <div className="flex items-center gap-2 opacity-60">
-                                    <stat.icon size={12} className="text-[#003366]" />
-                                    <span className="text-[9px] font-semibold uppercase tracking-wider text-[#003366]">{stat.label}</span>
-                                 </div>
-                                 <p className="text-2xl font-semibold text-[#003366] mt-1">{stat.value}</p>
-                              </div>
-                           ))}
-                        </div>
-                     </div>
+                         {/* Integrated Stats Row with Separate Containers */}
+                         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-8 pt-6 border-t border-[#003366]/10">
+                            {[
+                               { label: "Attendance", value: `${attendancePercentage}%`, icon: CheckCircle2 },
+                               { label: "Milestones", value: schedules.filter(s => s.isCompleted).length, icon: Target },
+                               { label: "Reports", value: reports.length + examSessions.length, icon: FileTextIcon },
+                               { label: "Warnings", value: examSessions.reduce((acc, s) => acc + (s.violations || 0), 0), icon: AlertCircle }
+                            ].map((stat, i) => (
+                               <div key={i} className="bg-white/40 border border-[#003366]/5 p-3 flex flex-col justify-between group">
+                                  <div className="flex items-center gap-2 opacity-60">
+                                     <stat.icon size={12} className="text-[#003366]" />
+                                     <span className="text-[9px] font-bold uppercase tracking-wider text-[#003366]">{stat.label}</span>
+                                  </div>
+                                  <p className="text-xl font-bold text-[#003366] mt-0.5">{stat.value}</p>
+                               </div>
+                            ))}
+                         </div>
+                      </div>
                   </div>
 
                   {/* Right Column: Key Actions */}

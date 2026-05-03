@@ -2,7 +2,8 @@
 
 import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Loader2, Calendar, Clock, AlertCircle, ShieldCheck, Lock } from "lucide-react";
+import { Loader2, Calendar, Clock, AlertCircle, ShieldCheck, Lock, User } from "lucide-react";
+import { motion } from "framer-motion";
 
 function ExamLoginContent() {
   const router = useRouter();
@@ -79,124 +80,136 @@ function ExamLoginContent() {
   if (fetchingExam) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-white">
-        <Loader2 className="animate-spin text-violet-600 mb-4" size={32} />
-        <p className="text-sm font-medium text-gray-400">Loading...</p>
+        <Loader2 className="animate-spin text-[#003366] mb-4" size={32} />
+        <p className="text-sm font-medium text-gray-400">Initializing secure session...</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans flex flex-col relative select-none">
+    <div className="min-h-screen bg-[#F8FAFC] font-sans flex flex-col relative select-none">
       
       {/* Top Banner with Exam Details */}
-      <div className="w-full bg-violet-600 border-b border-violet-700 py-2.5 px-6">
-         <div className="max-w-[900px] mx-auto flex justify-between items-center text-white">
-            <div className="flex items-center gap-4">
-               <div className="text-[10px] font-bold uppercase tracking-[0.2em] opacity-70 border-r border-white/20 pr-4">Assessment Mode</div>
-               <div className="text-xs font-bold truncate max-w-[300px]">
-                  {exam?.title || "Exam Portal"} • {exam?.date || "No date set"} • {exam?.time || "Time not set"}
+      <div className="w-full bg-[#003366] py-2.5 px-6 shadow-sm z-20">
+         <div className="max-w-[800px] mx-auto flex justify-between items-center text-white">
+            <div className="flex items-center gap-3">
+               <div className="text-[10px] font-bold uppercase tracking-widest opacity-50 border-r border-white/10 pr-3 hidden sm:block">Secure Session</div>
+               <div className="text-xs font-bold truncate max-w-[200px] sm:max-w-[300px]">
+                  {exam?.title || "Exam Portal"}
                </div>
             </div>
             <div className="flex items-center gap-2">
-               <div className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></div>
-               <span className="text-[10px] font-bold uppercase tracking-widest opacity-80">Secure Node Active</span>
+               <div className="h-1.5 w-1.5 rounded-full bg-emerald-400"></div>
+               <span className="text-[9px] font-bold uppercase tracking-widest opacity-80">Connected</span>
             </div>
          </div>
       </div>
 
-      <div className="flex-1 flex items-center justify-center p-6 lg:p-10 pb-32">
+      <div className="flex-1 flex items-center justify-center p-4 lg:p-10 pb-32">
         
-        <div className="w-full max-w-[900px] bg-white border border-gray-200 flex flex-col md:flex-row overflow-hidden relative z-10 shadow-sm">
+        <motion.div 
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="w-full max-w-[800px] bg-white rounded-xl flex flex-col md:flex-row overflow-hidden relative z-10 shadow-lg border border-zinc-200"
+        >
           
-          {/* Left Side: Branding */}
-          <div className="md:w-1/2 bg-violet-50 p-10 md:p-14 flex flex-col justify-center relative border-b md:border-b-0 md:border-r border-gray-100">
-             <div className="space-y-8">
+          {/* Left Side: Info */}
+          <div className="md:w-[40%] bg-[#E0E7FF] p-8 flex flex-col justify-between relative">
+             <div className="space-y-6 relative z-10">
                 <div className="flex items-center gap-3">
-                   <div className="h-10 w-10 bg-violet-600 rounded flex items-center justify-center text-white">
-                      <ShieldCheck size={24} />
+                   <div className="h-9 w-9 bg-[#003366] rounded-lg flex items-center justify-center text-white">
+                      <ShieldCheck size={18} />
                    </div>
-                   <h1 className="text-violet-900 font-bold text-lg tracking-tight leading-tight">Exam Portal</h1>
+                   <h1 className="text-[#003366] font-bold text-sm uppercase tracking-wider">Assessment</h1>
                 </div>
 
-                <div className="space-y-2">
-                   <h2 className="text-violet-900 text-3xl font-bold leading-tight tracking-tight">
-                       {exam?.title || "Assessment"}
+                <div className="space-y-3">
+                   <h2 className="text-[#003366] text-2xl font-bold leading-tight tracking-tight">
+                       {exam?.title || "Online Examination"}
                    </h2>
-                   <p className="text-violet-600/70 text-sm font-medium tracking-wide">Student Forge Technologies</p>
+                   <div className="space-y-2 pt-2">
+                      <div className="flex items-center gap-2 text-[#003366]/60">
+                         <Clock size={12} />
+                         <span className="text-[11px] font-bold">{exam?.duration || "Set"} mins</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-[#003366]/60">
+                         <Calendar size={12} />
+                         <span className="text-[11px] font-bold">{exam?.date || "TBA"}</span>
+                      </div>
+                   </div>
                 </div>
              </div>
 
-             <div className="hidden md:block absolute bottom-14 left-10 md:left-14">
-                <p className="text-[10px] font-bold text-violet-300 uppercase tracking-widest leading-none">
-                   Official Assessment Gateway
-                </p>
+             <div className="mt-8 relative z-10">
+                <div className="p-4 bg-[#003366] rounded-lg text-white">
+                   <p className="text-[11px] font-medium leading-relaxed opacity-90">
+                      Stable connection required. Monitor active.
+                   </p>
+                </div>
              </div>
           </div>
 
           {/* Right Side: Form Section */}
-          <div className="md:w-1/2 p-10 md:p-14 bg-white">
-             <div className="max-w-[340px] mx-auto">
+          <div className="md:w-[60%] p-8 md:p-10 bg-white">
+             <div className="max-w-[300px] mx-auto">
                 
-                <div className="mb-10">
-                   <h3 className="text-xl font-bold text-slate-800">Student Login</h3>
-                   <p className="text-xs text-slate-400 font-medium mt-1">Log in to start your exam.</p>
+                <div className="mb-8">
+                   <h3 className="text-xl font-bold text-[#003366]">Candidate Login</h3>
+                   <p className="text-[12px] text-zinc-400 font-medium mt-1">Access the secure portal.</p>
                 </div>
 
-                <form onSubmit={handleLogin} className="space-y-6">
+                <form onSubmit={handleLogin} className="space-y-4">
                    
-                   <div className="space-y-1.5">
-                      <label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest ml-1">Email address</label>
+                   <div className="space-y-1">
+                      <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest ml-1">Email address</label>
                       <input 
                           type="email" 
                           required
-                          placeholder="your@email.com"
-                          className="w-full h-11 px-4 bg-slate-50 border border-slate-200 text-sm outline-none transition-all focus:border-violet-600 focus:bg-white rounded-none"
+                          placeholder="scholar@studentforge.in"
+                          className="w-full h-11 px-4 bg-zinc-50 border border-zinc-200 text-sm font-medium outline-none transition-all focus:border-[#003366] rounded-lg"
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
                       />
                    </div>
 
-                   <div className="space-y-1.5">
-                      <label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest ml-1">Password</label>
-                      <div className="relative">
-                         <input 
-                             type="password" 
-                             required
-                             placeholder="Enter password"
-                             className="w-full h-11 px-4 bg-slate-50 border border-slate-200 text-sm outline-none transition-all focus:border-violet-600 focus:bg-white rounded-none"
-                             value={password}
-                             onChange={(e) => setPassword(e.target.value)}
-                         />
-                         <Lock className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-300" size={16} />
-                      </div>
+                   <div className="space-y-1">
+                      <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest ml-1">Password</label>
+                      <input 
+                          type="password" 
+                          required
+                          placeholder="••••••••"
+                          className="w-full h-11 px-4 bg-zinc-50 border border-zinc-200 text-sm font-medium outline-none transition-all focus:border-[#003366] rounded-lg"
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                      />
                    </div>
 
-                   <div className="space-y-1.5">
-                      <label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest ml-1">What is 5 + 7?</label>
+                   <div className="p-4 bg-[#E0E7FF]/30 border border-[#003366]/5 rounded-lg space-y-2">
+                      <label className="text-[10px] font-bold text-[#003366] uppercase tracking-widest text-center block">Security: 5 + 7?</label>
                       <input 
                           type="number" 
                           required
                           placeholder="Answer"
-                          className="w-full h-11 px-4 bg-slate-50 border border-slate-200 text-sm outline-none transition-all focus:border-violet-600 focus:bg-white rounded-none"
+                          className="w-full h-10 px-4 bg-white border border-[#003366]/10 text-sm font-bold outline-none transition-all focus:border-[#003366] rounded-md text-center"
                           value={mathAnswer}
                           onChange={(e) => setMathAnswer(e.target.value)}
                       />
                    </div>
 
                    {error && (
-                      <div className="p-3 bg-red-50 border border-red-100 rounded-none flex items-center gap-3">
-                         <AlertCircle size={14} className="text-red-500 shrink-0" />
-                         <p className="text-[10px] text-red-600 font-bold uppercase tracking-tight">{error}</p>
+                      <div className="p-2.5 bg-red-50 border border-red-100 rounded-lg flex items-center gap-2">
+                         <AlertCircle size={12} className="text-red-500 shrink-0" />
+                         <p className="text-[9px] text-red-600 font-bold uppercase tracking-tight">{error}</p>
                       </div>
                    )}
 
-                   <div className="pt-4">
+                   <div className="pt-2">
                       <button 
                          type="submit"
                          disabled={loading || !exam}
-                         className="w-full h-12 bg-violet-600 text-white text-[11px] font-bold uppercase tracking-widest transition-all hover:bg-violet-700 active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-2 rounded-none"
+                         className="w-full h-11 bg-[#003366] text-white text-[10px] font-bold uppercase tracking-widest transition-all hover:bg-black active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-2 rounded-lg"
                       >
-                         {loading ? <Loader2 className="animate-spin" size={16} /> : "Start Exam"}
+                         {loading ? <Loader2 className="animate-spin" size={14} /> : "Authenticate"}
                       </button>
                    </div>
 
@@ -205,19 +218,15 @@ function ExamLoginContent() {
              </div>
           </div>
 
-        </div>
+        </motion.div>
 
       </div>
 
-      {/* Standard Intern Footer */}
-      <footer className="absolute bottom-0 left-0 w-full bg-zinc-100 border-t border-zinc-200 py-6 px-6">
-          <div className="max-w-[900px] mx-auto flex flex-col items-center gap-2">
-              <p className="text-[11px] text-[#6c757d] font-medium text-center">
-                  © 2025-2026 Student Forge Technologies Private Limited. All Rights Reserved.
-                  Unauthorized access or use of this platform is strictly prohibited.
-              </p>
-              <p className="text-[10px] text-zinc-400 font-bold text-center">
-                  platform.studentforge.in is a registered trademark. Secured with enterprise-grade encryption.
+      <footer className="absolute bottom-0 left-0 w-full py-6 px-6 opacity-40">
+          <div className="max-w-[800px] mx-auto flex flex-col items-center gap-2 text-center">
+              <span className="text-[9px] font-bold text-zinc-400 uppercase tracking-widest">Powered by Redlix Secure</span>
+              <p className="text-[9px] text-zinc-400 font-semibold max-w-xs leading-tight">
+                  © 2025-2026 Student Forge. Evaluation purposes only.
               </p>
           </div>
       </footer>
@@ -230,11 +239,10 @@ export default function ExamLoginPage() {
   return (
     <Suspense fallback={
       <div className="min-h-screen bg-white flex items-center justify-center">
-        <Loader2 className="animate-spin text-violet-600" size={32} />
+        <Loader2 className="animate-spin text-[#003366]" size={32} />
       </div>
     }>
       <ExamLoginContent />
     </Suspense>
   );
 }
-
