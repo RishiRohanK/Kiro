@@ -11,6 +11,7 @@ function ExamDetailsContent() {
   const examId = searchParams.get("id");
   
   const [exam, setExam] = useState<any>(null);
+  const [isExamActive, setIsExamActive] = useState(false);
   const [fetchingExam, setFetchingExam] = useState(true);
   const [error, setError] = useState("");
   const [user, setUser] = useState<any>(null);
@@ -28,8 +29,10 @@ function ExamDetailsContent() {
         const data = await res.json();
         if (data.success) {
           setExam(data.exam);
+          setIsExamActive(data.isExamActive);
         } else {
           setError(data.error || "Assessment not found.");
+          setIsExamActive(data.isExamActive || false);
         }
       } catch (err) {
         setError("Connection error.");
@@ -127,11 +130,16 @@ function ExamDetailsContent() {
                <div className="flex flex-col gap-3 pt-4">
                   <button 
                      onClick={() => router.push(`/exams/login?id=${examId}`)}
-                     disabled={isEnded}
-                     className="w-full h-14 bg-[#6366F1] text-white font-medium rounded-lg shadow-lg shadow-[#6366F1]/20 hover:bg-[#4F46E5] transition-all active:scale-[0.98] disabled:opacity-50"
+                     disabled={isEnded || !isExamActive}
+                     className="w-full h-14 bg-[#6366F1] text-white font-medium rounded-lg shadow-lg shadow-[#6366F1]/20 hover:bg-[#4F46E5] transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                     Start Test
+                     {isExamActive ? "Start Test" : "Waiting for Admin..."}
                   </button>
+                  {!isExamActive && (
+                     <p className="text-[11px] text-amber-600 font-medium text-center">
+                        The administrator has not started this assessment session yet.
+                     </p>
+                  )}
                   {isEnded && (
                      <div className="w-full h-14 bg-zinc-200 text-zinc-500 font-medium rounded-lg flex items-center justify-center">
                         This test has ended

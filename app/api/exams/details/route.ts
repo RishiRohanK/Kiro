@@ -6,6 +6,10 @@ export async function GET(req: Request) {
         const { searchParams } = new URL(req.url);
         const id = searchParams.get("id");
 
+        const globalStatus = await prisma.examStatus.findUnique({
+            where: { id: "global_exam_state" }
+        });
+
         if (id) {
             // First try RichExam
             const richExam = await prisma.richExam.findUnique({
@@ -13,7 +17,7 @@ export async function GET(req: Request) {
                 include: { questions: true }
             });
             if (richExam) {
-                return NextResponse.json({ success: true, exam: richExam });
+                return NextResponse.json({ success: true, exam: richExam, isExamActive: globalStatus?.isActive || false });
             }
 
             // If not found, try ScheduledExam
@@ -21,24 +25,26 @@ export async function GET(req: Request) {
                 where: { id }
             });
             if (scheduledExam) {
-                return NextResponse.json({ success: true, exam: scheduledExam });
+                return NextResponse.json({ success: true, exam: scheduledExam, isExamActive: globalStatus?.isActive || false });
             }
 
-            return NextResponse.json({ success: false, error: "Exam not found" }, { status: 404 });
+            return NextResponse.json({ success: false, error: "Exam not found", isExamActive: globalStatus?.isActive || false }, { status: 404 });
         }
 
-        // Default to latest published RichExam if no ID
-        const latestExam = await prisma.richExam.findFirst({
-            where: { status: "PUBLISHED" },
-            orderBy: { createdAt: "desc" },
-            include: { questions: true }
+        // Fetch global exam status
+        const globalStatus = await prisma.examStatus.findUnique({
+            where: { id: "global_exam_state" }
         });
 
         if (latestExam) {
-            return NextResponse.json({ success: true, exam: latestExam });
+            return NextResponse.json({ 
+                success: true, 
+                exam: latestExam,
+                isExamActive: globalStatus?.isActive || false
+            });
         }
 
-        return NextResponse.json({ success: false, error: "No active exams found" }, { status: 404 });
+        return NextResponse.json({ success: false, error: "No active exams found", isExamActive: globalStatus?.isActive || false }, { status: 404 });
     } catch (error) {
         console.error("Fetch Exam Details Error:", error);
         return NextResponse.json({ success: false, error: "Server error" }, { status: 500 });
