@@ -25,7 +25,10 @@ import {
     Menu,
     ChevronLeft,
     Bell,
-    Globe
+    Globe,
+    ChevronDown,
+    School,
+    Users
 } from "lucide-react"; 
 
 import { motion, AnimatePresence } from "framer-motion";
@@ -237,54 +240,69 @@ function InternDashboardLayoutContent({
             {}
             <div className="flex-1 flex flex-col min-w-0 lg:pl-64">
                 {/* Header */}
-                <header className="h-14 lg:h-12 flex items-center justify-between px-4 lg:px-8 bg-zinc-100 border-b border-zinc-200 sticky top-0 z-[60] text-zinc-900 shadow-sm">
-                    <div className="flex items-center gap-3">
+                <header className="h-16 lg:h-16 flex items-center justify-between px-4 lg:px-8 bg-white border-b border-zinc-100 sticky top-0 z-[60] text-zinc-900 shadow-sm">
+                    <div className="flex items-center gap-4">
                         <button 
                             onClick={() => setIsMobileMenuOpen(true)}
-                            className="lg:hidden p-2 -ml-2 text-zinc-600 hover:bg-zinc-200 transition-colors"
+                            className="lg:hidden p-2 -ml-2 text-zinc-600 hover:bg-zinc-100 transition-colors rounded-lg"
                         >
                             <Menu size={20} />
                         </button>
-                        <div className="flex items-center gap-2">
-                            <span className="hidden sm:inline text-[11px] font-medium text-zinc-500">Portal Node</span>
-                            <ChevronRight size={12} className="hidden sm:inline text-zinc-300" />
-                            <span className="text-[12px] font-bold">
-                               {navItems.find(item => {
-                                   const itemUrl = new URL(item.slug, "http://localhost");
-                                   const itemPath = itemUrl.pathname;
-                                   const itemView = itemUrl.searchParams.get("view");
-                                   return pathname === itemPath && (itemView === currentView || (!itemView && !currentView));
-                               })?.name || "Portal"}
-                            </span>
+                        
+                        <div className="flex items-center gap-3">
+                            <div className="h-10 w-10 bg-zinc-50 flex items-center justify-center border border-zinc-100 shadow-inner overflow-hidden">
+                                <School size={20} className="text-[#003366]/60" />
+                            </div>
+                            <div className="flex flex-col">
+                                <span className="text-[13px] font-bold text-[#003366] leading-tight truncate max-w-[200px] lg:max-w-none">
+                                    {user.college || "Institute Name"}
+                                </span>
+                                <span className="text-[10px] text-zinc-400 font-bold uppercase tracking-wider">
+                                    {user.department || "Academic Node"}
+                                </span>
+                            </div>
                         </div>
                     </div>
 
-                    <div className="flex items-center gap-2 lg:gap-6">
-                        <Link 
-                            href="/courses"
-                            className="hidden md:flex items-center gap-2 text-[11px] font-bold text-zinc-500 hover:text-black transition-colors"
-                        >
-                            <Globe size={14} />
-                            <span>Courses</span>
-                        </Link>
-                        <div className="flex items-center gap-4">
-                        <Link 
-                            href="/intern/dashboard/news"
-                            className="flex items-center gap-2 px-3 py-1 bg-blue-50 text-[#0055FF] text-[10px] font-medium border border-blue-100 hover:bg-blue-100 transition-colors relative"
-                        >
-                            <div className="relative">
-                                <Bell size={14} className="animate-pulse" />
-                                <span className="absolute -top-1.5 -right-1.5 flex h-3 w-3 items-center justify-center rounded-full bg-blue-600 text-[8px] font-bold text-white shadow-sm">
-                                    1
-                                </span>
-                            </div>
-                            <span>News & updates</span>
-                        </Link>
-                        <div className="px-3 py-1 bg-emerald-50 text-emerald-600 text-[10px] font-medium border border-emerald-100 hidden sm:block">
-                           Secure session
+                    <div className="flex items-center gap-4 lg:gap-8">
+                        <div className="hidden md:flex items-center gap-1 pr-4 border-r border-zinc-100">
+                            <button className="p-2 text-zinc-400 hover:text-[#003366] hover:bg-zinc-50 transition-all rounded-lg">
+                                <Users size={19} strokeWidth={1.5} />
+                            </button>
+                            <button className="p-2 text-zinc-400 hover:text-[#003366] hover:bg-zinc-50 transition-all rounded-lg">
+                                <Calendar size={19} strokeWidth={1.5} />
+                            </button>
+                            <button className="p-2 text-zinc-400 hover:text-[#003366] hover:bg-zinc-50 transition-all rounded-lg">
+                                <MessageSquare size={19} strokeWidth={1.5} />
+                            </button>
+                            <Link href="/intern/dashboard/news" className="p-2 text-zinc-400 hover:text-[#003366] hover:bg-zinc-50 transition-all rounded-lg relative">
+                                <Bell size={19} strokeWidth={1.5} />
+                                <span className="absolute top-2 right-2.5 h-2 w-2 bg-red-500 rounded-full border-2 border-white" />
+                            </Link>
                         </div>
+
+                        {/* Profile Pill */}
+                        <Link href="/intern/dashboard/profile" className="flex items-center">
+                            <div className="flex items-center gap-3 px-3 py-1.5 rounded-full border border-zinc-200 bg-white hover:border-[#003366]/30 hover:bg-zinc-50/50 transition-all shadow-sm group">
+                                <div className="h-8 w-8 rounded-full bg-zinc-100 flex items-center justify-center text-[10px] font-bold text-[#003366] overflow-hidden border border-zinc-200">
+                                    {user.profileImage ? (
+                                        <img src={user.profileImage} alt={user.name} className="h-full w-full object-cover" />
+                                    ) : (
+                                        user.name?.split(' ').map((n: string) => n[0]).join('').toUpperCase().slice(0, 2)
+                                    )}
+                                </div>
+                                <div className="hidden sm:flex flex-col items-start pr-1">
+                                    <span className="text-[12px] font-bold text-[#003366] truncate max-w-[120px]">
+                                        {user.name}
+                                    </span>
+                                    <span className="text-[9px] font-medium text-zinc-400 -mt-0.5">
+                                        Active Scholar
+                                    </span>
+                                </div>
+                                <ChevronDown size={14} className="text-zinc-400 group-hover:text-[#003366] transition-colors mr-1" />
+                            </div>
+                        </Link>
                     </div>
-                </div>
                 </header>
 
                 <main className="flex-1 p-4 lg:p-0 pb-20 lg:pb-10">
