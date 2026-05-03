@@ -53,6 +53,8 @@ import {
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { PWAInstallButton } from "@/app/components/PWAInstallButton";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 
 interface Intern {
    id: string;
@@ -669,6 +671,88 @@ export default function CleedDashboard() {
       } catch (err) {
          console.error("Report download failed:", err);
          alert("Failed to generate report.");
+      } finally {
+         setIsDownloadingReport(false);
+      }
+   };
+
+   const handleDownloadMonthlyAttendancePDF = async () => {
+      setIsDownloadingReport(true);
+      try {
+         const res = await fetch(`/api/cleed/attendance/monthly?month=${reportMonth}&year=${reportYear}`);
+         const attendanceData = await res.json();
+         
+         if (!Array.isArray(attendanceData)) {
+            alert("No attendance data found for this period.");
+            return;
+         }
+
+         const daysInMonth = new Date(reportYear, reportMonth, 0).getDate();
+         const monthName = new Date(reportYear, reportMonth - 1).toLocaleString('default', { month: 'long' });
+
+         const doc = new jsPDF('l', 'mm', 'a4');
+         
+         doc.setFontSize(20);
+         doc.setTextColor(0, 85, 255);
+         doc.text(`Monthly Attendance Report - ${monthName} ${reportYear}`, 14, 22);
+         
+         doc.setFontSize(10);
+         doc.setTextColor(100);
+         doc.text(`Generated on: ${new Date().toLocaleString()}`, 14, 30);
+
+         const userMap = new Map();
+         interns.filter(i => i.isApproved).forEach(intern => {
+            userMap.set(intern.id, {
+               name: intern.name,
+               email: intern.email,
+               batch: intern.batch || "N/A",
+               days: Array(daysInMonth).fill("-"),
+               presentCount: 0
+            });
+         });
+
+         attendanceData.forEach(record => {
+            const intern = userMap.get(record.userId);
+            if (intern) {
+               const day = new Date(record.date).getDate();
+               if (record.status === "PRESENT") {
+                  intern.days[day - 1] = "P";
+                  intern.presentCount++;
+               } else if (record.status === "ABSENT") {
+                  intern.days[day - 1] = "A";
+               }
+            }
+         });
+
+         const headers = ["Name", "Batch", ...Array.from({ length: daysInMonth }, (_, i) => `${i + 1}`), "%"];
+         const rows = Array.from(userMap.values()).map(u => {
+            const percentage = ((u.presentCount / daysInMonth) * 100).toFixed(1);
+            return [
+               u.name,
+               u.batch,
+               ...u.days,
+               `${percentage}%`
+            ];
+         });
+
+         autoTable(doc, {
+            head: [headers],
+            body: rows,
+            startY: 40,
+            styles: { fontSize: 6, cellPadding: 0.8, halign: 'center' },
+            headStyles: { fillColor: [0, 85, 255], textColor: 255, fontStyle: 'bold' },
+            columnStyles: {
+               0: { halign: 'left', cellWidth: 35 },
+               1: { halign: 'left', cellWidth: 15 }
+            },
+            alternateRowStyles: { fillColor: [245, 247, 250] },
+            margin: { top: 40 },
+         });
+
+         doc.save(`Attendance_Report_${monthName}_${reportYear}.pdf`);
+      } catch (err) {
+         console.error("PDF generation failed:", err);
+         alert("Failed to generate PDF report.");
       } finally {
          setIsDownloadingReport(false);
       }
@@ -2616,9 +2700,9 @@ export default function CleedDashboard() {
                            </div>
                         </motion.div>
                      </div>
-                  </motion.div>
-               )}
-               { }
+                  )}
+               </AnimatePresence>
+
                {activeTab === "assign" && (
                   <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-12">
                      <div className="max-w-2xl bg-white border border-zinc-100 p-8">
@@ -3369,14 +3453,22 @@ export default function CleedDashboard() {
                                        <option key={y} value={y}>{y}</option>
                                     ))}
                                  </select>
-                              </div>
-                              <button 
-                                 onClick={handleDownloadMonthlyAttendance}
+                                 <button 
+                                 onClick={handleDownloadMonthlyAttendancePDF}
                                  disabled={isDownloadingReport}
                                  className="h-7 px-4 bg-[#0055FF] text-white text-[10px] font-bold hover:bg-blue-600 disabled:opacity-50 transition-all flex items-center gap-2"
                               >
-                                 <Download size={12} /> {isDownloadingReport ? "Generating..." : "Download Report"}
+                                 <FileBadge size={12} /> {isDownloadingReport ? "Generating..." : "Download PDF Report"}
                               </button>
+                                 <button 
+                                     onClick={handleDownloadMonthlyAttendance}
+                                     disabled={isDownloadingReport}
+                                     className="h-7 px-3 bg-zinc-800 text-zinc-400 text-[10px] font-bold hover:bg-zinc-700 disabled:opacity-50 transition-all flex items-center gap-2 border-l border-zinc-700"
+                                     title="Download CSV Format"
+                                  >
+                                     <Download size={12} />
+                                  </button>
+                              </div>
                            </div>
 
                            <div className="flex flex-wrap items-center gap-2 justify-end">
@@ -3440,9 +3532,8 @@ export default function CleedDashboard() {
                               );
                            })}
                         </div>
-                     </div>
-                  </motion.div>
-               )}
+                     </motion.div>
+                  )}
 
                {activeTab === "bootcamp" && (
                   <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-8 text-left">
