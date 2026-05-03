@@ -73,7 +73,7 @@ function ExamCard({ exam, tab }: { exam: Exam; tab: Tab }) {
         <motion.div
             initial={{ opacity: 0, y: 5 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white border border-zinc-200 rounded-md p-6 flex flex-col gap-4 relative hover:shadow-sm transition-all"
+            className="bg-white border border-zinc-100 rounded-md p-6 flex flex-col gap-5 relative hover:border-[#003366]/10 hover:shadow-md hover:shadow-[#003366]/5 transition-all group"
         >
             <div className="flex justify-between items-start">
                 <span className="bg-red-50 text-red-400 text-[10px] font-bold px-2 py-0.5 rounded">
@@ -82,18 +82,17 @@ function ExamCard({ exam, tab }: { exam: Exam; tab: Tab }) {
                 <span className="text-[11px] text-zinc-400 font-medium">{timeAgo(exam.createdAt || refDate)}</span>
             </div>
 
-            <div className="space-y-2">
-                <h3 className="text-lg font-bold text-[#003366]">
+            <div className="space-y-3">
+                <h3 className="text-xl font-black text-[#003366] tracking-tight">
                     {exam.title}
                 </h3>
-                {exam.description ? (
-                    <p className="text-[13px] text-zinc-500 leading-relaxed max-w-2xl">
-                        {exam.description}
-                    </p>
-                ) : (
-                    <p className="text-[13px] text-zinc-400 leading-relaxed italic">
-                        No additional instructions provided for this assessment.
-                    </p>
+                {exam.description && (
+                    <div className="flex gap-2.5 items-start bg-zinc-50/50 border border-zinc-100 p-3 rounded-md">
+                        <Info size={16} className="text-[#003366] mt-0.5 flex-shrink-0" />
+                        <p className="text-[13px] text-zinc-600 leading-relaxed font-medium">
+                            {exam.description}
+                        </p>
+                    </div>
                 )}
             </div>
 
