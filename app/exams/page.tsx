@@ -119,46 +119,53 @@ function ExamDetailsContent() {
                </div>
             </div>
 
-            <div className="mt-auto">
-                <div className="flex items-center gap-1.5 opacity-60 grayscale brightness-0">
-                    <span className="text-[#6366F1] font-black text-2xl italic">pod</span>
+            <div className="mt-auto pt-10">
+                <div className="flex items-center gap-2 opacity-50 grayscale brightness-0">
+                    <img src="https://ik.imagekit.io/dypkhqxip/sflogo" alt="Redlix Logo" className="h-6 w-auto" />
+                    <span className="text-[14px] font-bold tracking-tighter text-zinc-900">Redlix Secure</span>
                 </div>
             </div>
          </div>
 
          {/* Right Column: History/Attempts */}
          <div className="flex-1 bg-white p-8 lg:p-12 overflow-y-auto">
-            <div className="max-w-3xl">
-               <div className="bg-white border border-zinc-100 rounded-xl p-6 shadow-sm flex flex-col gap-4">
-                  <div className="flex items-center justify-between">
-                     <h3 className="text-lg font-bold text-zinc-800">Attempt 1</h3>
-                     <span className="bg-emerald-50 text-emerald-600 text-[10px] font-bold px-3 py-1 rounded-full border border-emerald-100 flex items-center gap-1.5 uppercase tracking-widest">
-                        <CheckCircle2 size={12} /> Submitted
-                     </span>
-                  </div>
+            {!exam && !fetchingExam ? (
+                <div className="max-w-3xl py-20 text-center">
+                    <p className="text-sm font-medium text-zinc-400">Please select an assessment from your dashboard to view details.</p>
+                </div>
+            ) : (
+                <div className="max-w-3xl">
+                   <div className="bg-white border border-zinc-100 rounded-xl p-6 shadow-sm flex flex-col gap-4">
+                      <div className="flex items-center justify-between">
+                         <h3 className="text-lg font-bold text-zinc-800">Attempt 1</h3>
+                         <span className="bg-emerald-50 text-emerald-600 text-[10px] font-bold px-3 py-1 rounded-full border border-emerald-100 flex items-center gap-1.5 uppercase tracking-widest">
+                            <CheckCircle2 size={12} /> Submitted
+                         </span>
+                      </div>
 
-                  <div className="flex flex-wrap gap-4">
-                     <div className="bg-zinc-50 px-4 py-3 rounded-lg border border-zinc-100 space-y-1">
-                        <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Start Time</p>
-                        <div className="flex items-center gap-2 text-zinc-600">
-                           <Calendar size={14} />
-                           <span className="text-[13px] font-bold">23 Aug 2025, 11:59 AM</span>
-                        </div>
-                     </div>
-                     <div className="bg-zinc-50 px-4 py-3 rounded-lg border border-zinc-100 space-y-1">
-                        <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Submitted</p>
-                        <div className="flex items-center gap-2 text-zinc-600">
-                           <Calendar size={14} />
-                           <span className="text-[13px] font-bold">23 Aug 2025, 12:12 PM</span>
-                        </div>
-                     </div>
-                  </div>
-               </div>
+                      <div className="flex flex-wrap gap-4">
+                         <div className="bg-zinc-50 px-4 py-3 rounded-lg border border-zinc-100 space-y-1">
+                            <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Start Time</p>
+                            <div className="flex items-center gap-2 text-zinc-600">
+                               <Calendar size={14} />
+                               <span className="text-[13px] font-bold">23 Aug 2025, 11:59 AM</span>
+                            </div>
+                         </div>
+                         <div className="bg-zinc-50 px-4 py-3 rounded-lg border border-zinc-100 space-y-1">
+                            <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Submitted</p>
+                            <div className="flex items-center gap-2 text-zinc-600">
+                               <Calendar size={14} />
+                               <span className="text-[13px] font-bold">23 Aug 2025, 12:12 PM</span>
+                            </div>
+                         </div>
+                      </div>
+                   </div>
 
-               <p className="mt-6 text-[12px] font-medium text-zinc-400 italic">
-                  * Please note that negative score is treated as 0%. This is possible in tests which have negative markings.
-               </p>
-            </div>
+                   <p className="mt-6 text-[12px] font-medium text-zinc-400 italic leading-relaxed">
+                      * Please note that negative score is treated as 0%. This is possible in tests which have negative markings. Ensure your connection is stable before starting.
+                   </p>
+                </div>
+            )}
          </div>
 
       </main>
