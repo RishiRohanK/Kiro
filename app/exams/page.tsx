@@ -98,7 +98,9 @@ function ExamDetailsContent() {
                      <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Duration</p>
                   </div>
                   <div className="p-4 space-y-1">
-                     <p className="text-xl font-bold text-zinc-800 leading-none">75</p>
+                     <p className="text-xl font-bold text-zinc-800 leading-none">
+                        {exam?.questions?.length || 75}
+                     </p>
                      <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Questions</p>
                   </div>
                </div>

@@ -7,25 +7,31 @@ export async function GET(req: Request) {
         const id = searchParams.get("id");
 
         if (id) {
-            const exam = await prisma.richExam.findUnique({
+            // First try RichExam
+            const richExam = await prisma.richExam.findUnique({
                 where: { id },
-                include: {
-                    questions: true
-                }
+                include: { questions: true }
             });
-            if (exam) {
-                return NextResponse.json({ success: true, exam });
+            if (richExam) {
+                return NextResponse.json({ success: true, exam: richExam });
             }
+
+            // If not found, try ScheduledExam
+            const scheduledExam = await prisma.scheduledExam.findUnique({
+                where: { id }
+            });
+            if (scheduledExam) {
+                return NextResponse.json({ success: true, exam: scheduledExam });
+            }
+
             return NextResponse.json({ success: false, error: "Exam not found" }, { status: 404 });
         }
 
-        // Get the latest published exam if no ID is provided
+        // Default to latest published RichExam if no ID
         const latestExam = await prisma.richExam.findFirst({
             where: { status: "PUBLISHED" },
             orderBy: { createdAt: "desc" },
-            include: {
-                questions: true
-            }
+            include: { questions: true }
         });
 
         if (latestExam) {
