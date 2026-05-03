@@ -31,9 +31,11 @@ export async function GET(req: Request) {
             return NextResponse.json({ success: false, error: "Exam not found", isExamActive: globalStatus?.isActive || false }, { status: 404 });
         }
 
-        // Fetch global exam status
-        const globalStatus = await prisma.examStatus.findUnique({
-            where: { id: "global_exam_state" }
+        // Default to latest published RichExam if no ID
+        const latestExam = await prisma.richExam.findFirst({
+            where: { status: "PUBLISHED" },
+            orderBy: { createdAt: "desc" },
+            include: { questions: true }
         });
 
         if (latestExam) {
