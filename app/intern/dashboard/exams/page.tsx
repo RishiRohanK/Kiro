@@ -83,13 +83,13 @@ function ExamCard({ exam, tab }: { exam: Exam; tab: Tab }) {
             </div>
 
             <div className="space-y-3">
-                <h3 className="text-xl font-black text-[#003366] tracking-tight">
+                <h3 className="text-xl font-medium text-[#FF8C42] tracking-tight">
                     {exam.title}
                 </h3>
                 {exam.description && (
                     <div className="flex gap-2.5 items-start bg-zinc-50/50 border border-zinc-100 p-3 rounded-md">
-                        <Info size={16} className="text-[#003366] mt-0.5 flex-shrink-0" />
-                        <p className="text-[13px] text-zinc-600 leading-relaxed font-medium">
+                        <Info size={16} className="text-zinc-400 mt-0.5 flex-shrink-0" />
+                        <p className="text-[13px] text-zinc-500 leading-relaxed">
                             {exam.description}
                         </p>
                     </div>
@@ -97,13 +97,12 @@ function ExamCard({ exam, tab }: { exam: Exam; tab: Tab }) {
             </div>
 
             <div className="flex flex-wrap items-center gap-6 mt-1">
-                <div className="flex items-center gap-2 text-zinc-500">
-                    <Calendar size={16} />
-                    <span className="text-[12px] font-medium">{formatDateRange(exam.date, exam.endDate)}</span>
+                <div className="flex items-center gap-2 text-zinc-400">
+                    <Calendar size={14} />
+                    <span className="text-[12px]">{formatDateRange(exam.date, exam.endDate)}</span>
                 </div>
-                <div className="flex items-center gap-2 text-zinc-500">
-                    <Clock size={16} />
-                    <span className="text-[12px] font-medium">Duration: {exam.duration} mins</span>
+                <div className="flex items-center gap-2 text-zinc-400 border border-zinc-100 px-2 py-1 rounded bg-zinc-50">
+                    <span className="text-[12px] text-zinc-500">Duration: {exam.duration} mins</span>
                 </div>
             </div>
 
@@ -111,7 +110,7 @@ function ExamCard({ exam, tab }: { exam: Exam; tab: Tab }) {
                 <a
                     href={exam.link || "https://platform.studentforge.in/exams"}
                     target="_blank"
-                    className="flex items-center gap-1.5 text-[12px] font-bold text-[#003366] hover:underline"
+                    className="flex items-center gap-1 text-[13px] font-medium text-blue-500 hover:underline"
                 >
                     View Details <ChevronRight size={14} />
                 </a>
@@ -160,51 +159,26 @@ export default function InternExamsPage() {
     return (
         <div className="p-4 lg:p-10 w-full mx-auto font-sans pb-24 text-zinc-900 bg-[#FBFBFB] min-h-screen">
             {/* Header */}
-            <div className="flex items-center gap-4 mb-10">
-                <ClipboardList size={32} className="text-[#003366]" />
-                <div>
-                    <h1 className="text-3xl font-bold text-[#003366]">Assessments</h1>
-                    <p className="text-[13px] text-zinc-400 font-medium">Attempt and review your technical evaluations.</p>
-                </div>
-            </div>
-
-            {/* Stats Overview */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-                {[
-                    { label: "ATTEMPTED", count: attempted.length, icon: CheckSquare, subtext: "Attempted Assessments", color: "text-emerald-600" },
-                    { label: "YET TO ATTEMPT", count: yetToAttempt.length, icon: Clock, subtext: "Yet to be attempted assessments", color: "text-[#003366]" },
-                    { label: "NOT ATTEMPTED", count: notAttempted.length, icon: MinusSquare, subtext: "Not Attempted Assessments", color: "text-red-600" }
-                ].map((stat, i) => (
-                    <div key={i} className="bg-white border border-zinc-100 p-6 rounded-md flex items-center gap-5 hover:shadow-sm transition-all group">
-                        <div className={`${stat.color} opacity-80 group-hover:opacity-100 transition-opacity`}>
-                            <stat.icon size={24} />
-                        </div>
-                        <div className="space-y-0.5">
-                            <p className="text-[10px] font-black text-zinc-400 uppercase tracking-[0.15em]">{stat.label}</p>
-                            <div className="flex items-baseline gap-2">
-                                <span className={`text-3xl font-black ${stat.color} leading-none`}>{stat.count}</span>
-                                <span className="text-[11px] font-bold text-zinc-400">{stat.subtext}</span>
-                            </div>
-                        </div>
-                    </div>
-                ))}
+            <div className="flex items-center gap-3 mb-8">
+                <ClipboardList size={32} className="text-[#FF8C42]" />
+                <h1 className="text-3xl font-medium text-zinc-800">Assessments</h1>
             </div>
 
             {/* Tabs */}
-            <div className="flex items-center border-b border-zinc-200 mb-8 gap-1 overflow-x-auto scrollbar-hide">
+            <div className="flex items-center border-b border-zinc-200 mb-8 gap-6 overflow-x-auto scrollbar-hide">
                 {tabs.map(tab => (
                     <button
                         key={tab}
                         onClick={() => setActiveTab(tab)}
-                        className={`relative px-6 py-4 text-[13px] font-bold transition-all whitespace-nowrap ${
+                        className={`relative pb-4 text-[13px] font-medium transition-all whitespace-nowrap ${
                             activeTab === tab
-                                ? "text-[#003366]"
-                                : "text-zinc-400 hover:text-zinc-600"
+                                ? "text-[#FF8C42]"
+                                : "text-zinc-500 hover:text-zinc-700"
                         }`}
                     >
                         {tab}
                         {activeTab === tab && (
-                            <motion.div layoutId="exam-tab-line" className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#003366] rounded-t-full" />
+                            <motion.div layoutId="exam-tab-line" className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#FF8C42]" />
                         )}
                     </button>
                 ))}
@@ -212,30 +186,54 @@ export default function InternExamsPage() {
 
             {loading ? (
                 <div className="py-20 flex justify-center">
-                    <div className="animate-spin h-7 w-7 border-2 border-[#003366] border-t-transparent rounded-full" />
+                    <div className="animate-spin h-7 w-7 border-2 border-[#FF8C42] border-t-transparent rounded-full" />
                 </div>
             ) : (
-                <div className="w-full">
-                    <AnimatePresence mode="wait">
-                        <motion.div
-                            key={activeTab}
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            transition={{ duration: 0.15 }}
-                            className="space-y-4"
-                        >
-                            {visibleExams.length > 0 ? (
-                                visibleExams.map((exam, i) => (
-                                    <ExamCard key={exam.id || i} exam={exam} tab={activeTab} />
-                                ))
-                            ) : (
-                                <div className="py-20 text-center bg-white border border-zinc-100 rounded-md">
-                                    <p className="text-[14px] font-medium text-zinc-400">No assessments found in this category.</p>
+                <div className="flex flex-col lg:flex-row gap-8 items-start">
+                    
+                    {/* Left: Cards List */}
+                    <div className="flex-1 w-full space-y-4">
+                        <AnimatePresence mode="wait">
+                            <motion.div
+                                key={activeTab}
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                transition={{ duration: 0.15 }}
+                                className="space-y-4"
+                            >
+                                {visibleExams.length > 0 ? (
+                                    visibleExams.map((exam, i) => (
+                                        <ExamCard key={exam.id || i} exam={exam} tab={activeTab} />
+                                    ))
+                                ) : (
+                                    <div className="py-20 text-center bg-white border border-zinc-100 rounded-md">
+                                        <p className="text-[14px] font-medium text-zinc-400">No assessments found in this category.</p>
+                                    </div>
+                                )}
+                            </motion.div>
+                        </AnimatePresence>
+                    </div>
+
+                    {/* Right: Sidebar Stats */}
+                    <div className="w-full lg:w-[320px] flex-shrink-0 bg-white border border-zinc-200 rounded-md overflow-hidden">
+                        {[
+                            { label: "ATTEMPTED", count: attempted.length, icon: CheckSquare, subtext: "Attempted Assessments" },
+                            { label: "YET TO ATTEMPT", count: yetToAttempt.length, icon: Clock, subtext: "Yet to be attempted assessments" },
+                            { label: "NOT ATTEMPTED", count: notAttempted.length, icon: MinusSquare, subtext: "Not Attempted Assessments" }
+                        ].map((stat, i) => (
+                            <div key={i} className={`p-6 flex flex-col gap-3 ${i < 2 ? "border-b border-zinc-100" : ""}`}>
+                                <div className="flex items-center gap-2">
+                                    <stat.icon size={16} className="text-[#FF8C42]" />
+                                    <span className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest">{stat.label}</span>
                                 </div>
-                            )}
-                        </motion.div>
-                    </AnimatePresence>
+                                <div className="flex items-baseline gap-3">
+                                    <span className="text-4xl font-bold text-emerald-500">{stat.count}</span>
+                                    <span className="text-[12px] font-medium text-zinc-400">{stat.subtext}</span>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
                 </div>
             )}
         </div>
