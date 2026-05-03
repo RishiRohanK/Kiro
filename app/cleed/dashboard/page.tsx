@@ -581,8 +581,8 @@ export default function CleedDashboard() {
       try {
          const res = await fetch("/api/cleed/submissions");
          const data = await res.json();
-         if (data.success) {
-            setSubmissions(data.submissions);
+         if (data.weekly) {
+            setSubmissions(data.weekly);
          }
       } catch (err) {
          console.error("Submissions fetch failure");
@@ -665,7 +665,7 @@ export default function CleedDashboard() {
 
    const fetchAllSchedules = async () => {
       try {
-         const res = await fetch(`/api/intern/schedule?batch=${batchFilter}`);
+         const res = await fetch("/api/intern/schedule");
          const data = await res.json();
          if (data.success) setAllSchedules(data.schedules);
       } catch (err) { console.error("Schedules fetch failure"); }
@@ -673,7 +673,7 @@ export default function CleedDashboard() {
 
    useEffect(() => {
       fetchAllSchedules();
-   }, [batchFilter]);
+   }, []);
 
    useEffect(() => {
       fetchAttendance();
@@ -683,7 +683,8 @@ export default function CleedDashboard() {
       try {
          const res = await fetch(`/api/cleed/attendance?date=${selectedDate}`);
          const data = await res.json();
-         setCurrentAttendance(data);
+         if (Array.isArray(data)) setCurrentAttendance(data);
+         else setCurrentAttendance([]);
       } catch (err) {
          console.error("Attendance synchronization failure");
       }
@@ -1426,7 +1427,13 @@ export default function CleedDashboard() {
                      ].map((item) => (
                         <button
                            key={item.id}
-                           onClick={() => setActiveTab(item.id)}
+                           onClick={() => {
+                              if (item.id === "vault") {
+                                 router.push("/cleed/dashboard/submissions");
+                              } else {
+                                 setActiveTab(item.id);
+                              }
+                           }}
                            className={`w-full h-10 flex items-center px-3 gap-3 transition-all rounded-none ${activeTab === item.id
                               ? "bg-white/10 text-white font-bold border-l-2 border-white -ml-[9px] pl-[10px]"
                               : "text-white/70 hover:text-white hover:bg-white/5"
@@ -1455,7 +1462,13 @@ export default function CleedDashboard() {
                      ].map((item) => (
                         <button
                            key={item.id}
-                           onClick={() => setActiveTab(item.id)}
+                           onClick={() => {
+                              if (item.id === "vault") {
+                                 router.push("/cleed/dashboard/submissions");
+                              } else {
+                                 setActiveTab(item.id);
+                              }
+                           }}
                            className={`w-full h-10 flex items-center px-3 gap-3 transition-all rounded-none ${activeTab === item.id
                               ? "bg-white/10 text-white font-bold border-l-2 border-white -ml-[9px] pl-[10px]"
                               : "text-white/70 hover:text-white hover:bg-white/5"
@@ -2809,23 +2822,11 @@ export default function CleedDashboard() {
                            <div className="lg:col-span-2 pt-10 border-t border-zinc-100 mt-10">
                               <div className="flex items-center justify-between mb-6">
                                  <label className="text-[11px] font-bold text-zinc-400 uppercase tracking-tighter block">Select team interns (Form Team)</label>
-                                 <div className="flex items-center gap-2">
-                                    <span className="text-[10px] font-bold text-zinc-400 uppercase">Filter by:</span>
-                                    <select
-                                       value={internBatchFilter}
-                                       onChange={(e) => setInternBatchFilter(e.target.value)}
-                                       className="h-8 bg-zinc-50 border border-zinc-100 px-3 text-[10px] font-bold outline-none focus:border-blue-600 rounded uppercase tracking-widest cursor-pointer"
-                                    >
-                                       <option value="All">All Batches</option>
-                                       <option value="Batch 1">Batch 1 Only</option>
-                                       <option value="Batch 2">Batch 2 Only</option>
-                                    </select>
-                                 </div>
+
                               </div>
                               <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3 max-h-[300px] overflow-y-auto p-4 bg-zinc-50 border border-zinc-100 rounded">
                                  {interns
                                     .filter(i => i.isApproved)
-                                    .filter(i => internBatchFilter === "All" || i.batch === internBatchFilter)
                                     .map((intern: any) => (
                                        <label key={intern.id} className={`flex flex-col p-4 border transition-all cursor-pointer rounded relative ${scheduleData.teamInternIds.includes(intern.id) ? 'bg-zinc-900 border-zinc-900 shadow-md' : 'bg-white border-zinc-100 hover:border-blue-200'}`}>
                                           <input
@@ -3028,7 +3029,10 @@ export default function CleedDashboard() {
                                                 <div className="flex flex-col">
                                                    <span className="text-[9px] font-bold text-zinc-400 mb-1">Intern</span>
                                                    <h4 className="text-[14px] font-bold text-zinc-900 leading-none">{sub.intern?.name || "Unknown"}</h4>
-                                                   <p className="text-[10px] text-zinc-500 font-medium mt-1">{sub.intern?.email}</p>
+                                                   <div className="flex items-center gap-1.5 mt-1.5">
+                                                      <p className="text-[10px] text-zinc-500 font-medium tabular-nums">{sub.intern?.email}</p>
+                                                      <span className="text-[9px] font-bold bg-red-50 text-red-600 px-1.5 py-0.5 border border-red-100 uppercase tracking-tighter">{sub.schedule?.batch || "N/A"}</span>
+                                                   </div>
                                                 </div>
 
                                                 <div className="flex flex-col">
@@ -3274,7 +3278,7 @@ export default function CleedDashboard() {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                            {interns.filter(i => i.isApproved).map((intern) => {
-                              const record = currentAttendance.find(a => a.userId === intern.id);
+                              const record = Array.isArray(currentAttendance) ? currentAttendance.find(a => a.userId === intern.id) : null;
                               return (
                                  <div key={intern.id} className={`p-5 border group transition-all relative rounded-none flex flex-col justify-between ${intern.handRaised ? "bg-amber-50/20 border-amber-500/50" : "bg-white border-zinc-200"}`}>
                                     <div className="space-y-4">
@@ -3424,14 +3428,7 @@ export default function CleedDashboard() {
                               <p className="text-[12px] text-zinc-500 font-medium tracking-tight">Manage project timelines, team assignments, and delivery deadlines.</p>
                            </div>
                            <div className="flex items-center gap-2">
-                              <select
-                                 value={batchFilter}
-                                 onChange={(e) => setBatchFilter(e.target.value)}
-                                 className="h-9 bg-zinc-50 border border-zinc-200 px-3 text-[10px] font-bold outline-none focus:border-red-600 rounded-none cursor-pointer"
-                              >
-                                 <option value="Batch 1">Batch 1</option>
-                                 <option value="Batch 2">Batch 2</option>
-                              </select>
+
                               <button
                                  onClick={() => { fetchData(); }}
                                  className="h-9 px-3 border border-zinc-200 bg-white hover:bg-zinc-50 transition-all rounded-none"
@@ -3444,7 +3441,7 @@ export default function CleedDashboard() {
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                            {allSchedules.length === 0 ? (
                               <div className="col-span-full py-24 text-center bg-zinc-50 border border-zinc-200">
-                                 <p className="text-[13px] text-zinc-400 font-bold italic">No schedules found for this batch.</p>
+                                 <p className="text-[13px] text-zinc-400 font-bold italic">No schedules found.</p>
                               </div>
                            ) : (
                               allSchedules.map((schedule) => (

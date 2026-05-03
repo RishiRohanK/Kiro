@@ -26,9 +26,16 @@ export async function GET() {
       })
     ]);
 
-    return NextResponse.json({ feedback, uiux, weekly, publicTasks });
+    return NextResponse.json({ 
+      success: true,
+      feedback, 
+      uiux, 
+      weekly, 
+      publicTasks,
+      submissions: weekly // Alias for the internal dashboard's Audit tab
+    });
   } catch (error: any) {
     console.error("Fetch submissions error:", error);
-    return NextResponse.json({ error: "Server error" }, { status: 500 });
+    return NextResponse.json({ success: false, error: "Server error" }, { status: 500 });
   }
 }

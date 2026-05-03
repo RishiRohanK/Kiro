@@ -5,9 +5,10 @@ export async function GET(req: Request) {
     try {
         const { searchParams } = new URL(req.url);
         const internId = searchParams.get('internId');
-        const batch = searchParams.get('batch') || "Batch 1"; 
+        const batch = searchParams.get('batch'); 
 
-        const where: any = { batch };
+        const where: any = {};
+        if (batch) where.batch = batch;
         if (internId) {
             where.OR = [
                 { teamInternIds: { has: internId } },
@@ -26,28 +27,6 @@ export async function GET(req: Request) {
                 createdAt: 'asc'
             }
         });
-
-        // Fallback: If no schedules for Batch 3, try Batch 1 (Baseline)
-        if (schedules.length === 0 && batch !== "Batch 1") {
-            const fallbackWhere = { batch: "Batch 1" };
-            if (internId) {
-                (fallbackWhere as any).OR = [
-                    { teamInternIds: { has: internId } },
-                    { teamInternIds: { isEmpty: true } }
-                ];
-            }
-            schedules = await prisma.schedule.findMany({
-                where: fallbackWhere,
-                include: {
-                    submissions: internId ? {
-                        where: { internId }
-                    } : true
-                },
-                orderBy: {
-                    createdAt: 'asc'
-                }
-            });
-        }
 
         
         const allInternIds = Array.from(new Set(schedules.flatMap((s: any) => s.teamInternIds || [])));

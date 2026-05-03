@@ -11,8 +11,11 @@ import {
     Target,
     RefreshCw,
     Lock,
-    CheckCircle2
+    CheckCircle2,
+    Edit3,
+    Hand
 } from "lucide-react";
+import { motion } from "framer-motion";
 
 interface ScheduleItem {
     id: string;
@@ -115,308 +118,272 @@ export default function SchedulePage() {
     );
 
     return (
-        <div className="p-4 lg:p-6 max-w-7xl w-full mx-auto bg-white min-h-screen pb-24 lg:pb-6">
-            <header className="mb-8 pt-2">
-                <h1 className="text-xl lg:text-2xl font-bold tracking-tight text-zinc-900 font-sans">
-                   Internship Roadmap <span className="text-[#0055FF] font-medium">Session Update.</span>
+        <div className="p-6 lg:p-10 w-full bg-zinc-50 min-h-screen pb-24">
+            <header className="mb-8">
+                <div className="flex items-center gap-2 mb-2">
+                    <div className="h-1 w-6 bg-[#0055FF]" />
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">Internship Roadmap</span>
+                </div>
+                <h1 className="text-2xl font-bold tracking-tight text-zinc-900">
+                    Your <span className="text-[#0055FF]">Progress</span>
                 </h1>
-                <p className="text-zinc-400 text-[10px] lg:text-[12px] font-medium mt-1">
-                   Monitor progress objectives and synchronize submission protocols.
+                <p className="text-zinc-500 text-sm mt-1">
+                    Follow these weekly steps to complete your internship.
                 </p>
             </header>
 
-            <div className="space-y-6">
-                {schedules.length === 0 ? (
-                    <div className="py-12 text-center text-sm text-zinc-400 border border-dashed rounded-lg">
-                        No schedule updates available yet.
-                    </div>
-                ) : (
-                    <div className="grid gap-4">
-                        {schedules.map((item) => {
+            <div className="relative">
+                {/* Vertical Timeline Line */}
+                <div className="absolute left-4 lg:left-8 top-0 bottom-0 w-px bg-zinc-200 hidden md:block" />
+
+                <div className="space-y-8 relative">
+                    {schedules.length === 0 ? (
+                        <div className="py-20 text-center text-sm text-zinc-400 border border-dashed border-zinc-200 bg-white rounded-xl">
+                            No roadmap items assigned yet.
+                        </div>
+                    ) : (
+                        schedules.map((item, index) => {
                             const isPastDeadline = new Date(item.deadline) < new Date();
                             const isClosed = isPastDeadline && !item.isCompleted && !item.isManualOpen;
 
                             return (
-                                <div
-                                    key={item.id}
-                                    className={`p-5 border rounded-lg transition-colors ${
-                                        isClosed
-                                        ? "bg-red-50 border-red-200"
-                                        : selectedSchedule?.id === item.id
-                                            ? "bg-white border-blue-500 shadow-sm"
-                                            : "bg-white border-zinc-200"
-                                    }`}
-                                >
-                                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                                        <div className="flex-1">
-                                            <div className="flex items-center gap-3 mb-1 flex-wrap">
-                                                <span className={`text-sm font-medium ${isClosed ? "text-zinc-400" : "text-blue-600"}`}>
-                                                    {item.week}
-                                                </span>
-                                                {item.isCompleted && (
-                                                    <span className="text-[10px] bg-green-50 text-green-600 px-2 py-0.5 rounded border border-green-100">Submitted</span>
-                                                )}
-                                                {isClosed && (
-                                                    <span className="text-[10px] bg-red-50 text-red-500 px-2 py-0.5 rounded border border-red-100 font-bold uppercase tracking-wide flex items-center gap-1">
-                                                        <Lock size={10} className="text-black" /> Closed
-                                                    </span>
-                                                )}
-                                                {item.isManualOpen && !item.isCompleted && (
-                                                    <span className="text-[10px] bg-blue-50 text-blue-600 px-2 py-0.5 rounded border border-blue-100 font-bold uppercase tracking-wide flex items-center gap-1">
-                                                        <RefreshCw size={10} /> Re-opened
-                                                    </span>
-                                                )}
-                                                {isPastDeadline && item.isCompleted && (
-                                                    <span className="text-[10px] bg-zinc-100 text-zinc-400 px-2 py-0.5 rounded border border-zinc-200 uppercase tracking-wide">
-                                                        Deadline passed
-                                                    </span>
-                                                )}
-                                            </div>
-                                            <h3 className={`text-lg ${isClosed ? "text-zinc-400 line-through decoration-zinc-300" : "text-zinc-900"}`}>
-                                                {item.typeOfWork}
-                                            </h3>
-                                            <p className="text-sm text-zinc-500 mt-1 line-clamp-1">{item.description}</p>
-                                        </div>
-                                        <button
-                                            onClick={() => setSelectedSchedule(selectedSchedule?.id === item.id ? null : item)}
-                                            className={`text-sm px-4 py-2 border rounded transition-colors ${
-                                                isClosed
-                                                ? "border-zinc-200 text-zinc-400 hover:bg-zinc-100 cursor-pointer"
-                                                : "border-zinc-300 hover:bg-zinc-50"
-                                            }`}
-                                        >
-                                            {selectedSchedule?.id === item.id ? "Close" : isClosed ? "View (Read-only)" : "View Details"}
-                                        </button>
-                                    </div>
+                                <div key={item.id} className="relative md:pl-20">
+                                    {/* Timeline Node Point - Aligned with Title */}
+                                    <div className={`absolute left-4 lg:left-8 top-7 -ml-1 h-2 w-2 rounded-full hidden md:block transition-all ${
+                                        item.isCompleted ? "bg-green-500" : 
+                                        isClosed ? "bg-zinc-300" : 
+                                        "bg-[#0055FF]"
+                                    }`} />
 
-                                    {selectedSchedule?.id === item.id && (
-                                        <div className="mt-8 pt-8 border-t border-zinc-100 grid md:grid-cols-2 gap-10">
-                                            <div className="space-y-6">
-                                                <div>
-                                                    <h4 className="text-xs font-medium text-zinc-400 mb-2">Description</h4>
-                                                    <p className="text-sm leading-relaxed">{item.description}</p>
-                                                </div>
-
-                                                {(item.projectName || item.teamAllocation || item.mentorName) && (
-                                                    <div className="p-4 bg-zinc-50 border border-zinc-100 space-y-4">
-                                                        <h4 className="text-[10px] font-bold text-[#0055FF] uppercase tracking-widest">Project & Team Allocation</h4>
-                                                        <div className="grid grid-cols-2 gap-4">
-                                                            {item.projectName && (
-                                                                <div>
-                                                                    <p className="text-[10px] font-bold text-zinc-400 uppercase">Project</p>
-                                                                    <p className="text-xs font-bold text-zinc-900 mt-1">{item.projectName}</p>
-                                                                </div>
-                                                            )}
-                                                            {(item.teamInternNames && item.teamInternNames.length > 0) ? (
-                                                                <div>
-                                                                    <p className="text-[10px] font-bold text-zinc-400 uppercase">Team Members</p>
-                                                                    <p className="text-xs font-bold text-zinc-900 mt-1">{item.teamInternNames.join(", ")}</p>
-                                                                </div>
-                                                            ) : item.teamAllocation ? (
-                                                                <div>
-                                                                    <p className="text-[10px] font-bold text-zinc-400 uppercase">Team Allocation</p>
-                                                                    <p className="text-xs font-bold text-zinc-900 mt-1">{item.teamAllocation}</p>
-                                                                </div>
-                                                            ) : null}
-                                                            {item.mentorName && (
-                                                                <div>
-                                                                    <p className="text-[10px] font-bold text-zinc-400 uppercase">Assigned Mentor</p>
-                                                                    <p className="text-xs font-bold text-zinc-900 mt-1">{item.mentorName}</p>
-                                                                </div>
-                                                            )}
-                                                            {item.teamLead && (
-                                                                <div>
-                                                                    <p className="text-[10px] font-bold text-zinc-400 uppercase">Team Lead</p>
-                                                                    <p className="text-xs font-bold text-zinc-900 mt-1">{item.teamLead}</p>
-                                                                </div>
-                                                            )}
-                                                        </div>
-                                                        {item.projectDocLink && (
-                                                            <div className="pt-2">
-                                                                <a href={item.projectDocLink} target="_blank" className="h-9 w-full bg-zinc-900 text-white text-[11px] font-bold flex items-center justify-center gap-2 hover:bg-black transition-all">
-                                                                    <ExternalLink size={14} /> Open Project Docs
-                                                                </a>
+                                    <div 
+                                        className={`group relative bg-white border transition-all rounded-xl overflow-hidden ${
+                                            selectedSchedule?.id === item.id 
+                                            ? "border-[#0055FF] shadow-lg shadow-blue-500/5" 
+                                            : "border-zinc-200 hover:border-zinc-300"
+                                        } ${isClosed ? "opacity-80" : ""}`}
+                                    >
+                                        <div className="p-6">
+                                            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+                                                <div className="space-y-2">
+                                                    <div className="flex items-center gap-2 flex-wrap">
+                                                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded border ${
+                                                            item.isCompleted ? "bg-green-50 text-green-600 border-green-100" :
+                                                            isClosed ? "bg-zinc-50 text-zinc-400 border-zinc-100" :
+                                                            "bg-blue-50 text-blue-600 border-blue-100"
+                                                        }`}>
+                                                            {item.week}
+                                                        </span>
+                                                        {item.isCompleted && (
+                                                            <div className="flex items-center gap-1 text-[10px] font-bold text-green-600">
+                                                                <CheckCircle2 size={12} /> Submitted
+                                                            </div>
+                                                        )}
+                                                        {isClosed && (
+                                                            <div className="flex items-center gap-1 text-[10px] font-bold text-zinc-400">
+                                                                <Lock size={12} /> Closed
                                                             </div>
                                                         )}
                                                     </div>
-                                                )}
-
-                                                <div>
-                                                    <h4 className="text-xs font-medium text-zinc-400 mb-2">Tools to be used</h4>
-                                                    <div className="flex flex-wrap gap-2">
-                                                        {item.toolsUsed.map(tool => (
-                                                            <span key={tool} className="text-xs px-2 py-1 bg-zinc-100 text-zinc-600 rounded">{tool}</span>
-                                                        ))}
-                                                    </div>
-                                                </div>
-
-                                                {item.deploymentTools && item.deploymentTools.length > 0 && (
-                                                    <div>
-                                                        <h4 className="text-xs font-medium text-zinc-400 mb-2">Deployment tools</h4>
-                                                        <div className="flex flex-wrap gap-2">
-                                                            {item.deploymentTools.map(tool => (
-                                                                <span key={tool} className="text-xs px-2 py-1 bg-blue-50 text-blue-600 border border-blue-100 rounded">{tool}</span>
-                                                            ))}
-                                                        </div>
-                                                    </div>
-                                                )}
-
-                                                {item.requirements && item.requirements.length > 0 && (
-                                                    <div>
-                                                        <h4 className="text-xs font-medium text-zinc-400 mb-2">Requirements</h4>
-                                                        <ul className="list-disc list-inside text-sm space-y-1 text-zinc-600">
-                                                            {item.requirements.map((req, i) => (
-                                                                <li key={i}>{req}</li>
-                                                            ))}
-                                                        </ul>
-                                                    </div>
-                                                )}
-
-                                                <div>
-                                                    <h4 className="text-xs font-medium text-zinc-400 mb-2">Outcomes</h4>
-                                                    <ul className="list-disc list-inside text-sm space-y-1 text-zinc-600">
-                                                        {item.outcomes.map((outcome, i) => (
-                                                            <li key={i}>{outcome}</li>
-                                                        ))}
-                                                    </ul>
-                                                </div>
-
-                                                <div className="pt-4">
-                                                    <p className="text-xs font-medium text-zinc-400">Deadline</p>
-                                                    <p className={`text-sm mt-1 font-semibold ${isPastDeadline ? "text-red-500" : "text-red-600"}`}>
-                                                        {new Date(item.deadline).toLocaleDateString('en-GB', {
-                                                            day: 'numeric',
-                                                            month: 'long',
-                                                            year: 'numeric'
-                                                        })}
-                                                        {isPastDeadline && <span className="ml-2 text-[10px] text-red-400 font-normal">(Expired)</span>}
+                                                    <h3 className="text-lg lg:text-xl font-bold text-zinc-900">
+                                                        {item.typeOfWork}
+                                                    </h3>
+                                                    <p className="text-zinc-500 text-sm line-clamp-1 max-w-xl">
+                                                        {item.description}
                                                     </p>
                                                 </div>
+
+                                                <div className="flex flex-col items-start lg:items-end gap-3">
+                                                    <div className="text-left lg:text-right">
+                                                        <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-wide">Deadline</p>
+                                                        <p className={`text-sm font-bold ${isPastDeadline ? "text-red-500" : "text-zinc-700"}`}>
+                                                            {new Date(item.deadline).toLocaleDateString('en-US', { day: '2-digit', month: 'short', year: 'numeric' })}
+                                                        </p>
+                                                    </div>
+                                                    <button
+                                                        onClick={() => setSelectedSchedule(selectedSchedule?.id === item.id ? null : item)}
+                                                        className={`h-9 px-4 rounded-lg text-[11px] font-bold transition-all ${
+                                                            selectedSchedule?.id === item.id
+                                                            ? "bg-zinc-900 text-white"
+                                                            : "bg-zinc-50 text-zinc-600 border border-zinc-200 hover:bg-zinc-100"
+                                                        }`}
+                                                    >
+                                                        {selectedSchedule?.id === item.id ? "Close" : "View Details"}
+                                                    </button>
+                                                </div>
                                             </div>
 
-                                            <div className={`p-6 rounded-lg ${item.isCompleted ? "bg-green-50/50 border border-green-100" : isClosed ? "bg-red-50 border border-red-200" : "bg-zinc-50"}`}>
-                                                {item.isCompleted ? (
-                                                    <div className="space-y-4">
-                                                        <div className="flex items-center gap-2 p-3 bg-green-50 border border-green-200 rounded-lg">
-                                                            <CheckCircle2 size={18} className="text-green-600" />
-                                                            <div>
-                                                                <p className="text-xs font-bold text-green-700">Assignment Submitted</p>
-                                                                <p className="text-[10px] text-green-500">Your work has been safely synchronized. Submission form is locked.</p>
+                                            {selectedSchedule?.id === item.id && (
+                                                <motion.div 
+                                                    initial={{ opacity: 0, height: 0 }}
+                                                    animate={{ opacity: 1, height: "auto" }}
+                                                    className="mt-8 pt-8 border-t border-zinc-100 grid lg:grid-cols-2 gap-10"
+                                                >
+                                                    <div className="space-y-8">
+                                                        <div>
+                                                            <h4 className="text-[11px] font-bold text-zinc-400 uppercase mb-2">Description</h4>
+                                                            <p className="text-sm text-zinc-600 leading-relaxed">{item.description}</p>
+                                                        </div>
+
+                                                        {/* Details Grid */}
+                                                        <div className="grid grid-cols-2 gap-6 p-5 bg-zinc-50 rounded-xl border border-zinc-100">
+                                                            <div className="space-y-1">
+                                                                <p className="text-[10px] font-bold text-zinc-400 uppercase">Project</p>
+                                                                <p className="text-xs font-bold text-zinc-900">{item.projectName || "General Work"}</p>
+                                                            </div>
+                                                            <div className="space-y-1">
+                                                                <p className="text-[10px] font-bold text-zinc-400 uppercase">Mentor</p>
+                                                                <p className="text-xs font-bold text-zinc-900">{item.mentorName || "Core Team"}</p>
+                                                            </div>
+                                                            <div className="col-span-2 space-y-2">
+                                                                <p className="text-[10px] font-bold text-zinc-400 uppercase">Team Members</p>
+                                                                <div className="flex flex-wrap gap-2">
+                                                                    {item.teamInternNames?.map((name, i) => (
+                                                                        <span key={i} className="px-2 py-0.5 bg-white border border-zinc-200 rounded text-[10px] text-zinc-600">
+                                                                            {name}
+                                                                        </span>
+                                                                    )) || <span className="text-[10px] text-zinc-500">Individual Task</span>}
+                                                                </div>
                                                             </div>
                                                         </div>
-                                                        <div className="space-y-4">
-                                                            <div>
-                                                                <label className="block text-[11px] text-zinc-500 mb-1">GitHub repository link</label>
-                                                                <div className="w-full p-2 text-sm border border-zinc-200 rounded bg-white font-medium text-zinc-900 flex items-center justify-between">
-                                                                    <span className="truncate">{item.githubLink}</span>
-                                                                    <a href={item.githubLink} target="_blank" className="text-blue-600 hover:text-blue-700 transition-colors">
-                                                                        <ExternalLink size={12} />
-                                                                    </a>
+
+                                                        {/* Requirements & Outcomes */}
+                                                        <div className="space-y-6">
+                                                            <div className="space-y-3">
+                                                                <h4 className="text-[11px] font-bold text-zinc-400 uppercase">Tools & Technologies</h4>
+                                                                <div className="flex flex-wrap gap-2">
+                                                                    {item.toolsUsed.map(tool => (
+                                                                        <span key={tool} className="text-[10px] px-2 py-1 bg-white border border-zinc-200 text-zinc-600 font-bold rounded">{tool}</span>
+                                                                    ))}
                                                                 </div>
                                                             </div>
-                                                            <div>
-                                                                <label className="block text-[11px] text-zinc-500 mb-1">Submit link (Deployment/Drive)</label>
-                                                                <div className="w-full p-2 text-sm border border-zinc-200 rounded bg-white font-medium text-zinc-900 flex items-center justify-between">
-                                                                    <span className="truncate">{item.submissionLink}</span>
-                                                                    <a href={item.submissionLink} target="_blank" className="text-blue-600 hover:text-blue-700 transition-colors">
-                                                                        <ExternalLink size={12} />
-                                                                    </a>
+
+                                                            <div className="grid grid-cols-2 gap-8">
+                                                                <div className="space-y-3">
+                                                                    <h4 className="text-[11px] font-bold text-zinc-400 uppercase">Requirements</h4>
+                                                                    <ul className="space-y-1.5">
+                                                                        {item.requirements.map((req, i) => (
+                                                                            <li key={i} className="text-[12px] text-zinc-500 flex gap-2">
+                                                                                <span className="text-blue-500">•</span> {req}
+                                                                            </li>
+                                                                        ))}
+                                                                    </ul>
                                                                 </div>
-                                                            </div>
-                                                            <div className="pt-2">
-                                                                <button
-                                                                    disabled
-                                                                    className="w-full py-2.5 bg-green-100 text-green-700 text-[10px] font-black uppercase tracking-[0.2em] rounded cursor-not-allowed border border-green-200 shadow-sm"
-                                                                >
-                                                                    Protocol Completed
-                                                                </button>
+                                                                <div className="space-y-3">
+                                                                    <h4 className="text-[11px] font-bold text-zinc-400 uppercase">Learning Outcomes</h4>
+                                                                    <ul className="space-y-1.5">
+                                                                        {item.outcomes.map((outcome, i) => (
+                                                                            <li key={i} className="text-[12px] text-zinc-500 flex gap-2">
+                                                                                <span className="text-green-500">•</span> {outcome}
+                                                                            </li>
+                                                                        ))}
+                                                                    </ul>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                ) : isClosed ? (
-                                                    <div className="space-y-4">
-                                                        <div className="flex items-center gap-2 p-3 bg-red-100 border border-red-300 rounded-lg">
-                                                            <Lock size={18} className="text-black" />
-                                                            <div>
-                                                                <p className="text-xs font-bold text-red-700">Submission Closed</p>
-                                                                <p className="text-[10px] text-red-500">Deadline has passed. This form is frozen.</p>
+
+                                                    <div className={`p-6 rounded-xl border ${
+                                                        item.isCompleted ? "bg-green-50/30 border-green-100" : 
+                                                        isClosed ? "bg-zinc-50 border-zinc-200" : 
+                                                        "bg-blue-50/20 border-blue-100"
+                                                    }`}>
+                                                        {item.isCompleted ? (
+                                                            <div className="space-y-6">
+                                                                <div className="flex items-center gap-3">
+                                                                    <div className="h-10 w-10 bg-green-100 text-green-600 rounded-lg flex items-center justify-center">
+                                                                        <CheckCircle2 size={24} />
+                                                                    </div>
+                                                                    <div>
+                                                                        <p className="text-sm font-bold text-zinc-900">Task Completed</p>
+                                                                        <p className="text-[10px] text-green-600 font-bold uppercase">Your work has been submitted</p>
+                                                                    </div>
+                                                                </div>
+                                                                
+                                                                <div className="space-y-4">
+                                                                    <div className="p-4 bg-white border border-zinc-100 rounded-lg space-y-3">
+                                                                        <div className="flex flex-col">
+                                                                            <span className="text-[9px] font-bold text-zinc-400 uppercase mb-1">GitHub Link</span>
+                                                                            <a href={item.githubLink} target="_blank" className="text-xs font-bold text-blue-600 truncate hover:underline flex items-center gap-1">
+                                                                                {item.githubLink} <ExternalLink size={10} />
+                                                                            </a>
+                                                                        </div>
+                                                                        <div className="h-px bg-zinc-50" />
+                                                                        <div className="flex flex-col">
+                                                                            <span className="text-[9px] font-bold text-zinc-400 uppercase mb-1">Live Link</span>
+                                                                            <a href={item.submissionLink} target="_blank" className="text-xs font-bold text-blue-600 truncate hover:underline flex items-center gap-1">
+                                                                                {item.submissionLink} <ExternalLink size={10} />
+                                                                            </a>
+                                                                        </div>
+                                                                    </div>
+                                                                    <button disabled className="w-full h-10 bg-green-100 text-green-700 text-[11px] font-bold rounded-lg cursor-not-allowed">
+                                                                        Already Submitted
+                                                                    </button>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                        <div className="space-y-4 pointer-events-none select-none opacity-50 grayscale">
-                                                            <div>
-                                                                <label className="block text-[11px] text-zinc-500 mb-1">GitHub repository link</label>
-                                                                <input
-                                                                    type="url"
-                                                                    disabled
-                                                                    value={item.githubLink || ""}
-                                                                    readOnly
-                                                                    className="w-full p-2 text-sm border border-zinc-300 rounded bg-zinc-100 cursor-not-allowed"
-                                                                    placeholder="https://github.com/..."
-                                                                />
+                                                        ) : isClosed ? (
+                                                            <div className="space-y-6 text-center py-6">
+                                                                <div className="inline-flex h-12 w-12 bg-zinc-100 text-zinc-400 rounded-full items-center justify-center mb-2">
+                                                                    <Lock size={24} />
+                                                                </div>
+                                                                <h4 className="text-sm font-bold text-zinc-900">Submission Closed</h4>
+                                                                <p className="text-xs text-zinc-500 leading-relaxed px-4">
+                                                                    The deadline for this task has passed. Please contact your mentor if you need more time.
+                                                                </p>
                                                             </div>
-                                                            <div>
-                                                                <label className="block text-[11px] text-zinc-500 mb-1">Submit link (Deployment/Drive)</label>
-                                                                <input
-                                                                    type="url"
-                                                                    disabled
-                                                                    value={item.submissionLink || ""}
-                                                                    readOnly
-                                                                    className="w-full p-2 text-sm border border-zinc-300 rounded bg-zinc-100 cursor-not-allowed"
-                                                                    placeholder="https://..."
-                                                                />
-                                                            </div>
-                                                            <button
-                                                                disabled
-                                                                className="w-full py-2 bg-red-300 text-white text-sm rounded cursor-not-allowed"
-                                                            >
-                                                                Submission Closed
-                                                            </button>
-                                                        </div>
+                                                        ) : (
+                                                            <form onSubmit={handleSubmission} className="space-y-5">
+                                                                <div className="flex items-center gap-3 mb-4">
+                                                                    <div className="h-10 w-10 bg-blue-600 text-white rounded-lg flex items-center justify-center">
+                                                                        <Edit3 size={20} />
+                                                                    </div>
+                                                                    <div>
+                                                                        <p className="text-sm font-bold text-zinc-900">Submit Your Work</p>
+                                                                        <p className="text-[10px] text-blue-600 font-bold uppercase">Fill in your links below</p>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div className="space-y-4">
+                                                                    <div className="space-y-1.5">
+                                                                        <label className="text-[10px] font-bold text-zinc-400 uppercase">GitHub Link</label>
+                                                                        <input 
+                                                                            required 
+                                                                            type="url"
+                                                                            value={submissionData.githubLink}
+                                                                            onChange={e => setSubmissionData({...submissionData, githubLink: e.target.value})}
+                                                                            className="w-full h-10 bg-white border border-zinc-200 rounded-lg px-3 text-xs outline-none focus:border-blue-600 transition-all" 
+                                                                            placeholder="https://github.com/your-repo" 
+                                                                        />
+                                                                    </div>
+                                                                    <div className="space-y-1.5">
+                                                                        <label className="text-[10px] font-bold text-zinc-400 uppercase">Live Demo Link</label>
+                                                                        <input 
+                                                                            required 
+                                                                            type="url"
+                                                                            value={submissionData.submissionLink}
+                                                                            onChange={e => setSubmissionData({...submissionData, submissionLink: e.target.value})}
+                                                                            className="w-full h-10 bg-white border border-zinc-200 rounded-lg px-3 text-xs outline-none focus:border-blue-600 transition-all" 
+                                                                            placeholder="https://your-site.vercel.app" 
+                                                                        />
+                                                                    </div>
+                                                                    <button 
+                                                                        disabled={isSubmitting}
+                                                                        className="w-full h-11 bg-[#0055FF] text-white text-[12px] font-bold rounded-lg hover:bg-blue-700 transition-all disabled:opacity-50 mt-2"
+                                                                    >
+                                                                        {isSubmitting ? "Submitting..." : "Submit Assignment"}
+                                                                    </button>
+                                                                </div>
+                                                            </form>
+                                                        )}
                                                     </div>
-                                                ) : (
-                                                    <>
-                                                        <h4 className="text-sm font-medium mb-4">Submission Form</h4>
-                                                        <form onSubmit={handleSubmission} className="space-y-4">
-                                                            <div>
-                                                                <label className="block text-[11px] text-zinc-500 mb-1">GitHub repository link</label>
-                                                                <input
-                                                                    type="url"
-                                                                    required
-                                                                    value={submissionData.githubLink}
-                                                                    onChange={e => setSubmissionData({...submissionData, githubLink: e.target.value})}
-                                                                    className="w-full p-2 text-sm border border-zinc-300 rounded outline-none focus:border-blue-500"
-                                                                    placeholder="https://github.com/..."
-                                                                />
-                                                            </div>
-                                                            <div>
-                                                                <label className="block text-[11px] text-zinc-500 mb-1">Submit link (Deployment/Drive)</label>
-                                                                <input
-                                                                    type="url"
-                                                                    required
-                                                                    value={submissionData.submissionLink}
-                                                                    onChange={e => setSubmissionData({...submissionData, submissionLink: e.target.value})}
-                                                                    className="w-full p-2 text-sm border border-zinc-300 rounded outline-none focus:border-blue-500"
-                                                                    placeholder="https://..."
-                                                                />
-                                                            </div>
-                                                            <button
-                                                                disabled={isSubmitting}
-                                                                type="submit"
-                                                                className="w-full py-2 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 disabled:opacity-50 transition-colors"
-                                                            >
-                                                                {isSubmitting ? "Submitting..." : "Submit All Links"}
-                                                            </button>
-                                                        </form>
-                                                    </>
-                                                )}
-                                            </div>
+                                                </motion.div>
+                                            )}
                                         </div>
-                                    )}
+                                    </div>
                                 </div>
                             );
-                        })}
-                    </div>
-                )}
+                        })
+                    )}
+                </div>
             </div>
         </div>
     );

@@ -23,7 +23,7 @@ export async function proxy(request: NextRequest) {
 
   // 2. TIGHTENED RATE LIMITING: Prevent DOS on authentication routes
   const isSignin = pathname.includes('/signin') || pathname.includes('/login') || pathname.includes('/signup');
-  const limit = isSignin ? 5 : MAX_REQUESTS; 
+  const limit = isSignin ? 20 : MAX_REQUESTS; // Increased from 5 to 20 to prevent accidental blocks during dev
 
   // Admin and Cleed protection
   if (pathname.startsWith('/cleed/dashboard') || pathname.startsWith('/api/cleed')) {

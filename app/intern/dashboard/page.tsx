@@ -1286,60 +1286,63 @@ function InternDashboardContent() {
          )}
 
          {activeTab === "attendance" && (
-            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-4 text-left">
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6 text-left">
                {/* Page Header */}
-               <div className="space-y-0.5">
-                  <h2 className="text-xl font-bold text-[#003366]">Attendance Overview</h2>
-                  <p className="text-[12px] text-zinc-500 font-medium">Monthly tracking and performance logs.</p>
-               </div>
+               <header className="mb-4">
+                  <div className="flex items-center gap-2 mb-2">
+                     <div className="h-1 w-6 bg-[#0055FF]" />
+                     <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">Attendance Log</span>
+                  </div>
+                  <h2 className="text-2xl font-bold text-zinc-900">Weekly <span className="text-[#0055FF]">Tracking</span></h2>
+                  <p className="text-zinc-500 text-sm mt-1">Check your performance and attendance history.</p>
+               </header>
 
-               <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                  <div className="md:col-span-2 p-6 bg-zinc-900 text-white rounded-xl relative overflow-hidden group">
-                     <div className="relative z-10">
-                        <h4 className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/50 mb-1">Average Attendance</h4>
-                        <p className="text-4xl font-bold">{attendancePercentage}%</p>
-                        <div className="flex items-center gap-2 mt-4">
-                           <div className="flex-1 h-1.5 bg-white/10 rounded-full overflow-hidden">
-                              <motion.div 
-                                 initial={{ width: 0 }}
-                                 animate={{ width: `${attendancePercentage}%` }}
-                                 className="h-full bg-blue-500"
-                              />
-                           </div>
-                           <span className="text-[10px] font-bold text-white/40">{attendanceCount}/{attendanceData.totalTrackingDays} Days</span>
-                        </div>
+               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="p-6 bg-white border border-zinc-200 rounded-xl shadow-sm flex flex-col justify-between">
+                     <div>
+                        <h4 className="text-[10px] font-bold uppercase tracking-wider text-zinc-400 mb-1">Average Rate</h4>
+                        <p className="text-3xl font-bold text-zinc-900">{attendancePercentage}%</p>
                      </div>
-                     <Activity className="absolute -bottom-4 -right-4 w-32 h-32 text-white/5 rotate-12" />
+                     <div className="mt-4">
+                        <div className="h-1.5 w-full bg-zinc-100 rounded-full overflow-hidden">
+                           <motion.div 
+                              initial={{ width: 0 }}
+                              animate={{ width: `${attendancePercentage}%` }}
+                              className="h-full bg-[#0055FF]"
+                           />
+                        </div>
+                        <p className="text-[10px] font-bold text-zinc-400 mt-2">{attendanceCount} Days Present</p>
+                     </div>
                   </div>
 
-                  <div className="p-6 bg-zinc-50 border border-zinc-100 rounded-xl flex flex-col justify-between">
+                  <div className="p-6 bg-white border border-zinc-200 rounded-xl shadow-sm flex flex-col justify-between">
                      <div>
-                        <h4 className="text-[10px] font-bold uppercase tracking-[0.1em] text-zinc-400 mb-1">Status</h4>
+                        <h4 className="text-[10px] font-bold uppercase tracking-wider text-zinc-400 mb-1">Status</h4>
                         <div className="flex items-center gap-2">
-                           <div className={`h-2 w-2 rounded-full ${attendancePercentage >= 75 ? "bg-emerald-500" : "bg-amber-500"}`} />
-                           <p className="text-lg font-bold text-[#003366]">{attendancePercentage >= 75 ? "Qualified" : "Warning"}</p>
+                           <div className={`h-2 w-2 rounded-full ${attendancePercentage >= 75 ? "bg-green-500" : "bg-amber-500"}`} />
+                           <p className="text-lg font-bold text-zinc-900">{attendancePercentage >= 75 ? "Satisfactory" : "Low Attendance"}</p>
                         </div>
                      </div>
-                     <p className="text-[10px] text-zinc-400 font-medium leading-tight">Must maintain 75% for certification.</p>
+                     <p className="text-[10px] text-zinc-400 font-medium leading-tight mt-2">Required: 75% for certification.</p>
                   </div>
 
-                  <div className="p-6 bg-zinc-50 border border-zinc-100 rounded-xl flex flex-col justify-between">
+                  <div className="p-6 bg-white border border-zinc-200 rounded-xl shadow-sm flex flex-col justify-between">
                      <div>
-                        <h4 className="text-[10px] font-bold uppercase tracking-[0.1em] text-zinc-400 mb-1">Consistency</h4>
-                        <p className="text-2xl font-bold text-zinc-900">Good</p>
+                        <h4 className="text-[10px] font-bold uppercase tracking-wider text-zinc-400 mb-1">Consistency</h4>
+                        <p className="text-xl font-bold text-zinc-900">Steady</p>
                      </div>
-                     <div className="flex gap-1">
-                        {[1, 2, 3, 4, 5].map((i) => (
-                           <div key={i} className={`h-1 flex-1 ${i <= 4 ? "bg-emerald-400" : "bg-zinc-200"}`} />
+                     <div className="flex gap-1 mt-4">
+                        {[1, 2, 3, 4, 5, 6, 7].map((i) => (
+                           <div key={i} className={`h-1.5 flex-1 rounded-full ${i <= 6 ? "bg-green-500" : "bg-zinc-100"}`} />
                         ))}
                      </div>
                   </div>
                </div>
 
-               <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                     <h3 className="text-[11px] font-bold text-zinc-400 uppercase tracking-[0.2em]">Activity Log</h3>
-                     <span className="text-[10px] text-zinc-400 font-medium">Showing last {attendanceData.history.length} records</span>
+               <div className="space-y-4">
+                  <div className="flex items-center justify-between border-b border-zinc-100 pb-2">
+                     <h3 className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest">Recent Activity</h3>
+                     <span className="text-[10px] text-zinc-400">Latest records</span>
                   </div>
                   
                   <div className="bg-white border border-zinc-100 rounded-xl overflow-hidden shadow-sm">
