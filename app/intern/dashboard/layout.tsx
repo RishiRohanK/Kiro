@@ -49,6 +49,7 @@ function InternDashboardLayoutContent({
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [isProfileComplete, setIsProfileComplete] = useState(true);
     const [checkingProfile, setCheckingProfile] = useState(true);
+    const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
 
     useEffect(() => {
         setMounted(true);
@@ -163,6 +164,19 @@ function InternDashboardLayoutContent({
         { name: "News & Updates", icon: Bell, slug: "/intern/dashboard/news", isNew: false, mobile: false, hideFromSidebar: true },
     ];
 
+    const getCollegeLogo = () => {
+        const college = user.college?.toLowerCase() || "";
+        if (college.includes("cmrit") || college.includes("cmr")) {
+            return "https://ik.imagekit.io/dypkhqxip/cmrit";
+        }
+        if (college.includes("kits") || college.includes("kamala institute")) {
+            return "https://ik.imagekit.io/dypkhqxip/kits";
+        }
+        return null;
+    };
+
+    const collegeLogo = getCollegeLogo();
+
     return (
         <div className="min-h-screen bg-[#F8F9FA] text-zinc-900 flex flex-col font-sans">
             {/* Sidebar Desktop */}
@@ -251,7 +265,11 @@ function InternDashboardLayoutContent({
                         
                         <div className="flex items-center gap-3">
                             <div className="h-10 w-10 bg-zinc-50 flex items-center justify-center border border-zinc-100 shadow-inner overflow-hidden">
-                                <School size={20} className="text-[#003366]/60" />
+                                {collegeLogo ? (
+                                    <img src={collegeLogo} alt="College Logo" className="w-full h-full object-cover" />
+                                ) : (
+                                    <School size={20} className="text-[#003366]/60" />
+                                )}
                             </div>
                             <div className="flex flex-col">
                                 <span className="text-[13px] font-bold text-[#003366] leading-tight truncate max-w-[200px] lg:max-w-none">
@@ -281,9 +299,12 @@ function InternDashboardLayoutContent({
                             </Link>
                         </div>
 
-                        {/* Profile Pill */}
-                        <Link href="/intern/dashboard/profile" className="flex items-center">
-                            <div className="flex items-center gap-3 px-3 py-1.5 rounded-full border border-zinc-200 bg-white hover:border-[#003366]/30 hover:bg-zinc-50/50 transition-all shadow-sm group">
+                        {/* Profile Pill & Dropdown */}
+                        <div className="relative">
+                            <button 
+                                onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
+                                className="flex items-center gap-3 px-3 py-1.5 rounded-full border border-zinc-200 bg-white hover:border-[#003366]/30 hover:bg-zinc-50/50 transition-all shadow-sm group"
+                            >
                                 <div className="h-8 w-8 rounded-full bg-zinc-100 flex items-center justify-center text-[10px] font-bold text-[#003366] overflow-hidden border border-zinc-200">
                                     {user.profileImage ? (
                                         <img src={user.profileImage} alt={user.name} className="h-full w-full object-cover" />
@@ -291,7 +312,7 @@ function InternDashboardLayoutContent({
                                         user.name?.split(' ').map((n: string) => n[0]).join('').toUpperCase().slice(0, 2)
                                     )}
                                 </div>
-                                <div className="hidden sm:flex flex-col items-start pr-1">
+                                <div className="hidden sm:flex flex-col items-start pr-1 text-left">
                                     <span className="text-[12px] font-bold text-[#003366] truncate max-w-[120px]">
                                         {user.name}
                                     </span>
@@ -299,9 +320,50 @@ function InternDashboardLayoutContent({
                                         Active Scholar
                                     </span>
                                 </div>
-                                <ChevronDown size={14} className="text-zinc-400 group-hover:text-[#003366] transition-colors mr-1" />
-                            </div>
-                        </Link>
+                                <ChevronDown 
+                                    size={14} 
+                                    className={`text-zinc-400 group-hover:text-[#003366] transition-transform duration-200 mr-1 ${isProfileDropdownOpen ? 'rotate-180' : ''}`} 
+                                />
+                            </button>
+
+                            <AnimatePresence>
+                                {isProfileDropdownOpen && (
+                                    <>
+                                        {/* Backdrop to close on click outside */}
+                                        <div 
+                                            className="fixed inset-0 z-10" 
+                                            onClick={() => setIsProfileDropdownOpen(false)} 
+                                        />
+                                        <motion.div
+                                            initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                                            exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                                            className="absolute right-0 mt-2 w-48 bg-white border border-zinc-100 shadow-xl rounded-2xl overflow-hidden z-20 py-1"
+                                        >
+                                            <Link 
+                                                href="/intern/dashboard/profile"
+                                                onClick={() => setIsProfileDropdownOpen(false)}
+                                                className="flex items-center gap-3 px-4 py-2.5 text-[13px] font-medium text-zinc-600 hover:bg-zinc-50 hover:text-[#003366] transition-colors"
+                                            >
+                                                <User size={16} />
+                                                Edit Profile
+                                            </Link>
+                                            <div className="border-t border-zinc-50 my-1" />
+                                            <button
+                                                onClick={() => {
+                                                    setIsProfileDropdownOpen(false);
+                                                    handleLogout();
+                                                }}
+                                                className="w-full flex items-center gap-3 px-4 py-2.5 text-[13px] font-medium text-red-600 hover:bg-red-50 transition-colors"
+                                            >
+                                                <LogOut size={16} />
+                                                Sign Out
+                                            </button>
+                                        </motion.div>
+                                    </>
+                                )}
+                            </AnimatePresence>
+                        </div>
                     </div>
                 </header>
 

@@ -14,10 +14,15 @@ export async function POST(req: Request) {
         const { email, password, captcha_token } = await req.json();
 
         // 1. Google reCAPTCHA Verification (Bypassed in local development)
-        const isLocal = process.env.NODE_ENV === 'development';
+        const isLocal = process.env.NODE_ENV === 'development' || 
+                        req.headers.get('host')?.includes('localhost') || 
+                        req.headers.get('host')?.includes('127.0.0.1');
         
+        console.log(`[SIGNIN_DEBUG] Login attempt for: ${email} (Local: ${isLocal})`);
+
         if (!isLocal) {
             if (!captcha_token) {
+                console.log(`[SIGNIN_DEBUG] Missing captcha token for: ${email}`);
                 return NextResponse.json({ error: "Security verification token is missing." }, { status: 400 });
             }
 
@@ -28,6 +33,7 @@ export async function POST(req: Request) {
             const verifyData = await verifyRes.json();
 
             if (!verifyData.success) {
+                console.log(`[SIGNIN_DEBUG] Captcha verification failed for: ${email}`);
                 return NextResponse.json({ error: "Security verification failed. Please try again." }, { status: 400 });
             }
         }
@@ -42,6 +48,7 @@ export async function POST(req: Request) {
         });
 
         if (!user) {
+            console.log(`[SIGNIN_DEBUG] No account found for email: ${email}`);
             return NextResponse.json({ error: "No account found with this email." }, { status: 404 });
         }
 
@@ -57,6 +64,7 @@ export async function POST(req: Request) {
         const isValid = await bcrypt.compare(password, user.password);
         
         if (!isValid) {
+            console.log(`[SIGNIN_DEBUG] Invalid password for: ${email}`);
             const newFailedAttempts = (user.failedAttempts || 0) + 1;
             const updateData: any = { failedAttempts: newFailedAttempts };
             
@@ -86,6 +94,7 @@ export async function POST(req: Request) {
         
         const { password: _, ...userWithoutPassword } = updatedUser;
 
+        console.log(`[SIGNIN_DEBUG] Login successful for: ${email}`);
         return NextResponse.json({ 
             success: true, 
             user: userWithoutPassword 

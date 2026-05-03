@@ -30,7 +30,9 @@ export default function InternSigninPage() {
     const handleSignin = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        const isLocal = process.env.NODE_ENV === 'development';
+        const isLocal = process.env.NODE_ENV === 'development' || 
+                       window.location.hostname === 'localhost' || 
+                       window.location.hostname === '127.0.0.1';
         
         if (!captchaToken && !isLocal) {
             setError("Please complete the security verification.");
