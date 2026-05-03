@@ -83,23 +83,23 @@ function ExamDetailsContent() {
             </button>
 
             <div className="space-y-6">
-               <h1 className="text-4xl lg:text-5xl font-bold text-zinc-800 leading-[1.1] tracking-tight">
+               <h1 className="text-3xl lg:text-4xl font-bold text-zinc-800 leading-[1.1] tracking-tight">
                   {exam?.title || "Assessment Overview"}
                </h1>
 
-               <div className="inline-flex items-center gap-2 bg-zinc-200/50 px-4 py-2 rounded-md text-zinc-600">
-                  <Clock size={16} />
-                  <span className="text-sm font-semibold">{exam?.date || "No date set"}</span>
+               <div className="inline-flex items-center gap-2 bg-zinc-200/50 px-3 py-1.5 rounded-md text-zinc-600">
+                  <Clock size={14} />
+                  <span className="text-[13px] font-semibold">{exam?.date || "No date set"}</span>
                </div>
 
-               <div className="grid grid-cols-2 bg-white/50 border border-zinc-200 rounded-xl overflow-hidden shadow-sm">
-                  <div className="p-5 border-r border-zinc-200 space-y-1">
-                     <p className="text-2xl font-bold text-zinc-800 leading-none">{exam?.duration || "60"} mins</p>
-                     <p className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest">Duration</p>
+               <div className="grid grid-cols-2 bg-white/50 border border-zinc-200 rounded-lg overflow-hidden shadow-sm">
+                  <div className="p-4 border-r border-zinc-200 space-y-1">
+                     <p className="text-xl font-bold text-zinc-800 leading-none">{exam?.duration || "60"} mins</p>
+                     <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Duration</p>
                   </div>
-                  <div className="p-5 space-y-1">
-                     <p className="text-2xl font-bold text-zinc-800 leading-none">75</p>
-                     <p className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest">Questions</p>
+                  <div className="p-4 space-y-1">
+                     <p className="text-xl font-bold text-zinc-800 leading-none">75</p>
+                     <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Questions</p>
                   </div>
                </div>
 

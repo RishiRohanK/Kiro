@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import {
     ClipboardList,
     Calendar,
@@ -89,7 +90,7 @@ function ExamCard({ exam, tab }: { exam: Exam; tab: Tab }) {
                 {exam.description && (
                     <div className="flex gap-2.5 items-start bg-zinc-50/50 border border-zinc-100 p-3 rounded-md">
                         <Info size={16} className="text-zinc-400 mt-0.5 flex-shrink-0" />
-                        <p className="text-[13px] text-zinc-500 leading-relaxed">
+                        <p className="text-[12px] text-zinc-500 leading-relaxed">
                             {exam.description}
                         </p>
                     </div>
@@ -99,21 +100,20 @@ function ExamCard({ exam, tab }: { exam: Exam; tab: Tab }) {
             <div className="flex flex-wrap items-center gap-6 mt-1">
                 <div className="flex items-center gap-2 text-zinc-400">
                     <Calendar size={14} />
-                    <span className="text-[12px]">{formatDateRange(exam.date, exam.endDate)}</span>
+                    <span className="text-[11px]">{formatDateRange(exam.date, exam.endDate)}</span>
                 </div>
                 <div className="flex items-center gap-2 text-zinc-400 border border-zinc-100 px-2 py-1 rounded bg-zinc-50">
-                    <span className="text-[12px] text-zinc-500">Duration: {exam.duration} mins</span>
+                    <span className="text-[11px] text-zinc-500">Duration: {exam.duration} mins</span>
                 </div>
             </div>
 
             <div className="flex justify-end mt-2">
-                <a
-                    href={exam.link || "https://platform.studentforge.in/exams"}
-                    target="_blank"
-                    className="flex items-center gap-1 text-[13px] font-medium text-blue-500 hover:underline"
+                <Link
+                    href={exam.link || `/exams?id=${exam.id}`}
+                    className="flex items-center gap-1 text-[12px] font-medium text-blue-500 hover:underline"
                 >
                     View Details <ChevronRight size={14} />
-                </a>
+                </Link>
             </div>
         </motion.div>
     );
