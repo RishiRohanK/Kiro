@@ -172,17 +172,20 @@ export default function InternExamsPage() {
             {/* Stats Overview */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
                 {[
-                    { label: "Attempted", count: attempted.length, icon: CheckSquare, color: "text-emerald-600", bg: "bg-emerald-50" },
-                    { label: "Yet to Attempt", count: yetToAttempt.length, icon: Clock, color: "text-blue-600", bg: "bg-blue-50" },
-                    { label: "Not Attempted", count: notAttempted.length, icon: MinusSquare, color: "text-red-600", bg: "bg-red-50" }
+                    { label: "ATTEMPTED", count: attempted.length, icon: CheckSquare, subtext: "Attempted Assessments", color: "text-emerald-600" },
+                    { label: "YET TO ATTEMPT", count: yetToAttempt.length, icon: Clock, subtext: "Yet to be attempted assessments", color: "text-[#003366]" },
+                    { label: "NOT ATTEMPTED", count: notAttempted.length, icon: MinusSquare, subtext: "Not Attempted Assessments", color: "text-red-600" }
                 ].map((stat, i) => (
-                    <div key={i} className="bg-white border border-zinc-200 p-5 rounded-md flex items-center justify-between group hover:border-[#003366]/20 transition-all">
-                        <div className="space-y-1">
-                            <p className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest">{stat.label}</p>
-                            <p className={`text-2xl font-bold ${stat.color}`}>{stat.count}</p>
+                    <div key={i} className="bg-white border border-zinc-100 p-6 rounded-md flex items-center gap-5 hover:shadow-sm transition-all group">
+                        <div className={`${stat.color} opacity-80 group-hover:opacity-100 transition-opacity`}>
+                            <stat.icon size={24} />
                         </div>
-                        <div className={`h-10 w-10 ${stat.bg} ${stat.color} flex items-center justify-center rounded-lg`}>
-                            <stat.icon size={20} />
+                        <div className="space-y-0.5">
+                            <p className="text-[10px] font-black text-zinc-400 uppercase tracking-[0.15em]">{stat.label}</p>
+                            <div className="flex items-baseline gap-2">
+                                <span className={`text-3xl font-black ${stat.color} leading-none`}>{stat.count}</span>
+                                <span className="text-[11px] font-bold text-zinc-400">{stat.subtext}</span>
+                            </div>
                         </div>
                     </div>
                 ))}
