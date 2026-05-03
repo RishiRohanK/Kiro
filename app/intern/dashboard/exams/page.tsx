@@ -84,7 +84,7 @@ function ExamCard({ exam, tab }: { exam: Exam; tab: Tab }) {
             </div>
 
             <div className="space-y-3">
-                <h3 className="text-xl font-medium text-[#FF8C42] tracking-tight">
+                <h3 className="text-xl font-medium text-[#003366] tracking-tight">
                     {exam.title}
                 </h3>
                 {exam.description && (
@@ -160,7 +160,7 @@ export default function InternExamsPage() {
         <div className="p-4 lg:p-10 w-full mx-auto font-sans pb-24 text-zinc-900 bg-[#FBFBFB] min-h-screen">
             {/* Header */}
             <div className="flex items-center gap-3 mb-8">
-                <ClipboardList size={32} className="text-[#FF8C42]" />
+                <ClipboardList size={32} className="text-[#003366]" />
                 <h1 className="text-3xl font-medium text-zinc-800">Assessments</h1>
             </div>
 
@@ -172,13 +172,13 @@ export default function InternExamsPage() {
                         onClick={() => setActiveTab(tab)}
                         className={`relative pb-4 text-[13px] font-medium transition-all whitespace-nowrap ${
                             activeTab === tab
-                                ? "text-[#FF8C42]"
+                                ? "text-[#003366]"
                                 : "text-zinc-500 hover:text-zinc-700"
                         }`}
                     >
                         {tab}
                         {activeTab === tab && (
-                            <motion.div layoutId="exam-tab-line" className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#FF8C42]" />
+                            <motion.div layoutId="exam-tab-line" className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#003366]" />
                         )}
                     </button>
                 ))}

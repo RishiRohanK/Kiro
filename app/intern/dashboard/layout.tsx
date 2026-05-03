@@ -150,7 +150,7 @@ function InternDashboardLayoutContent({
     const navItems = [
         { name: "Overview", icon: LayoutDashboard, slug: "/intern/dashboard?view=overview", mobile: true },
         { name: "Roadmap", icon: Calendar, slug: "/intern/dashboard/schedule", mobile: true },
-        { name: "Assignments", icon: Briefcase, slug: "/intern/dashboard?view=tasks", mobile: false },
+        { name: "Tasks", icon: Briefcase, slug: "/intern/dashboard?view=tasks", mobile: false },
         { name: "Attendance", icon: FileBadge, slug: "/intern/dashboard?view=attendance", mobile: false },
         { name: "Group Chat", icon: MessageSquare, slug: "/intern/dashboard?view=chat", mobile: false },
         { name: "Profile", icon: User, slug: "/intern/dashboard/profile", mobile: false },
@@ -158,6 +158,7 @@ function InternDashboardLayoutContent({
     ];
 
     const trainingSubItems = [
+        { name: "Classes", icon: School, slug: "/intern/dashboard/training/classes" },
         { name: "Exams", icon: ClipboardCheck, slug: "/intern/dashboard/exams" },
         { name: "Resources", icon: BookOpen, slug: "/intern/dashboard/resources" },
         { name: "Reports", icon: FileText, slug: "/intern/dashboard/reports" },
@@ -218,21 +219,21 @@ function InternDashboardLayoutContent({
                     <img
                         src="https://ik.imagekit.io/dypkhqxip/platform?updatedAt=1776791557303"
                         alt="Student Forge"
-                        className="hidden lg:block h-5 w-auto object-contain opacity-80"
+                        className="hidden lg:block h-5 w-auto object-contain"
                     />
                 </div>
 
                 <div className="flex items-center gap-5 lg:gap-8">
                     <div className="hidden md:flex items-center gap-1">
-                        <button className="p-2 text-zinc-400 hover:text-[#003366] hover:bg-[#E8EDFF] transition-all rounded-lg">
+                        <Link href="/intern/dashboard?view=chat" className="p-2 text-zinc-400 hover:text-[#003366] hover:bg-[#E8EDFF] transition-all rounded-lg">
                             <Users size={20} strokeWidth={1.5} />
-                        </button>
-                        <button className="p-2 text-zinc-400 hover:text-[#003366] hover:bg-[#E8EDFF] transition-all rounded-lg">
+                        </Link>
+                        <Link href="/intern/dashboard/schedule" className="p-2 text-zinc-400 hover:text-[#003366] hover:bg-[#E8EDFF] transition-all rounded-lg">
                             <Calendar size={20} strokeWidth={1.5} />
-                        </button>
-                        <button className="p-2 text-zinc-400 hover:text-[#003366] hover:bg-[#E8EDFF] transition-all rounded-lg">
+                        </Link>
+                        <Link href="/intern/dashboard?view=chat" className="p-2 text-zinc-400 hover:text-[#003366] hover:bg-[#E8EDFF] transition-all rounded-lg">
                             <MessageSquare size={20} strokeWidth={1.5} />
-                        </button>
+                        </Link>
                         <Link href="/intern/dashboard/news" className="p-2 text-zinc-400 hover:text-[#003366] hover:bg-[#E8EDFF] transition-all rounded-lg relative">
                             <Bell size={20} strokeWidth={1.5} />
                             <span className="absolute top-2 right-2.5 h-2 w-2 bg-red-500 rounded-full border-2 border-white" />
@@ -440,7 +441,7 @@ function InternDashboardLayoutContent({
 
                     {/* Branding Footer */}
                     <div className="py-3 flex items-center justify-center gap-1.5 border-t border-[#003366]/5">
-                        <span className="text-[10px] font-semibold text-[#003366]/40 tracking-wide uppercase">Powered by</span>
+                        <span className="text-[10px] font-semibold text-[#003366]/40 tracking-wide">Powered by</span>
                         <img
                             src="https://ik.imagekit.io/dypkhqxip/redlixlogo?updatedAt=1777318254456"
                             alt="Redlix"

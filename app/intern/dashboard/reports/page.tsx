@@ -5,10 +5,9 @@ import {
   FileText, 
   CheckCircle2, 
   AlertCircle,
-  TrendingUp,
   BarChart3,
 } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 
 export default function InternReportsPage() {
   const [sessions, setSessions] = useState<any[]>([]);
@@ -54,91 +53,122 @@ export default function InternReportsPage() {
   if (loading) {
     return (
       <div className="py-20 flex justify-center">
-        <div className="animate-spin h-6 w-6 border-2 border-[#003366] border-t-transparent rounded-full" />
+        <div className="animate-spin h-7 w-7 border-2 border-[#FF8C42] border-t-transparent rounded-full" />
       </div>
     );
   }
 
   return (
-    <div className="p-4 lg:p-6 max-w-[1200px] mx-auto font-sans pb-24">
+    <div className="p-4 lg:p-10 w-full mx-auto font-sans pb-24 text-zinc-900 bg-[#FBFBFB] min-h-screen">
       
-      {/* Header Section */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
-          <div className="space-y-1">
-              <div className="flex items-center gap-2">
-                  <div className="h-8 w-8 bg-[#E0E7FF] rounded-lg flex items-center justify-center text-[#003366]">
-                      <BarChart3 size={18} />
-                  </div>
-                  <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Analytics Node</span>
+      {/* Page Header - Standardized */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
+          <div className="flex items-center gap-3">
+              <div className="p-2 bg-white rounded-lg border border-zinc-100 shadow-sm">
+                 <BarChart3 size={32} className="text-[#003366]" />
               </div>
-              <h1 className="text-2xl font-bold text-[#003366]">My Reports</h1>
-              <p className="text-[12px] text-zinc-500 font-medium">Detailed breakdown of your academic and attendance records.</p>
+              <div>
+                  <h1 className="text-3xl font-medium text-zinc-800 tracking-tight">My Reports</h1>
+                  <p className="text-[12px] text-zinc-400 font-medium mt-0.5">Detailed breakdown of your academic and attendance records.</p>
+              </div>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-4 bg-white p-2.5 border border-zinc-100 rounded-lg shadow-sm">
               {[
-                  { label: "Attendance", value: `${attendance}%`, icon: TrendingUp, color: "text-emerald-500" },
-                  { label: "Exam Scores", value: sessions.length, icon: FileText, color: "text-[#003366]" },
-                  { label: "Alerts", value: sessions.reduce((acc, s) => acc + (s.violations || 0), 0), icon: AlertCircle, color: "text-red-500" }
+                  { label: "Attendance", value: `${attendance}%`, color: "text-emerald-500" },
+                  { label: "Exams", value: sessions.length, color: "text-[#003366]" },
+                  { label: "Violations", value: sessions.reduce((acc, s) => acc + (s.violations || 0), 0), color: "text-red-500" }
               ].map((stat, i) => (
-                  <div key={i} className="flex flex-col items-center px-4 py-2 bg-zinc-50 border border-zinc-100 rounded-lg min-w-[80px]">
-                      <span className={`text-sm font-bold ${stat.color}`}>{stat.value}</span>
-                      <span className="text-[9px] font-bold uppercase tracking-tighter text-zinc-400">{stat.label}</span>
+                  <div key={i} className={`flex flex-col items-center px-6 ${i < 2 ? "border-r border-zinc-100" : ""}`}>
+                      <span className={`text-2xl font-bold ${stat.color}`}>{stat.value}</span>
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">{stat.label}</span>
                   </div>
               ))}
           </div>
       </div>
 
-      <div className="space-y-10">
-        {/* Simplified Exam Section */}
-        <section className="space-y-4">
-            <h2 className="text-[11px] font-bold text-zinc-400 uppercase tracking-[0.2em] border-b border-zinc-100 pb-2">Exam Performance</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {sessions.map((session) => (
-                    <div key={session.id} className="bg-white border border-zinc-200 rounded-lg p-5 flex flex-col gap-4">
+      <div className="space-y-12">
+        {/* Exam Performance Section */}
+        <section className="space-y-6">
+            <div className="flex items-center gap-2 border-b border-zinc-200 pb-3">
+                <FileText size={16} className="text-zinc-400" />
+                <h2 className="text-[13px] font-bold text-zinc-500 uppercase tracking-widest">Exam Performance</h2>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {sessions.length > 0 ? sessions.map((session) => (
+                    <motion.div 
+                        initial={{ opacity: 0, y: 5 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        key={session.id} 
+                        className="bg-white border border-zinc-100 rounded-md p-6 flex flex-col gap-4 hover:shadow-md transition-all group"
+                    >
                         <div className="flex justify-between items-start">
-                            <span className="text-[9px] font-bold uppercase text-[#003366] bg-blue-50 px-1.5 py-0.5 rounded">
+                            <span className="text-[10px] font-bold uppercase text-[#003366] bg-blue-50 px-2 py-0.5 rounded">
                                 {session.examType || 'General'}
                             </span>
-                            <span className="text-[10px] font-bold text-zinc-400">{new Date(session.startedAt).toLocaleDateString()}</span>
+                            <span className="text-[11px] font-medium text-zinc-400">{new Date(session.startedAt).toLocaleDateString()}</span>
                         </div>
-                        <div className="flex items-baseline gap-1">
-                            <span className="text-2xl font-bold text-[#003366]">{session.score || 0}</span>
-                            <span className="text-xs text-zinc-300 font-bold">/ {session.examType === 'UI_UX' ? '40' : '150'}</span>
+                        <div className="flex items-baseline gap-2">
+                            <span className="text-4xl font-bold text-zinc-800">{session.score || 0}</span>
+                            <span className="text-sm text-zinc-300 font-bold tracking-widest">/ {session.examType === 'UI_UX' ? '40' : '150'}</span>
                         </div>
-                        <div className="pt-3 border-t border-zinc-50 flex items-center justify-between">
-                            <span className="text-[10px] font-bold text-zinc-400 uppercase">Violations: {session.violations}</span>
+                        <div className="pt-4 border-t border-zinc-50 flex items-center justify-between">
+                            <div className="flex items-center gap-1.5">
+                                <AlertCircle size={14} className={session.violations > 0 ? "text-red-400" : "text-zinc-200"} />
+                                <span className="text-[10px] font-bold text-zinc-400 uppercase">Violations: {session.violations}</span>
+                            </div>
                             <button 
                                 onClick={() => setShowResponses(showResponses === session.id ? null : session.id)}
-                                className="text-[10px] font-bold text-[#003366] uppercase hover:underline"
+                                className="text-[11px] font-bold text-[#003366] uppercase hover:underline"
                             >
-                                {showResponses === session.id ? "Hide" : "Inspect"}
+                                {showResponses === session.id ? "Close" : "Inspect"}
                             </button>
                         </div>
+                    </motion.div>
+                )) : (
+                    <div className="col-span-full py-16 bg-white border border-dashed border-zinc-200 rounded-md text-center">
+                        <p className="text-[13px] font-medium text-zinc-400">No exam sessions recorded yet.</p>
                     </div>
-                ))}
+                )}
             </div>
         </section>
 
-        {/* Simplified Weekly Reviews */}
-        <section className="space-y-4">
-            <h2 className="text-[11px] font-bold text-zinc-400 uppercase tracking-[0.2em] border-b border-zinc-100 pb-2">Mentorship Feedback</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {history.map((report) => (
-                    <div key={report.id} className="bg-white border border-zinc-200 p-5 rounded-lg space-y-3">
+        {/* Mentorship Feedback Section */}
+        <section className="space-y-6">
+            <div className="flex items-center gap-2 border-b border-zinc-200 pb-3">
+                <CheckCircle2 size={16} className="text-zinc-400" />
+                <h2 className="text-[13px] font-bold text-zinc-500 uppercase tracking-widest">Mentorship Feedback</h2>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {history.length > 0 ? history.map((report) => (
+                    <motion.div 
+                        initial={{ opacity: 0, y: 5 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        key={report.id} 
+                        className="bg-white border border-zinc-100 p-6 rounded-md space-y-4 hover:shadow-md transition-all"
+                    >
                         <div className="flex justify-between items-center">
-                            <span className="text-[10px] font-bold text-white bg-black px-2 py-0.5 rounded">{report.schedule.week}</span>
-                            <span className="text-[10px] font-bold text-zinc-400">{new Date(report.reviewedAt).toLocaleDateString()}</span>
+                            <div className="flex items-center gap-2">
+                                <span className="text-[10px] font-bold text-white bg-[#003366] px-2 py-0.5 rounded uppercase tracking-wider">{report.schedule.week}</span>
+                                <span className="text-[11px] font-medium text-zinc-400">{new Date(report.reviewedAt).toLocaleDateString()}</span>
+                            </div>
+                            <div className="flex items-baseline gap-1">
+                                <span className="text-2xl font-bold text-emerald-500">{report.marks}</span>
+                                <span className="text-[10px] font-bold text-zinc-300 uppercase tracking-widest">Grade</span>
+                            </div>
                         </div>
-                        <h4 className="text-sm font-bold text-[#003366]">{report.schedule.typeOfWork}</h4>
-                        <p className="text-[12px] text-zinc-500 leading-relaxed italic border-l-2 border-[#E0E7FF] pl-3 py-1 bg-zinc-50 rounded-r-md">
-                            {report.review || "No specific feedback recorded."}
-                        </p>
-                        <div className="pt-2 flex justify-end">
-                            <span className="text-lg font-bold text-[#003366]">{report.marks}% Grade</span>
+                        <h4 className="text-[15px] font-bold text-zinc-800 tracking-tight">{report.schedule.typeOfWork}</h4>
+                        <div className="bg-zinc-50/50 border border-zinc-100 p-4 rounded-md">
+                            <p className="text-[13px] text-zinc-500 font-medium leading-relaxed italic">
+                                "{report.review || "No specific feedback recorded."}"
+                            </p>
                         </div>
+                    </motion.div>
+                )) : (
+                    <div className="col-span-full py-16 bg-white border border-dashed border-zinc-200 rounded-md text-center">
+                        <p className="text-[13px] font-medium text-zinc-400">No weekly reviews available yet.</p>
                     </div>
-                ))}
+                )}
             </div>
         </section>
       </div>

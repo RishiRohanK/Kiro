@@ -49,7 +49,8 @@ import {
    Shield,
    BookOpen,
    MessageCircle,
-   ArrowRight
+   ArrowRight,
+   Newspaper
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { io } from "socket.io-client";
@@ -644,6 +645,23 @@ function InternDashboardContent() {
       <div key={activeTab} className="p-4 lg:p-6 max-w-[1600px] w-full mx-auto bg-white min-h-screen pb-24 lg:pb-6">
          {activeTab === "overview" && (
             <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} className="space-y-4">
+               {attendancePercentage < 65 && (
+                  <motion.div 
+                     initial={{ opacity: 0, y: -10 }}
+                     animate={{ opacity: 1, y: 0 }}
+                     className="bg-red-50 border border-red-100 p-4 rounded-lg flex items-center gap-4"
+                  >
+                     <div className="h-10 w-10 bg-red-100 rounded-full flex items-center justify-center shrink-0">
+                        <AlertCircle className="text-red-600" size={20} />
+                     </div>
+                     <div className="flex-1">
+                        <h4 className="text-[13px] font-bold text-red-700">Attendance Warning</h4>
+                        <p className="text-[12px] text-red-600 font-medium leading-relaxed">
+                           Your attendance is currently <span className="font-bold">{attendancePercentage}%</span>. Make sure to follow correct attendance procedures, else your internship completion details will not be issued.
+                        </p>
+                     </div>
+                  </motion.div>
+               )}
                {/* Hero Bento Section */}
                <div className="grid grid-cols-12 gap-4 text-left">
                   {/* Left Column: Greeting & Stats */}
@@ -697,16 +715,16 @@ function InternDashboardContent() {
                   </div>
 
                   {/* Right Column: Key Actions */}
-                  <div className="col-span-12 lg:col-span-4 flex flex-col gap-4">
+                  <div className="col-span-12 lg:col-span-4 flex flex-col gap-4 h-full">
                      {/* Submission Portal Card */}
-                     <div className="flex-1 bg-white border border-zinc-100 p-6 flex flex-col sm:flex-row items-center justify-between shadow-none relative overflow-hidden group min-h-[220px] sm:min-h-[200px]">
-                        <div className="absolute top-2 right-2 p-2 bg-blue-50 text-blue-600 z-10">
+                      <div className="flex-1 bg-white border border-zinc-100 p-6 flex flex-col sm:flex-row items-center justify-between shadow-none relative overflow-hidden group min-h-[210px]">
+                        <div className="absolute top-2 right-2 p-2 bg-blue-50 text-[#003366] z-10">
                            <Paperclip size={18} />
                         </div>
 
                         <div className="flex-1 flex flex-col justify-between h-full text-center sm:text-left relative z-10 w-full">
                            <div className="space-y-1">
-                              <h3 className="text-sm font-semibold text-[#003366] uppercase tracking-wider">My Portal</h3>
+                              <h3 className="text-sm font-semibold text-[#003366] tracking-tight">My Portal</h3>
                               <p className="text-[11px] text-zinc-500 font-medium leading-relaxed max-w-full sm:max-w-[180px]">
                                  Submit your work and get marks for your results. Daily progress tracking active.
                               </p>
@@ -714,14 +732,14 @@ function InternDashboardContent() {
 
                            <button
                               onClick={() => setShowUIUXModal(true)}
-                              className="w-full sm:w-fit px-6 h-10 bg-[#003366] text-white text-[10px] font-semibold uppercase tracking-[0.1em] mt-6 hover:bg-black transition-all flex items-center justify-center gap-2 whitespace-nowrap"
+                              className="w-full sm:w-fit px-6 h-9 bg-[#003366] text-white text-[11px] font-semibold tracking-wide mt-4 hover:bg-black transition-all flex items-center justify-center gap-2 whitespace-nowrap"
                            >
                               Submit Work <ArrowUpRight size={14} />
                            </button>
                         </div>
 
-                        {/* Extra Large Illustration on Right */}
-                        <div className="w-48 h-48 sm:w-64 sm:h-64 flex items-center justify-center flex-shrink-0 mt-4 sm:mt-0 -mr-0 sm:-mr-12 -mb-4 sm:-mb-8 pointer-events-none">
+                        {/* Illustration Aligned to Container Height */}
+                        <div className="w-40 h-40 sm:w-48 sm:h-full flex items-center justify-center flex-shrink-0 mt-4 sm:mt-0 pointer-events-none">
                            <img
                               src="https://ik.imagekit.io/dypkhqxip/Image%20folder-amico.svg"
                               alt="Illustration"
@@ -746,12 +764,45 @@ function InternDashboardContent() {
                   </div>
                </div>
 
-               {/* No Prompts Section */}
-               <div className="mt-6 py-12 bg-zinc-50 border border-dashed border-zinc-200 flex flex-col items-center justify-center space-y-2">
-                  <div className="h-10 w-10 rounded-full bg-zinc-100 flex items-center justify-center">
-                     <Terminal size={18} className="text-zinc-300" />
+               {/* Portal Updates Card Section */}
+               <div className="mt-8">
+                  <div className="flex items-center gap-2 mb-4 border-b border-zinc-100 pb-2">
+                     <Newspaper size={16} className="text-[#003366]" />
+                     <h2 className="text-[11px] font-bold text-zinc-400 uppercase tracking-[0.2em]">Portal Updates</h2>
                   </div>
-                  <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-[0.2em]">No prompts available !</p>
+                  
+                  <div className="bg-zinc-50 border border-zinc-100 rounded-lg p-6 flex flex-col lg:flex-row items-center gap-8 hover:shadow-md transition-all group relative overflow-hidden">
+                     {/* Responsive Poster Snippet */}
+                     <div className="w-full lg:w-48 h-48 lg:h-48 bg-white rounded-md overflow-hidden shrink-0 border border-zinc-100">
+                        <img 
+                           src="https://ik.imagekit.io/dypkhqxip/Summer%20Bootcamp%20(2).png?updatedAt=1776542583323" 
+                           alt="Summer Bootcamp"
+                           className="w-full h-full object-cover lg:object-contain transition-all duration-500 group-hover:scale-105"
+                        />
+                     </div>
+
+                     <div className="flex-1 space-y-3 w-full">
+                        <div className="flex items-center gap-3">
+                           <span className="bg-white text-emerald-600 border border-emerald-100 text-[9px] font-bold px-2 py-0.5 rounded">
+                              Active
+                           </span>
+                           <span className="text-[11px] text-zinc-400 font-medium">April 20, 2026</span>
+                        </div>
+                        <h3 className="text-xl font-bold text-[#003366] tracking-tight">Summer boot camp 2026 announcement</h3>
+                        <p className="text-[13px] text-zinc-500 font-medium leading-relaxed line-clamp-3 max-w-2xl">
+                           This notice announces the start of the 30-day "Summer Boot Camp 2026". The program is designed to provide high-quality technical skills to students. We focus on building industry-standard capabilities through practical training.
+                        </p>
+                        
+                        <div className="flex justify-start mt-4">
+                           <Link 
+                              href="/intern/dashboard/news"
+                              className="flex items-center gap-1 text-[13px] font-semibold text-blue-500 hover:underline"
+                           >
+                              View Details <ChevronRight size={14} />
+                           </Link>
+                        </div>
+                     </div>
+                  </div>
                </div>
 
                {/* Custom Floating Chat Icon */}
@@ -1238,89 +1289,100 @@ function InternDashboardContent() {
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-4 text-left">
                {/* Page Header */}
                <div className="space-y-0.5">
-                  <h2 className="text-xl font-bold text-[#003366]">My Attendance</h2>
-                  <p className="text-[12px] text-zinc-500 font-medium">Track your presence and active days here.</p>
+                  <h2 className="text-xl font-bold text-[#003366]">Attendance Overview</h2>
+                  <p className="text-[12px] text-zinc-500 font-medium">Monthly tracking and performance logs.</p>
                </div>
 
-               <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                  <div className="p-4 bg-[#E0E7FF] border border-[#003366]/5 shadow-sm flex flex-col justify-between">
-                     <div>
-                        <h4 className="text-[9px] font-bold uppercase tracking-widest text-[#003366]/60 mb-0.5">Rate</h4>
-                        <p className="text-3xl font-black text-[#003366]">{attendancePercentage}%</p>
-                     </div>
-                     <div className="w-full h-1 bg-white/40 mt-3 rounded-none overflow-hidden">
-                        <motion.div
-                           initial={{ width: 0 }}
-                           animate={{ width: `${attendancePercentage}%` }}
-                           transition={{ duration: 1, ease: "easeOut" }}
-                           className="h-full bg-[#003366]"
-                        />
-                     </div>
-                  </div>
-
-                  <div className="p-4 bg-white border border-[#003366]/5 shadow-sm flex flex-col justify-between">
-                     <div>
-                        <h4 className="text-[9px] font-bold uppercase tracking-widest text-zinc-400 mb-0.5">Today</h4>
-                        <div className="flex items-baseline gap-1">
-                           <p className="text-2xl font-bold text-[#003366]">{attendanceCount}</p>
-                           <p className="text-xs font-bold text-zinc-300">/ {attendanceData.totalTrackingDays}</p>
+               <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                  <div className="md:col-span-2 p-6 bg-zinc-900 text-white rounded-xl relative overflow-hidden group">
+                     <div className="relative z-10">
+                        <h4 className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/50 mb-1">Average Attendance</h4>
+                        <p className="text-4xl font-bold">{attendancePercentage}%</p>
+                        <div className="flex items-center gap-2 mt-4">
+                           <div className="flex-1 h-1.5 bg-white/10 rounded-full overflow-hidden">
+                              <motion.div 
+                                 initial={{ width: 0 }}
+                                 animate={{ width: `${attendancePercentage}%` }}
+                                 className="h-full bg-blue-500"
+                              />
+                           </div>
+                           <span className="text-[10px] font-bold text-white/40">{attendanceCount}/{attendanceData.totalTrackingDays} Days</span>
                         </div>
                      </div>
-                     <p className="text-[8px] font-bold text-emerald-600 mt-2 uppercase tracking-widest opacity-70">Days Present</p>
+                     <Activity className="absolute -bottom-4 -right-4 w-32 h-32 text-white/5 rotate-12" />
                   </div>
 
-                  <div className="p-4 bg-white border border-[#003366]/5 shadow-sm flex flex-col justify-between">
+                  <div className="p-6 bg-zinc-50 border border-zinc-100 rounded-xl flex flex-col justify-between">
                      <div>
-                        <h4 className="text-[9px] font-bold uppercase tracking-widest text-zinc-400 mb-0.5">Required</h4>
-                        <div className="flex items-baseline gap-2">
-                           <p className="text-2xl font-bold text-zinc-900">75%</p>
-                           <span className={`text-[8px] font-bold px-1.5 py-0.5 border ${isLowAttendance ? 'bg-rose-50 text-rose-600 border-rose-100' : 'bg-emerald-50 text-emerald-600 border-emerald-100'} uppercase`}>
-                              {isLowAttendance ? 'Low' : 'Good'}
-                           </span>
+                        <h4 className="text-[10px] font-bold uppercase tracking-[0.1em] text-zinc-400 mb-1">Status</h4>
+                        <div className="flex items-center gap-2">
+                           <div className={`h-2 w-2 rounded-full ${attendancePercentage >= 75 ? "bg-emerald-500" : "bg-amber-500"}`} />
+                           <p className="text-lg font-bold text-[#003366]">{attendancePercentage >= 75 ? "Qualified" : "Warning"}</p>
                         </div>
                      </div>
-                     <p className="text-[8px] font-bold text-zinc-400 mt-2 uppercase tracking-widest opacity-70">Pass Mark</p>
+                     <p className="text-[10px] text-zinc-400 font-medium leading-tight">Must maintain 75% for certification.</p>
+                  </div>
+
+                  <div className="p-6 bg-zinc-50 border border-zinc-100 rounded-xl flex flex-col justify-between">
+                     <div>
+                        <h4 className="text-[10px] font-bold uppercase tracking-[0.1em] text-zinc-400 mb-1">Consistency</h4>
+                        <p className="text-2xl font-bold text-zinc-900">Good</p>
+                     </div>
+                     <div className="flex gap-1">
+                        {[1, 2, 3, 4, 5].map((i) => (
+                           <div key={i} className={`h-1 flex-1 ${i <= 4 ? "bg-emerald-400" : "bg-zinc-200"}`} />
+                        ))}
+                     </div>
                   </div>
                </div>
 
-               {/* Attendance History Table */}
-               <div className="bg-white border border-[#003366]/10 shadow-sm overflow-hidden">
-                  <div className="px-5 py-3 border-b border-zinc-50 flex items-center justify-between bg-zinc-50/30">
-                     <h3 className="text-[9px] font-bold text-[#003366] uppercase tracking-widest">History</h3>
+               <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                     <h3 className="text-[11px] font-bold text-zinc-400 uppercase tracking-[0.2em]">Activity Log</h3>
+                     <span className="text-[10px] text-zinc-400 font-medium">Showing last {attendanceData.history.length} records</span>
                   </div>
-                  <div className="overflow-x-auto">
-                     <table className="w-full text-left border-collapse">
-                        <thead>
-                           <tr className="bg-zinc-50/20">
-                              <th className="px-6 py-3 text-[9px] font-bold text-zinc-400 uppercase tracking-tight">Date</th>
-                              <th className="px-6 py-3 text-[9px] font-bold text-zinc-400 uppercase tracking-tight">Batch</th>
-                              <th className="px-6 py-3 text-[9px] font-bold text-zinc-400 uppercase tracking-tight text-right">Verification</th>
-                           </tr>
-                        </thead>
-                        <tbody className="divide-y divide-zinc-50">
-                           {attendanceData.history.map((log: any) => (
-                              <tr key={log.id} className="hover:bg-zinc-50/30 transition-colors">
-                                 <td className="px-6 py-2.5">
-                                    <div className="flex flex-col">
-                                       <span className="text-[12px] font-bold text-[#003366]">{new Date(log.date).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })}</span>
-                                       <span className="text-[8px] text-zinc-300 font-medium uppercase tracking-tighter">{new Date(log.date).getFullYear()} Record</span>
-                                    </div>
-                                 </td>
-                                 <td className="px-6 py-2.5">
-                                    <span className="text-[9px] font-bold text-zinc-500 uppercase">Regular</span>
-                                 </td>
-                                 <td className="px-6 py-2.5 text-right">
-                                    <div className="flex items-center justify-end gap-1.5">
-                                       <span className={`text-[9px] font-black tracking-widest uppercase ${log.status === "PRESENT" || log.status === "LATE" ? "text-emerald-500" : "text-rose-500"}`}>
-                                          {log.status === "PRESENT" ? "In" : log.status === "LATE" ? "Late" : "Out"}
-                                       </span>
-                                       <div className={`h-1 w-1 rounded-full ${log.status === "PRESENT" || log.status === "LATE" ? "bg-emerald-500" : "bg-rose-500"}`} />
-                                    </div>
-                                 </td>
+                  
+                  <div className="bg-white border border-zinc-100 rounded-xl overflow-hidden shadow-sm">
+                     <div className="overflow-x-auto">
+                        <table className="w-full text-left">
+                           <thead className="bg-zinc-50/50 border-b border-zinc-100">
+                              <tr>
+                                 <th className="px-6 py-4 text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Session Date</th>
+                                 <th className="px-6 py-4 text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Type</th>
+                                 <th className="px-6 py-4 text-[10px] font-bold text-zinc-400 uppercase tracking-widest text-right">Status</th>
                               </tr>
-                           ))}
-                        </tbody>
-                     </table>
+                           </thead>
+                           <tbody className="divide-y divide-zinc-50">
+                              {attendanceData.history.map((log: any) => (
+                                 <tr key={log.id} className="hover:bg-zinc-50/50 transition-all group">
+                                    <td className="px-6 py-4">
+                                       <div className="flex items-center gap-3">
+                                          <div className="h-8 w-8 rounded-lg bg-zinc-50 flex flex-col items-center justify-center border border-zinc-100">
+                                             <span className="text-[10px] font-bold text-[#003366] leading-none">{new Date(log.date).getDate()}</span>
+                                             <span className="text-[7px] font-bold text-zinc-400 uppercase">{new Date(log.date).toLocaleString("default", { month: "short" })}</span>
+                                          </div>
+                                          <div>
+                                             <p className="text-[13px] font-bold text-zinc-800">{new Date(log.date).toLocaleDateString(undefined, { weekday: "long" })}</p>
+                                             <p className="text-[10px] text-zinc-400 font-medium">Regular Session</p>
+                                          </div>
+                                       </div>
+                                    </td>
+                                    <td className="px-6 py-4">
+                                       <span className="px-2 py-0.5 bg-blue-50 text-blue-600 text-[10px] font-bold rounded uppercase tracking-tighter">Classroom</span>
+                                    </td>
+                                    <td className="px-6 py-4 text-right">
+                                       <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-tight ${
+                                          log.status === "PRESENT" ? "bg-emerald-50 text-emerald-600" : 
+                                          log.status === "LATE" ? "bg-amber-50 text-amber-600" : "bg-red-50 text-red-600"
+                                       }`}>
+                                          {log.status === "PRESENT" ? "Present" : log.status === "LATE" ? "Late" : "Absent"}
+                                       </span>
+                                    </td>
+                                 </tr>
+                              ))}
+                           </tbody>
+                        </table>
+                     </div>
                   </div>
                </div>
             </motion.div>

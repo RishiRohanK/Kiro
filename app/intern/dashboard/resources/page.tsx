@@ -5,12 +5,15 @@ import {
     BookOpen, 
     Download, 
     Search, 
-    Filter,
     FileText,
     Globe,
     Lock,
     ArrowUpRight,
-    LucideIcon
+    LucideIcon,
+    Folder,
+    File,
+    ChevronRight,
+    ExternalLink
 } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -57,116 +60,136 @@ export default function InternResourcesPage() {
         return matchesSearch && matchesCategory;
     });
 
-    const getTypeIcon = (type: string): LucideIcon => {
+    const getTypeColor = (type: string) => {
         switch (type) {
-            case 'WEB': return Globe;
-            case 'DOC': return FileText;
-            default: return BookOpen;
+            case 'WEB': return 'text-blue-500 bg-blue-50';
+            case 'PDF': return 'text-red-500 bg-red-50';
+            case 'VIDEO': return 'text-purple-500 bg-purple-50';
+            case 'ZIP': return 'text-orange-500 bg-orange-50';
+            default: return 'text-zinc-500 bg-zinc-50';
         }
     };
 
     return (
-        <div className="p-4 lg:p-6 max-w-[1400px] mx-auto font-sans pb-24 text-zinc-900">
-             {/* Page Header */}
-             <div className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
-                 <div className="space-y-1 text-left">
-                     <div className="flex items-center gap-2 text-[#003366]">
-                         <span className="text-[11px] font-semibold opacity-50 uppercase tracking-widest">Scholar Hub</span>
-                     </div>
-                     <h1 className="text-3xl font-semibold text-[#003366]">Resource Library</h1>
-                     <p className="text-sm text-zinc-500 font-medium">Download guides and technical materials for your track.</p>
+        <div className="p-4 lg:p-10 w-full mx-auto font-sans pb-24 text-zinc-900 bg-[#FBFBFB] min-h-screen">
+             {/* Page Header - Compact & Direct Icon */}
+             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+                 <div className="flex items-center gap-3">
+                    <Folder size={32} className="text-[#003366]" fill="currentColor" fillOpacity={0.1} />
+                    <div>
+                        <h1 className="text-3xl font-medium text-zinc-800 tracking-tight">Resource Library</h1>
+                        <p className="text-[13px] text-zinc-400 font-medium">Access your technical materials and learning guides.</p>
+                    </div>
                  </div>
- 
-                 <div className="flex flex-col sm:flex-row items-center gap-3">
-                     <div className="relative w-full sm:w-64">
-                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400" size={13} />
-                         <input 
-                             type="text"
-                             placeholder="Search library..."
-                             value={search}
-                             onChange={(e) => setSearch(e.target.value)}
-                             className="w-full h-11 bg-zinc-50 border border-zinc-100 pl-10 pr-4 text-[12px] font-medium focus:outline-none focus:border-[#003366] transition-all"
-                         />
-                     </div>
-                     <div className="flex items-center gap-2 bg-zinc-50 border border-zinc-100 h-11 px-4">
-                         <Filter size={13} className="text-zinc-400" />
-                         <select 
-                             value={activeCategory}
-                             onChange={(e) => setActiveCategory(e.target.value)}
-                             className="bg-transparent text-[11px] font-semibold focus:outline-none"
-                         >
-                             {categories.map(c => <option key={c} value={c}>{c}</option>)}
-                         </select>
-                     </div>
-                 </div>
+
+                 <div className="relative w-full md:w-72">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400" size={15} />
+                    <input 
+                        type="text"
+                        placeholder="Search for files, guides..."
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                        className="w-full pl-10 pr-4 py-2.5 bg-white border border-zinc-200 rounded-xl text-[13px] focus:outline-none focus:ring-2 focus:ring-[#003366]/5 focus:border-[#003366] transition-all shadow-sm"
+                    />
+                </div>
              </div>
- 
-             {loading ? (
-                 <div className="py-20 flex justify-center">
-                     <div className="animate-spin h-8 w-8 border-4 border-[#003366] border-t-transparent rounded-full" />
-                 </div>
-             ) : filtered.length > 0 ? (
-                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                     {filtered.map((resource, i) => {
-                         const Icon = getTypeIcon(resource.type);
-                         return (
-                             <motion.div 
-                                 key={resource.id}
-                                 initial={{ opacity: 0, scale: 0.98 }}
-                                 animate={{ opacity: 1, scale: 1 }}
-                                 transition={{ delay: i * 0.05 }}
-                                 className="bg-zinc-50 border border-zinc-100 p-6 flex flex-col justify-between hover:bg-white hover:border-[#003366]/20 transition-all group overflow-hidden relative text-left"
-                             >
-                                 <div className="absolute top-0 right-0 p-3 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity">
-                                     <Icon size={80} strokeWidth={1} />
-                                 </div>
-                                 
-                                 <div>
-                                     <div className="flex items-center justify-between mb-4">
-                                         <div className="text-[10px] font-semibold px-2 py-0.5 bg-[#E0E7FF] text-[#003366] uppercase tracking-wider">
-                                             {resource.type}
-                                         </div>
-                                         <span className="text-[10px] font-semibold text-zinc-400">{resource.date}</span>
-                                     </div>
-                                     <h3 className="text-sm font-semibold text-[#003366] mb-2 line-clamp-2">
-                                         {resource.title}
-                                     </h3>
-                                     <p className="text-[11px] text-zinc-500 font-medium leading-relaxed mb-6 line-clamp-3">
-                                         {resource.description}
-                                     </p>
-                                 </div>
- 
-                                 <div className="pt-4 border-t border-zinc-200/50 mt-auto flex items-center justify-between">
-                                     <span className="text-[10px] font-semibold text-zinc-400 uppercase tracking-widest">{resource.category}</span>
-                                     <a 
-                                         href={resource.url} 
-                                         target="_blank" 
-                                         rel="noopener noreferrer"
-                                         className="h-9 w-9 bg-zinc-900 text-white flex items-center justify-center hover:bg-[#003366] transition-all"
-                                     >
-                                         {resource.type === 'WEB' ? <ArrowUpRight size={14} /> : <Download size={14} />}
-                                     </a>
-                                 </div>
-                             </motion.div>
-                         );
-                     })}
-                 </div>
-             ) : (
-                 <div className="p-24 bg-zinc-50 border border-zinc-100 text-center flex flex-col items-center justify-center">
-                     <Lock size={40} className="text-zinc-200 mb-4" />
-                     <h3 className="text-sm font-semibold text-[#003366] uppercase tracking-[0.2em]">No Materials</h3>
-                     <p className="text-[11px] text-zinc-400 font-medium mt-2 max-w-xs leading-relaxed">
-                         Materials will be added by your leads through the Cleed portal.
-                     </p>
-                 </div>
-             )}
- 
+
+             {/* Categories (Folder View) - More Compact */}
+             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3 mb-8">
+                 {categories.map(tab => (
+                     <button
+                         key={tab}
+                         onClick={() => setActiveCategory(tab)}
+                         className={`group p-4 rounded-2xl border transition-all text-left flex flex-col gap-3 ${
+                             activeCategory === tab
+                                 ? "bg-[#003366] border-[#003366] shadow-lg shadow-[#003366]/10"
+                                 : "bg-white border-zinc-100 hover:border-[#003366]/20 hover:shadow-md"
+                         }`}
+                     >
+                         <Folder 
+                            size={24} 
+                            className={activeCategory === tab ? "text-white/80" : "text-[#003366]/40 group-hover:text-[#003366] transition-colors"} 
+                            fill="currentColor" 
+                            fillOpacity={activeCategory === tab ? 0.2 : 0.1}
+                         />
+                         <span className={`text-[13px] font-bold tracking-tight truncate ${activeCategory === tab ? "text-white" : "text-zinc-600"}`}>
+                            {tab}
+                         </span>
+                     </button>
+                 ))}
+             </div>
+
+             {/* Library List View */}
+             <div className="bg-white border border-zinc-100 rounded-3xl overflow-hidden shadow-sm">
+                <div className="px-8 py-5 border-b border-zinc-50 bg-zinc-50/30 flex items-center justify-between">
+                    <h2 className="text-[14px] font-bold text-zinc-800 uppercase tracking-widest">Library Files</h2>
+                    <span className="text-[12px] font-medium text-zinc-400">{filtered.length} items</span>
+                </div>
+
+                {loading ? (
+                    <div className="py-20 flex justify-center">
+                        <div className="animate-spin h-7 w-7 border-2 border-[#003366] border-t-transparent rounded-full" />
+                    </div>
+                ) : filtered.length > 0 ? (
+                    <div className="divide-y divide-zinc-50">
+                        {filtered.map((resource, i) => (
+                            <motion.div 
+                                key={resource.id}
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                className="group px-8 py-5 flex flex-col md:flex-row md:items-center justify-between gap-4 hover:bg-zinc-50/50 transition-all cursor-default"
+                            >
+                                <div className="flex items-center gap-5 flex-1">
+                                    <div className={`p-3 rounded-xl transition-transform group-hover:scale-105 ${getTypeColor(resource.type)}`}>
+                                        <FileText size={20} />
+                                    </div>
+                                    <div className="space-y-0.5">
+                                        <h3 className="text-[15px] font-bold text-zinc-800 group-hover:text-[#003366] transition-colors">
+                                            {resource.title}
+                                        </h3>
+                                        <div className="flex items-center gap-3">
+                                            <span className="text-[11px] font-medium text-zinc-400">{resource.date}</span>
+                                            <span className="w-1 h-1 rounded-full bg-zinc-200"></span>
+                                            <span className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest">{resource.category}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="flex items-center gap-3">
+                                    <a 
+                                        href={resource.url} 
+                                        target="_blank" 
+                                        rel="noopener noreferrer"
+                                        className="px-5 py-2.5 bg-zinc-100 text-zinc-600 rounded-xl text-[12px] font-bold hover:bg-[#003366] hover:text-white transition-all flex items-center gap-2"
+                                    >
+                                        {resource.type === 'WEB' ? 'Open Link' : 'Download File'}
+                                        {resource.type === 'WEB' ? <ExternalLink size={14} /> : <Download size={14} />}
+                                    </a>
+                                    <button className="p-2.5 text-zinc-300 hover:text-zinc-500 transition-colors">
+                                        <ChevronRight size={18} />
+                                    </button>
+                                </div>
+                            </motion.div>
+                        ))}
+                    </div>
+                ) : (
+                    <div className="py-32 text-center flex flex-col items-center justify-center">
+                        <div className="w-20 h-20 bg-zinc-50 rounded-full flex items-center justify-center mb-6">
+                            <Lock size={32} className="text-zinc-200" />
+                        </div>
+                        <h3 className="text-[16px] font-bold text-zinc-800 mb-2">No files found</h3>
+                        <p className="text-[13px] text-zinc-400 max-w-sm mx-auto font-medium">
+                            No materials match your current filter or search criteria.
+                        </p>
+                    </div>
+                )}
+             </div>
+  
              {/* Support Note */}
-             <div className="mt-16 p-8 bg-zinc-50 border border-zinc-100 text-center max-w-2xl mx-auto">
-                 <h4 className="text-[11px] font-semibold text-[#003366] uppercase tracking-widest mb-2">Need Support?</h4>
-                 <p className="text-[11px] text-zinc-500 font-medium leading-relaxed">
-                     If you can't access these materials, please raise your hand in the sidebar or contact support.
-                 </p>
+             <div className="mt-16 flex items-center justify-center gap-4 text-zinc-400">
+                 <div className="h-px bg-zinc-100 flex-1"></div>
+                 <p className="text-[12px] font-medium italic">Contact support for missing library access</p>
+                 <div className="h-px bg-zinc-100 flex-1"></div>
              </div>
         </div>
     );
