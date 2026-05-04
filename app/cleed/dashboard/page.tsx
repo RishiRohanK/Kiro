@@ -1533,7 +1533,7 @@ export default function CleedDashboard() {
                         { id: "interns", icon: Users, label: "Interns" },
                         { id: "authorizations", icon: ShieldCheck, label: "Approvals" },
                         { id: "hiring", icon: Briefcase, label: "Hiring" },
-                        { id: "internships", icon: Briefcase, label: "Programs" },
+                        { id: "internships", icon: Briefcase, label: "Internships" },
                         { id: "certification", icon: FileBadge, label: "Certificates" },
                         { id: "attendance", icon: CalendarCheck, label: "Attendance" },
                         { id: "vault", icon: Shield, label: "Vault" },
@@ -1588,6 +1588,7 @@ export default function CleedDashboard() {
                   <div className="mt-1 space-y-1 ml-2 border-l border-white/10 pl-2">
                      {[
                         { id: "interns", icon: Users, label: "Interns" },
+                        { id: "internships", icon: Briefcase, label: "Internships" },
                         { id: "authorizations", icon: ShieldCheck, label: "Approvals" },
                         { id: "employees", icon: ShieldCheck, label: "Employees" },
                         { id: "certification", icon: FileBadge, label: "Certificates" },

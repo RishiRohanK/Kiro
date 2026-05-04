@@ -1661,7 +1661,6 @@ function InternDashboardContent() {
                      </div>
 
                      <div className="bg-[#F5332C] p-8 rounded-none text-white space-y-4 relative overflow-hidden">
-                        <Sparkles className="absolute top-0 right-0 text-white/10 -m-4" size={120} />
                         <div className="relative z-10">
                            <h4 className="text-[14px] font-bold">Forge Career Center</h4>
                            <p className="text-xs text-white/80 leading-relaxed mt-2">
