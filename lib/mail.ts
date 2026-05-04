@@ -29,6 +29,7 @@ const getSimpleTemplate = (title: string, content: string, ctaText: string, ctaU
         p { font-size: 13px; margin: 0 0 20px; color: #333; line-height: 1.6; }
         .button-wrapper { text-align: left; margin-bottom: 20px; }
         .button { display: inline-block; background: #000; color: #fff !important; padding: 12px 28px; text-decoration: none; font-size: 12.5px; font-weight: 700; border-radius: 0px; letter-spacing: 0.02em; }
+        .signature { margin-top: 35px; font-size: 13px; color: #333; line-height: 1.5; }
         .footer { background-color: #FACC15; padding: 25px 30px; font-size: 10px; color: #000000; text-align: left; border-top: 1px solid rgba(0,0,0,0.05); }
         .team { font-weight: 800; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.05em; font-size: 11px; color: #000; }
         .footer-text { color: #000000; opacity: 0.8; font-weight: 500; }
@@ -54,6 +55,11 @@ const getSimpleTemplate = (title: string, content: string, ctaText: string, ctaU
                 <p>${content}</p>
                 <div class="button-wrapper">
                     <a href="${ctaUrl}" class="button">${ctaText}</a>
+                </div>
+                <div class="signature">
+                    Best Wishes,<br/>
+                    <b>Rishi Rohan Kalapala</b><br/>
+                    CEO, Student Forge
                 </div>
             </div>
             <div class="footer">
