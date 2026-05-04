@@ -1715,11 +1715,22 @@ function InternDashboardContent() {
                                     <button 
                                        onClick={() => { handleApply(selectedInternship.id); setSelectedInternship(null); }}
                                        disabled={isApplying === selectedInternship.id || myApplications.some(a => a.internshipId === selectedInternship.id)}
-                                       className="flex-1 h-14 bg-zinc-900 text-white font-bold text-xs uppercase tracking-widest hover:bg-black transition-all rounded-none disabled:opacity-50"
+                                       className="flex-1 h-14 bg-zinc-900 text-white font-bold text-xs hover:bg-black transition-all rounded-none disabled:opacity-50"
                                     >
-                                       External Link <ArrowUpRight size={18} className="ml-2" />
-                                    </a>
-                                 )}
+                                       {isApplying === selectedInternship.id ? "Applying..." : 
+                                        myApplications.some(a => a.internshipId === selectedInternship.id) ? "Already applied" : "Apply with resume"}
+                                    </button>
+                                    {selectedInternship.applyLink && (
+                                       <a 
+                                          href={selectedInternship.applyLink} 
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+                                          className="h-14 px-8 border border-zinc-200 text-zinc-900 flex items-center justify-center font-bold text-[12px] hover:bg-zinc-50 transition-all rounded-none"
+                                       >
+                                          External link <ArrowUpRight size={18} className="ml-2" />
+                                       </a>
+                                    )}
+                                 </div>
                               </div>
                            </div>
                         </motion.div>

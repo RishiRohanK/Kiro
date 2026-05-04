@@ -203,9 +203,9 @@ export default function CleedDashboard() {
    const [sendingTask, setSendingTask] = useState(false);
    const [taskSuccess, setTaskSuccess] = useState(false);
 
-   const [eventData, setEventData] = useState({ title: "", description: "", category: "Workshop", date: "", location: "", price: "" });
-   const [sendingEvent, setSendingEvent] = useState(false);
-   const [eventSuccess, setEventSuccess] = useState(false);
+
+
+
    
    const [letterUrl, setLetterUrl] = useState("");
    const [offerLetterUrl, setOfferLetterUrl] = useState("");
