@@ -259,6 +259,7 @@ export default function CleedDashboard() {
       location: "",
       duration: "",
       stipend: "",
+      image: "",
       applyLink: ""
    });
    const [sendingInternship, setSendingInternship] = useState(false);
@@ -1312,7 +1313,7 @@ export default function CleedDashboard() {
          });
          if (res.ok) {
             setInternshipSuccess(true);
-            setInternshipData({ title: "", description: "", role: "", company: "", location: "", duration: "", stipend: "", applyLink: "" });
+            setInternshipData({ title: "", description: "", role: "", company: "", location: "", duration: "", stipend: "", image: "", applyLink: "" });
             setTimeout(() => setInternshipSuccess(false), 3000);
             fetchData();
          }
