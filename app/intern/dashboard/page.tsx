@@ -1574,29 +1574,29 @@ function InternDashboardContent() {
                                        <Briefcase size={40} />
                                     </div>
                                  )}
-                                 <div className="absolute top-3 right-3">
-                                    <span className="bg-black/60 backdrop-blur-md text-white text-[9px] font-bold px-2 py-1 uppercase tracking-tighter">
-                                       Added {timeSince}
+                                 <div className="absolute top-0 right-0 p-3">
+                                    <span className="bg-white/90 backdrop-blur-md text-zinc-900 text-[10px] font-bold px-2 py-1 shadow-sm">
+                                       {timeSince}
                                     </span>
                                  </div>
                               </div>
 
                               <div className="p-5 flex-1 flex flex-col">
                                  <div className="mb-4">
-                                    <h4 className="text-[15px] font-bold text-zinc-900 truncate leading-none mb-1.5">{job.title}</h4>
-                                    <p className="text-[11px] font-bold text-red-600 uppercase tracking-tight">{job.company}</p>
+                                    <h4 className="text-[16px] font-bold text-zinc-900 truncate leading-none mb-1">{job.title}</h4>
+                                    <p className="text-[12px] font-medium text-zinc-500">{job.company}</p>
                                  </div>
                                  
-                                 <div className="flex items-center gap-4 text-[10px] font-bold text-zinc-400 mb-6">
-                                    <span className="flex items-center gap-1"><MapPin size={12} /> {job.location || "Remote"}</span>
-                                    <span className="flex items-center gap-1"><Clock size={12} /> {job.duration || "3M"}</span>
+                                 <div className="flex items-center gap-4 text-[11px] font-medium text-zinc-400 mb-6">
+                                    <span className="flex items-center gap-1.5"><MapPin size={13} className="text-red-500" /> {job.location || "Remote"}</span>
+                                    <span className="flex items-center gap-1.5"><Clock size={13} className="text-zinc-300" /> {job.duration || "3 Months"}</span>
                                  </div>
 
                                  <button 
                                     onClick={() => setSelectedInternship(job)}
-                                    className="w-full h-10 border border-zinc-900 text-zinc-900 text-[10px] font-bold uppercase tracking-widest hover:bg-zinc-900 hover:text-white transition-all rounded-none"
+                                    className="w-full h-11 bg-zinc-900 text-white text-[12px] font-bold hover:bg-red-600 transition-all rounded-none"
                                  >
-                                    View Details
+                                    View details
                                  </button>
                               </div>
                            </div>
@@ -1625,16 +1625,16 @@ function InternDashboardContent() {
                                        </div>
                                        <div>
                                           <p className="text-sm font-bold text-zinc-900">{app.internship?.title || "Role"}</p>
-                                          <p className="text-[10px] text-zinc-400 font-bold uppercase tracking-wider">{app.internship?.company || "Company"}</p>
+                                          <p className="text-[10px] text-zinc-400 font-bold">{app.internship?.company || "Company"}</p>
                                        </div>
                                     </div>
-                                    <span className={`text-[9px] font-black px-2 py-1 rounded-none uppercase tracking-widest ${
+                                    <span className={`text-[10px] font-bold px-3 py-1 rounded-sm ${
                                        app.status === "PENDING" ? "bg-amber-50 text-amber-600" :
                                        app.status === "REVIEWED" ? "bg-blue-50 text-blue-600" :
                                        app.status === "ACCEPTED" ? "bg-emerald-50 text-emerald-600" :
                                        "bg-zinc-100 text-zinc-400"
                                     }`}>
-                                       {app.status}
+                                       {app.status.charAt(0) + app.status.slice(1).toLowerCase()}
                                     </span>
                                  </div>
                               ))}
@@ -1681,46 +1681,41 @@ function InternDashboardContent() {
                            <div className="p-8 md:p-10 overflow-y-auto custom-scrollbar">
                               <div className="mb-8">
                                  <div className="flex items-center gap-3 mb-2">
-                                    <span className="bg-red-50 text-red-600 text-[10px] font-bold px-2 py-0.5 uppercase tracking-tighter border border-red-100">{selectedInternship.role || "Internship"}</span>
-                                    <span className="text-[10px] text-zinc-400 font-bold">Added {new Date(selectedInternship.createdAt).toLocaleDateString()}</span>
+                                    <span className="bg-red-50 text-red-600 text-[10px] font-bold px-2 py-0.5 border border-red-100">{selectedInternship.role || "Internship"}</span>
+                                    <span className="text-[10px] text-zinc-400 font-bold">Added on {new Date(selectedInternship.createdAt).toLocaleDateString()}</span>
                                  </div>
                                  <h2 className="text-3xl font-bold tracking-tighter text-zinc-900 leading-tight mb-2">{selectedInternship.title}</h2>
-                                 <p className="text-lg font-bold text-red-600 uppercase tracking-tight">{selectedInternship.company}</p>
+                                 <p className="text-lg font-bold text-red-600">{selectedInternship.company}</p>
                               </div>
 
                               <div className="grid grid-cols-2 md:grid-cols-3 gap-6 mb-10 pb-10 border-b border-zinc-100">
                                  <div>
-                                    <p className="text-[10px] font-bold text-zinc-400 uppercase mb-1">Location</p>
+                                    <p className="text-[10px] font-bold text-zinc-400 mb-1">Location</p>
                                     <p className="text-sm font-bold text-zinc-900">{selectedInternship.location || "Remote"}</p>
                                  </div>
                                  <div>
-                                    <p className="text-[10px] font-bold text-zinc-400 uppercase mb-1">Duration</p>
+                                    <p className="text-[10px] font-bold text-zinc-400 mb-1">Duration</p>
                                     <p className="text-sm font-bold text-zinc-900">{selectedInternship.duration || "3 Months"}</p>
                                  </div>
                                  <div>
-                                    <p className="text-[10px] font-bold text-zinc-400 uppercase mb-1">Stipend</p>
-                                    <p className="text-sm font-bold text-zinc-900">{selectedInternship.stipend || "Performance Based"}</p>
+                                    <p className="text-[10px] font-bold text-zinc-400 mb-1">Stipend</p>
+                                    <p className="text-sm font-bold text-emerald-600">{selectedInternship.stipend || "Unpaid"}</p>
                                  </div>
                               </div>
 
-                              <div className="space-y-4 mb-10">
-                                 <h4 className="text-[11px] font-bold text-zinc-900 uppercase tracking-widest">About the role</h4>
-                                 <p className="text-sm text-zinc-600 leading-relaxed whitespace-pre-wrap">{selectedInternship.description}</p>
-                              </div>
+                              <div className="space-y-6">
+                                 <div>
+                                    <h3 className="text-sm font-bold text-zinc-900 mb-3">Job description</h3>
+                                    <div className="text-xs text-zinc-600 leading-relaxed space-y-4 whitespace-pre-wrap">
+                                       {selectedInternship.description}
+                                    </div>
+                                 </div>
 
-                              <div className="flex flex-col md:flex-row gap-3">
-                                 <button 
-                                    onClick={() => { handleApply(selectedInternship.id); setSelectedInternship(null); }}
-                                    disabled={myApplications.some(app => app.internshipId === selectedInternship.id) || isApplying === selectedInternship.id}
-                                    className="flex-1 h-14 bg-zinc-900 text-white text-[12px] font-bold uppercase tracking-widest hover:bg-black transition-all rounded-none disabled:opacity-50"
-                                 >
-                                    {myApplications.some(app => app.internshipId === selectedInternship.id) ? "Already Applied" : "Apply with Forge Resume"}
-                                 </button>
-                                 {selectedInternship.applyLink && (
-                                    <a 
-                                       href={selectedInternship.applyLink} 
-                                       target="_blank"
-                                       className="h-14 px-8 border border-zinc-200 text-zinc-900 flex items-center justify-center font-bold text-[12px] uppercase tracking-widest hover:bg-zinc-50 transition-all rounded-none"
+                                 <div className="pt-6 flex flex-col md:flex-row gap-3">
+                                    <button 
+                                       onClick={() => { handleApply(selectedInternship.id); setSelectedInternship(null); }}
+                                       disabled={isApplying === selectedInternship.id || myApplications.some(a => a.internshipId === selectedInternship.id)}
+                                       className="flex-1 h-14 bg-zinc-900 text-white font-bold text-xs uppercase tracking-widest hover:bg-black transition-all rounded-none disabled:opacity-50"
                                     >
                                        External Link <ArrowUpRight size={18} className="ml-2" />
                                     </a>
