@@ -1760,6 +1760,10 @@ export default function CleedDashboard() {
                                  </div>
                               </div>
                               <div className="space-y-1">
+                                 <label className="text-[11px] font-bold text-zinc-400">Poster Image URL (Optional)</label>
+                                 <input value={internshipData.image || ''} onChange={(e) => setInternshipData({ ...internshipData, image: e.target.value })} className="w-full h-10 bg-white border border-zinc-200 px-4 text-sm font-bold outline-none focus:border-red-600 rounded-none" placeholder="https://..." />
+                              </div>
+                              <div className="space-y-1">
                                  <label className="text-[11px] font-bold text-zinc-400">Application Link</label>
                                  <input required value={internshipData.applyLink} onChange={(e) => setInternshipData({ ...internshipData, applyLink: e.target.value })} className="w-full h-10 bg-white border border-zinc-200 px-4 text-sm font-bold outline-none focus:border-red-600 rounded-none" placeholder="https://..." />
                               </div>
@@ -1780,8 +1784,14 @@ export default function CleedDashboard() {
                                              <h4 className="text-[14px] font-bold leading-tight truncate">{job.title}</h4>
                                              {!job.isApproved && <span className="bg-amber-100 text-amber-700 text-[9px] font-bold px-1.5 py-0.5 border border-amber-200">Pending</span>}
                                           </div>
-                                          <p className="text-[11px] font-bold text-red-600">{job.company}</p>
-                                       </div>
+                                           <p className="text-[11px] font-bold text-red-600">{job.company}</p>
+                                           <p className="text-[9px] text-zinc-400 font-bold">Added {new Date(job.createdAt).toLocaleDateString()} ({(() => {
+                                              const diff = Date.now() - new Date(job.createdAt).getTime();
+                                              const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                                              if (days === 0) return "Today";
+                                              return `${days}d ago`;
+                                           })()})</p>
+                                        </div>
                                        <div className="flex items-center gap-1.5">
                                           {!job.isApproved ? (
                                              <button

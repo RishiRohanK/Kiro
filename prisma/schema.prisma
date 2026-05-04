@@ -402,6 +402,7 @@ model Internship {
   location    String?
   duration    String?
   stipend     String?
+  image       String?
   applyLink   String
   isApproved  Boolean @default(false)
 

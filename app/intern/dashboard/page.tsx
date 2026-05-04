@@ -138,6 +138,7 @@ function InternDashboardContent() {
    const [onlineUsers, setOnlineUsers] = useState<string[]>([]);
    const [activeTeamId, setActiveTeamId] = useState<string | null>(null);
    const [selectedUser, setSelectedUser] = useState<any>(null);
+   const [selectedInternship, setSelectedInternship] = useState<any>(null);
    const [allInterns, setAllInterns] = useState<any[]>([]);
    const [reports, setReports] = useState<any[]>([]);
    const [examSessions, setExamSessions] = useState<any[]>([]);
@@ -1559,115 +1560,89 @@ function InternDashboardContent() {
             </motion.div>
          )}
          {activeTab === "internships" && (
-            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-8 text-left">
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-12 text-left pb-20">
                <header className="pb-4 border-b border-zinc-100">
                   <h1 className="text-xl font-bold text-zinc-900 flex items-center gap-2">
-                     <Briefcase className="text-[#003366]" size={20} /> Open Internships
+                     <Briefcase className="text-[#F5332C]" size={20} /> Internships
                   </h1>
-                  <p className="text-zinc-500 text-sm mt-1">Explore opportunities and build your career with premium roles.</p>
+                  <p className="text-zinc-500 text-sm mt-1">New roles added recently.</p>
                </header>
 
-               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                  <div className="space-y-4">
-                     <h3 className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest">Available Roles</h3>
-                     {internships.length > 0 ? (
-                        internships.map((job) => {
-                           const hasApplied = myApplications.some(app => app.internshipId === job.id);
-                           return (
-                              <div key={job.id} className="bg-white border border-zinc-200 p-6 rounded-2xl hover:shadow-xl transition-all group relative overflow-hidden">
-                                 <div className="absolute top-0 right-0 p-4">
-                                    {hasApplied ? (
-                                       <span className="bg-emerald-50 text-emerald-600 text-[10px] font-bold px-3 py-1 rounded-full border border-emerald-100 flex items-center gap-1">
-                                          <CheckCircle2 size={12} /> Applied
-                                       </span>
-                                    ) : (
-                                       <span className="bg-blue-50 text-blue-600 text-[10px] font-bold px-3 py-1 rounded-full border border-blue-100">
-                                          New Role
-                                       </span>
-                                    )}
-                                 </div>
-                                 
-                                 <div className="flex flex-col h-full">
-                                    <div className="space-y-1 mb-4">
-                                       <h4 className="text-lg font-bold text-zinc-900 group-hover:text-[#003366] transition-colors">{job.title}</h4>
-                                       <p className="text-[13px] font-semibold text-zinc-500 uppercase tracking-wide">{job.company}</p>
-                                    </div>
-                                    
-                                    <div className="grid grid-cols-2 gap-4 mb-6">
-                                       <div className="flex items-center gap-2 text-zinc-400">
-                                          <MapPin size={14} className="text-zinc-300" />
-                                          <span className="text-xs font-medium">{job.location || "Remote"}</span>
-                                       </div>
-                                       <div className="flex items-center gap-2 text-zinc-400">
-                                          <Clock size={14} className="text-zinc-300" />
-                                          <span className="text-xs font-medium">{job.duration || "3 Months"}</span>
-                                       </div>
-                                       <div className="flex items-center gap-2 text-zinc-400">
-                                          <Trophy size={14} className="text-zinc-300" />
-                                          <span className="text-xs font-medium">{job.stipend || "Performance Based"}</span>
-                                       </div>
-                                       <div className="flex items-center gap-2 text-zinc-400">
-                                          <Target size={14} className="text-zinc-300" />
-                                          <span className="text-xs font-medium">{job.role || "Internship"}</span>
-                                       </div>
-                                    </div>
+               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {internships.length > 0 ? (
+                     internships.map((job) => {
+                        const timeSince = (() => {
+                           const diff = Date.now() - new Date(job.createdAt).getTime();
+                           const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                           if (days === 0) return "Today";
+                           return `${days}d ago`;
+                        })();
 
-                                    <p className="text-[12px] text-zinc-500 leading-relaxed mb-6 line-clamp-3">
-                                       {job.description}
-                                    </p>
-
-                                    <div className="mt-auto pt-4 border-t border-zinc-50 flex items-center justify-between gap-3">
-                                       <button 
-                                          onClick={() => handleApply(job.id)}
-                                          disabled={hasApplied || isApplying === job.id}
-                                          className={`flex-1 h-11 rounded-xl text-[12px] font-bold uppercase tracking-widest transition-all ${
-                                             hasApplied 
-                                             ? "bg-zinc-100 text-zinc-400 cursor-not-allowed" 
-                                             : "bg-black text-white hover:bg-[#003366] shadow-lg shadow-black/5"
-                                          }`}
-                                       >
-                                          {isApplying === job.id ? "Applying..." : hasApplied ? "Application Sent" : "Apply with Forge Resume"}
-                                       </button>
-                                       {job.applyLink && !hasApplied && (
-                                          <a 
-                                             href={job.applyLink} 
-                                             target="_blank" 
-                                             className="px-4 h-11 border border-zinc-200 text-zinc-400 rounded-xl flex items-center justify-center hover:bg-zinc-50 transition-all"
-                                          >
-                                             <ArrowUpRight size={18} />
-                                          </a>
-                                       )}
+                        return (
+                           <div key={job.id} className="bg-white border border-zinc-200 overflow-hidden group hover:border-zinc-400 transition-all flex flex-col rounded-none">
+                              <div className="h-48 bg-zinc-100 relative overflow-hidden">
+                                 {job.image ? (
+                                    <img src={job.image} alt={job.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                                 ) : (
+                                    <div className="w-full h-full flex items-center justify-center text-zinc-300">
+                                       <Briefcase size={40} />
                                     </div>
+                                 )}
+                                 <div className="absolute top-3 right-3">
+                                    <span className="bg-black/60 backdrop-blur-md text-white text-[9px] font-bold px-2 py-1 uppercase tracking-tighter">
+                                       Added {timeSince}
+                                    </span>
                                  </div>
                               </div>
-                           );
-                        })
-                     ) : (
-                        <div className="py-20 flex flex-col items-center justify-center text-center bg-zinc-50 border-2 border-dashed border-zinc-200 rounded-2xl">
-                           <Briefcase size={40} className="text-zinc-200 mb-4" />
-                           <h4 className="text-sm font-bold text-zinc-900">No active roles right now</h4>
-                           <p className="text-xs text-zinc-500 max-w-xs mt-1">Check back later or explore the roadmap for upcoming missions.</p>
-                        </div>
-                     )}
-                  </div>
 
-                  <div className="space-y-4">
-                     <h3 className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest">My Applications</h3>
-                     <div className="bg-white border border-zinc-200 rounded-2xl overflow-hidden">
+                              <div className="p-5 flex-1 flex flex-col">
+                                 <div className="mb-4">
+                                    <h4 className="text-[15px] font-bold text-zinc-900 truncate leading-none mb-1.5">{job.title}</h4>
+                                    <p className="text-[11px] font-bold text-red-600 uppercase tracking-tight">{job.company}</p>
+                                 </div>
+                                 
+                                 <div className="flex items-center gap-4 text-[10px] font-bold text-zinc-400 mb-6">
+                                    <span className="flex items-center gap-1"><MapPin size={12} /> {job.location || "Remote"}</span>
+                                    <span className="flex items-center gap-1"><Clock size={12} /> {job.duration || "3M"}</span>
+                                 </div>
+
+                                 <button 
+                                    onClick={() => setSelectedInternship(job)}
+                                    className="w-full h-10 border border-zinc-900 text-zinc-900 text-[10px] font-bold uppercase tracking-widest hover:bg-zinc-900 hover:text-white transition-all rounded-none"
+                                 >
+                                    View Details
+                                 </button>
+                              </div>
+                           </div>
+                        );
+                     })
+                  ) : (
+                     <div className="col-span-full py-20 flex flex-col items-center justify-center text-center bg-zinc-50 border border-dashed border-zinc-200">
+                        <Briefcase size={40} className="text-zinc-200 mb-4" />
+                        <h4 className="text-sm font-bold text-zinc-900">No jobs yet</h4>
+                        <p className="text-xs text-zinc-500 mt-1">Check back later.</p>
+                     </div>
+                  )}
+               </div>
+
+               <div className="space-y-6 pt-12 border-t border-zinc-100">
+                  <h3 className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest">My Applications</h3>
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+                     <div className="bg-white border border-zinc-200 rounded-none overflow-hidden">
                         {myApplications.length > 0 ? (
                            <div className="divide-y divide-zinc-100">
                               {myApplications.map((app) => (
                                  <div key={app.id} className="p-4 flex items-center justify-between hover:bg-zinc-50 transition-colors">
                                     <div className="flex items-center gap-4">
-                                       <div className="h-10 w-10 bg-zinc-100 rounded-lg flex items-center justify-center text-[#003366]">
+                                       <div className="h-10 w-10 bg-zinc-50 text-emerald-600 flex items-center justify-center">
                                           <CheckCircle2 size={18} />
                                        </div>
                                        <div>
-                                          <p className="text-sm font-bold text-zinc-900">{app.internship?.title || "Role Title"}</p>
-                                          <p className="text-[10px] text-zinc-400 font-medium uppercase tracking-wider">{app.internship?.company || "Company"} • {new Date(app.createdAt).toLocaleDateString()}</p>
+                                          <p className="text-sm font-bold text-zinc-900">{app.internship?.title || "Role"}</p>
+                                          <p className="text-[10px] text-zinc-400 font-bold uppercase tracking-wider">{app.internship?.company || "Company"}</p>
                                        </div>
                                     </div>
-                                    <span className={`text-[9px] font-black px-2 py-1 rounded uppercase tracking-widest ${
+                                    <span className={`text-[9px] font-black px-2 py-1 rounded-none uppercase tracking-widest ${
                                        app.status === "PENDING" ? "bg-amber-50 text-amber-600" :
                                        app.status === "REVIEWED" ? "bg-blue-50 text-blue-600" :
                                        app.status === "ACCEPTED" ? "bg-emerald-50 text-emerald-600" :
@@ -1680,28 +1655,97 @@ function InternDashboardContent() {
                            </div>
                         ) : (
                            <div className="p-12 text-center">
-                              <p className="text-xs text-zinc-400 font-medium italic">No applications submitted yet.</p>
+                              <p className="text-xs text-zinc-400 font-medium italic">No applications yet.</p>
                            </div>
                         )}
                      </div>
 
-                     <div className="bg-[#003366] p-6 rounded-2xl text-white space-y-4 relative overflow-hidden">
-                        <Sparkles className="absolute top-0 right-0 text-white/10 -m-4" size={100} />
+                     <div className="bg-[#F5332C] p-8 rounded-none text-white space-y-4 relative overflow-hidden">
+                        <Sparkles className="absolute top-0 right-0 text-white/10 -m-4" size={120} />
                         <div className="relative z-10">
-                           <h4 className="text-sm font-bold">Forge Career Guide</h4>
-                           <p className="text-xs text-white/70 leading-relaxed mt-2">
-                              Your Forge Resume is automatically updated with your latest achievements and project scores. Keep building to increase your selection chances!
+                           <h4 className="text-[14px] font-bold">Forge Career Center</h4>
+                           <p className="text-xs text-white/80 leading-relaxed mt-2">
+                              Your Forge Resume is updated automatically. Keep working on your projects to increase your chances of selection.
                            </p>
-                           <Link 
-                              href="/intern/dashboard/resume"
-                              className="inline-flex items-center gap-2 text-xs font-bold mt-4 hover:underline"
-                           >
+                           <Link href="/intern/dashboard/resume" className="inline-flex items-center gap-2 text-xs font-bold mt-6 hover:underline uppercase tracking-widest">
                               Refine Resume <ArrowRight size={14} />
                            </Link>
                         </div>
                      </div>
                   </div>
                </div>
+
+               {/* Internship Detail Modal */}
+               <AnimatePresence>
+                  {selectedInternship && (
+                     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-10">
+                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setSelectedInternship(null)} className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+                        <motion.div initial={{ opacity: 0, scale: 0.9, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.9, y: 20 }} className="relative w-full max-w-2xl bg-white shadow-2xl overflow-hidden flex flex-col rounded-none max-h-[90vh]">
+                           <div className="h-48 md:h-64 bg-zinc-100 relative shrink-0">
+                              {selectedInternship.image ? (
+                                 <img src={selectedInternship.image} alt={selectedInternship.title} className="w-full h-full object-cover" />
+                              ) : (
+                                 <div className="w-full h-full flex items-center justify-center text-zinc-200">
+                                    <Briefcase size={60} />
+                                 </div>
+                              )}
+                              <button onClick={() => setSelectedInternship(null)} className="absolute top-4 right-4 h-10 w-10 bg-white text-black hover:bg-zinc-100 transition-all flex items-center justify-center">
+                                 <X size={20} />
+                              </button>
+                           </div>
+                           <div className="p-8 md:p-10 overflow-y-auto custom-scrollbar">
+                              <div className="mb-8">
+                                 <div className="flex items-center gap-3 mb-2">
+                                    <span className="bg-red-50 text-red-600 text-[10px] font-bold px-2 py-0.5 uppercase tracking-tighter border border-red-100">{selectedInternship.role || "Internship"}</span>
+                                    <span className="text-[10px] text-zinc-400 font-bold">Added {new Date(selectedInternship.createdAt).toLocaleDateString()}</span>
+                                 </div>
+                                 <h2 className="text-3xl font-bold tracking-tighter text-zinc-900 leading-tight mb-2">{selectedInternship.title}</h2>
+                                 <p className="text-lg font-bold text-red-600 uppercase tracking-tight">{selectedInternship.company}</p>
+                              </div>
+
+                              <div className="grid grid-cols-2 md:grid-cols-3 gap-6 mb-10 pb-10 border-b border-zinc-100">
+                                 <div>
+                                    <p className="text-[10px] font-bold text-zinc-400 uppercase mb-1">Location</p>
+                                    <p className="text-sm font-bold text-zinc-900">{selectedInternship.location || "Remote"}</p>
+                                 </div>
+                                 <div>
+                                    <p className="text-[10px] font-bold text-zinc-400 uppercase mb-1">Duration</p>
+                                    <p className="text-sm font-bold text-zinc-900">{selectedInternship.duration || "3 Months"}</p>
+                                 </div>
+                                 <div>
+                                    <p className="text-[10px] font-bold text-zinc-400 uppercase mb-1">Stipend</p>
+                                    <p className="text-sm font-bold text-zinc-900">{selectedInternship.stipend || "Performance Based"}</p>
+                                 </div>
+                              </div>
+
+                              <div className="space-y-4 mb-10">
+                                 <h4 className="text-[11px] font-bold text-zinc-900 uppercase tracking-widest">About the role</h4>
+                                 <p className="text-sm text-zinc-600 leading-relaxed whitespace-pre-wrap">{selectedInternship.description}</p>
+                              </div>
+
+                              <div className="flex flex-col md:flex-row gap-3">
+                                 <button 
+                                    onClick={() => { handleApply(selectedInternship.id); setSelectedInternship(null); }}
+                                    disabled={myApplications.some(app => app.internshipId === selectedInternship.id) || isApplying === selectedInternship.id}
+                                    className="flex-1 h-14 bg-zinc-900 text-white text-[12px] font-bold uppercase tracking-widest hover:bg-black transition-all rounded-none disabled:opacity-50"
+                                 >
+                                    {myApplications.some(app => app.internshipId === selectedInternship.id) ? "Already Applied" : "Apply with Forge Resume"}
+                                 </button>
+                                 {selectedInternship.applyLink && (
+                                    <a 
+                                       href={selectedInternship.applyLink} 
+                                       target="_blank"
+                                       className="h-14 px-8 border border-zinc-200 text-zinc-900 flex items-center justify-center font-bold text-[12px] uppercase tracking-widest hover:bg-zinc-50 transition-all rounded-none"
+                                    >
+                                       External Link <ArrowUpRight size={18} className="ml-2" />
+                                    </a>
+                                 )}
+                              </div>
+                           </div>
+                        </motion.div>
+                     </div>
+                  )}
+               </AnimatePresence>
             </motion.div>
          )}
 
