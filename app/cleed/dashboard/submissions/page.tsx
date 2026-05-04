@@ -16,9 +16,9 @@ import {
 import Link from "next/link";
 
 export default function SubmissionsVault() {
-  const [data, setData] = useState<{ feedback: any[], uiux: any[], weekly: any[], publicTasks: any[] }>({ feedback: [], uiux: [], weekly: [], publicTasks: [] });
+  const [data, setData] = useState<{ feedback: any[], uiux: any[], weekly: any[], publicTasks: any[], week2: any[] }>({ feedback: [], uiux: [], weekly: [], publicTasks: [], week2: [] });
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<"feedback" | "uiux" | "weekly" | "publicTasks">("feedback");
+  const [activeTab, setActiveTab] = useState<"feedback" | "uiux" | "weekly" | "publicTasks" | "week2">("feedback");
   const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
@@ -56,6 +56,11 @@ export default function SubmissionsVault() {
     s.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
     s.taskAllocated.toLowerCase().includes(searchQuery.toLowerCase()) ||
     s.email.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const filteredWeek2 = (data.week2 || []).filter(s => 
+    s.teamNumber.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    s.teamMembers.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
@@ -109,6 +114,12 @@ export default function SubmissionsVault() {
             className={`px-6 py-3 text-xs font-bold transition-all border-b-2 whitespace-nowrap ${activeTab === "publicTasks" ? "border-[#F5332C] text-[#F5332C]" : "border-transparent text-zinc-400 hover:text-zinc-600"}`}
           >
             Public tasks ({data.publicTasks.length})
+          </button>
+          <button 
+            onClick={() => setActiveTab("week2")}
+            className={`px-6 py-3 text-xs font-bold transition-all border-b-2 whitespace-nowrap ${activeTab === "week2" ? "border-[#F5332C] text-[#F5332C]" : "border-transparent text-zinc-400 hover:text-zinc-600"}`}
+          >
+            Week 2 ({data.week2?.length || 0})
           </button>
         </div>
 
@@ -287,7 +298,65 @@ export default function SubmissionsVault() {
                 </table>
               </div>
             </motion.div>
-          ) : (
+          ) : activeTab === "week2" ? (
+            <motion.div 
+              key="week2" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              className="bg-white border border-zinc-200 rounded-none shadow-sm overflow-hidden"
+            >
+              <div className="overflow-x-auto">
+                <table className="w-full text-left border-collapse min-w-[800px]">
+                  <thead>
+                    <tr className="bg-zinc-50 border-b border-zinc-100">
+                      <th className="px-6 py-4 text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Team</th>
+                      <th className="px-6 py-4 text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Members</th>
+                      <th className="px-6 py-4 text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Links</th>
+                      <th className="px-6 py-4 text-[10px] font-bold text-zinc-400 uppercase tracking-widest text-right">Submitted</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-zinc-50">
+                    {filteredWeek2.length > 0 ? filteredWeek2.map((s) => (
+                      <tr key={s.id} className="hover:bg-red-50/20 transition-colors">
+                        <td className="px-6 py-4">
+                           <div className="flex items-center gap-2">
+                              <div className="h-7 w-7 bg-blue-600 text-white rounded-none flex items-center justify-center text-[10px] font-bold">
+                                {s.teamNumber?.match(/\d+/)?.[0] || "T"}
+                              </div>
+                              <p className="text-xs font-bold text-zinc-900">{s.teamNumber}</p>
+                           </div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <p className="text-xs font-medium text-zinc-600 max-w-[200px] truncate" title={s.teamMembers}>{s.teamMembers}</p>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="flex items-center gap-3">
+                            <a 
+                              href={s.liveLink} target="_blank" rel="noopener noreferrer"
+                              className="text-[10px] font-bold text-[#F5332C] hover:underline flex items-center gap-1"
+                            >
+                              Live view <ExternalLink size={10} />
+                            </a>
+                            <a 
+                              href={s.githubLink} target="_blank" rel="noopener noreferrer"
+                              className="text-[10px] font-bold text-zinc-400 hover:text-zinc-800 flex items-center gap-1"
+                            >
+                              Source <Github size={10} />
+                            </a>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 text-right">
+                          <span className="text-[10px] font-bold text-zinc-300">{new Date(s.createdAt).toLocaleDateString()}</span>
+                        </td>
+                      </tr>
+                    )) : (
+                      <tr>
+                        <td colSpan={4} className="py-20 text-center text-zinc-400 text-xs font-medium">No Week 2 submissions found.</td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </motion.div>
+          ) : activeTab === "uiux" ? (
             <motion.div 
               key="uiux" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
               className="bg-white border border-zinc-200 rounded-none shadow-sm overflow-hidden"
@@ -326,11 +395,11 @@ export default function SubmissionsVault() {
                             </a>
                             {s.githubLink && (
                                <a 
-                                href={s.githubLink} target="_blank" rel="noopener noreferrer"
-                                className="text-[10px] font-bold text-zinc-400 hover:text-zinc-800 flex items-center gap-1"
-                              >
-                                Source <Github size={10} />
-                              </a>
+                                 href={s.githubLink} target="_blank" rel="noopener noreferrer"
+                                 className="text-[10px] font-bold text-zinc-400 hover:text-zinc-800 flex items-center gap-1"
+                               >
+                                 Source <Github size={10} />
+                               </a>
                             )}
                           </div>
                         </td>
@@ -347,7 +416,11 @@ export default function SubmissionsVault() {
                 </table>
               </div>
             </motion.div>
-          )}
+          ) : (
+            <div className="py-20 text-center">
+              <p className="text-zinc-400 text-xs font-medium">Select a tab to view records.</p>
+            </div>
+          )
         </AnimatePresence>
 
       </div>

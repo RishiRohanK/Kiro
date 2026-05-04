@@ -3,7 +3,7 @@ import prisma from "@/lib/prisma";
 
 export async function GET() {
   try {
-    const [feedback, uiux, weekly, publicTasks] = await Promise.all([
+    const [feedback, uiux, weekly, publicTasks, week2] = await Promise.all([
       prisma.feedback.findMany({ 
         orderBy: { createdAt: "desc" } 
       }),
@@ -23,6 +23,9 @@ export async function GET() {
       }),
       prisma.taskSubmission.findMany({
         orderBy: { createdAt: "desc" }
+      }),
+      prisma.week2Submission.findMany({
+        orderBy: { createdAt: "desc" }
       })
     ]);
 
@@ -32,6 +35,7 @@ export async function GET() {
       uiux, 
       weekly, 
       publicTasks,
+      week2,
       submissions: weekly // Alias for the internal dashboard's Audit tab
     });
   } catch (error: any) {
