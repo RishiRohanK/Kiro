@@ -279,6 +279,7 @@ export default function CleedDashboard() {
    });
    const [sendingEmployee, setSendingEmployee] = useState(false);
    const [employeeSuccess, setEmployeeSuccess] = useState(false);
+   const [editingEmployeeId, setEditingEmployeeId] = useState<string | null>(null);
    const [editEmployeeData, setEditEmployeeData] = useState<any>({});
 
    const [offerData, setOfferData] = useState({ name: "", email: "", link: "", message: "" });

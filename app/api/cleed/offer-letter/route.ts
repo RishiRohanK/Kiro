@@ -1,6 +1,6 @@
 import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
-import { sendOfferLetterEmail } from "@/lib/mail";
+import { sendOfferLetterEmail, sendCustomOfferLetterEmail } from "@/lib/mail";
 
 export async function POST(req: Request) {
   try {

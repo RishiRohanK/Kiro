@@ -112,15 +112,22 @@ export const sendOfferLetterEmail = async (email: string, name: string) => {
 };
 
 export const sendCustomOfferLetterEmail = async (email: string, name: string, offerLetterUrl: string, customMessage: string) => {
-    const title = "Internship Offer Letter Issued";
-    const content = `Hello ${name},<br/><br/>${customMessage}<br/><br/>You can access your official internship offer letter by clicking the button below. Welcome to the Student Forge community.`;
-    const html = getSimpleTemplate(title, content, "View Offer Letter", offerLetterUrl, "Student Forge Team");
+    const title = "Welcome to Student Forge | Official Internship Offer";
+    const content = `
+        Dear ${name},<br/><br/>
+        Congratulations! On behalf of the <b>Student Forge HR Team</b>, we are pleased to offer you an internship position with our organization. We were impressed with your profile and believe your skills will be a valuable asset to our upcoming technical initiatives.<br/><br/>
+        <b>Offer Details:</b><br/>
+        ${customMessage}<br/><br/>
+        Attached to this email (via the button below) is your official Internship Offer Letter. Please review the terms and conditions carefully. We are excited to have you join our high-performance community and contribute to industrial-standard projects.<br/><br/>
+        Welcome aboard! We look forward to seeing you in the Student Forge ecosystem.
+    `;
+    const html = getSimpleTemplate(title, content, "Access Offer Letter", offerLetterUrl, "Student Forge HR Team");
 
     try {
         await transporter.sendMail({
-            from: '"Student Forge" <studentforgetechnologies@gmail.com>',
+            from: '"Student Forge HR" <studentforgetechnologies@gmail.com>',
             to: email,
-            subject: `Internship Offer: ${name}`,
+            subject: `Internship Offer: ${name} | Student Forge`,
             html: html,
         });
         return true;
