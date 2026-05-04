@@ -20,24 +20,34 @@ const getSimpleTemplate = (title: string, content: string, ctaText: string, ctaU
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #1a1a1a; margin: 0; padding: 0; background-color: #f8f9fa; }
-        .wrapper { padding: 40px 20px; }
-        .container { max-width: 600px; margin: 0 auto; background: #ffffff; border: 1px solid #eeeeee; padding: 0px; border-radius: 0px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
-        .header { background-color: #FACC15; padding: 25px 40px; text-align: left; }
-        .content { padding: 45px 40px; }
-        h1 { font-size: 22px; font-weight: 800; margin: 0 0 16px; color: #000; letter-spacing: -0.02em; line-height: 1.2; }
-        p { font-size: 15px; margin: 0 0 24px; color: #444; line-height: 1.7; }
-        .button-wrapper { text-align: left; margin-bottom: 24px; }
-        .button { display: inline-block; background: #000; color: #fff !important; padding: 14px 32px; text-decoration: none; font-size: 14px; font-weight: 700; border-radius: 0px; letter-spacing: 0.02em; }
-        .footer { background-color: #FACC15; padding: 30px 40px; font-size: 11px; color: #000; text-align: left; }
-        .team { font-weight: 800; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.05em; font-size: 12px; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; line-height: 1.5; color: #1a1a1a; margin: 0; padding: 0; background-color: #f8f9fa; }
+        .wrapper { padding: 20px 10px; }
+        .container { width: 100% !important; max-width: 600px; margin: 0 auto; background: #ffffff; border: 1px solid #eeeeee; padding: 0px; border-radius: 0px; overflow: hidden; }
+        .header { background-color: #FACC15; padding: 20px 30px; text-align: left; }
+        .content { padding: 35px 30px; }
+        h1 { font-size: 19px; font-weight: 800; margin: 0 0 12px; color: #000; letter-spacing: -0.02em; line-height: 1.2; }
+        p { font-size: 13px; margin: 0 0 20px; color: #333; line-height: 1.6; }
+        .button-wrapper { text-align: left; margin-bottom: 20px; }
+        .button { display: inline-block; background: #000; color: #fff !important; padding: 12px 28px; text-decoration: none; font-size: 12.5px; font-weight: 700; border-radius: 0px; letter-spacing: 0.02em; }
+        .footer { background-color: #FACC15; padding: 25px 30px; font-size: 10px; color: #000000; text-align: left; border-top: 1px solid rgba(0,0,0,0.05); }
+        .team { font-weight: 800; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.05em; font-size: 11px; color: #000; }
+        .footer-text { color: #000000; opacity: 0.8; font-weight: 500; }
+        
+        @media only screen and (max-width: 480px) {
+            .wrapper { padding: 10px 0; }
+            .header { padding: 15px 20px; }
+            .content { padding: 25px 20px; }
+            .footer { padding: 20px 20px; }
+            h1 { font-size: 17px; }
+            p { font-size: 12.5px; }
+        }
     </style>
 </head>
 <body>
     <div class="wrapper">
         <div class="container">
             <div class="header">
-                <img src="https://ik.imagekit.io/dypkhqxip/sflogo?updatedAt=1774952380858" alt="Student Forge" height="42" />
+                <img src="https://ik.imagekit.io/dypkhqxip/sflogo?updatedAt=1774952380858" alt="Student Forge" height="36" />
             </div>
             <div class="content">
                 <h1>${title}</h1>
@@ -48,8 +58,8 @@ const getSimpleTemplate = (title: string, content: string, ctaText: string, ctaU
             </div>
             <div class="footer">
                 <div class="team">${team}</div>
-                <div style="font-weight: 600; opacity: 0.9;">Student Forge Technologies Pvt. Ltd.</div>
-                <div style="margin-top: 12px; opacity: 0.6; font-weight: 500;">&copy; 2026 Student Forge. All rights reserved.</div>
+                <div class="footer-text">Student Forge Technologies Pvt. Ltd.</div>
+                <div style="margin-top: 10px; opacity: 0.5; font-weight: 500; font-size: 9px;">&copy; 2026 Student Forge. All rights reserved.</div>
             </div>
         </div>
     </div>
