@@ -514,6 +514,16 @@ model TaskSubmission {
   createdAt     DateTime @default(now())
 }
 
+model Week2Submission {
+  id          String   @id @default(cuid())
+  userId      String
+  teamNumber  String
+  teamMembers String
+  githubLink  String
+  liveLink    String
+  createdAt   DateTime @default(now())
+}
+
 model ScheduledExam {
   id          String   @id @default(cuid())
   title       String

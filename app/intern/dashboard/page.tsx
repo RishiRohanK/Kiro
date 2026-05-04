@@ -118,7 +118,16 @@ function InternDashboardContent() {
    const [userStatus, setUserStatus] = useState<any>(null);
    const [showLetterModal, setShowLetterModal] = useState(false);
    const [showOfferLetterModal, setShowOfferLetterModal] = useState(false);
-   const [showSupportModal, setShowSupportModal] = useState(false);   const [personalTasks, setPersonalTasks] = useState<PersonalTask[]>([]);
+   const [showSupportModal, setShowSupportModal] = useState(false);
+   const [showWeek2Modal, setShowWeek2Modal] = useState(false);
+   const [week2FormData, setWeek2FormData] = useState({
+      teamNumber: "",
+      teamMembers: "",
+      githubLink: "",
+      liveLink: ""
+   });
+   const [isSubmittingWeek2, setIsSubmittingWeek2] = useState(false);
+   const [personalTasks, setPersonalTasks] = useState<PersonalTask[]>([]);
    const [isAddingPersonalTask, setIsAddingPersonalTask] = useState(false);
    const [newPersonalTask, setNewPersonalTask] = useState({ title: "", description: "" });
    const [isSavingPersonalTask, setIsSavingPersonalTask] = useState(false);
@@ -685,6 +694,34 @@ function InternDashboardContent() {
    const attendancePercentage = attendanceData.totalTrackingDays > 0 ? Math.min(100, Math.round((attendanceCount / attendanceData.totalTrackingDays) * 100)) : 0;
    const isLowAttendance = attendancePercentage < 75;
 
+   const handleWeek2Submit = async (e: React.FormEvent) => {
+      e.preventDefault();
+      if (!user) return;
+      setIsSubmittingWeek2(true);
+      try {
+         const res = await fetch("/api/intern/week2-submission", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+               userId: user.id,
+               ...week2FormData
+            })
+         });
+         const data = await res.json();
+         if (data.success) {
+            alert("Week 2 submission successful!");
+            setShowWeek2Modal(false);
+         } else {
+            alert(data.error || "Failed to submit.");
+         }
+      } catch (err) {
+         console.error("Week 2 submission error:", err);
+         alert("Server error. Please try again.");
+      } finally {
+         setIsSubmittingWeek2(false);
+      }
+   };
+
    const handleApply = async (internshipId: string) => {
       if (!user) return;
       setIsApplying(internshipId);
@@ -745,6 +782,32 @@ function InternDashboardContent() {
                            Your attendance is currently <span className="font-bold">{attendancePercentage}%</span>. Make sure to follow correct attendance procedures, else your internship completion details will not be issued.
                         </p>
                      </div>
+                  </motion.div>
+               )}
+
+               {user.batch === "Batch 1" && (
+                  <motion.div 
+                     initial={{ opacity: 0, y: -10 }}
+                     animate={{ opacity: 1, y: 0 }}
+                     className="bg-blue-50 border border-blue-600/10 p-4 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-4"
+                  >
+                     <div className="flex items-center gap-4">
+                        <div className="h-10 w-10 bg-blue-600 text-white rounded-full flex items-center justify-center shrink-0">
+                           <Send size={18} />
+                        </div>
+                        <div>
+                           <h4 className="text-[14px] font-bold text-blue-900">Week 2 Submission is Live</h4>
+                           <p className="text-[12px] text-blue-700 font-medium leading-relaxed">
+                              Submit your team details and project links here. All fields are mandatory for evaluation.
+                           </p>
+                        </div>
+                     </div>
+                     <button 
+                        onClick={() => setShowWeek2Modal(true)}
+                        className="w-full sm:w-fit px-6 h-10 bg-blue-600 text-white text-[11px] font-bold rounded-lg hover:bg-black transition-all shadow-md shadow-blue-500/20"
+                     >
+                        Submit Now
+                     </button>
                   </motion.div>
                )}
                {/* Hero Bento Section */}
@@ -2175,6 +2238,93 @@ function InternDashboardContent() {
                               </div>
                            </>
                         )}
+                     </form>
+                  </motion.div>
+               </motion.div>
+            )}
+         </AnimatePresence>
+          <AnimatePresence>
+            {showWeek2Modal && (
+               <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="fixed inset-0 z-[9999] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4"
+               >
+                  <motion.div
+                     initial={{ scale: 0.95, y: 16 }}
+                     animate={{ scale: 1, y: 0 }}
+                     className="bg-white max-w-md w-full shadow-2xl rounded-2xl overflow-hidden border border-zinc-100"
+                  >
+                     <div className="p-6 border-b border-zinc-100 flex items-center justify-between bg-blue-50/50">
+                        <div>
+                           <h2 className="text-sm font-bold text-blue-900 uppercase tracking-widest">Submit Week 2 Details</h2>
+                           <p className="text-[10px] text-blue-400 font-bold uppercase mt-1">Batch 1 Exclusive</p>
+                        </div>
+                        <button onClick={() => setShowWeek2Modal(false)} className="text-zinc-300 hover:text-zinc-600 transition-colors">
+                           <X size={20} />
+                        </button>
+                     </div>
+                     <form onSubmit={handleWeek2Submit} className="p-8 space-y-4">
+                        <div className="space-y-1.5">
+                           <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Team Number</label>
+                           <input
+                              required
+                              type="text"
+                              placeholder="e.g., Team 05"
+                              className="w-full bg-zinc-50 border border-zinc-100 rounded-xl px-4 h-11 text-sm font-semibold outline-none focus:bg-white focus:border-blue-500 transition-all"
+                              value={week2FormData.teamNumber}
+                              onChange={e => setWeek2FormData({ ...week2FormData, teamNumber: e.target.value })}
+                           />
+                        </div>
+                        <div className="space-y-1.5">
+                           <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Team Member Names</label>
+                           <textarea
+                              required
+                              placeholder="Name 1, Name 2, Name 3..."
+                              className="w-full bg-zinc-50 border border-zinc-100 rounded-xl p-4 h-24 text-sm font-semibold outline-none focus:bg-white focus:border-blue-500 transition-all resize-none"
+                              value={week2FormData.teamMembers}
+                              onChange={e => setWeek2FormData({ ...week2FormData, teamMembers: e.target.value })}
+                           />
+                        </div>
+                        <div className="space-y-1.5">
+                           <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">GitHub Repository Link</label>
+                           <input
+                              required
+                              type="url"
+                              placeholder="https://github.com/..."
+                              className="w-full bg-zinc-50 border border-zinc-100 rounded-xl px-4 h-11 text-sm font-semibold outline-none focus:bg-white focus:border-blue-500 transition-all"
+                              value={week2FormData.githubLink}
+                              onChange={e => setWeek2FormData({ ...week2FormData, githubLink: e.target.value })}
+                           />
+                        </div>
+                        <div className="space-y-1.5">
+                           <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Live Preview Link</label>
+                           <input
+                              required
+                              type="url"
+                              placeholder="https://your-project.vercel.app"
+                              className="w-full bg-zinc-50 border border-zinc-100 rounded-xl px-4 h-11 text-sm font-semibold outline-none focus:bg-white focus:border-blue-500 transition-all"
+                              value={week2FormData.liveLink}
+                              onChange={e => setWeek2FormData({ ...week2FormData, liveLink: e.target.value })}
+                           />
+                        </div>
+                        <button
+                           type="submit"
+                           disabled={isSubmittingWeek2}
+                           className="w-full h-12 bg-blue-600 text-white rounded-xl text-[11px] font-bold uppercase tracking-[0.2em] hover:bg-black transition-all flex items-center justify-center gap-2 shadow-lg shadow-blue-500/20 active:scale-95 disabled:opacity-50"
+                        >
+                           {isSubmittingWeek2 ? (
+                              <>
+                                 <RefreshCw size={14} className="animate-spin" />
+                                 Submitting...
+                              </>
+                           ) : (
+                              <>
+                                 Confirm Submission <Send size={14} />
+                              </>
+                           )}
+                        </button>
                      </form>
                   </motion.div>
                </motion.div>
