@@ -101,6 +101,8 @@ model User {
   lockUntil            DateTime?
   hasSubmittedFeedback Boolean              @default(false)
   tasks                Task[]               @relation("UserTasks")
+  resumeData           Json?
+  internshipApplications InternshipApplication[]
   createdAt            DateTime             @default(now())
   updatedAt            DateTime             @updatedAt
   attendances          Attendance[]         @relation("UserAttendances")
@@ -409,6 +411,21 @@ model Internship {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  applications InternshipApplication[]
+}
+
+model InternshipApplication {
+  id           String     @id @default(cuid())
+  intern       User       @relation(fields: [internId], references: [id])
+  internId     String
+  internship   Internship @relation(fields: [internshipId], references: [id])
+  internshipId String
+  resumeData   Json?      // Snapshot of the resume at the time of application
+  status       String     @default("PENDING") // PENDING, REVIEWED, ACCEPTED, REJECTED
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  @@unique([internId, internshipId])
 }
 
 model Message {

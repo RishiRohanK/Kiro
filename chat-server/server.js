@@ -1,4 +1,5 @@
-require("dotenv").config({ path: "../.env" });
+require("dotenv").config(); // Render uses process.env directly
+require("dotenv").config({ path: "../.env" }); // Fallback for local dev if needed
 const express = require("express");
 const http = require("http");
 const { Server } = require("socket.io");

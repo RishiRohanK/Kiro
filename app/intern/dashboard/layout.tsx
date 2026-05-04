@@ -25,7 +25,9 @@ import {
     ChevronDown,
     School,
     Users,
-    Edit3
+    Edit3,
+    Target,
+    Sparkles
 } from "lucide-react";
 
 import { motion, AnimatePresence } from "framer-motion";
@@ -149,8 +151,10 @@ function InternDashboardLayoutContent({
 
     const navItems = [
         { name: "Overview", icon: LayoutDashboard, slug: "/intern/dashboard?view=overview", mobile: true },
+        { name: "Internships", icon: Briefcase, slug: "/intern/dashboard?view=internships", mobile: true },
         { name: "Roadmap", icon: Calendar, slug: "/intern/dashboard/schedule", mobile: true },
-        { name: "Tasks", icon: Briefcase, slug: "/intern/dashboard?view=tasks", mobile: false },
+        { name: "Tasks", icon: Target, slug: "/intern/dashboard?view=tasks", mobile: false },
+        { name: "Resume Builder", icon: FileText, slug: "/intern/dashboard/resume", mobile: true },
         { name: "Attendance", icon: FileBadge, slug: "/intern/dashboard?view=attendance", mobile: false },
         { name: "Group Chat", icon: MessageSquare, slug: "/intern/dashboard?view=chat", mobile: false },
         { name: "Profile", icon: User, slug: "/intern/dashboard/profile", mobile: false },
@@ -333,6 +337,13 @@ function InternDashboardLayoutContent({
                             <p className="text-[11px] text-[#003366]/60 font-medium mt-0.5 text-left">
                                 {user.batch || "Intern Scholar"}
                             </p>
+                            
+                            <Link 
+                                href="/intern/dashboard/resume"
+                                className="mt-4 inline-flex items-center px-3 py-1 bg-[#003366] text-white rounded-full hover:bg-[#002244] transition-all shadow-sm group/pill"
+                            >
+                                <span className="text-[10px] font-bold tracking-wider">Generate Resume</span>
+                            </Link>
                         </div>
 
                         <div className="flex flex-col py-1 px-2">
