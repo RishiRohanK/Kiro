@@ -198,6 +198,8 @@ export default function CleedDashboard() {
 
    const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
    const [attendanceStats, setAttendanceStats] = useState<any[]>([]);
+   const [currentAttendance, setCurrentAttendance] = useState<any[]>([]);
+   const [markingId, setMarkingId] = useState<string | null>(null);
 
    const [taskData, setTaskData] = useState({ title: "", description: "", attachmentUrl: "", batch: "Batch 2" });
    const [sendingTask, setSendingTask] = useState(false);
