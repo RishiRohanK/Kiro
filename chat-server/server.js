@@ -35,22 +35,47 @@ app.get("/", (req, res) => {
   res.status(200).send("Relay Node Operational");
 });
 
-io.on("connection", (socket) => {
-  console.log("Team-linked peer connected:", socket.id);
+const activeUsers = new Map(); // userId -> { socketId, teamId }
 
-  
-  socket.on("join_team", (teamId) => {
+io.on("connection", (socket) => {
+  console.log("Peer connected:", socket.id);
+
+  socket.on("join_team", async ({ teamId, userId }) => {
     socket.join(teamId);
-    console.log(`Team Sync: Peer ${socket.id} joined Node [${teamId}]`);
+    activeUsers.set(userId, { socketId: socket.id, teamId });
+    
+    console.log(`Presence: User ${userId} active in Team ${teamId}`);
+    
+    // Notify others in the team that this user is online
+    io.to(teamId).emit("user_status_change", { userId, status: "online" });
+    
+    // Send join confirmation
     socket.emit("team_synced", { teamId, status: "active" });
+
+    // Send currently online users in this team
+    const onlineInTeam = [];
+    activeUsers.forEach((data, id) => {
+      if (data.teamId === teamId) onlineInTeam.push(id);
+    });
+    socket.emit("online_users", onlineInTeam);
   });
 
-  
+  socket.on("get_history", async (teamId) => {
+    try {
+      const history = await prisma.message.findMany({
+        where: { teamId },
+        orderBy: { createdAt: "asc" },
+        take: 50,
+      });
+      socket.emit("chat_history", history);
+    } catch (err) {
+      console.error("History fetch error:", err);
+    }
+  });
+
   socket.on("send_message", async (data) => {
     const { teamId, message, senderId, senderName, targetId } = data;
-
     try {
-      
       const newMessage = await prisma.message.create({
         data: {
           teamId,
@@ -61,15 +86,26 @@ io.on("connection", (socket) => {
         },
       });
 
-      
-      io.to(teamId).emit("receive_message", { ...newMessage, targetId });
+      // Broadcast to the whole team (including offline ones who will see it in history later)
+      io.to(teamId).emit("receive_message", newMessage);
     } catch (error) {
-      console.error("Message persistence failure:", error);
+      console.error("Persistence error:", error);
     }
   });
 
   socket.on("disconnect", () => {
-    console.log("Peer disconnected from relay:", socket.id);
+    let disconnectedUserId = null;
+    activeUsers.forEach((data, id) => {
+      if (data.socketId === socket.id) {
+        disconnectedUserId = id;
+        const teamId = data.teamId;
+        activeUsers.delete(id);
+        if (disconnectedUserId) {
+          io.to(teamId).emit("user_status_change", { userId: disconnectedUserId, status: "offline" });
+        }
+      }
+    });
+    console.log("Peer disconnected:", socket.id);
   });
 });
 

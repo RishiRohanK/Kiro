@@ -135,6 +135,7 @@ function InternDashboardContent() {
    const [inputText, setInputText] = useState("");
    const [socket, setSocket] = useState<any>(null);
    const [socketStatus, setSocketStatus] = useState<"connected" | "disconnected" | "connecting">("connecting");
+   const [onlineUsers, setOnlineUsers] = useState<string[]>([]);
    const [activeTeamId, setActiveTeamId] = useState<string | null>(null);
    const [selectedUser, setSelectedUser] = useState<any>(null);
    const [allInterns, setAllInterns] = useState<any[]>([]);
@@ -378,6 +379,23 @@ function InternDashboardContent() {
          newSocket.on("connect", () => {
             console.log("CHAT_SERVER: Connection established");
             setSocketStatus("connected");
+            if (user?.id) {
+               const teamId = schedules.find(s => s.teamInternIds?.includes(user.id))?.teamAllocation || "global";
+               newSocket.emit("join_team", { teamId, userId: user.id });
+               newSocket.emit("get_history", teamId);
+            }
+         });
+
+         newSocket.on("online_users", (users: string[]) => {
+            setOnlineUsers(users);
+         });
+
+         newSocket.on("user_status_change", ({ userId, status }: { userId: string, status: "online" | "offline" }) => {
+            setOnlineUsers(prev => status === "online" ? [...new Set([...prev, userId])] : prev.filter(id => id !== userId));
+         });
+
+         newSocket.on("chat_history", (history: ChatMessage[]) => {
+            setMessages(history);
          });
 
          newSocket.on("disconnect", () => {
@@ -1267,8 +1285,8 @@ function InternDashboardContent() {
                                        <div className="text-left overflow-hidden">
                                           <p className="text-xs font-bold truncate leading-none mb-1">{peer.name}</p>
                                           <div className="flex items-center gap-1">
-                                             <div className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                                             <p className="text-[9px] font-bold text-zinc-400 font-bold">Online</p>
+                                             <div className={`h-1.5 w-1.5 rounded-full ${onlineUsers.includes(peer.id) ? "bg-emerald-500" : "bg-zinc-300"}`} />
+                                             <p className="text-[9px] font-bold text-zinc-400 font-bold">{onlineUsers.includes(peer.id) ? "Online" : "Offline"}</p>
                                           </div>
                                        </div>
                                     </button>
