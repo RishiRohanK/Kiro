@@ -39,7 +39,8 @@ io.on("connection", (socket) => {
   
   socket.on("join_team", (teamId) => {
     socket.join(teamId);
-    console.log(`Socket ${socket.id} synchronized with Team Node: ${teamId}`);
+    console.log(`Team Sync: Peer ${socket.id} joined Node [${teamId}]`);
+    socket.emit("team_synced", { teamId, status: "active" });
   });
 
   

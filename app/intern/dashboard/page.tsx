@@ -362,12 +362,14 @@ function InternDashboardContent() {
             : "https://redlix-chat-relay.onrender.com";
 
          const newSocket = io(CHAT_SERVER_URL, {
-            reconnectionAttempts: 20,
-            reconnectionDelay: 2000,
+            reconnectionAttempts: Infinity,
+            reconnectionDelay: 1000,
+            reconnectionDelayMax: 5000,
+            randomizationFactor: 0.5,
             timeout: 20000,
             autoConnect: true,
             withCredentials: true,
-            transports: ["polling", "websocket"]
+            transports: ["websocket"]
          });
          setSocket(newSocket);
 
@@ -399,7 +401,7 @@ function InternDashboardContent() {
             newSocket.disconnect();
          };
       }
-   }, [user, socket]);
+   }, [user]);
 
 
    const fetchMessageHistory = async (teamId: string, otherUserId?: string) => {
@@ -432,7 +434,7 @@ function InternDashboardContent() {
          
          fetchMessageHistory(currentTeamId, selectedUser?.id);
       }
-   }, [socket, schedules, user, selectedUser]);
+   }, [socket?.id, schedules, user?.id, selectedUser?.id]);
 
    useEffect(() => {
       if (messages.length > 0) {
@@ -566,7 +568,7 @@ function InternDashboardContent() {
       };
 
       // Wake up server if needed during interaction
-      fetch("https://serversf.onrender.com/ping").catch(() => {});
+      fetch("https://redlix-chat-relay.onrender.com/ping").catch(() => {});
 
       socket.emit("send_message", messageData);
 
