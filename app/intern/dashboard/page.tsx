@@ -771,35 +771,70 @@ function InternDashboardContent() {
                      <h2 className="text-[11px] font-bold text-zinc-400 uppercase tracking-[0.2em]">Portal Updates</h2>
                   </div>
                   
-                  <div className="bg-zinc-50 border border-zinc-100 rounded-lg p-6 flex flex-col lg:flex-row items-center gap-8 hover:shadow-md transition-all group relative overflow-hidden">
-                     {/* Responsive Poster Snippet */}
-                     <div className="w-full lg:w-48 h-48 lg:h-48 bg-white rounded-md overflow-hidden shrink-0 border border-zinc-100">
-                        <img 
-                           src="https://ik.imagekit.io/dypkhqxip/hiring" 
-                           alt="Student Forge Hiring"
-                           className="w-full h-full object-cover lg:object-contain transition-all duration-500 group-hover:scale-105"
-                        />
+                  <div className="space-y-4">
+                     {/* Announcement 1: Student Forge Hiring (Newest) */}
+                     <div className="bg-zinc-50 border border-zinc-100 rounded-lg p-6 flex flex-col lg:flex-row items-center gap-8 hover:shadow-md transition-all group relative overflow-hidden">
+                        <div className="w-full lg:w-48 h-48 lg:h-48 bg-white rounded-md overflow-hidden shrink-0 border border-zinc-100">
+                           <img 
+                              src="https://ik.imagekit.io/dypkhqxip/hiring" 
+                              alt="Student Forge Hiring"
+                              className="w-full h-full object-cover lg:object-contain transition-all duration-500 group-hover:scale-105"
+                           />
+                        </div>
+
+                        <div className="flex-1 space-y-3 w-full">
+                           <div className="flex items-center gap-3">
+                              <span className="bg-white text-emerald-600 border border-emerald-100 text-[9px] font-bold px-2 py-0.5 rounded">
+                                 Active
+                              </span>
+                              <span className="text-[11px] text-zinc-400 font-medium">May 04, 2026</span>
+                           </div>
+                           <h3 className="text-xl font-bold text-[#003366] tracking-tight">Join Student Forge – We’re Hiring Interns</h3>
+                           <p className="text-[13px] text-zinc-500 font-medium leading-relaxed line-clamp-3 max-w-2xl">
+                              Student Forge is excited to welcome passionate and driven students to be part of our growing team. We are currently hiring Marketing Interns and Web Development Interns who are eager to learn, contribute, and build real-world experience.
+                           </p>
+                           
+                           <div className="flex justify-start mt-4">
+                              <Link 
+                                 href="/intern/dashboard/news"
+                                 className="flex items-center gap-1 text-[13px] font-semibold text-blue-500 hover:underline"
+                              >
+                                 View Details <ChevronRight size={14} />
+                              </Link>
+                           </div>
+                        </div>
                      </div>
 
-                     <div className="flex-1 space-y-3 w-full">
-                        <div className="flex items-center gap-3">
-                           <span className="bg-white text-emerald-600 border border-emerald-100 text-[9px] font-bold px-2 py-0.5 rounded">
-                              Active
-                           </span>
-                           <span className="text-[11px] text-zinc-400 font-medium">May 04, 2026</span>
+                     {/* Announcement 2: Summer Bootcamp (Previous) */}
+                     <div className="bg-white border border-zinc-100 rounded-lg p-6 flex flex-col lg:flex-row items-center gap-8 hover:shadow-md transition-all group relative overflow-hidden">
+                        <div className="w-full lg:w-48 h-48 lg:h-48 bg-zinc-50 rounded-md overflow-hidden shrink-0 border border-zinc-100">
+                           <img 
+                              src="https://ik.imagekit.io/dypkhqxip/Summer%20Bootcamp%20(2).png?updatedAt=1776542583323" 
+                              alt="Summer Bootcamp"
+                              className="w-full h-full object-cover lg:object-contain transition-all duration-500 group-hover:scale-105"
+                           />
                         </div>
-                        <h3 className="text-xl font-bold text-[#003366] tracking-tight">Join Student Forge – We’re Hiring Interns</h3>
-                        <p className="text-[13px] text-zinc-500 font-medium leading-relaxed line-clamp-3 max-w-2xl">
-                           Student Forge is excited to welcome passionate and driven students to be part of our growing team. We are currently hiring Marketing Interns and Web Development Interns who are eager to learn, contribute, and build real-world experience.
-                        </p>
-                        
-                        <div className="flex justify-start mt-4">
-                           <Link 
-                              href="/intern/dashboard/news"
-                              className="flex items-center gap-1 text-[13px] font-semibold text-blue-500 hover:underline"
-                           >
-                              View Details <ChevronRight size={14} />
-                           </Link>
+
+                        <div className="flex-1 space-y-3 w-full">
+                           <div className="flex items-center gap-3">
+                              <span className="bg-zinc-100 text-zinc-500 border border-zinc-200 text-[9px] font-bold px-2 py-0.5 rounded">
+                                 Notice
+                              </span>
+                              <span className="text-[11px] text-zinc-400 font-medium">April 20, 2026</span>
+                           </div>
+                           <h3 className="text-xl font-bold text-zinc-800 tracking-tight">Summer boot camp 2026 announcement</h3>
+                           <p className="text-[13px] text-zinc-500 font-medium leading-relaxed line-clamp-3 max-w-2xl">
+                              This notice announces the start of the 30-day "Summer Boot Camp 2026". The program is designed to provide high-quality technical skills to students. We focus on building industry-standard capabilities through practical training.
+                           </p>
+                           
+                           <div className="flex justify-start mt-4">
+                              <Link 
+                                 href="/intern/dashboard/news"
+                                 className="flex items-center gap-1 text-[13px] font-semibold text-blue-500 hover:underline"
+                              >
+                                 View Details <ChevronRight size={14} />
+                              </Link>
+                           </div>
                         </div>
                      </div>
                   </div>

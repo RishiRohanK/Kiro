@@ -303,7 +303,7 @@ export default function CleedDashboard() {
    const [resourcesList, setResourcesList] = useState<any[]>([]);
    const [copySuccess, setCopySuccess] = useState<string | null>(null);
    const [resourceFormData, setResourceFormData] = useState({ 
-       title: "", description: "", type: "PDF", url: "", category: "Documentation", date: "", batch: "All" 
+       title: "", description: "", type: "PDF", url: "", category: "Documentation", date: new Date().toISOString().split('T')[0], batch: "All" 
    });
    const [sendingResourceForm, setSendingResourceForm] = useState(false);
 
@@ -1451,17 +1451,33 @@ export default function CleedDashboard() {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(resourceFormData)
          });
-         if (res.ok) {
-            setResourceFormData({ title: "", description: "", type: "PDF", url: "", category: "Documentation", date: new Date().toISOString().split('T')[0], batch: "All" });
-            const fetchResources = async () => {
-               const res = await fetch("/api/cleed/resources");
-               const data = await res.json();
-               if (data.success) setResourcesList(data.resources);
-            };
-            fetchResources();
+         
+         const data = await res.json();
+         
+         if (res.ok && data.success) {
+            alert("Resource published successfully!");
+            setResourceFormData({ 
+               title: "", 
+               description: "", 
+               type: "PDF", 
+               url: "", 
+               category: "Documentation", 
+               date: new Date().toISOString().split('T')[0], 
+               batch: "All" 
+            });
+            // Re-fetch resources list
+            const fetchRes = await fetch("/api/cleed/resources");
+            const fetchDate = await fetchRes.json();
+            if (fetchDate.success) setResourcesList(fetchDate.resources);
+         } else {
+            alert(`Failed to publish resource: ${data.error || 'Unknown error'}`);
          }
-      } catch (err) { console.error("Resource registry failure"); }
-      finally { setSendingResourceForm(false); }
+      } catch (err) { 
+         console.error("Resource registry failure", err);
+         alert("Resource registry failure. Please check your connection.");
+      } finally { 
+         setSendingResourceForm(false); 
+      }
    };
 
    const handleDeleteResource = async (id: string) => {
@@ -2336,7 +2352,11 @@ export default function CleedDashboard() {
                                     </select>
                                  </div>
                               </div>
-                              <button disabled={sendingResourceForm} className="w-full h-14 bg-black text-white text-[11px] font-bold tracking-widest hover:bg-zinc-800 transition-all rounded-none shadow-sm disabled:opacity-50">
+                              <button 
+                                 type="submit"
+                                 disabled={sendingResourceForm} 
+                                 className="w-full h-14 bg-black text-white text-[11px] font-bold tracking-widest hover:bg-zinc-800 transition-all rounded-none shadow-sm disabled:opacity-50"
+                              >
                                  {sendingResourceForm ? "Publish..." : "Publish Resource"}
                               </button>
                            </form>
