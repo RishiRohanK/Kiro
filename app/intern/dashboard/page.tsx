@@ -372,7 +372,7 @@ function InternDashboardContent() {
             randomizationFactor: 0.5,
             timeout: 20000,
             autoConnect: true,
-            withCredentials: true,
+            withCredentials: false,
             transports: ["polling", "websocket"]
          });
          setSocket(newSocket);
