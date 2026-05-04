@@ -1,5 +1,5 @@
-require("dotenv").config(); // Render uses process.env directly
-require("dotenv").config({ path: "../.env" }); // Fallback for local dev if needed
+require("dotenv").config();
+require("dotenv").config({ path: "../.env" });
 const express = require("express");
 const http = require("http");
 const { Server } = require("socket.io");
@@ -25,7 +25,6 @@ const io = new Server(server, {
   allowEIO3: true
 });
 
-// Health check endpoint for Render
 app.get("/ping", (req, res) => {
   res.status(200).send("Relay Active");
 });
@@ -34,7 +33,7 @@ app.get("/", (req, res) => {
   res.status(200).send("Relay Node Operational");
 });
 
-const activeUsers = new Map(); // userId -> { socketId, teamId }
+const activeUsers = new Map();
 
 io.on("connection", (socket) => {
   console.log("Peer connected:", socket.id);
@@ -45,13 +44,10 @@ io.on("connection", (socket) => {
     
     console.log(`Presence: User ${userId} active in Team ${teamId}`);
     
-    // Notify others in the team that this user is online
     io.to(teamId).emit("user_status_change", { userId, status: "online" });
     
-    // Send join confirmation
     socket.emit("team_synced", { teamId, status: "active" });
 
-    // Send currently online users in this team
     const onlineInTeam = [];
     activeUsers.forEach((data, id) => {
       if (data.teamId === teamId) onlineInTeam.push(id);
@@ -85,7 +81,6 @@ io.on("connection", (socket) => {
         },
       });
 
-      // Broadcast to the whole team (including offline ones who will see it in history later)
       io.to(teamId).emit("receive_message", newMessage);
     } catch (error) {
       console.error("Persistence error:", error);

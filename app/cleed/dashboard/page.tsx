@@ -196,16 +196,19 @@ export default function CleedDashboard() {
    const [isAuthorizing, setIsAuthorizing] = useState<string | null>(null);
    const [internBatchFilter, setInternBatchFilter] = useState("All");
 
-
    const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
-   const [currentAttendance, setCurrentAttendance] = useState<any[]>([]);
-   const [markingId, setMarkingId] = useState<string | null>(null);
-
+   const [attendanceStats, setAttendanceStats] = useState<any[]>([]);
 
    const [taskData, setTaskData] = useState({ title: "", description: "", attachmentUrl: "", batch: "Batch 2" });
+   const [sendingTask, setSendingTask] = useState(false);
+   const [taskSuccess, setTaskSuccess] = useState(false);
+
+   const [eventData, setEventData] = useState({ title: "", description: "", category: "Workshop", date: "", location: "", price: "" });
+   const [sendingEvent, setSendingEvent] = useState(false);
+   const [eventSuccess, setEventSuccess] = useState(false);
+   
    const [letterUrl, setLetterUrl] = useState("");
    const [offerLetterUrl, setOfferLetterUrl] = useState("");
-   const [sendingTask, setSendingTask] = useState(false);
    const [sendingLetter, setSendingLetter] = useState(false);
    const [sendingOfferLetter, setSendingOfferLetter] = useState(false);
    const [formSuccess, setFormSuccess] = useState(false);

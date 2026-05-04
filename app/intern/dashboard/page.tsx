@@ -94,10 +94,7 @@ interface ScheduleItem {
    batch: string;
    teamInternIds: string[];
    teamAllocation?: string;
-}
-
-
-interface ChatMessage {
+}interface ChatMessage {
    id?: string;
    teamId: string;
    senderId: string;
@@ -121,16 +118,12 @@ function InternDashboardContent() {
    const [userStatus, setUserStatus] = useState<any>(null);
    const [showLetterModal, setShowLetterModal] = useState(false);
    const [showOfferLetterModal, setShowOfferLetterModal] = useState(false);
-   const [showSupportModal, setShowSupportModal] = useState(false);
-
-
-   const [personalTasks, setPersonalTasks] = useState<PersonalTask[]>([]);
+   const [showSupportModal, setShowSupportModal] = useState(false);   const [personalTasks, setPersonalTasks] = useState<PersonalTask[]>([]);
    const [isAddingPersonalTask, setIsAddingPersonalTask] = useState(false);
    const [newPersonalTask, setNewPersonalTask] = useState({ title: "", description: "" });
    const [isSavingPersonalTask, setIsSavingPersonalTask] = useState(false);
 
 
-   // Relay Terminal (Group Chat)
    const [messages, setMessages] = useState<ChatMessage[]>([]);
    const [inputText, setInputText] = useState("");
    const [socket, setSocket] = useState<any>(null);
@@ -145,7 +138,6 @@ function InternDashboardContent() {
    const [loadingReports, setLoadingReports] = useState(false);
    const chatEndRef = useRef<HTMLDivElement>(null);
 
-   // Internship State
    const [internships, setInternships] = useState<any[]>([]);
    const [myApplications, setMyApplications] = useState<any[]>([]);
    const [isApplying, setIsApplying] = useState<string | null>(null);
@@ -178,7 +170,6 @@ function InternDashboardContent() {
       const syncSession = async () => {
          let storedUser = localStorage.getItem("intern_user");
          let userData = storedUser ? JSON.parse(storedUser) : null;
-
 
          if (!userData) {
             const { data: { session } } = await supabase.auth.getSession();
@@ -358,7 +349,6 @@ function InternDashboardContent() {
          setSocketStatus("connecting");
          const PROD_URL = process.env.NEXT_PUBLIC_CHAT_SERVER_URL || "https://redlix-chat-relay.onrender.com";
          
-         // Wake up the chat server (Render free tier)
          fetch(`${PROD_URL}/ping`).catch(() => {});
 
          const CHAT_SERVER_URL = window.location.hostname === "localhost" 
@@ -588,12 +578,8 @@ function InternDashboardContent() {
          targetId: selectedUser?.id || null,
       };
 
-      // Wake up server if needed during interaction
-      fetch("https://redlix-chat-relay.onrender.com/ping").catch(() => {});
-
       socket.emit("send_message", messageData);
 
-      // Local echo: add message to state immediately for responsiveness
       const localMsg: ChatMessage = {
          id: "temp-" + Date.now(),
          teamId: activeTeamId,
