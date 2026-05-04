@@ -111,6 +111,25 @@ export const sendOfferLetterEmail = async (email: string, name: string) => {
     }
 };
 
+export const sendCustomOfferLetterEmail = async (email: string, name: string, offerLetterUrl: string, customMessage: string) => {
+    const title = "Internship Offer Letter Issued";
+    const content = `Hello ${name},<br/><br/>${customMessage}<br/><br/>You can access your official internship offer letter by clicking the button below. Welcome to the Student Forge community.`;
+    const html = getSimpleTemplate(title, content, "View Offer Letter", offerLetterUrl, "Student Forge Team");
+
+    try {
+        await transporter.sendMail({
+            from: '"Student Forge" <studentforgetechnologies@gmail.com>',
+            to: email,
+            subject: `Internship Offer: ${name}`,
+            html: html,
+        });
+        return true;
+    } catch (error) {
+        console.error("Custom Offer Letter Mail Error:", error);
+        return false;
+    }
+};
+
 export const sendTeamAssignmentEmail = async (email: string, name: string, projectName: string, mentorName: string, teamMembers: string[]) => {
     const title = "Project Team Assignment";
     const content = `Hello ${name}! You have been assigned to the project: <b>${projectName}</b>.<br/><br/><b>Team Members:</b> ${teamMembers.join(", ")}<br/><b>Mentor:</b> ${mentorName}<br/><br/>You can now synchronize with your team and start working on the milestones.`;

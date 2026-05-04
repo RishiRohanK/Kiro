@@ -279,8 +279,11 @@ export default function CleedDashboard() {
    });
    const [sendingEmployee, setSendingEmployee] = useState(false);
    const [employeeSuccess, setEmployeeSuccess] = useState(false);
-   const [editingEmployeeId, setEditingEmployeeId] = useState<string | null>(null);
    const [editEmployeeData, setEditEmployeeData] = useState<any>({});
+
+   const [offerData, setOfferData] = useState({ name: "", email: "", link: "", message: "" });
+   const [sendingOffer, setSendingOffer] = useState(false);
+   const [offerSuccess, setOfferSuccess] = useState(false);
 
    // Interview Schedule State
    const [isInterviewModalOpen, setIsInterviewModalOpen] = useState(false);
@@ -1374,6 +1377,34 @@ export default function CleedDashboard() {
       }
    };
 
+   const handleSendOffer = async (e: React.FormEvent) => {
+      e.preventDefault();
+      setSendingOffer(true);
+      try {
+         const res = await fetch("/api/cleed/offer-letter", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+               email: offerData.email,
+               offerLetterUrl: offerData.link,
+               customMessage: offerData.message
+            })
+         });
+         if (res.ok) {
+            setOfferSuccess(true);
+            setOfferData({ name: "", email: "", link: "", message: "" });
+            setTimeout(() => setOfferSuccess(false), 3000);
+         } else {
+            const errData = await res.json();
+            alert(errData.error || "Failed to send offer letter");
+         }
+      } catch (err) {
+         console.error("Offer letter dispatch failure.");
+      } finally {
+         setSendingOffer(false);
+      }
+   };
+
    const handleDeleteEmployee = async (id: string) => {
       if (!confirm("Are you sure you want to remove this employee?")) return;
       try {
@@ -1891,6 +1922,34 @@ export default function CleedDashboard() {
                               </button>
                               {employeeSuccess && <p className="text-emerald-600 text-[10px] font-bold text-center">Employee added successfully.</p>}
                            </form>
+
+                           <div className="pt-8 border-t border-zinc-100">
+                              <h2 className="text-2xl font-bold tracking-tighter text-zinc-900">Issue Internship Offer</h2>
+                              <p className="text-[11px] text-zinc-500 mb-6">Send personalized offer letter links to selected interns.</p>
+                              
+                              <form onSubmit={handleSendOffer} className="space-y-4">
+                                 <div className="space-y-1">
+                                    <label className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest">Intern Name</label>
+                                    <input required value={offerData.name} onChange={(e) => setOfferData({ ...offerData, name: e.target.value })} className="w-full h-10 bg-white border border-zinc-200 px-4 text-sm font-bold outline-none focus:border-blue-600 rounded-none" placeholder="Enter intern full name" />
+                                 </div>
+                                 <div className="space-y-1">
+                                    <label className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest">Intern Email</label>
+                                    <input required type="email" value={offerData.email} onChange={(e) => setOfferData({ ...offerData, email: e.target.value })} className="w-full h-10 bg-white border border-zinc-200 px-4 text-sm font-bold outline-none focus:border-blue-600 rounded-none" placeholder="intern@example.com" />
+                                 </div>
+                                 <div className="space-y-1">
+                                    <label className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest">Offer Letter Link (URL)</label>
+                                    <input required value={offerData.link} onChange={(e) => setOfferData({ ...offerData, link: e.target.value })} className="w-full h-10 bg-white border border-zinc-200 px-4 text-sm font-bold outline-none focus:border-blue-600 rounded-none" placeholder="https://docs.google.com/..." />
+                                 </div>
+                                 <div className="space-y-1">
+                                    <label className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest">Greetings & Details</label>
+                                    <textarea required value={offerData.message} onChange={(e) => setOfferData({ ...offerData, message: e.target.value })} className="w-full min-h-[100px] bg-white border border-zinc-200 p-4 text-sm font-medium outline-none focus:border-blue-600 rounded-none resize-none" placeholder="e.g., We are pleased to offer you the Full Stack Developer Internship role..." />
+                                 </div>
+                                 <button disabled={sendingOffer} className="w-full h-12 bg-blue-600 text-white text-[11px] font-bold tracking-widest hover:bg-blue-700 transition-all rounded-none shadow-sm disabled:opacity-50">
+                                    {sendingOffer ? "SENDING OFFER..." : "DISPATCH OFFER LETTER"}
+                                 </button>
+                                 {offerSuccess && <p className="text-emerald-600 text-[10px] font-bold text-center">Offer letter dispatched successfully.</p>}
+                              </form>
+                           </div>
                         </div>
                         <div className="space-y-6">
                            <h2 className="text-2xl font-bold tracking-tighter text-zinc-900 text-left">Active Employees</h2>

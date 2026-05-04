@@ -4,22 +4,30 @@ import { sendOfferLetterEmail } from "@/lib/mail";
 
 export async function POST(req: Request) {
   try {
-    const { internId, offerLetterUrl } = await req.json();
+    const { internId, offerLetterUrl, customMessage, email } = await req.json();
 
-    if (!internId || !offerLetterUrl) {
-      return NextResponse.json({ error: "Intern ID and Offer Letter URL are required" }, { status: 400 });
+    if ((!internId && !email) || !offerLetterUrl) {
+      return NextResponse.json({ error: "Intern ID/Email and Offer Letter URL are required" }, { status: 400 });
     }
 
-    console.log("Protocol Initiation: Internship Offer Letter Issuance for intern:", internId);
+    console.log("Protocol Initiation: Internship Offer Letter Issuance");
     
-    
-    const user = await prisma.user.update({
-      where: { id: internId },
-      data: { offerLetterUrl } as any,
-    });
+    let user;
+    if (internId) {
+      user = await prisma.user.update({
+        where: { id: internId },
+        data: { offerLetterUrl } as any,
+      });
+    }
 
-    
-    await sendOfferLetterEmail(user.email, user.name);
+    const recipientEmail = email || user?.email;
+    const recipientName = user?.name || "Intern";
+
+    if (customMessage) {
+      await sendCustomOfferLetterEmail(recipientEmail, recipientName, offerLetterUrl, customMessage);
+    } else if (user) {
+      await sendOfferLetterEmail(user.email, user.name);
+    }
 
     return NextResponse.json({ success: true, user });
   } catch (error) {
