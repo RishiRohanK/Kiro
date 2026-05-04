@@ -857,7 +857,40 @@ function InternDashboardContent() {
                   </div>
                   
                   <div className="space-y-4">
-                     {/* Announcement 1: Student Forge Hiring (Newest) */}
+                     {/* Announcement 0: RX Resume Builder (Newest) */}
+                     <div className="bg-white border border-zinc-100 rounded-lg p-6 flex flex-col lg:flex-row items-center gap-8 hover:shadow-md transition-all group relative overflow-hidden">
+                        <div className="w-full lg:w-48 h-48 lg:h-48 bg-zinc-50 rounded-md overflow-hidden shrink-0 border border-zinc-100">
+                           <img 
+                              src="https://ik.imagekit.io/dypkhqxip/resumebuilder" 
+                              alt="RX Resume Builder"
+                              className="w-full h-full object-cover lg:object-contain transition-all duration-500 group-hover:scale-105"
+                           />
+                        </div>
+
+                        <div className="flex-1 space-y-3 w-full">
+                           <div className="flex items-center gap-3">
+                              <span className="bg-zinc-100 text-[#003366] border border-blue-100 text-[9px] font-bold px-2 py-0.5 rounded">
+                                 New Feature
+                              </span>
+                              <span className="text-[11px] text-zinc-400 font-medium">May 04, 2026</span>
+                           </div>
+                           <h3 className="text-xl font-bold text-[#003366] tracking-tight">RX Resume Builder – Intelligent, ATS-Friendly Resumes</h3>
+                           <p className="text-[13px] text-zinc-500 font-medium leading-relaxed line-clamp-3 max-w-2xl">
+                              RX Resume Builder is an intelligent, ATS-friendly resume creation platform designed specifically for students. It offers a dynamic and structured approach to resume building, ensuring your profile stands out.
+                           </p>
+                           
+                           <div className="flex justify-start mt-4">
+                              <Link 
+                                 href="/intern/dashboard/news"
+                                 className="flex items-center gap-1 text-[13px] font-semibold text-blue-500 hover:underline"
+                              >
+                                 View Details <ChevronRight size={14} />
+                              </Link>
+                           </div>
+                        </div>
+                     </div>
+
+                     {/* Announcement 1: Student Forge Hiring */}
                      <div className="bg-zinc-50 border border-zinc-100 rounded-lg p-6 flex flex-col lg:flex-row items-center gap-8 hover:shadow-md transition-all group relative overflow-hidden">
                         <div className="w-full lg:w-48 h-48 lg:h-48 bg-white rounded-md overflow-hidden shrink-0 border border-zinc-100">
                            <img 

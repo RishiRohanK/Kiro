@@ -6,6 +6,36 @@ import { Newspaper, MapPin, Briefcase, GraduationCap, Phone, Globe, ExternalLink
 
 const UPDATES = [
     {
+        id: "rx-resume-builder",
+        title: "RX Resume Builder – Intelligent, ATS-Friendly Resumes",
+        image: "https://ik.imagekit.io/dypkhqxip/resumebuilder",
+        date: "May 04, 2026",
+        status: "Active",
+        description: [
+            "RX Resume Builder is an intelligent, ATS-friendly resume creation platform designed specifically for students and early professionals. It goes beyond traditional static templates by offering a dynamic and structured approach to resume building, ensuring your profile stands out in modern recruitment systems.",
+            "Built on an ATS-driven template methodology, the platform helps users craft resumes that are optimized for applicant tracking systems while maintaining a clean and professional design. From structuring content effectively to highlighting key skills and achievements, RX Resume Builder ensures every resume is both impactful and recruiter-ready.",
+            "With a focus on efficiency and adaptability, users can quickly generate personalized resumes tailored to different roles and industries. The platform simplifies the resume creation process, making it faster, smarter, and more aligned with current hiring standards.",
+            "Currently in its Beta Model, RX Resume Builder is continuously evolving to deliver a seamless and powerful experience for students aiming to take their first step into the professional world."
+        ],
+        details: {
+            "Version": "Beta Model",
+            "Target": "Students & Early Professionals",
+            "Technology": "ATS-Driven"
+        },
+        highlightsTitle: "Platform Advantages:",
+        highlights: [
+            "ATS-optimized template methodology",
+            "Dynamic and structured building",
+            "High-impact professional designs",
+            "Fast personalized generation"
+        ],
+        footer: {
+            contact: "+91 6304218064",
+            website: "www.studentforge.in",
+            applyLink: "/intern/dashboard/resume"
+        }
+    },
+    {
         id: "hiring-2026",
         title: "Join Student Forge – We’re Hiring Interns",
         image: "https://ik.imagekit.io/dypkhqxip/hiring",
