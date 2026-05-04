@@ -1194,8 +1194,8 @@ function InternDashboardContent() {
                <aside className={`${showChatSidebar ? "flex" : "hidden"} lg:flex absolute inset-0 z-20 lg:relative lg:inset-auto w-full lg:w-72 bg-zinc-50/50 border-r border-zinc-100 flex-col shrink-0`}>
                   <div className="p-6 border-b border-zinc-100 bg-white/50 backdrop-blur-sm flex items-center justify-between">
                      <div>
-                        <h3 className="text-xs font-bold text-zinc-900 uppercase tracking-widest leading-none">Team Relay</h3>
-                        <p className="text-[10px] text-zinc-400 mt-2 font-medium">Internal communication</p>
+                        <h3 className="text-xs font-bold text-zinc-900 uppercase tracking-widest leading-none">Chat</h3>
+                        <p className="text-[10px] text-zinc-400 mt-2 font-medium">Talk with your team</p>
                      </div>
                      <button onClick={() => setShowChatSidebar(false)} className="lg:hidden p-2 text-zinc-400">
                         <ChevronRight size={18} />
@@ -1203,37 +1203,34 @@ function InternDashboardContent() {
                   </div>
 
                   <div className="flex-1 overflow-y-auto no-scrollbar py-4">
-                     { }
+                     {/* Search/Filter or Categories could go here */}
                      <div className="px-4 mb-6">
                         <button
                            onClick={() => { setSelectedUser(null); setShowChatSidebar(false); }}
                            className={`w-full flex items-center gap-3 p-3 text-xs font-bold transition-all rounded-none mb-2 ${!selectedUser ? "bg-zinc-900 text-white shadow-lg shadow-zinc-200" : "hover:bg-zinc-200/50 text-zinc-600"}`}
                         >
-                           <Users size={16} /> Group Enclave
+                           <Users size={16} /> Main Group
                         </button>
 
                         <div className="h-px bg-zinc-200 my-4 mx-2" />
 
-                        <p className="px-3 py-2 text-[10px] font-bold text-zinc-400 font-bold tracking-tight">Teammates</p>
+                        <p className="px-3 py-2 text-[10px] font-bold text-zinc-400 font-bold tracking-tight">Team Members</p>
                         <div className="space-y-1 mt-1">
                            {(() => {
                               const teammateIds = new Set<string>();
                               
-                              // 1. Get my own team allocation names
                               const myTeamNames = schedules
                                  .filter(s => s.teamInternIds?.includes(user.id))
                                  .map(s => s.teamAllocation)
                                  .filter(Boolean);
 
                               schedules.forEach(s => {
-                                 // 2. Add members of schedules where I am explicitly listed
                                  if (s.teamInternIds?.includes(user.id)) {
                                     s.teamInternIds.forEach(id => {
                                        if (id !== user.id) teammateIds.add(id);
                                     });
                                  }
                                  
-                                 // 3. Add members of schedules that share a team name with my schedules
                                  if (s.teamAllocation && myTeamNames.includes(s.teamAllocation)) {
                                     s.teamInternIds?.forEach(id => {
                                        if (id !== user.id) teammateIds.add(id);
@@ -1260,14 +1257,18 @@ function InternDashboardContent() {
                                        onClick={() => { setSelectedUser(peer); setShowChatSidebar(false); }}
                                        className={`w-full flex items-center gap-3 p-2.5 transition-all rounded-none mb-1 ${selectedUser?.id === peer.id ? "bg-white border border-zinc-200 shadow-sm text-zinc-900" : "text-zinc-500 hover:bg-white hover:shadow-sm"}`}
                                     >
-                                       <div className="h-9 w-9 bg-zinc-100 text-zinc-900 flex items-center justify-center text-xs font-bold rounded-none shrink-0">
-                                          {peer.name[0]}
+                                       <div className="h-9 w-9 bg-zinc-100 text-zinc-900 flex items-center justify-center text-xs font-bold rounded-full shrink-0 overflow-hidden">
+                                          {peer.profileImage ? (
+                                             <img src={peer.profileImage} alt={peer.name} className="w-full h-full object-cover" />
+                                          ) : (
+                                             peer.name.split(' ').map(n => n[0]).join('').substring(0, 2)
+                                          )}
                                        </div>
                                        <div className="text-left overflow-hidden">
                                           <p className="text-xs font-bold truncate leading-none mb-1">{peer.name}</p>
                                           <div className="flex items-center gap-1">
                                              <div className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                                             <p className="text-[9px] font-bold text-zinc-400 font-bold">Mission Active</p>
+                                             <p className="text-[9px] font-bold text-zinc-400 font-bold">Online</p>
                                           </div>
                                        </div>
                                     </button>
@@ -1280,8 +1281,12 @@ function InternDashboardContent() {
 
                   { }
                   <div className="p-4 bg-zinc-100/50 border-t border-zinc-200 flex items-center gap-3">
-                     <div className="h-9 w-9 bg-black text-white flex items-center justify-center text-xs font-bold rounded-none">
-                        {user.name[0]}
+                     <div className="h-9 w-9 bg-black text-white flex items-center justify-center text-xs font-bold rounded-full overflow-hidden">
+                        {user.profileImage ? (
+                           <img src={user.profileImage} alt={user.name} className="w-full h-full object-cover" />
+                        ) : (
+                           user.name.split(' ').map(n => n[0]).join('').substring(0, 2)
+                        )}
                      </div>
                      <div className="overflow-hidden">
                         <p className="text-xs font-bold text-zinc-900 truncate leading-none mb-1">{user.name}</p>
@@ -1290,28 +1295,36 @@ function InternDashboardContent() {
                   </div>
                </aside>
 
-                             <div className={`flex-1 flex flex-col bg-white overflow-hidden ${!showChatSidebar ? "flex" : "hidden lg:flex"}`}>
+               <div className={`flex-1 flex flex-col bg-white overflow-hidden ${!showChatSidebar ? "flex" : "hidden lg:flex"}`}>
                   {/* Window Header */}
                   <div className="px-6 py-4 border-b border-zinc-100 flex items-center justify-between bg-white sticky top-0 z-10">
                      <div className="flex items-center gap-4 truncate">
                         <button onClick={() => setShowChatSidebar(true)} className="lg:hidden p-2 -ml-2 text-zinc-400 hover:text-black transition-colors">
                            <ChevronLeft size={20} />
                         </button>
-                        <div className="h-10 w-10 bg-zinc-900 text-white flex items-center justify-center rounded-none shadow-inner shrink-0">
-                           {selectedUser ? <User size={18} /> : <Users size={18} />}
+                        <div className="h-10 w-10 bg-zinc-900 text-white flex items-center justify-center rounded-full shadow-inner shrink-0 overflow-hidden">
+                           {selectedUser ? (
+                              selectedUser.profileImage ? (
+                                 <img src={selectedUser.profileImage} alt={selectedUser.name} className="w-full h-full object-cover" />
+                              ) : (
+                                 <span className="text-xs font-bold">{selectedUser.name.split(' ').map(n => n[0]).join('').substring(0, 2)}</span>
+                              )
+                           ) : (
+                              <Users size={18} />
+                           )}
                         </div>
-                        <div className="truncate">
+                        <div className="text-left">
                            <h2 className="text-sm font-bold text-zinc-900 leading-none mb-1.5 truncate">
-                              {selectedUser ? selectedUser.name : (schedules.find(s => s.week.includes("Week 2"))?.teamAllocation || "Group Enclave")}
+                              {selectedUser ? selectedUser.name : (schedules.find(s => s.week.includes("Week 2"))?.teamAllocation || "Main Group")}
                            </h2>
                            <div className="flex items-center gap-2">
                               <div className={`h-1.5 w-1.5 rounded-full ${
                                  socketStatus === "connected" ? "bg-emerald-500 animate-pulse" : 
                                  socketStatus === "connecting" ? "bg-amber-500" : "bg-rose-500"
-                              }`} />
+                               }`} />
                               <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-tight">
-                                 {socketStatus === "connected" ? "Live session" : 
-                                  socketStatus === "connecting" ? "Syncing... " : "Offline"}
+                                 {socketStatus === "connected" ? "Online" : 
+                                  socketStatus === "connecting" ? "Connecting... " : "Offline"}
                               </span>
                            </div>
                         </div>
@@ -1327,8 +1340,8 @@ function InternDashboardContent() {
                      ).length === 0 ? (
                         <div className="h-full flex flex-col items-center justify-center text-center p-8">
                            <img src="https://ik.imagekit.io/dypkhqxip/Messaging-bro.svg" alt="No messages" className="w-48 lg:w-64 h-auto mb-6" />
-                           <p className="text-sm font-bold text-zinc-900 leading-none mb-2">No conversations found</p>
-                           <p className="text-[11px] text-zinc-400 font-bold">Start a new chat with your teammates.</p>
+                           <p className="text-sm font-bold text-zinc-900 leading-none mb-2">No messages yet</p>
+                           <p className="text-[11px] text-zinc-400 font-bold">Send a message to your team.</p>
                         </div>
                      ) : (
                         messages.filter(m =>
@@ -1367,7 +1380,7 @@ function InternDashboardContent() {
                            value={inputText}
                            onChange={(e) => setInputText(e.target.value)}
                            className="w-full pl-6 pr-12 h-12 bg-white border border-zinc-200 text-sm font-medium rounded-none focus:border-zinc-400 outline-none transition-all shadow-sm placeholder:text-zinc-300"
-                           placeholder={selectedUser ? `Reply to ${selectedUser.name.split(' ')[0]}...` : "Message group..."}
+                           placeholder={selectedUser ? `Chat with ${selectedUser.name.split(' ')[0]}...` : "Send a message..."}
                         />
                      </div>
                      <button type="submit" disabled={!activeTeamId || !inputText.trim()} className="h-12 w-12 bg-zinc-900 text-white hover:bg-black transition-all rounded-none disabled:opacity-30 active:scale-95 flex items-center justify-center shadow-lg shadow-zinc-200">
