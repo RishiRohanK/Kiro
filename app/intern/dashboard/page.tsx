@@ -371,7 +371,7 @@ function InternDashboardContent() {
             timeout: 20000,
             autoConnect: true,
             withCredentials: true,
-            transports: ["websocket"]
+            transports: ["polling", "websocket"]
          });
          setSocket(newSocket);
 
