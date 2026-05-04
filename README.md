@@ -9,20 +9,25 @@ Student Forge is a high-density, secure ecosystem designed for institutional lea
 
 ---
 
-### TECHNOLOGY STACK
+---
 
-![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white) 
-![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white) 
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white) 
-![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
-![Nginx](https://img.shields.io/badge/Nginx-009639?style=for-the-badge&logo=nginx&logoColor=white)
-![Redis](https://img.shields.io/badge/Redis-DC382D?style=for-the-badge&logo=redis&logoColor=white) 
+## 🛠️ TECHNOLOGY STACK
 
-![Prisma](https://img.shields.io/badge/Prisma-2D3748?style=flat-square&logo=prisma&logoColor=white)
-![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=flat-square&logo=typescript&logoColor=white) 
-![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=flat-square&logo=tailwind-css&logoColor=white) 
-![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=flat-square&logo=supabase&logoColor=white) 
-![Vercel](https://img.shields.io/badge/Vercel-000000?style=flat-square&logo=vercel&logoColor=white)
+The Student Forge platform is built on a high-performance, modern industrial stack designed for scalability and reliability.
+
+| Layer | Technology | Details |
+| :--- | :--- | :--- |
+| **Framework** | Next.js 16.2 (Turbopack) | Industrial-grade SSR/ISR framework with React 19 support |
+| **Language** | TypeScript 5 | Strict-type safety for mission-critical logic |
+| **Styling** | Tailwind CSS 4 | Atomic utility-first styling with hardware-accelerated transitions |
+| **Animations** | Framer Motion 12 | Fluid, high-fidelity micro-interactions and layout transitions |
+| **Database** | PostgreSQL | Robust relational engine via Prisma 7.5 ORM |
+| **Authentication** | Supabase Auth / SSR | Zero-trust authentication with secure session state |
+| **Real-time** | Socket.io 4.8 | Low-latency bi-directional communication for chat and live monitoring |
+| **Caching** | Redis (ioredis) | High-speed data caching and rate-limiting infrastructure |
+| **Mailing** | Nodemailer | Automated industrial notification and onboarding engine |
+| **Payments** | Razorpay | Secure financial transaction gateway integration |
+| **Deployment** | Vercel | High-availability serverless deployment with automated CI/CD |
 
 </div>
 
