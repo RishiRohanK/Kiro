@@ -1261,7 +1261,7 @@ function InternDashboardContent() {
                                           {peer.profileImage ? (
                                              <img src={peer.profileImage} alt={peer.name} className="w-full h-full object-cover" />
                                           ) : (
-                                             peer.name.split(' ').map(n => n[0]).join('').substring(0, 2)
+                                             peer.name.split(' ').map((n: string) => n[0]).join('').substring(0, 2)
                                           )}
                                        </div>
                                        <div className="text-left overflow-hidden">
@@ -1285,7 +1285,7 @@ function InternDashboardContent() {
                         {user.profileImage ? (
                            <img src={user.profileImage} alt={user.name} className="w-full h-full object-cover" />
                         ) : (
-                           user.name.split(' ').map(n => n[0]).join('').substring(0, 2)
+                           user.name.split(' ').map((n: string) => n[0]).join('').substring(0, 2)
                         )}
                      </div>
                      <div className="overflow-hidden">
@@ -1307,7 +1307,7 @@ function InternDashboardContent() {
                               selectedUser.profileImage ? (
                                  <img src={selectedUser.profileImage} alt={selectedUser.name} className="w-full h-full object-cover" />
                               ) : (
-                                 <span className="text-xs font-bold">{selectedUser.name.split(' ').map(n => n[0]).join('').substring(0, 2)}</span>
+                                 <span className="text-xs font-bold">{selectedUser.name.split(' ').map((n: string) => n[0]).join('').substring(0, 2)}</span>
                               )
                            ) : (
                               <Users size={18} />
