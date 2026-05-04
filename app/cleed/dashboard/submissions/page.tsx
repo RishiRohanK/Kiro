@@ -420,7 +420,7 @@ export default function SubmissionsVault() {
             <div className="py-20 text-center">
               <p className="text-zinc-400 text-xs font-medium">Select a tab to view records.</p>
             </div>
-          )
+          )}
         </AnimatePresence>
 
       </div>
