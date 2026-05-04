@@ -775,8 +775,8 @@ function InternDashboardContent() {
                      {/* Responsive Poster Snippet */}
                      <div className="w-full lg:w-48 h-48 lg:h-48 bg-white rounded-md overflow-hidden shrink-0 border border-zinc-100">
                         <img 
-                           src="https://ik.imagekit.io/dypkhqxip/Summer%20Bootcamp%20(2).png?updatedAt=1776542583323" 
-                           alt="Summer Bootcamp"
+                           src="https://ik.imagekit.io/dypkhqxip/hiring" 
+                           alt="Student Forge Hiring"
                            className="w-full h-full object-cover lg:object-contain transition-all duration-500 group-hover:scale-105"
                         />
                      </div>
@@ -786,11 +786,11 @@ function InternDashboardContent() {
                            <span className="bg-white text-emerald-600 border border-emerald-100 text-[9px] font-bold px-2 py-0.5 rounded">
                               Active
                            </span>
-                           <span className="text-[11px] text-zinc-400 font-medium">April 20, 2026</span>
+                           <span className="text-[11px] text-zinc-400 font-medium">May 04, 2026</span>
                         </div>
-                        <h3 className="text-xl font-bold text-[#003366] tracking-tight">Summer boot camp 2026 announcement</h3>
+                        <h3 className="text-xl font-bold text-[#003366] tracking-tight">Join Student Forge – We’re Hiring Interns</h3>
                         <p className="text-[13px] text-zinc-500 font-medium leading-relaxed line-clamp-3 max-w-2xl">
-                           This notice announces the start of the 30-day "Summer Boot Camp 2026". The program is designed to provide high-quality technical skills to students. We focus on building industry-standard capabilities through practical training.
+                           Student Forge is excited to welcome passionate and driven students to be part of our growing team. We are currently hiring Marketing Interns and Web Development Interns who are eager to learn, contribute, and build real-world experience.
                         </p>
                         
                         <div className="flex justify-start mt-4">
