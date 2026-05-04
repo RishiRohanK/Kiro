@@ -20,30 +20,36 @@ const getSimpleTemplate = (title: string, content: string, ctaText: string, ctaU
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #1a1a1a; margin: 0; padding: 0; background-color: #ffffff; }
-        .wrapper { padding: 40px 20px; background-color: #ffffff; }
-        .container { max-width: 500px; margin: 0 auto; background: #ffffff; border: 1px solid #eeeeee; padding: 40px; border-radius: 0px; }
-        .logo { margin-bottom: 30px; }
-        h1 { font-size: 20px; font-weight: 600; margin: 0 0 16px; color: #000; letter-spacing: -0.01em; }
-        p { font-size: 14px; margin: 0 0 24px; color: #666; }
-        .button { display: inline-block; background: #000; color: #fff !important; padding: 12px 24px; text-decoration: none; font-size: 13px; font-weight: 600; border-radius: 0px; transition: background 0.2s; }
-        .footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; font-size: 12px; color: #999; }
-        .team { font-weight: 600; color: #000; margin-bottom: 4px; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #1a1a1a; margin: 0; padding: 0; background-color: #f4f4f4; }
+        .wrapper { padding: 40px 20px; }
+        .container { max-width: 500px; margin: 0 auto; background: #ffffff; border: 1px solid #eeeeee; padding: 0px; border-radius: 0px; overflow: hidden; }
+        .header { background-color: #FACC15; padding: 30px 20px; text-align: center; }
+        .content { padding: 40px; }
+        h1 { font-size: 20px; font-weight: 700; margin: 0 0 16px; color: #000; letter-spacing: -0.01em; }
+        p { font-size: 14px; margin: 0 0 24px; color: #444; }
+        .button-wrapper { text-align: center; margin-bottom: 24px; }
+        .button { display: inline-block; background: #000; color: #fff !important; padding: 14px 28px; text-decoration: none; font-size: 12px; font-weight: 700; border-radius: 0px; text-transform: uppercase; letter-spacing: 0.1em; }
+        .footer { background-color: #FACC15; padding: 30px 20px; font-size: 11px; color: #000; text-align: center; }
+        .team { font-weight: 700; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.05em; }
     </style>
 </head>
 <body>
     <div class="wrapper">
         <div class="container">
-            <div class="logo">
-                <img src="https://ik.imagekit.io/dypkhqxip/Screenshot%202026-04-02%20at%2000.53.30.png" alt="Student Forge" height="24" />
+            <div class="header">
+                <img src="https://ik.imagekit.io/dypkhqxip/Screenshot%202026-04-02%20at%2000.53.30.png" alt="Student Forge" height="28" />
             </div>
-            <h1>${title}</h1>
-            <p>${content}</p>
-            <a href="${ctaUrl}" class="button">${ctaText}</a>
+            <div class="content">
+                <h1>${title}</h1>
+                <p>${content}</p>
+                <div class="button-wrapper">
+                    <a href="${ctaUrl}" class="button">${ctaText}</a>
+                </div>
+            </div>
             <div class="footer">
                 <div class="team">${team}</div>
-                <div>Student Forge</div>
-                <div style="margin-top: 10px;">&copy; 2026 Student Forge Technologies Pvt. Ltd.</div>
+                <div style="font-weight: 500;">Student Forge Technologies Pvt. Ltd.</div>
+                <div style="margin-top: 12px; opacity: 0.7;">&copy; 2026 Student Forge. All rights reserved.</div>
             </div>
         </div>
     </div>
