@@ -6,10 +6,14 @@ export async function GET(req: Request) {
     const { searchParams } = new URL(req.url);
     const batch = searchParams.get('batch');
 
-    const where: any = { role: "INTERN" };
+    const where: any = {};
     if (batch && batch !== "All") {
       where.batch = batch;
     }
+    // Exclude top-level admins but include all potential teammates
+    where.NOT = {
+      role: { in: ["CEO", "CTO", "COO", "CFO", "CSO"] }
+    };
 
     const [interns, allDates] = await Promise.all([
       prisma.user.findMany({

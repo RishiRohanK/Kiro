@@ -354,12 +354,14 @@ function InternDashboardContent() {
    useEffect(() => {
       if (user && !socket) {
          setSocketStatus("connecting");
+         const PROD_URL = process.env.NEXT_PUBLIC_CHAT_SERVER_URL || "https://redlix-chat-relay.onrender.com";
+         
          // Wake up the chat server (Render free tier)
-         fetch("https://redlix-chat-relay.onrender.com/ping").catch(() => {});
+         fetch(`${PROD_URL}/ping`).catch(() => {});
 
          const CHAT_SERVER_URL = window.location.hostname === "localhost" 
             ? "http://localhost:5005" 
-            : "https://redlix-chat-relay.onrender.com";
+            : PROD_URL;
 
          const newSocket = io(CHAT_SERVER_URL, {
             reconnectionAttempts: Infinity,
@@ -1215,14 +1217,36 @@ function InternDashboardContent() {
                         <p className="px-3 py-2 text-[10px] font-bold text-zinc-400 font-bold tracking-tight">Teammates</p>
                         <div className="space-y-1 mt-1">
                            {(() => {
-                              const activeSchedule = schedules.find(s => s.id === activeTeamId) || schedules.find(s => s.teamInternIds?.length > 0);
-                              const teamIds = activeSchedule?.teamInternIds || [];
-                              const teamPeers = teamIds.filter(id => id !== user.id);
+                              const teammateIds = new Set<string>();
+                              
+                              // 1. Get my own team allocation names
+                              const myTeamNames = schedules
+                                 .filter(s => s.teamInternIds?.includes(user.id))
+                                 .map(s => s.teamAllocation)
+                                 .filter(Boolean);
+
+                              schedules.forEach(s => {
+                                 // 2. Add members of schedules where I am explicitly listed
+                                 if (s.teamInternIds?.includes(user.id)) {
+                                    s.teamInternIds.forEach(id => {
+                                       if (id !== user.id) teammateIds.add(id);
+                                    });
+                                 }
+                                 
+                                 // 3. Add members of schedules that share a team name with my schedules
+                                 if (s.teamAllocation && myTeamNames.includes(s.teamAllocation)) {
+                                    s.teamInternIds?.forEach(id => {
+                                       if (id !== user.id) teammateIds.add(id);
+                                    });
+                                 }
+                              });
+
+                              const teamPeers = Array.from(teammateIds);
 
                               if (teamPeers.length === 0) {
                                  return (
                                     <div className="p-6 text-center">
-                                       <p className="text-[10px] text-zinc-300 font-bold tracking-wider">No teammates yet</p>
+                                       <p className="text-[10px] text-zinc-300 font-bold tracking-wider">No teammates allocated yet</p>
                                     </div>
                                  );
                               }
