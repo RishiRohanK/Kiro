@@ -59,7 +59,7 @@ const getSimpleTemplate = (title: string, content: string, ctaText: string, ctaU
                 <div class="signature">
                     Best Wishes,<br/>
                     <b>Rishi Rohan Kalapala</b><br/>
-                    CEO, Student Forge
+                    CtO, Student Forge Technologies Pvt. Ltd.
                 </div>
             </div>
             <div class="footer">
@@ -245,7 +245,7 @@ export const sendCleedPasswordResetEmail = async (email: string, token: string) 
     const title = "Password Reset Request";
     const content = "You requested to reset your password for the CLEED portal. Click the button below to set a new password. This link expires in 15 minutes.";
     const resetLink = `${BASE_URL}/cleed/reset-password?token=${token}`;
-    
+
     // Custom template with Cleed Logo
     const html = `
     <!DOCTYPE html>
