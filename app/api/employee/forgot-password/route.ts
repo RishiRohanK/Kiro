@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { sendPasswordResetEmail } from "@/lib/mail";
+import { emailQueue } from "@/queues/emailQueue";
 import crypto from "crypto";
 
 export async function POST(req: Request) {
@@ -34,11 +34,16 @@ export async function POST(req: Request) {
             },
         });
 
-        const mailSent = await sendPasswordResetEmail(email, token);
-
-        if (!mailSent) {
-            return NextResponse.json({ error: "Failed to send reset email. Contact admin." }, { status: 500 });
-        }
+        await emailQueue.add("password-reset", {
+            type: "password-reset",
+            data: { email, token },
+        }, {
+            attempts: 3,
+            backoff: {
+                type: "exponential",
+                delay: 5000,
+            },
+        });
 
         return NextResponse.json({ success: true, message: "Reset link sent if account exists." });
     } catch (error) {

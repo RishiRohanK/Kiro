@@ -2,19 +2,16 @@ import Redis from 'ioredis';
 
 const getRedisUrl = () => {
   if (process.env.REDIS_URL) return process.env.REDIS_URL;
-  return null;
+  return "redis://127.0.0.1:6379";
 };
 
-const redis = getRedisUrl() ? new Redis(getRedisUrl()!, {
-  maxRetriesPerRequest: 3,
-  retryStrategy: (times) => Math.min(times * 50, 2000),
-}) : null;
+export const redis = new Redis(getRedisUrl(), {
+  maxRetriesPerRequest: null,
+});
 
-if (redis) {
-  redis.on('error', (err) => {
-    console.error('Redis synchronization failure:', err);
-  });
-}
+redis.on('error', (err) => {
+  console.error('Redis synchronization failure:', err);
+});
 
 export default redis;
 
