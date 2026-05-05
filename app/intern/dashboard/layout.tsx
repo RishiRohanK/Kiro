@@ -181,6 +181,9 @@ function InternDashboardLayoutContent({
         if (college.includes("kits") || college.includes("kamala institute")) {
             return "https://ik.imagekit.io/dypkhqxip/kits";
         }
+        if (college.includes("mohan babu") || college.includes("mbu")) {
+            return "https://upload.wikimedia.org/wikipedia/en/4/4b/Mohan_Babu_University_Logo%2C_Tirupati%2C_Andhra_Pradesh%2C_India.png";
+        }
         return null;
     };
 

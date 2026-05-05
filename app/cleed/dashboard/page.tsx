@@ -80,6 +80,20 @@ interface Intern {
    totalTrackingDays?: number;
 }
 
+const getCollegeLogo = (collegeName: string) => {
+   const college = collegeName?.toLowerCase() || "";
+   if (college.includes("cmrit") || college.includes("cmr")) {
+      return "https://ik.imagekit.io/dypkhqxip/cmrit";
+   }
+   if (college.includes("kits") || college.includes("kamala institute")) {
+      return "https://ik.imagekit.io/dypkhqxip/kits";
+   }
+   if (college.includes("mohan babu") || college.includes("mbu")) {
+      return "https://upload.wikimedia.org/wikipedia/en/4/4b/Mohan_Babu_University_Logo%2C_Tirupati%2C_Andhra_Pradesh%2C_India.png";
+   }
+   return null;
+};
+
 interface HiringApplication {
    id: string;
    name: string;
@@ -2627,10 +2641,19 @@ export default function CleedDashboard() {
                                           </div>
                                        </div>
 
-                                       <div className="flex flex-col">
-                                          <span className="text-[9px] font-bold text-zinc-400 mb-1">Institution</span>
-                                          <h4 className="text-[13px] font-bold text-zinc-900 leading-none truncate">{intern.college || 'Undeclared'}</h4>
-                                          <p className="text-[10px] text-red-600 font-bold mt-1">{intern.branch || 'General branch'}</p>
+                                       <div className="flex items-center gap-3 overflow-hidden">
+                                          {getCollegeLogo(intern.college || "") && (
+                                             <img 
+                                                src={getCollegeLogo(intern.college || "")!} 
+                                                alt="College Logo" 
+                                                className="h-8 w-8 object-contain shrink-0" 
+                                             />
+                                          )}
+                                          <div className="flex flex-col overflow-hidden">
+                                             <span className="text-[9px] font-bold text-zinc-400 mb-1">Institution</span>
+                                             <h4 className="text-[13px] font-bold text-zinc-900 leading-none truncate">{intern.college || 'Undeclared'}</h4>
+                                             <p className="text-[10px] text-red-600 font-bold mt-1">{intern.branch || 'General branch'}</p>
+                                          </div>
                                        </div>
 
                                        <div className="flex items-center gap-8 lg:justify-start">
@@ -2968,7 +2991,16 @@ export default function CleedDashboard() {
                                           <td className="px-6 py-5">
                                              <div className="flex flex-col">
                                                 <p className="text-[12px] font-bold text-zinc-600">{intern.email}</p>
-                                                <p className="text-[11px] text-zinc-400">{intern.college || "N/A"}</p>
+                                                <div className="flex items-center gap-2">
+                                                   {getCollegeLogo(intern.college || "") && (
+                                                      <img 
+                                                         src={getCollegeLogo(intern.college || "")!} 
+                                                         alt="Logo" 
+                                                         className="h-4 w-4 object-contain" 
+                                                      />
+                                                   )}
+                                                   <p className="text-[11px] text-zinc-400">{intern.college || "N/A"}</p>
+                                                </div>
                                              </div>
                                           </td>
                                           <td className="px-8 py-5 text-right">
@@ -3153,7 +3185,15 @@ export default function CleedDashboard() {
                                           </div>
                                           {app.college && (
                                              <div className="flex items-center gap-3">
-                                                <Building2 size={12} className="text-zinc-400" />
+                                                {getCollegeLogo(app.college) ? (
+                                                   <img 
+                                                      src={getCollegeLogo(app.college)!} 
+                                                      alt="College Logo" 
+                                                      className="h-4 w-4 object-contain shrink-0" 
+                                                   />
+                                                ) : (
+                                                   <Building2 size={12} className="text-zinc-400" />
+                                                )}
                                                 <span className="text-[11px] font-medium truncate">{app.college} {app.yearOfStudy ? `(${app.yearOfStudy})` : ""}</span>
                                              </div>
                                           )}

@@ -59,7 +59,7 @@ const getSimpleTemplate = (title: string, content: string, ctaText: string, ctaU
                 <div class="signature">
                     Best Wishes,<br/>
                     <b>Rishi Rohan Kalapala</b><br/>
-                    CtO, Student Forge Technologies Pvt. Ltd.
+                    CTO, Student Forge Technologies Pvt. Ltd.
                 </div>
             </div>
             <div class="footer">

@@ -358,21 +358,23 @@ function InternDashboardContent() {
          setSocketStatus("connecting");
          const PROD_URL = process.env.NEXT_PUBLIC_CHAT_SERVER_URL || "https://redlix-chat-relay.onrender.com";
          
+         // Keep-alive ping for Render free tier
          fetch(`${PROD_URL}/ping`).catch(() => {});
 
-         const CHAT_SERVER_URL = window.location.hostname === "localhost" 
-            ? "http://localhost:5005" 
-            : PROD_URL;
+         const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+         const CHAT_SERVER_URL = isLocal ? "http://localhost:5005" : PROD_URL;
+
+         console.log(`CHAT_SYSTEM: Initiating connection to ${CHAT_SERVER_URL} (isLocal: ${isLocal})`);
 
          const newSocket = io(CHAT_SERVER_URL, {
+            reconnection: true,
             reconnectionAttempts: Infinity,
-            reconnectionDelay: 1000,
-            reconnectionDelayMax: 5000,
-            randomizationFactor: 0.5,
-            timeout: 20000,
+            reconnectionDelay: 2000,
+            reconnectionDelayMax: 10000,
+            timeout: 45000,
             autoConnect: true,
             withCredentials: false,
-            transports: ["polling", "websocket"]
+            transports: ["websocket", "polling"]
          });
          setSocket(newSocket);
 
@@ -767,44 +769,26 @@ function InternDashboardContent() {
       <div key={activeTab} className="p-4 lg:p-6 max-w-[1600px] w-full mx-auto bg-white min-h-screen pb-24 lg:pb-6">
          {activeTab === "overview" && (
             <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} className="space-y-4">
-               {attendancePercentage < 65 && (
-                  <motion.div 
-                     initial={{ opacity: 0, y: -10 }}
-                     animate={{ opacity: 1, y: 0 }}
-                     className="bg-red-50 border border-red-100 p-4 rounded-lg flex items-center gap-4"
-                  >
-                     <div className="h-10 w-10 bg-red-100 rounded-full flex items-center justify-center shrink-0">
-                        <AlertCircle className="text-red-600" size={20} />
-                     </div>
-                     <div className="flex-1">
-                        <h4 className="text-[13px] font-bold text-red-700">Attendance Warning</h4>
-                        <p className="text-[12px] text-red-600 font-medium leading-relaxed">
-                           Your attendance is currently <span className="font-bold">{attendancePercentage}%</span>. Make sure to follow correct attendance procedures, else your internship completion details will not be issued.
-                        </p>
-                     </div>
-                  </motion.div>
-               )}
-
                {user.batch === "Batch 1" && (
                   <motion.div 
                      initial={{ opacity: 0, y: -10 }}
                      animate={{ opacity: 1, y: 0 }}
-                     className="bg-blue-50 border border-blue-600/10 p-4 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-4"
+                     className="bg-blue-50 border border-blue-600/10 py-2.5 px-4 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-4"
                   >
                      <div className="flex items-center gap-4">
-                        <div className="h-10 w-10 bg-blue-600 text-white rounded-full flex items-center justify-center shrink-0">
-                           <Send size={18} />
+                        <div className="h-8 w-8 bg-blue-600 text-white rounded-full flex items-center justify-center shrink-0">
+                           <Send size={15} />
                         </div>
                         <div>
-                           <h4 className="text-[14px] font-bold text-blue-900">Week 2 Submission is Live</h4>
-                           <p className="text-[12px] text-blue-700 font-medium leading-relaxed">
-                              Submit your team details and project links here. All fields are mandatory for evaluation.
+                           <h4 className="text-[13px] font-bold text-blue-900">Week 2 Submission is Live</h4>
+                           <p className="text-[11px] text-blue-700 font-medium leading-relaxed">
+                              Submit your team details and project links here.
                            </p>
                         </div>
                      </div>
                      <button 
                         onClick={() => setShowWeek2Modal(true)}
-                        className="w-full sm:w-fit px-6 h-10 bg-blue-600 text-white text-[11px] font-bold rounded-lg hover:bg-black transition-all shadow-md shadow-blue-500/20"
+                        className="w-full sm:w-fit px-5 h-8 bg-blue-600 text-white text-[10px] font-bold rounded-lg hover:bg-black transition-all shadow-sm shadow-blue-500/20"
                      >
                         Submit Now
                      </button>

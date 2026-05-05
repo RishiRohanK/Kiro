@@ -104,6 +104,18 @@ io.on("connection", (socket) => {
 });
 
 const PORT = process.env.PORT || 5005;
+
+// Verify Database Connection
+pool.query('SELECT NOW()', (err, res) => {
+  if (err) {
+    console.error('CRITICAL: Database connection failed:', err);
+  } else {
+    console.log('DATABASE: Connected successfully at', res.rows[0].now);
+  }
+});
+
 server.listen(PORT, () => {
   console.log(`Relay Node synchronized on Port ${PORT}`);
+  console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`CORS Origin: *`);
 });
