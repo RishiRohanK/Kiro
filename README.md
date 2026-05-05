@@ -20,6 +20,23 @@ Kiro LMS is a high-performance Learning Management System with integrated backgr
 ![Prisma](https://img.shields.io/badge/Prisma-2D3748?style=for-the-badge&logo=prisma&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
 
+| Layer | Technology | Usage |
+| :--- | :--- | :--- |
+| **Framework** | Next.js | Modern SSR/ISR framework for high-performance web architecture |
+| **Frontend** | React | Component-based UI library for dynamic user experiences |
+| **Language** | TypeScript | Type-safe development for scalable and maintainable code |
+| **Styling** | Tailwind CSS | Utility-first CSS framework for rapid and consistent UI design |
+| **Animations** | Framer Motion | High-fidelity animations and micro-interactions |
+| **Database** | PostgreSQL | Robust relational database engine for mission-critical data |
+| **ORM** | Prisma | Type-safe database client and automated migrations |
+| **Caching** | Redis | High-speed data caching and session management |
+| **Queueing** | BullMQ | Distributed job and message queue for background processing |
+| **Real-time** | Socket.io | Low-latency bi-directional communication for live features |
+| **Auth** | Supabase | Secure authentication and session state management |
+| **Mailing** | Nodemailer | Automated email dispatch and onboarding engine |
+| **Payments** | Razorpay | Integrated financial transaction gateway |
+| **DevOps** | Docker | Containerization for consistent deployment environments |
+
 </div>
 
 ---
