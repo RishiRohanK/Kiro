@@ -423,12 +423,20 @@ function InternDashboardContent() {
 
    useEffect(() => {
       if (socket && socketStatus === "connected" && user?.id) {
-         const teamId = schedules.find(s => s.teamInternIds?.includes(user.id))?.teamAllocation || "global";
+         // Correct logic: Find the team where THE CURRENT USER is a member
+         const myTeam = schedules.find(s => s.teamInternIds?.includes(user.id));
+         const teamId = myTeam?.teamAllocation || "global";
+         
+         setActiveTeamId(teamId);
          console.log(`CHAT_SYSTEM: Synchronizing with Team ${teamId}`);
          socket.emit("join_team", { teamId, userId: user.id });
-         socket.emit("get_history", teamId);
+         
+         // Fetch history for the active team/user
+         fetchMessageHistory(teamId, selectedUser?.id);
       }
-   }, [socket, socketStatus, user, schedules]);
+   }, [socket, socketStatus, user, schedules, selectedUser?.id]);
+
+   // Remove the old redundant useEffect at line 452
 
    const fetchMessageHistory = async (teamId: string, otherUserId?: string) => {
       try {
@@ -449,18 +457,24 @@ function InternDashboardContent() {
       }
    };
 
-   useEffect(() => {
-      if (socket && user) {
-         const teamAllocation = schedules.find(s => s.teamAllocation)?.teamAllocation;
-         const currentTeamId = teamAllocation || "global";
-         
-         setActiveTeamId(currentTeamId);
-         socket.emit("join_team", currentTeamId);
-         console.log("CHAT_SERVER: Joined room", currentTeamId);
-         
-         fetchMessageHistory(currentTeamId, selectedUser?.id);
+   const getSenderColor = (name: string) => {
+      const colors = [
+         'text-emerald-500', // Green
+         'text-rose-500',    // Red
+         'text-amber-500',   // Yellow
+         'text-blue-500',    // Blue
+         'text-pink-500',    // Pink
+         'text-indigo-500',  // Indigo
+         'text-orange-500',  // Orange
+         'text-purple-500'   // Purple
+      ];
+      let hash = 0;
+      if (!name) return colors[0];
+      for (let i = 0; i < name.length; i++) {
+         hash = name.charCodeAt(i) + ((hash << 5) - hash);
       }
-   }, [socket?.id, schedules, user?.id, selectedUser?.id]);
+      return colors[Math.abs(hash) % colors.length];
+   };
 
    useEffect(() => {
       if (messages.length > 0) {
@@ -1443,8 +1457,8 @@ function InternDashboardContent() {
                               <div key={i} className={`flex flex-col ${isOwn ? "items-end" : "items-start"}`}>
                                  <div className={`max-w-[85%] lg:max-w-[70%] ${isOwn ? "text-right" : "text-left"}`}>
                                     {!isOwn && (
-                                       <span className="text-[9px] lg:text-[10px] font-bold text-zinc-400 mb-1 lg:mb-2 block px-1">
-                                          {msg.senderName}
+                                       <span className={`text-[10px] font-bold mb-1 block px-1 ${getSenderColor(msg.senderName || "Anonymous")}`}>
+                                          {msg.senderName || "Anonymous"}
                                        </span>
                                     )}
                                     <div className={`px-4 py-3 ${isOwn ? "bg-zinc-900 text-white rounded-none shadow-sm" : "bg-white border border-zinc-100 text-zinc-900 rounded-none shadow-sm"}`}>
