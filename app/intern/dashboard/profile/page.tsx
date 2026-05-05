@@ -444,7 +444,7 @@ export default function InternProfile() {
                     {/* Tabs Section */}
                     <div className="bg-white border border-zinc-200 shadow-sm rounded-sm overflow-hidden">
                         <div className="border-b border-zinc-100 flex items-center gap-10 px-10">
-                            {["Summary", "Career Journey", "Activity"].map((tab: any) => (
+                            {["Summary", "My Journey", "Activity"].map((tab: any) => (
                                 <button 
                                     key={tab}
                                     onClick={() => setActiveTab(tab)}
@@ -585,7 +585,7 @@ export default function InternProfile() {
                                     </motion.div>
                                 )}
 
-                                {activeTab === "Career Journey" && (
+                                {activeTab === "My Journey" && (
                                     <motion.div 
                                         key="career"
                                         initial={{ opacity: 0, y: 10 }}
