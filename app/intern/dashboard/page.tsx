@@ -381,11 +381,6 @@ function InternDashboardContent() {
          newSocket.on("connect", () => {
             console.log("CHAT_SERVER: Connection established");
             setSocketStatus("connected");
-            if (user?.id) {
-               const teamId = schedules.find(s => s.teamInternIds?.includes(user.id))?.teamAllocation || "global";
-               newSocket.emit("join_team", { teamId, userId: user.id });
-               newSocket.emit("get_history", teamId);
-            }
          });
 
          newSocket.on("online_users", (users: string[]) => {
@@ -425,6 +420,15 @@ function InternDashboardContent() {
       }
    }, [user]);
 
+
+   useEffect(() => {
+      if (socket && socketStatus === "connected" && user?.id) {
+         const teamId = schedules.find(s => s.teamInternIds?.includes(user.id))?.teamAllocation || "global";
+         console.log(`CHAT_SYSTEM: Synchronizing with Team ${teamId}`);
+         socket.emit("join_team", { teamId, userId: user.id });
+         socket.emit("get_history", teamId);
+      }
+   }, [socket, socketStatus, user, schedules]);
 
    const fetchMessageHistory = async (teamId: string, otherUserId?: string) => {
       try {

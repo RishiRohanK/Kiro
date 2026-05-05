@@ -71,6 +71,8 @@ io.on("connection", (socket) => {
   socket.on("send_message", async (data) => {
     const { teamId, message, senderId, senderName, targetId } = data;
     try {
+      if (!teamId || !message) return;
+      
       const newMessage = await prisma.message.create({
         data: {
           teamId,
@@ -83,7 +85,19 @@ io.on("connection", (socket) => {
 
       io.to(teamId).emit("receive_message", newMessage);
     } catch (error) {
-      console.error("Persistence error:", error);
+      console.error("DB_PERSISTENCE_ERROR:", error);
+      
+      // Fallback for real-time continuity if DB fails
+      const fallbackMessage = {
+        id: `err-${Date.now()}`,
+        teamId,
+        senderId,
+        senderName: senderName || "Anonymous Intern",
+        content: message,
+        createdAt: new Date().toISOString(),
+        isUnstored: true
+      };
+      io.to(teamId).emit("receive_message", fallbackMessage);
     }
   });
 
