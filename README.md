@@ -1,5 +1,7 @@
 <div align="center">
 
+<img src="https://ik.imagekit.io/dypkhqxip/logo.png?updatedAt=1777320313623" alt="Kiro Logo" width="120" />
+
 # Kiro LMS
 **MVP Stage - Developed by Redlix Systems**
 
