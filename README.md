@@ -1,15 +1,15 @@
 <div align="center">
 
-# KIRO LMS
+# Kiro LMS
 **MVP Stage - Developed by Redlix Systems**
 
-Kiro LMS is a high-performance Learning Management System with integrated background processing for industrial-scale reliability.
+Kiro LMS is a high-performance Learning Management System with background processing for reliable task management.
 
 [Documentation](/docs) • [Intern Portal](/intern/signin) • [Cleed Dashboard](/cleed/dashboard) • [Security Logs](/admin/logs)
 
 ---
 
-## TECHNOLOGY STACK
+## Technology Stack
 
 ![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)
 ![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
@@ -22,31 +22,31 @@ Kiro LMS is a high-performance Learning Management System with integrated backgr
 
 | Layer | Technology | Usage |
 | :--- | :--- | :--- |
-| **Framework** | Next.js | Modern SSR/ISR framework for high-performance web architecture |
-| **Frontend** | React | Component-based UI library for dynamic user experiences |
-| **Language** | TypeScript | Type-safe development for scalable and maintainable code |
-| **Styling** | Tailwind CSS | Utility-first CSS framework for rapid and consistent UI design |
-| **Animations** | Framer Motion | High-fidelity animations and micro-interactions |
-| **Database** | PostgreSQL | Robust relational database engine for mission-critical data |
-| **ORM** | Prisma | Type-safe database client and automated migrations |
-| **Caching** | Redis | High-speed data caching and session management |
-| **Queueing** | BullMQ | Distributed job and message queue for background processing |
-| **Real-time** | Socket.io | Low-latency bi-directional communication for live features |
-| **Auth** | Supabase | Secure authentication and session state management |
-| **Mailing** | Nodemailer | Automated email dispatch and onboarding engine |
-| **Payments** | Razorpay | Integrated financial transaction gateway |
-| **DevOps** | Docker | Containerization for consistent deployment environments |
+| **Framework** | Next.js | Modern framework for fast web apps |
+| **Frontend** | React | Library for building user interfaces |
+| **Language** | TypeScript | Type-safe programming |
+| **Styling** | Tailwind CSS | Utility-first CSS for design |
+| **Animations** | Framer Motion | Smooth animations and transitions |
+| **Database** | PostgreSQL | Relational database for storing data |
+| **ORM** | Prisma | Database tool and migrations |
+| **Caching** | Redis | Fast data caching and session storage |
+| **Queueing** | BullMQ | Background job and message queue |
+| **Real-time** | Socket.io | Real-time chat and monitoring |
+| **Auth** | Supabase | Secure login and authentication |
+| **Mailing** | Nodemailer | Sending emails and onboarding info |
+| **Payments** | Razorpay | Handling financial transactions |
+| **DevOps** | Docker | Container system for easy deployment |
 
 </div>
 
 ---
 
-## BACKGROUND PROCESSING (BULLMQ + REDIS)
+## Background Processing (BullMQ + Redis)
 
-The system uses BullMQ and Redis for high-reliability background tasks (e.g., email dispatch, notifications).
+The system uses BullMQ and Redis to handle tasks like sending emails and notifications in the background.
 
 ### Worker Management
-To handle background jobs, you must run the dedicated workers separately from the Next.js server:
+To handle background jobs, you must run the workers separately from the main server:
 
 ```bash
 # Start Email Worker
@@ -57,31 +57,31 @@ npm run worker:notification
 ```
 
 ### Queue Architecture
-- **Email Queue**: Processes all system communications (onboarding, password resets, offer letters).
-- **Notification Queue**: Handles real-time system alerts and push notifications.
+- **Email Queue**: Handles all system emails like onboarding and password resets.
+- **Notification Queue**: Handles live alerts and push notifications.
 
 ---
 
-## DEPLOYMENT PROTOCOL
+## Deployment Protocol
 
-### DOCKER DEPLOYMENT
-The ecosystem is optimized for containerized environments including localized Redis and PostgreSQL nodes.
+### Docker Deployment
+The system is ready for Docker and includes Redis and PostgreSQL setup.
 
 ```bash
-# Initialize the industrial cluster
+# Start the system
 docker-compose up --build
 ```
-The ecosystem will be accessible at http://localhost (Port 80).
+The app will be available at http://localhost (Port 80).
 
-### LOCAL DEVELOPMENT
+### Local Development
 ```bash
-# Dependency acquisition
+# Install dependencies
 npm install
 
-# Client generation
+# Generate database client
 npx prisma generate
 
-# Development runtime
+# Run development server
 npm run dev
 ```
 
@@ -89,5 +89,5 @@ npm run dev
 
 <div align="center">
 **Redlix Systems — 2026**
-*Kiro LMS | Minimalist Standard | Engineered for Integrity*
+*Kiro LMS | Minimalist Standard | Built for Integrity*
 </div>
