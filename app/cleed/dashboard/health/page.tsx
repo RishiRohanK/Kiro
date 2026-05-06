@@ -146,6 +146,70 @@ export default function SystemHealthPage() {
                     ))}
                 </div>
 
+                {/* Worker Status Section */}
+                {healthData?.workers && (
+                    <div className="mt-12 space-y-6">
+                        <div className="flex items-center gap-3">
+                            <div className="p-2 bg-blue-500/10 text-blue-500 rounded-sm">
+                                <Activity size={18} />
+                            </div>
+                            <h2 className="text-xl font-bold tracking-tight uppercase">Background Workers</h2>
+                        </div>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="bg-zinc-950 border border-zinc-900 p-6 space-y-4 hover:border-zinc-800 transition-colors">
+                                <div className="flex justify-between items-center">
+                                    <h3 className="text-sm font-bold uppercase tracking-widest text-zinc-400">Email Queue</h3>
+                                    <span className="text-[10px] px-2 py-0.5 bg-green-500/10 text-green-500 font-bold border border-green-500/20 uppercase tracking-tighter">Running</span>
+                                </div>
+                                <div className="grid grid-cols-4 gap-2">
+                                    <div className="text-center">
+                                        <p className="text-[9px] text-zinc-600 font-bold uppercase">Waiting</p>
+                                        <p className="text-lg font-black text-white">{healthData.workers.email.waiting}</p>
+                                    </div>
+                                    <div className="text-center">
+                                        <p className="text-[9px] text-zinc-600 font-bold uppercase">Active</p>
+                                        <p className="text-lg font-black text-blue-500">{healthData.workers.email.active}</p>
+                                    </div>
+                                    <div className="text-center">
+                                        <p className="text-[9px] text-zinc-600 font-bold uppercase">Done</p>
+                                        <p className="text-lg font-black text-emerald-500">{healthData.workers.email.completed}</p>
+                                    </div>
+                                    <div className="text-center">
+                                        <p className="text-[9px] text-zinc-600 font-bold uppercase">Fail</p>
+                                        <p className="text-lg font-black text-red-500">{healthData.workers.email.failed}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="bg-zinc-950 border border-zinc-900 p-6 space-y-4 hover:border-zinc-800 transition-colors">
+                                <div className="flex justify-between items-center">
+                                    <h3 className="text-sm font-bold uppercase tracking-widest text-zinc-400">Push Queue</h3>
+                                    <span className="text-[10px] px-2 py-0.5 bg-green-500/10 text-green-500 font-bold border border-green-500/20 uppercase tracking-tighter">Running</span>
+                                </div>
+                                <div className="grid grid-cols-4 gap-2">
+                                    <div className="text-center">
+                                        <p className="text-[9px] text-zinc-600 font-bold uppercase">Waiting</p>
+                                        <p className="text-lg font-black text-white">{healthData.workers.notification.waiting}</p>
+                                    </div>
+                                    <div className="text-center">
+                                        <p className="text-[9px] text-zinc-600 font-bold uppercase">Active</p>
+                                        <p className="text-lg font-black text-blue-500">{healthData.workers.notification.active}</p>
+                                    </div>
+                                    <div className="text-center">
+                                        <p className="text-[9px] text-zinc-600 font-bold uppercase">Done</p>
+                                        <p className="text-lg font-black text-emerald-500">{healthData.workers.notification.completed}</p>
+                                    </div>
+                                    <div className="text-center">
+                                        <p className="text-[9px] text-zinc-600 font-bold uppercase">Fail</p>
+                                        <p className="text-lg font-black text-red-500">{healthData.workers.notification.failed}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
                 {/* Simplified Indicators */}
                 <div className="mt-12 grid grid-cols-2 lg:grid-cols-4 gap-4">
                     {[
