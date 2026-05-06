@@ -5,7 +5,7 @@ const rateLimitMap = new Map<string, { count: number; lastReset: number }>();
 const RATE_LIMIT_WINDOW = 60 * 1000; 
 const MAX_REQUESTS = 100; 
 
-export async function proxy(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const method = request.method.toUpperCase();
 
