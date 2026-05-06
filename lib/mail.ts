@@ -301,3 +301,32 @@ export const sendCleedPasswordResetEmail = async (email: string, token: string) 
         return false;
     }
 };
+export const sendEmployeeOnboardingEmail = async (email: string, name: string, role: string, password: string) => {
+    const title = "Welcome to the Student Forge Team";
+    const content = `
+        Hello ${name},<br/><br/>
+        Congratulations! We are thrilled to welcome you to <b>Student Forge Technologies</b> as a <b>${role.replace('_', ' ')}</b>. Your professional account has been successfully provisioned within our administrative ecosystem.<br/><br/>
+        <b>Your Access Credentials:</b><br/>
+        Email: ${email}<br/>
+        Temporary Password: ${password}<br/><br/>
+        <b>Next Steps:</b><br/>
+        1. Access the Cleed Portal: <a href="https://platform.studentforge.in/cleed/login">Login Here</a><br/>
+        2. Update your password upon first login.<br/>
+        3. Synchronize with your department lead for the orientation schedule.<br/><br/>
+        We look forward to your contributions to our technical and creative initiatives. Welcome aboard!
+    `;
+    const html = getSimpleTemplate(title, content, "Access Portal", "https://platform.studentforge.in/cleed/login", "Operations Division");
+
+    try {
+        await transporter.sendMail({
+            from: '"Forge HR" <studentforgetechnologies@gmail.com>',
+            to: email,
+            subject: `Onboarding: Welcome to the Team, ${name}`,
+            html: html,
+        });
+        return true;
+    } catch (error) {
+        console.error("Employee Onboarding Mail Error:", error);
+        return false;
+    }
+};

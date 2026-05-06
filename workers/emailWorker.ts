@@ -9,7 +9,8 @@ import {
   sendInterviewEmail,
   sendRescheduleEmail,
   sendBootcampRegistrationEmail,
-  sendCleedPasswordResetEmail
+  sendCleedPasswordResetEmail,
+  sendEmployeeOnboardingEmail
 } from "../lib/mail";
 
 const worker = new Worker(
@@ -45,6 +46,9 @@ const worker = new Worker(
         break;
       case "cleed-password-reset":
         await sendCleedPasswordResetEmail(data.email, data.token);
+        break;
+      case "onboard-employee":
+        await sendEmployeeOnboardingEmail(data.email, data.name, data.role, data.password);
         break;
       case "generic":
         console.log("Generic email to:", data.to, "Subject:", data.subject);

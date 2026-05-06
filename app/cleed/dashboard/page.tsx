@@ -1400,6 +1400,7 @@ export default function CleedDashboard() {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
+               name: offerData.name,
                email: offerData.email,
                offerLetterUrl: offerData.link,
                customMessage: offerData.message

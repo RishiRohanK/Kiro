@@ -1,6 +1,7 @@
 import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
+import { emailQueue } from "@/queues/emailQueue";
 
 export async function GET() {
   try {
@@ -53,6 +54,17 @@ export async function POST(req: Request) {
         batch: batch || "Batch 1",
         isApproved: true,
         employeeId: autoEmployeeId,
+      }
+    });
+    
+    // Automation: Dispatch Onboarding Email
+    await emailQueue.add("onboard-employee", {
+      type: "onboard-employee",
+      data: {
+        email: employee.email,
+        name: employee.name,
+        role: employee.role,
+        password: password // Original password before hashing
       }
     });
 

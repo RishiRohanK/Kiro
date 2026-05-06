@@ -4,7 +4,7 @@ import { emailQueue } from "@/queues/emailQueue";
 
 export async function POST(req: Request) {
   try {
-    const { internId, offerLetterUrl, customMessage, email } = await req.json();
+    const { internId, offerLetterUrl, customMessage, email, name } = await req.json();
 
     if ((!internId && !email) || !offerLetterUrl) {
       return NextResponse.json({ error: "Intern ID/Email and Offer Letter URL are required" }, { status: 400 });
@@ -21,7 +21,7 @@ export async function POST(req: Request) {
     }
 
     const recipientEmail = email || user?.email;
-    const recipientName = user?.name || "Intern";
+    const recipientName = name || user?.name || "Intern";
 
     if (customMessage) {
       await emailQueue.add("custom-offer-letter", {
