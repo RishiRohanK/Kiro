@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Mail, Send, Users, CheckCircle2, AlertCircle, Loader2, Search } from "lucide-react";
+import { Mail, Send, Users, CheckCircle2, AlertCircle, Loader2, Search, LayoutDashboard } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface Registration {
@@ -100,19 +100,28 @@ export default function BootcampMailerPage() {
             <div className="max-w-7xl mx-auto space-y-8">
                 {/* Header */}
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                    <div>
-                        <h1 className="text-2xl font-bold text-zinc-900 tracking-tight flex items-center gap-3">
-                            <div className="w-10 h-10 bg-black text-white flex items-center justify-center rounded-xl">
-                                <Mail size={20} />
-                            </div>
-                            Bootcamp Mail Dispatcher
-                        </h1>
-                        <p className="text-zinc-500 text-sm mt-1">Send bulk personalized emails to registered bootcamp candidates.</p>
+                    <div className="flex items-center gap-4">
+                        <button 
+                            onClick={() => window.location.href = "/cleed/dashboard"}
+                            className="h-10 px-4 bg-white border border-zinc-200 text-zinc-900 text-xs font-bold uppercase tracking-widest hover:bg-zinc-50 transition-all flex items-center gap-2"
+                        >
+                            <LayoutDashboard size={14} /> Dashboard
+                        </button>
+                        <div className="h-8 w-[1px] bg-zinc-200 mx-2 hidden md:block" />
+                        <div>
+                            <h1 className="text-2xl font-bold text-zinc-900 tracking-tight flex items-center gap-3">
+                                <div className="w-10 h-10 bg-[#F5332C] text-white flex items-center justify-center rounded-none shadow-lg shadow-red-500/20">
+                                    <Mail size={20} />
+                                </div>
+                                Bootcamp Mailer
+                            </h1>
+                            <p className="text-zinc-500 text-[11px] font-bold uppercase tracking-tighter mt-1">Industrial Dispatch Protocol</p>
+                        </div>
                     </div>
-                    <div className="flex items-center gap-3 bg-white p-1.5 rounded-xl border border-zinc-200 shadow-sm">
-                        <div className="px-4 py-2 bg-zinc-50 rounded-lg border border-zinc-100">
-                            <span className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest block">Selected Candidates</span>
-                            <span className="text-lg font-bold text-black">{selectedIds.length} / {registrations.length}</span>
+                    <div className="flex items-center gap-3 bg-white p-2 border border-zinc-200 shadow-sm rounded-none">
+                        <div className="px-5 py-2 bg-zinc-50 border border-zinc-100 text-right">
+                            <span className="text-[9px] font-bold text-zinc-400 uppercase tracking-widest block">Authorized Nodes</span>
+                            <span className="text-lg font-black text-zinc-900 tabular-nums">{selectedIds.length} <span className="text-xs text-zinc-400">/ {registrations.length}</span></span>
                         </div>
                     </div>
                 </div>
@@ -258,7 +267,7 @@ export default function BootcampMailerPage() {
                                                     </td>
                                                     <td className="px-6 py-4">
                                                         <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider border ${
-                                                            reg.paymentStatus === 'success' || reg.paymentStatus === 'verified' 
+                                                            reg.paymentStatus === 'paid' || reg.paymentStatus === 'success' || reg.paymentStatus === 'verified' 
                                                             ? 'bg-emerald-50 text-emerald-600 border-emerald-100' 
                                                             : 'bg-amber-50 text-amber-600 border-amber-100'
                                                         }`}>

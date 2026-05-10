@@ -1589,6 +1589,7 @@ export default function CleedDashboard() {
                         { id: "certification", icon: FileBadge, label: "Certificates" },
                         { id: "attendance", icon: CalendarCheck, label: "Attendance" },
                         { id: "vault", icon: Shield, label: "Vault" },
+                        { id: "mailer", icon: Mail, label: "Mailer" },
                         { id: "schedule", icon: Calendar, label: "Daily Plan" },
                         { id: "manage_schedules", icon: Settings, label: "Schedules" },
                         { id: "assign", icon: Send, label: "Dispatch" },
@@ -1601,6 +1602,8 @@ export default function CleedDashboard() {
                            onClick={() => { 
                               if (item.id === "vault") {
                                  router.push("/cleed/dashboard/submissions");
+                              } else if (item.id === "mailer") {
+                                 router.push("/cleed/dashboard/bootcamp-mailer");
                               } else {
                                  setActiveTab(item.id); 
                               }
@@ -1647,6 +1650,7 @@ export default function CleedDashboard() {
                         { id: "exams", icon: FileText, label: "Exams" },
                         { id: "resources", icon: BookOpen, label: "Resources" },
                         { id: "bootcamp", icon: Zap, label: "Bootcamp" },
+                        { id: "mailer", icon: Mail, label: "Mailer" },
                         { id: "attendance", icon: CalendarCheck, label: "Attendance" },
                         { id: "vault", icon: Shield, label: "Vault" },
                      ].map((item) => (
@@ -1655,6 +1659,8 @@ export default function CleedDashboard() {
                            onClick={() => {
                               if (item.id === "vault") {
                                  router.push("/cleed/dashboard/submissions");
+                              } else if (item.id === "mailer") {
+                                 router.push("/cleed/dashboard/bootcamp-mailer");
                               } else {
                                  setActiveTab(item.id);
                               }
