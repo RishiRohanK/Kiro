@@ -10,7 +10,8 @@ import {
   sendRescheduleEmail,
   sendBootcampRegistrationEmail,
   sendCleedPasswordResetEmail,
-  sendEmployeeOnboardingEmail
+  sendEmployeeOnboardingEmail,
+  sendBulkCustomEmail
 } from "../lib/mail";
 
 const worker = new Worker(
@@ -20,6 +21,9 @@ const worker = new Worker(
     console.log(`Processing email job: ${type} for ${data.email}`);
 
     switch (type) {
+      case "bulk-custom":
+        await sendBulkCustomEmail(data.email, data.name, data.subject, data.title, data.content);
+        break;
       case "approval":
         await sendApprovalEmail(data.email, data.name);
         break;

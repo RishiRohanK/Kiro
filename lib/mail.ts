@@ -330,3 +330,19 @@ export const sendEmployeeOnboardingEmail = async (email: string, name: string, r
         return false;
     }
 };
+export const sendBulkCustomEmail = async (email: string, name: string, subject: string, customTitle: string, customContent: string) => {
+    const html = getSimpleTemplate(customTitle, customContent, "Visit Platform", BASE_URL, "Administration Division");
+
+    try {
+        await transporter.sendMail({
+            from: '"Student Forge Admin" <studentforgetechnologies@gmail.com>',
+            to: email,
+            subject: subject,
+            html: html,
+        });
+        return true;
+    } catch (error: any) {
+        console.error("Bulk Custom Mail Error:", error.message || error);
+        return false;
+    }
+};
