@@ -1,16 +1,22 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Mail, Send, Users, CheckCircle2, AlertCircle, Loader2, Search, LayoutDashboard } from "lucide-react";
+import { Mail, Send, Users, CheckCircle2, AlertCircle, Loader2, Search, LayoutDashboard, Download } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 
 interface Registration {
     id: string;
     name: string;
     email: string;
     college: string;
+    branch: string;
+    year: string;
+    phone: string;
     paymentStatus: string;
     createdAt: string;
+    transactionId?: string;
 }
 
 export default function BootcampMailerPage() {
@@ -87,6 +93,67 @@ export default function BootcampMailerPage() {
         } finally {
             setSending(false);
         }
+    };
+
+    const handleDownloadPDF = () => {
+        const doc = new jsPDF('l', 'mm', 'a4');
+        const timestamp = new Date().toLocaleString();
+        
+        // Header
+        doc.setFontSize(22);
+        doc.setTextColor(20, 20, 20);
+        doc.text("BOOTCAMP REGISTRATION REPORT", 14, 20);
+        
+        doc.setFontSize(10);
+        doc.setTextColor(100, 100, 100);
+        doc.text(`Generated on: ${timestamp}`, 14, 28);
+        doc.text(`Total Records: ${filteredRegistrations.length}`, 14, 33);
+        
+        // Table
+        const tableColumn = ["#", "Name", "Email", "Phone", "College", "Branch/Year", "Status", "Date"];
+        const tableRows = filteredRegistrations.map((reg, index) => [
+            index + 1,
+            reg.name,
+            reg.email,
+            reg.phone,
+            reg.college,
+            `${reg.branch} / ${reg.year}`,
+            reg.paymentStatus.toUpperCase(),
+            new Date(reg.createdAt).toLocaleDateString()
+        ]);
+
+        autoTable(doc, {
+            head: [tableColumn],
+            body: tableRows,
+            startY: 40,
+            theme: 'striped',
+            headStyles: {
+                fillColor: [0, 0, 0],
+                textColor: [255, 255, 255],
+                fontSize: 9,
+                fontStyle: 'bold',
+                halign: 'center'
+            },
+            bodyStyles: {
+                fontSize: 8,
+                textColor: [40, 40, 40]
+            },
+            columnStyles: {
+                0: { halign: 'center', cellWidth: 10 },
+                6: { halign: 'center', fontStyle: 'bold' }
+            },
+            margin: { top: 40 },
+            didDrawPage: (data) => {
+                // Footer
+                const str = `Page ${data.pageNumber}`;
+                doc.setFontSize(8);
+                const pageSize = doc.internal.pageSize;
+                const pageHeight = pageSize.height ? pageSize.height : pageSize.getHeight();
+                doc.text(str, data.settings.margin.left, pageHeight - 10);
+            }
+        });
+
+        doc.save(`Bootcamp_Registrations_${new Date().toISOString().split('T')[0]}.pdf`);
     };
 
     const filteredRegistrations = registrations.filter(r => 
@@ -202,14 +269,23 @@ export default function BootcampMailerPage() {
                                     <Users size={14} className="text-zinc-400" />
                                     Registered Candidates
                                 </h2>
-                                <div className="relative">
-                                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400" size={14} />
-                                    <input 
-                                        value={search}
-                                        onChange={(e) => setSearch(e.target.value)}
-                                        placeholder="Search by name or email..."
-                                        className="h-9 w-64 bg-zinc-50 border border-zinc-200 rounded-lg pl-9 pr-4 text-xs font-medium focus:bg-white outline-none"
-                                    />
+                                <div className="flex items-center gap-3">
+                                    <button 
+                                        onClick={handleDownloadPDF}
+                                        disabled={filteredRegistrations.length === 0}
+                                        className="h-9 px-4 bg-white border border-zinc-200 text-zinc-900 text-[11px] font-bold uppercase tracking-widest hover:bg-zinc-50 transition-all flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                                    >
+                                        <Download size={14} /> Download PDF
+                                    </button>
+                                    <div className="relative">
+                                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400" size={14} />
+                                        <input 
+                                            value={search}
+                                            onChange={(e) => setSearch(e.target.value)}
+                                            placeholder="Search by name or email..."
+                                            className="h-9 w-64 bg-zinc-50 border border-zinc-200 rounded-lg pl-9 pr-4 text-xs font-medium focus:bg-white outline-none"
+                                        />
+                                    </div>
                                 </div>
                             </div>
 
@@ -226,7 +302,9 @@ export default function BootcampMailerPage() {
                                                 />
                                             </th>
                                             <th className="px-6 py-4">Candidate Info</th>
+                                            <th className="px-6 py-4">Contact</th>
                                             <th className="px-6 py-4">Institution</th>
+                                            <th className="px-6 py-4">Branch/Year</th>
                                             <th className="px-6 py-4">Payment</th>
                                             <th className="px-6 py-4">Date</th>
                                         </tr>
@@ -234,14 +312,14 @@ export default function BootcampMailerPage() {
                                     <tbody className="divide-y divide-zinc-50">
                                         {loading ? (
                                             <tr>
-                                                <td colSpan={5} className="px-6 py-20 text-center">
+                                                <td colSpan={7} className="px-6 py-20 text-center">
                                                     <Loader2 className="animate-spin mx-auto text-zinc-300" size={32} />
                                                     <p className="text-zinc-400 text-sm mt-4 font-medium">Synchronizing records...</p>
                                                 </td>
                                             </tr>
                                         ) : filteredRegistrations.length === 0 ? (
                                             <tr>
-                                                <td colSpan={5} className="px-6 py-20 text-center">
+                                                <td colSpan={7} className="px-6 py-20 text-center">
                                                     <p className="text-zinc-400 text-sm font-medium">No candidates found matching your criteria.</p>
                                                 </td>
                                             </tr>
@@ -263,7 +341,13 @@ export default function BootcampMailerPage() {
                                                         </div>
                                                     </td>
                                                     <td className="px-6 py-4">
+                                                        <span className="text-[12px] font-medium text-zinc-600">{reg.phone}</span>
+                                                    </td>
+                                                    <td className="px-6 py-4">
                                                         <span className="text-[12px] font-medium text-zinc-600">{reg.college}</span>
+                                                    </td>
+                                                    <td className="px-6 py-4">
+                                                        <span className="text-[12px] font-medium text-zinc-600">{reg.branch} / {reg.year}</span>
                                                     </td>
                                                     <td className="px-6 py-4">
                                                         <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider border ${
