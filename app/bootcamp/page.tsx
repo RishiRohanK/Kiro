@@ -144,71 +144,109 @@ export default function BootcampPage() {
                         </tr>
                         <tr>
                           <td className="px-5 py-3 bg-[#F8F9FA] border-r border-zinc-200 italic text-zinc-600 text-blue-900 font-medium">Training Operations Start</td>
-                          <td className="px-5 py-3 text-[#002147] font-semibold">May 10, 2026</td>
+                          <td className="px-5 py-3 text-[#002147] font-semibold">
+                            <span className="line-through text-zinc-400 mr-2">10-05-2026</span>
+                            <span>15-05-2026</span>
+                          </td>
                         </tr>
                         <tr>
                           <td className="px-5 py-3 bg-[#F8F9FA] border-r border-zinc-200 italic text-zinc-600">Final Assessment & Closure</td>
-                          <td className="px-5 py-3 font-medium">June 10, 2026</td>
+                          <td className="px-5 py-3 font-medium">
+                            <span className="line-through text-zinc-400 mr-2">June 10, 2026</span>
+                            <span>15-06-2026</span>
+                          </td>
                         </tr>
                       </tbody>
                     </table>
                   </div>
                 </section>
 
-                {/* Section 4: Comprehensive Syllabus (Full Stack Track) */}
+                {/* Section 4: Comprehensive Syllabus (MERN Stack Basics) */}
                 <section>
                   <div className="bg-[#F8F9FA] px-4 py-2 border-l-4 border-[#002147] mb-6 shadow-sm">
-                    <h2 className="text-[15px] sm:text-[16px] font-semibold text-[#002147]">4. Comprehensive Syllabus (Full Stack Track)</h2>
+                    <h2 className="text-[15px] sm:text-[16px] font-semibold text-[#002147]">4. Comprehensive Syllabus (MERN Stack Basics)</h2>
+                  </div>
+
+                  {/* Program Overview */}
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+                    <div className="p-4 bg-white border border-zinc-200 shadow-sm">
+                      <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-1">Duration</p>
+                      <p className="text-lg font-bold text-[#002147]">30 Days</p>
+                    </div>
+                    <div className="p-4 bg-white border border-zinc-200 shadow-sm">
+                      <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-1">Daily Commitment</p>
+                      <p className="text-lg font-bold text-[#002147]">1 Hour Class</p>
+                    </div>
+                    <div className="p-4 bg-white border border-zinc-200 shadow-sm">
+                      <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-1">Schedule</p>
+                      <p className="text-lg font-bold text-[#002147]">6 Days / Week</p>
+                    </div>
                   </div>
 
                   <div className="space-y-10">
-                    {/* Week 1: Fundamentals */}
+                    {/* Projects Overview */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="p-6 bg-[#F8F9FA] border border-zinc-200">
+                        <h3 className="text-sm font-bold text-[#002147] uppercase tracking-tight border-b border-zinc-200 pb-2 mb-4">Mini Project: Movie Search App</h3>
+                        <ul className="space-y-2 text-[13px] text-zinc-600 font-medium">
+                          <li className="flex items-center gap-2"><div className="w-1 h-1 bg-[#002147]" /> Search movies & API fetching</li>
+                          <li className="flex items-center gap-2"><div className="w-1 h-1 bg-[#002147]" /> Display cards & Responsive UI</li>
+                          <li className="flex items-center gap-2"><div className="w-1 h-1 bg-[#002147]" /> Favorites using localStorage</li>
+                        </ul>
+                      </div>
+                      <div className="p-6 bg-[#F8F9FA] border border-zinc-200">
+                        <h3 className="text-sm font-bold text-[#002147] uppercase tracking-tight border-b border-zinc-200 pb-2 mb-4">Major Project: MERN Task Manager</h3>
+                        <ul className="space-y-2 text-[13px] text-zinc-600 font-medium">
+                          <li className="flex items-center gap-2"><div className="w-1 h-1 bg-[#002147]" /> Login/Register & JWT Auth</li>
+                          <li className="flex items-center gap-2"><div className="w-1 h-1 bg-[#002147]" /> MongoDB storage & CRUD APIs</li>
+                          <li className="flex items-center gap-2"><div className="w-1 h-1 bg-[#002147]" /> Responsive Dashboard & Routes</li>
+                        </ul>
+                      </div>
+                    </div>
+
+                    {/* Week 1 */}
                     <div className="space-y-4">
-                      <div className="bg-[#002147] text-white px-4 py-1.5 text-[12px] font-medium">Week 1: Web Fundamentals & UI Design Foundations</div>
+                      <div className="bg-[#002147] text-white px-4 py-1.5 text-[12px] font-medium uppercase tracking-wider">Week 1: HTML, CSS & JavaScript Basics</div>
                       <div className="overflow-x-auto border border-zinc-200">
                         <table className="w-full text-left text-[13px] min-w-[550px]">
                           <thead className="bg-[#F8F9FA] border-b border-zinc-200 text-[#002147]">
                             <tr>
-                              <th className="px-4 py-2 font-semibold border-r border-zinc-200">Ref</th>
-                              <th className="px-4 py-2 font-semibold border-r border-zinc-200">Lesson Name</th>
-                              <th className="px-4 py-2 font-semibold border-r border-zinc-200">Level</th>
-                              <th className="px-4 py-2 font-semibold text-center">T-Time</th>
+                              <th className="px-4 py-2 font-semibold border-r border-zinc-200 w-16">Day</th>
+                              <th className="px-4 py-2 font-semibold border-r border-zinc-200">Topics & Concepts</th>
+                              <th className="px-4 py-2 font-semibold">Practical Task</th>
                             </tr>
                           </thead>
                           <tbody className="divide-y divide-zinc-200">
-                            <tr><td className="px-4 py-2 border-r">M-01</td><td className="px-4 py-2 border-r">Introduction to Web Development</td><td className="px-4 py-2 border-r">Beginner</td><td className="px-4 py-2 text-center">10m</td></tr>
-                            <tr><td className="px-4 py-2 border-r">M-01</td><td className="px-4 py-2 border-r">How the Web Works (Browser, Server, HTTP)</td><td className="px-4 py-2 border-r">Beginner</td><td className="px-4 py-2 text-center">15m</td></tr>
-                            <tr><td className="px-4 py-2 border-r">M-01</td><td className="px-4 py-2 border-r">HTML5 Fundamentals</td><td className="px-4 py-2 border-r">Beginner</td><td className="px-4 py-2 text-center">25m</td></tr>
-                            <tr><td className="px-4 py-2 border-r">M-01</td><td className="px-4 py-2 border-r">CSS3 Basics (Flexbox and Grid)</td><td className="px-4 py-2 border-r">Beginner</td><td className="px-4 py-2 text-center">30m</td></tr>
-                            <tr><td className="px-4 py-2 border-r">M-01</td><td className="px-4 py-2 border-r">Responsive Design Principles</td><td className="px-4 py-2 border-r">Beginner</td><td className="px-4 py-2 text-center">20m</td></tr>
-                            <tr><td className="px-4 py-2 border-r">M-01</td><td className="px-4 py-2 border-r">UI vs UX Fundamentals</td><td className="px-4 py-2 border-r">Beginner</td><td className="px-4 py-2 text-center">15m</td></tr>
-                            <tr><td className="px-4 py-2 border-r">M-01</td><td className="px-4 py-2 border-r">Introduction to Figma (Wireframing)</td><td className="px-4 py-2 border-r">Beginner</td><td className="px-4 py-2 text-center">20m</td></tr>
+                            <tr><td className="px-4 py-3 border-r font-bold">01</td><td className="px-4 py-3 border-r">Introduction to Web & HTML Structure</td><td className="px-4 py-3 italic">Personal portfolio page</td></tr>
+                            <tr><td className="px-4 py-3 border-r font-bold">02</td><td className="px-4 py-3 border-r">Forms, Tables & Semantic HTML</td><td className="px-4 py-3 italic">Student registration form</td></tr>
+                            <tr><td className="px-4 py-3 border-r font-bold">03</td><td className="px-4 py-3 border-r">CSS Selectors, Box Model & Flexbox</td><td className="px-4 py-3 italic">Style the form professionally</td></tr>
+                            <tr><td className="px-4 py-3 border-r font-bold">04</td><td className="px-4 py-3 border-r">Responsive Design & Media Queries</td><td className="px-4 py-3 italic">Responsive navbar & card layout</td></tr>
+                            <tr><td className="px-4 py-3 border-r font-bold">05</td><td className="px-4 py-3 border-r">JS Variables, Functions & Arrays</td><td className="px-4 py-3 italic">Student marks calculator</td></tr>
+                            <tr><td className="px-4 py-3 border-r font-bold">06</td><td className="px-4 py-3 border-r">DOM Manipulation & LocalStorage</td><td className="px-4 py-3 italic">To-do list using DOM</td></tr>
                           </tbody>
                         </table>
                       </div>
                     </div>
 
-                    {/* Week 1 & 2 */}
+                    {/* Week 2 */}
                     <div className="space-y-4">
-                      <div className="bg-[#002147] text-white px-4 py-1.5 text-[12px] font-medium">Week 2: Frontend Engineering & UI/UX</div>
+                      <div className="bg-[#002147] text-white px-4 py-1.5 text-[12px] font-medium uppercase tracking-wider">Week 2: Advanced JavaScript + React Basics</div>
                       <div className="overflow-x-auto border border-zinc-200">
                         <table className="w-full text-left text-[13px] min-w-[550px]">
                           <thead className="bg-[#F8F9FA] border-b border-zinc-200 text-[#002147]">
                             <tr>
-                              <th className="px-4 py-2 font-semibold border-r border-zinc-200">Ref</th>
-                              <th className="px-4 py-2 font-semibold border-r border-zinc-200">Lesson Name</th>
-                              <th className="px-4 py-2 font-semibold border-r border-zinc-200">Level</th>
-                              <th className="px-4 py-2 font-semibold text-center">T-Time</th>
+                              <th className="px-4 py-2 font-semibold border-r border-zinc-200 w-16">Day</th>
+                              <th className="px-4 py-2 font-semibold border-r border-zinc-200">Topics & Concepts</th>
+                              <th className="px-4 py-2 font-semibold">Practical Task</th>
                             </tr>
                           </thead>
                           <tbody className="divide-y divide-zinc-200">
-                            <tr><td className="px-4 py-2 border-r">M-02</td><td className="px-4 py-2 border-r">JavaScript ES6 Essentials</td><td className="px-4 py-2 border-r">Beginner</td><td className="px-4 py-2 text-center">30m</td></tr>
-                            <tr><td className="px-4 py-2 border-r">M-02</td><td className="px-4 py-2 border-r">React Introduction and Setup</td><td className="px-4 py-2 border-r">Beginner</td><td className="px-4 py-2 text-center">20m</td></tr>
-                            <tr><td className="px-4 py-2 border-r">M-02</td><td className="px-4 py-2 border-r">Components, Props and State</td><td className="px-4 py-2 border-r">Intermediate</td><td className="px-4 py-2 text-center">25m</td></tr>
-                            <tr><td className="px-4 py-2 border-r">M-02</td><td className="px-4 py-2 border-r">React Hooks (useState, useEffect)</td><td className="px-4 py-2 border-r">Intermediate</td><td className="px-4 py-2 text-center">30m</td></tr>
-                            <tr><td className="px-4 py-2 border-r">M-02</td><td className="px-4 py-2 border-r">Routing with React Router</td><td className="px-4 py-2 border-r">Intermediate</td><td className="px-4 py-2 text-center">20m</td></tr>
-                            <tr><td className="px-4 py-2 border-r">M-02</td><td className="px-4 py-2 border-r">Next.js Fundamentals</td><td className="px-4 py-2 border-r">Intermediate</td><td className="px-4 py-2 text-center">25m</td></tr>
-                            <tr><td className="px-4 py-2 border-r">M-02</td><td className="px-4 py-2 border-r">Styling with Tailwind CSS</td><td className="px-4 py-2 border-r">Beginner</td><td className="px-4 py-2 text-center">20m</td></tr>
+                            <tr><td className="px-4 py-3 border-r font-bold">07</td><td className="px-4 py-3 border-r">ES6: Arrow functions, Destructuring</td><td className="px-4 py-3 italic">Convert old JS code into ES6</td></tr>
+                            <tr><td className="px-4 py-3 border-r font-bold">08</td><td className="px-4 py-3 border-r">Async JS: Promises, Async/Await</td><td className="px-4 py-3 italic">Fetch users from External API</td></tr>
+                            <tr><td className="px-4 py-3 border-r font-bold">09</td><td className="px-4 py-3 border-r">React Intro: JSX, Props & Components</td><td className="px-4 py-3 italic">Greeting card application</td></tr>
+                            <tr><td className="px-4 py-3 border-r font-bold">10</td><td className="px-4 py-3 border-r">React State (useState) & Events</td><td className="px-4 py-3 italic">Counter app & Dark mode toggle</td></tr>
+                            <tr><td className="px-4 py-3 border-r font-bold">11</td><td className="px-4 py-3 border-r">React Lists (map) & Controlled Forms</td><td className="px-4 py-3 italic">Student form with display data</td></tr>
+                            <tr><td className="px-4 py-3 border-r font-bold">12</td><td className="px-4 py-3 border-r">React Router: Multi-page Navigation</td><td className="px-4 py-3 italic">Multi-page React website</td></tr>
                           </tbody>
                         </table>
                       </div>
@@ -216,24 +254,23 @@ export default function BootcampPage() {
 
                     {/* Week 3 */}
                     <div className="space-y-4">
-                      <div className="bg-[#002147] text-white px-4 py-1.5 text-[12px] font-medium">Week 3: Backend Systems & API Design</div>
+                      <div className="bg-[#002147] text-white px-4 py-1.5 text-[12px] font-medium uppercase tracking-wider">Week 3: React Advanced + Node.js & Express</div>
                       <div className="overflow-x-auto border border-zinc-200">
                         <table className="w-full text-left text-[13px] min-w-[550px]">
                           <thead className="bg-[#F8F9FA] border-b border-zinc-200 text-[#002147]">
                             <tr>
-                              <th className="px-4 py-2 font-semibold border-r border-zinc-200">Ref</th>
-                              <th className="px-4 py-2 font-semibold border-r border-zinc-200">Lesson Name</th>
-                              <th className="px-4 py-2 font-semibold border-r border-zinc-200">Level</th>
-                              <th className="px-4 py-2 font-semibold text-center">T-Time</th>
+                              <th className="px-4 py-2 font-semibold border-r border-zinc-200 w-16">Day</th>
+                              <th className="px-4 py-2 font-semibold border-r border-zinc-200">Topics & Concepts</th>
+                              <th className="px-4 py-2 font-semibold">Practical Task</th>
                             </tr>
                           </thead>
                           <tbody className="divide-y divide-zinc-200">
-                            <tr><td className="px-4 py-2 border-r">M-03</td><td className="px-4 py-2 border-r">Introduction to Node.js</td><td className="px-4 py-2 border-r">Intermediate</td><td className="px-4 py-2 text-center">20m</td></tr>
-                            <tr><td className="px-4 py-2 border-r">M-03</td><td className="px-4 py-2 border-r">Express.js Framework Basics</td><td className="px-4 py-2 border-r">Intermediate</td><td className="px-4 py-2 text-center">25m</td></tr>
-                            <tr><td className="px-4 py-2 border-r">M-03</td><td className="px-4 py-2 border-r">Creating REST APIs</td><td className="px-4 py-2 border-r">Intermediate</td><td className="px-4 py-2 text-center">30m</td></tr>
-                            <tr><td className="px-4 py-2 border-r">M-03</td><td className="px-4 py-2 border-r">Middleware in Express</td><td className="px-4 py-2 border-r">Intermediate</td><td className="px-4 py-2 text-center">20m</td></tr>
-                            <tr><td className="px-4 py-2 border-r">M-03</td><td className="px-4 py-2 border-r">Authentication with JWT</td><td className="px-4 py-2 border-r">Intermediate</td><td className="px-4 py-2 text-center">30m</td></tr>
-                            <tr><td className="px-4 py-2 border-r">M-03</td><td className="px-4 py-2 border-r">API Testing using Postman</td><td className="px-4 py-2 border-r">Beginner</td><td className="px-4 py-2 text-center">15m</td></tr>
+                            <tr><td className="px-4 py-3 border-r font-bold">13</td><td className="px-4 py-3 border-r">React Hooks: useEffect & API Fetching</td><td className="px-4 py-3 italic">Fetch products API & display</td></tr>
+                            <tr><td className="px-4 py-3 border-r font-bold">14</td><td className="px-4 py-3 border-r">Professional Project Structure</td><td className="px-4 py-3 italic">Refactor previous applications</td></tr>
+                            <tr><td className="px-4 py-3 border-r font-bold">15</td><td className="px-4 py-3 border-r">Redux Basics: Store, Reducers, Actions</td><td className="px-4 py-3 italic">Cart counter using Redux</td></tr>
+                            <tr><td className="px-4 py-3 border-r font-bold">16</td><td className="px-4 py-3 border-r">Node.js Introduction & NPM Ecosystem</td><td className="px-4 py-3 italic">Simple Node server setup</td></tr>
+                            <tr><td className="px-4 py-3 border-r font-bold">17</td><td className="px-4 py-3 border-r">Express.js: Routes, Middleware, REST</td><td className="px-4 py-3 italic">Student API (GET & POST)</td></tr>
+                            <tr><td className="px-4 py-3 border-r font-bold">18</td><td className="px-4 py-3 border-r">MongoDB Basics & CRUD Operations</td><td className="px-4 py-3 italic">Store & fetch student records</td></tr>
                           </tbody>
                         </table>
                       </div>
@@ -241,41 +278,49 @@ export default function BootcampPage() {
 
                     {/* Week 4 */}
                     <div className="space-y-4">
-                      <div className="bg-[#002147] text-white px-4 py-1.5 text-[12px] font-medium">Week 4: Database Integration & Assessment</div>
+                      <div className="bg-[#002147] text-white px-4 py-1.5 text-[12px] font-medium uppercase tracking-wider">Week 4: MERN Stack Integration</div>
                       <div className="overflow-x-auto border border-zinc-200">
                         <table className="w-full text-left text-[13px] min-w-[550px]">
                           <thead className="bg-[#F8F9FA] border-b border-zinc-200 text-[#002147]">
                             <tr>
-                              <th className="px-4 py-2 font-semibold border-r border-zinc-200">Ref</th>
-                              <th className="px-4 py-2 font-semibold border-r border-zinc-200">Lesson Name</th>
-                              <th className="px-4 py-2 font-semibold border-r border-zinc-200">Level</th>
-                              <th className="px-4 py-2 font-semibold text-center">T-Time</th>
+                              <th className="px-4 py-2 font-semibold border-r border-zinc-200 w-16">Day</th>
+                              <th className="px-4 py-2 font-semibold border-r border-zinc-200">Topics & Concepts</th>
+                              <th className="px-4 py-2 font-semibold">Practical Task</th>
                             </tr>
                           </thead>
                           <tbody className="divide-y divide-zinc-200">
-                            <tr><td className="px-4 py-2 border-r">M-04</td><td className="px-4 py-2 border-r">SQL vs NoSQL Databases</td><td className="px-4 py-2 border-r">Beginner</td><td className="px-4 py-2 text-center">15m</td></tr>
-                            <tr><td className="px-4 py-2 border-r">M-04</td><td className="px-4 py-2 border-r">MongoDB Basics and Setup</td><td className="px-4 py-2 border-r">Intermediate</td><td className="px-4 py-2 text-center">25m</td></tr>
-                            <tr><td className="px-4 py-2 border-r">M-04</td><td className="px-4 py-2 border-r">CRUD Operations in MongoDB</td><td className="px-4 py-2 border-r">Intermediate</td><td className="px-4 py-2 text-center">30m</td></tr>
-                            <tr><td className="px-4 py-2 border-r">M-04</td><td className="px-4 py-2 border-r">Mongoose (Schema and Models)</td><td className="px-4 py-2 border-r">Intermediate</td><td className="px-4 py-2 text-center">25m</td></tr>
-                            <tr><td className="px-4 py-2 border-r">M-04</td><td className="px-4 py-2 border-r">Connecting Database with Backend</td><td className="px-4 py-2 border-r">Intermediate</td><td className="px-4 py-2 text-center">20m</td></tr>
+                            <tr><td className="px-4 py-3 border-r font-bold">19</td><td className="px-4 py-3 border-r">MongoDB Atlas & Mongoose Schemas</td><td className="px-4 py-3 italic">Connect Atlas to Backend</td></tr>
+                            <tr><td className="px-4 py-3 border-r font-bold">20</td><td className="px-4 py-3 border-r">Full CRUD API Implementation</td><td className="px-4 py-3 italic">Notes management backend</td></tr>
+                            <tr><td className="px-4 py-3 border-r font-bold">21</td><td className="px-4 py-3 border-r">React + Backend API Integration</td><td className="px-4 py-3 italic">Connect React app with API</td></tr>
+                            <tr><td className="px-4 py-3 border-r font-bold">22</td><td className="px-4 py-3 border-r">Auth Basics: JWT & Bcrypt</td><td className="px-4 py-3 italic">Secure Register/Login system</td></tr>
+                            <tr><td className="px-4 py-3 border-r font-bold">23</td><td className="px-4 py-3 border-r">Protected Routes & Token Verification</td><td className="px-4 py-3 italic">Protect Dashboard access</td></tr>
+                            <tr><td className="px-4 py-3 border-r font-bold">24</td><td className="px-4 py-3 border-r">Deployment: GitHub, Vercel & Render</td><td className="px-4 py-3 italic">Full-stack application deployment</td></tr>
                           </tbody>
                         </table>
-                      </div>
-                      <div className="bg-[#F8F9FA] border border-zinc-200 p-4">
-                        <div className="text-[11px] font-semibold text-zinc-400 mb-2 uppercase tracking-wide underline underline-offset-4 decoration-[#002147]">Required Assessments</div>
-                        <div className="flex flex-col sm:flex-row gap-4">
-                          <div className="flex-1 bg-white p-3 border border-zinc-200 text-[12px] shadow-sm"><strong>MCQ Test:</strong> Concepts Week 1-4 (20m)</div>
-                          <div className="flex-1 bg-white p-3 border border-zinc-200 text-[12px] shadow-sm"><strong>Coding:</strong> API Integration (45m)</div>
-                          <div className="flex-1 bg-white p-3 border border-zinc-200 text-[12px] shadow-sm"><strong>Project:</strong> Full Submission (60m)</div>
-                        </div>
                       </div>
                     </div>
 
                     {/* Week 5 */}
                     <div className="space-y-4">
-                      <div className="bg-[#002147] text-white px-4 py-1.5 text-[12px] font-medium">Week 5: Real-Time Project Implementation</div>
-                      <div className="p-4 border border-zinc-200 bg-white text-[14px] leading-relaxed italic text-zinc-600 shadow-sm">
-                        Week 5 focuses on building a real-time full stack project through structured, text-based guidance. Students will implement authentication, CRUD operations, API integration, and deployment, resulting in a complete, production-ready application for their portfolio.
+                      <div className="bg-[#002147] text-white px-4 py-1.5 text-[12px] font-medium uppercase tracking-wider">Week 5: Project Finalization & Review</div>
+                      <div className="overflow-x-auto border border-zinc-200">
+                        <table className="w-full text-left text-[13px] min-w-[550px]">
+                          <thead className="bg-[#F8F9FA] border-b border-zinc-200 text-[#002147]">
+                            <tr>
+                              <th className="px-4 py-2 font-semibold border-r border-zinc-200 w-16">Day</th>
+                              <th className="px-4 py-2 font-semibold border-r border-zinc-200">Milestone Phase</th>
+                              <th className="px-4 py-2 font-semibold">Project Deliverable</th>
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-zinc-200">
+                            <tr><td className="px-4 py-3 border-r font-bold">25</td><td className="px-4 py-3 border-r">Mini Project UI Phase</td><td className="px-4 py-3 italic">Movie Search App Interface</td></tr>
+                            <tr><td className="px-4 py-3 border-r font-bold">26</td><td className="px-4 py-3 border-r">Mini Project Logic Phase</td><td className="px-4 py-3 italic">Complete API & Responsive Design</td></tr>
+                            <tr><td className="px-4 py-3 border-r font-bold">27</td><td className="px-4 py-3 border-r">Major Project: Environment Setup</td><td className="px-4 py-3 italic">Frontend, Backend & DB Setup</td></tr>
+                            <tr><td className="px-4 py-3 border-r font-bold">28</td><td className="px-4 py-3 border-r">Major Project: Backend Systems</td><td className="px-4 py-3 italic">Auth & CRUD API completion</td></tr>
+                            <tr><td className="px-4 py-3 border-r font-bold">29</td><td className="px-4 py-3 border-r">Major Project: Frontend Integration</td><td className="px-4 py-3 italic">Dashboard & API Connection</td></tr>
+                            <tr><td className="px-4 py-3 border-r font-bold">30</td><td className="px-4 py-3 border-r">Final Deployment & Interview Prep</td><td className="px-4 py-3 italic">Portfolio update & Revision</td></tr>
+                          </tbody>
+                        </table>
                       </div>
                     </div>
                   </div>

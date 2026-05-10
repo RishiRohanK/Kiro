@@ -84,8 +84,8 @@ const UPDATES = [
             rows: [
                 ["Online Registration Portal Starts", "April 20, 2026"],
                 ["Portal Closure for New Requests", "May 05, 2026"],
-                ["Training Operations Start", "May 10, 2026"],
-                ["Final Assessment & Closure", "June 10, 2026"]
+                ["Training Operations Start", "10-05-2026 | 15-05-2026"],
+                ["Final Assessment & Closure", "June 10, 2026 | 15-06-2026"],
             ]
         }
     }
@@ -190,7 +190,14 @@ export default function NewsUpdatesPage() {
                                                     {update.table.rows.map((row, i) => (
                                                         <tr key={i}>
                                                             <td className="py-4 pr-4">{row[0]}</td>
-                                                            <td className="py-4 text-right text-zinc-900 font-semibold">{row[1]}</td>
+                                                            <td className="py-4 text-right text-zinc-900 font-semibold">
+                                                                {row[1].includes(" | ") ? (
+                                                                    <div className="flex items-center justify-end gap-2">
+                                                                        <span className="line-through text-zinc-400">{row[1].split(" | ")[0]}</span>
+                                                                        <span>{row[1].split(" | ")[1]}</span>
+                                                                    </div>
+                                                                ) : row[1]}
+                                                            </td>
                                                         </tr>
                                                     ))}
                                                 </tbody>
