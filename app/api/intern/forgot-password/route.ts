@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { emailQueue } from "@/queues/emailQueue";
+import { sendPasswordResetEmail } from "@/lib/mail";
 import crypto from "crypto";
 
 export async function POST(req: Request) {
@@ -42,16 +42,7 @@ export async function POST(req: Request) {
         });
 
         
-        await emailQueue.add("password-reset", {
-            type: "password-reset",
-            data: { email, token },
-        }, {
-            attempts: 3,
-            backoff: {
-                type: "exponential",
-                delay: 5000,
-            },
-        });
+        await sendPasswordResetEmail(email, token);
 
         return NextResponse.json({ success: true, message: "Reset link sent if account exists." });
     } catch (error) {

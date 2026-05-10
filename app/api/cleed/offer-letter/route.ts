@@ -1,6 +1,6 @@
 import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
-import { emailQueue } from "@/queues/emailQueue";
+import { sendOfferLetterEmail, sendCustomOfferLetterEmail } from "@/lib/mail";
 
 export async function POST(req: Request) {
   try {
@@ -24,15 +24,9 @@ export async function POST(req: Request) {
     const recipientName = name || user?.name || "Intern";
 
     if (customMessage) {
-      await emailQueue.add("custom-offer-letter", {
-        type: "custom-offer-letter",
-        data: { email: recipientEmail, name: recipientName, offerLetterUrl, customMessage }
-      });
+      await sendCustomOfferLetterEmail(recipientEmail, recipientName, offerLetterUrl, customMessage);
     } else if (user) {
-      await emailQueue.add("offer-letter", {
-        type: "offer-letter",
-        data: { email: user.email, name: user.name }
-      });
+      await sendOfferLetterEmail(user.email, user.name);
     }
 
     return NextResponse.json({ success: true, user });

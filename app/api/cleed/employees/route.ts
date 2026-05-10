@@ -1,7 +1,7 @@
 import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
-import { emailQueue } from "@/queues/emailQueue";
+import { sendEmployeeOnboardingEmail } from "@/lib/mail";
 
 export async function GET() {
   try {
@@ -57,16 +57,8 @@ export async function POST(req: Request) {
       }
     });
     
-    // Automation: Dispatch Onboarding Email
-    await emailQueue.add("onboard-employee", {
-      type: "onboard-employee",
-      data: {
-        email: employee.email,
-        name: employee.name,
-        role: employee.role,
-        password: password // Original password before hashing
-      }
-    });
+    // Automation: Dispatch Onboarding Email Directly
+    await sendEmployeeOnboardingEmail(employee.email, employee.name, employee.role, password);
 
     return NextResponse.json({ success: true, employee });
   } catch (error) {

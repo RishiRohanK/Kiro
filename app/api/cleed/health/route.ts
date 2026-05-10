@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import os from "os";
-import { emailQueue } from "@/queues/emailQueue";
-import { notificationQueue } from "@/queues/notificationQueue";
 
 export async function GET() {
     try {
@@ -71,20 +69,6 @@ export async function GET() {
                     
                     storageUsed: "42.0 MB", // Placeholder for file system uploads if not explicitly counted
                     storageLimit: "1 GB"
-                },
-                workers: {
-                    email: {
-                        waiting: await emailQueue.getWaitingCount(),
-                        active: await emailQueue.getActiveCount(),
-                        completed: await emailQueue.getCompletedCount(),
-                        failed: await emailQueue.getFailedCount()
-                    },
-                    notification: {
-                        waiting: await notificationQueue.getWaitingCount(),
-                        active: await notificationQueue.getActiveCount(),
-                        completed: await notificationQueue.getCompletedCount(),
-                        failed: await notificationQueue.getFailedCount()
-                    }
                 }
             }
         });

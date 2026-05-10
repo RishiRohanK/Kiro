@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { emailQueue } from "@/queues/emailQueue";
+import { sendBulkCustomEmail } from "@/lib/mail";
 
 export async function POST(req: Request) {
     try {
@@ -16,29 +16,14 @@ export async function POST(req: Request) {
             }
         });
 
-        // Add each email to the queue
-        const jobs = registrations.map(reg => {
-            return emailQueue.add("bulk-custom", {
-                type: "bulk-custom",
-                data: {
-                    email: reg.email,
-                    name: reg.name,
-                    subject: subject,
-                    title: title,
-                    content: content
-                }
-            }, {
-                attempts: 3,
-                backoff: {
-                    type: "exponential",
-                    delay: 5000,
-                },
-            });
-        });
+        // Send emails directly
+        const sendPromises = registrations.map(reg => 
+            sendBulkCustomEmail(reg.email, reg.name, subject, title, content)
+        );
 
-        await Promise.all(jobs);
+        await Promise.all(sendPromises);
 
-        return NextResponse.json({ success: true, message: `Queued ${registrations.length} emails.` });
+        return NextResponse.json({ success: true, message: `Sent ${registrations.length} emails.` });
     } catch (error) {
         console.error("Bulk mail error:", error);
         return NextResponse.json({ error: "Internal server error" }, { status: 500 });
