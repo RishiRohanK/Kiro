@@ -2,9 +2,7 @@ import { createServer } from "http";
 import { parse } from "url";
 import next from "next";
 import { Server } from "socket.io";
-// Initialize Background Workers
-import "./workers/emailWorker";
-import "./workers/notificationWorker";
+// Background workers decommissioned in favor of synchronous dispatch
 
 const dev = process.env.NODE_ENV !== "production";
 const hostname = process.env.HOSTNAME || "0.0.0.0";

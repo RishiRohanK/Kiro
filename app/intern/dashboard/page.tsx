@@ -630,7 +630,7 @@ function InternDashboardContent() {
          <div className="p-4 lg:p-6 max-w-7xl w-full mx-auto bg-white min-h-screen">
             <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} className="max-w-xl w-full text-center space-y-10">
                <div className="flex justify-center"><div className="h-24 w-24 bg-amber-500 text-white flex items-center justify-center rounded-none shadow-2xl shadow-amber-500/20 relative"><Clock size={48} className="animate-pulse" /><div className="absolute -bottom-2 -right-2 h-8 w-8 bg-black text-[10px] font-bold flex items-center justify-center">SOS</div></div></div>
-               <div className="space-y-4 shadow-sm p-4"><h1 className="text-4xl font-bold tracking-tight text-zinc-900">Registration pending</h1><p className="text-zinc-500 font-medium text-lg leading-relaxed">Your application has been received. Please wait while the team verifies your details. Access will be granted shortly.</p></div>
+               <div className="space-y-4 shadow-sm p-4"><h1 className="text-4xl font-bold tracking-tight text-zinc-900">Welcome Bootcamp interns</h1><p className="text-zinc-500 font-medium text-lg leading-relaxed">Your account is currently under review by our administration. You will be notified once your access is fully activated. Welcome to the Student Forge community!</p></div>
                <button onClick={handleSignOut} className="text-[12px] font-medium text-zinc-400 hover:text-black transition-colors">Sign out</button>
             </motion.div>
          </div>
@@ -810,6 +810,25 @@ function InternDashboardContent() {
                      >
                         Submit Now
                      </button>
+                  </motion.div>
+               )}
+               {user.batch === "Batch 3" && (
+                  <motion.div 
+                     initial={{ opacity: 0, y: -10 }}
+                     animate={{ opacity: 1, y: 0 }}
+                     className="bg-emerald-50 border border-emerald-600/10 py-2.5 px-4 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-4"
+                  >
+                     <div className="flex items-center gap-4">
+                        <div className="h-8 w-8 bg-emerald-600 text-white rounded-full flex items-center justify-center shrink-0">
+                           <Sparkles size={15} />
+                        </div>
+                        <div>
+                           <h4 className="text-[13px] font-bold text-emerald-900">Welcome Bootcamp Interns</h4>
+                           <p className="text-[11px] text-emerald-700 font-medium leading-relaxed">
+                              Your registration is successful! Welcome to the Student Forge Industrial Program.
+                           </p>
+                        </div>
+                     </div>
                   </motion.div>
                )}
                {/* Hero Bento Section */}
