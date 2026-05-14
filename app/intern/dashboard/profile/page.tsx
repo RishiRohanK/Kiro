@@ -409,6 +409,8 @@ export default function InternProfile() {
                                                     <img src="https://ik.imagekit.io/dypkhqxip/kits?updatedAt=1777830973939" alt="KITS" className="h-8 w-auto object-contain" />
                                                 ) : intern.college?.toLowerCase().includes('mohan babu') ? (
                                                     <img src="https://upload.wikimedia.org/wikipedia/en/4/4b/Mohan_Babu_University_Logo%2C_Tirupati%2C_Andhra_Pradesh%2C_India.png" alt="MBU" className="h-8 w-auto object-contain" />
+                                                ) : intern.college?.toLowerCase().includes('visvesvaraya') ? (
+                                                    <img src="https://vcethyd.ac.in/wp-content/uploads/2026/02/Visvesvaraya-College-emblem-fin-white.png" alt="VCET" className="h-8 w-auto object-contain" />
                                                 ) : (
                                                     <div className="bg-orange-100 p-1.5 rounded-full">
                                                         <User size={14} className="text-orange-600" />

@@ -174,6 +174,8 @@ export default function ResumeGeneratorPage() {
                 logo = "https://ik.imagekit.io/dypkhqxip/cmrit.png";
             } else if (college.includes("kits") || college.includes("kamala institute")) {
                 logo = "https://ik.imagekit.io/dypkhqxip/kits.png";
+            } else if (college.includes("visvesvaraya")) {
+                logo = "https://vcethyd.ac.in/wp-content/uploads/2026/02/Visvesvaraya-College-emblem-fin-white.png";
             }
 
             setData(prev => ({

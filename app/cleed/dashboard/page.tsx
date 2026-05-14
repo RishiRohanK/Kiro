@@ -91,6 +91,9 @@ const getCollegeLogo = (collegeName: string) => {
    if (college.includes("mohan babu") || college.includes("mbu")) {
       return "https://upload.wikimedia.org/wikipedia/en/4/4b/Mohan_Babu_University_Logo%2C_Tirupati%2C_Andhra_Pradesh%2C_India.png";
    }
+   if (college.includes("visvesvaraya")) {
+      return "https://vcethyd.ac.in/wp-content/uploads/2026/02/Visvesvaraya-College-emblem-fin-white.png";
+   }
    return null;
 };
 
