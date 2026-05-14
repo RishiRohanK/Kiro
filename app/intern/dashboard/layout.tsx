@@ -187,6 +187,9 @@ function InternDashboardLayoutContent({
         if (college.includes("visvesvaraya")) {
             return "https://vcethyd.ac.in/wp-content/uploads/2026/02/Visvesvaraya-College-emblem-fin-white.png";
         }
+        if (college.includes("malla reddy university")) {
+            return "https://media.collegedekho.com/media/img/institute/logo/Malla_reddy_University_logo.png";
+        }
         return null;
     };
 

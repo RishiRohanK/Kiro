@@ -176,6 +176,8 @@ export default function ResumeGeneratorPage() {
                 logo = "https://ik.imagekit.io/dypkhqxip/kits.png";
             } else if (college.includes("visvesvaraya")) {
                 logo = "https://vcethyd.ac.in/wp-content/uploads/2026/02/Visvesvaraya-College-emblem-fin-white.png";
+            } else if (college.includes("malla reddy university")) {
+                logo = "https://media.collegedekho.com/media/img/institute/logo/Malla_reddy_University_logo.png";
             }
 
             setData(prev => ({
