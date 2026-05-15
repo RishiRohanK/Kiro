@@ -373,6 +373,19 @@ export default function BootcampPage() {
               </div>
 
               <div className="w-full lg:w-[420px] shrink-0 lg:sticky lg:top-4">
+                {/* System Alert for Automatic Closure */}
+                {!isRegistrationClosed && (
+                  <div className="mb-4 bg-amber-50 border-l-4 border-amber-500 p-4 shadow-sm animate-pulse">
+                    <div className="flex items-center gap-3">
+                      <Clock className="w-5 h-5 text-amber-600" />
+                      <p className="text-[12px] font-bold text-amber-800 uppercase tracking-tight">System Countdown Active</p>
+                    </div>
+                    <p className="text-[11px] text-amber-700 mt-2 font-medium leading-relaxed">
+                      Notice: This portal will <span className="font-bold underline">automatically decommission</span> at exactly 6:00 PM today (May 15, 2026). Incomplete drafts will be purged.
+                    </p>
+                  </div>
+                )}
+
                 <div className={`border-[4px] bg-white p-6 mb-4 shadow-lg transition-all ${isRegistrationClosed ? "border-red-500 opacity-80" : "border-[#002147]"}`}>
                   <div className={`${isRegistrationClosed ? "bg-red-500" : "bg-[#002147]"} text-white p-5 mb-6 text-center -mx-6 -mt-6`}>
                     <h2 className="text-lg sm:text-xl font-semibold">
