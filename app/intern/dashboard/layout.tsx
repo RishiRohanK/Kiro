@@ -27,7 +27,9 @@ import {
     Users,
     Edit3,
     Target,
-    Sparkles
+    Sparkles,
+    Flame,
+    ChevronLeft as CollapseIcon
 } from "lucide-react";
 
 import { motion, AnimatePresence } from "framer-motion";
@@ -50,6 +52,8 @@ function InternDashboardLayoutContent({
     const [checkingProfile, setCheckingProfile] = useState(true);
     const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
     const [isTrainingOpen, setIsTrainingOpen] = useState(false);
+    const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+    const [streakCount, setStreakCount] = useState(0);
 
     useEffect(() => {
         setMounted(true);
@@ -120,6 +124,50 @@ function InternDashboardLayoutContent({
         localStorage.removeItem("intern_user");
         router.push("/intern/signin");
     };
+
+    useEffect(() => {
+        if (!user) return;
+        const fetchStreak = async () => {
+            try {
+                const res = await fetch(`/api/intern/attendance?internId=${user.id}`);
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.history && data.history.length > 0) {
+                        const sorted = [...data.history].sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
+                        let s = 0;
+                        const today = new Date();
+                        today.setHours(0, 0, 0, 0);
+                        const firstDate = new Date(sorted[0].date);
+                        firstDate.setHours(0, 0, 0, 0);
+                        const diff = (today.getTime() - firstDate.getTime()) / (1000 * 60 * 60 * 24);
+                        if (diff <= 1) {
+                            for (let i = 0; i < sorted.length; i++) {
+                                if (sorted[i].status === 'PRESENT' || sorted[i].status === 'LATE') {
+                                    s++;
+                                    if (i < sorted.length - 1) {
+                                        const current = new Date(sorted[i].date);
+                                        current.setHours(0, 0, 0, 0);
+                                        const next = new Date(sorted[i + 1].date);
+                                        next.setHours(0, 0, 0, 0);
+                                        const gap = (current.getTime() - next.getTime()) / (1000 * 60 * 60 * 24);
+                                        if (gap > 1) break;
+                                    }
+                                } else {
+                                    break;
+                                }
+                            }
+                        }
+                        setStreakCount(s);
+                    }
+                }
+            } catch (err) {
+                console.error("Streak fetch failed");
+            }
+        };
+        fetchStreak();
+        const interval = setInterval(fetchStreak, 300000);
+        return () => clearInterval(interval);
+    }, [user]);
 
     const toggleHand = async () => {
         if (!user) return;
@@ -321,157 +369,144 @@ function InternDashboardLayoutContent({
             <div className="flex min-h-[calc(100vh-56px)]">
 
                 {/* Sidebar Desktop */}
-                <aside className="hidden lg:flex fixed left-0 top-14 bottom-0 w-[280px] flex-col z-40 p-4 pt-6 bg-[#E0E7FF]">
-                    <div className="flex-1 flex flex-col">
-                        {/* Sidebar Profile Section */}
-                        <div className="px-4 pb-5 flex flex-col items-start relative">
-                            <Link
-                                href="/intern/dashboard/profile"
-                                className="absolute top-0 right-2 p-1.5 text-[#003366]/30 hover:text-[#003366]/60 transition-colors"
-                            >
-                                <Edit3 size={15} />
-                            </Link>
-
-                            <div className="h-[72px] w-[72px] rounded-lg bg-white flex items-center justify-center text-xl font-bold text-[#003366] mb-3 overflow-hidden shadow-sm">
-                                {user.profileImage ? (
-                                    <img src={user.profileImage} alt={user.name} className="h-full w-full object-cover" />
-                                ) : (
-                                    user.name?.split(' ').map((n: string) => n[0]).join('').toUpperCase().slice(0, 2)
+                <aside 
+                    className={`hidden lg:flex fixed left-0 top-14 bottom-0 flex-col z-40 transition-all duration-300 ease-in-out border-r border-zinc-200/50 ${
+                        isSidebarCollapsed ? "w-[80px]" : "w-[260px]"
+                    } bg-white shadow-sm`}
+                >
+                    <div className="flex-1 flex flex-col overflow-y-auto overflow-x-hidden">
+                        {/* Sidebar Header/Streak Section */}
+                        <div className={`p-4 transition-all duration-300 ${isSidebarCollapsed ? "items-center" : "items-start"}`}>
+                            <div className={`flex items-center gap-3 bg-orange-50 p-3 rounded-2xl border border-orange-100 ${isSidebarCollapsed ? "justify-center w-12 h-12 p-0" : "w-full"}`}>
+                                <div className="bg-orange-500 p-2 rounded-xl shadow-lg shadow-orange-200">
+                                    <Flame size={isSidebarCollapsed ? 20 : 22} className="text-white animate-pulse" />
+                                </div>
+                                {!isSidebarCollapsed && (
+                                    <div className="flex flex-col">
+                                        <span className="text-[10px] font-bold text-orange-400 uppercase tracking-widest">Attendance Streak</span>
+                                        <span className="text-lg font-black text-orange-600 leading-tight">{streakCount} Days</span>
+                                    </div>
                                 )}
                             </div>
-
-                            <h2 className="text-[14px] font-bold text-[#003366] leading-tight text-left">
-                                {user.name}
-                            </h2>
-                            <p className="text-[11px] text-[#003366]/60 font-medium mt-0.5 text-left">
-                                {user.batch || "Intern Scholar"}
-                            </p>
-                            
-                            <Link 
-                                href="/intern/dashboard/resume"
-                                className="mt-4 inline-flex items-center px-3 py-1 bg-[#003366] text-white rounded-full hover:bg-[#002244] transition-all shadow-sm group/pill"
-                            >
-                                <span className="text-[10px] font-bold tracking-wider">Generate Resume</span>
-                            </Link>
                         </div>
 
-                        <div className="flex flex-col py-1 px-2">
-                            <nav className="space-y-0.5">
-                                {/* Regular items before Training */}
-                                {navItems.filter(i => !i.hideFromSidebar).slice(0, 1).map((item) => {
+                        <div className="flex flex-col py-4 px-3 space-y-1">
+                            <nav className="space-y-1">
+                                {navItems.filter(i => !i.hideFromSidebar).map((item) => {
                                     const itemUrl = new URL(item.slug, "http://localhost");
                                     const itemPath = itemUrl.pathname;
                                     const itemView = itemUrl.searchParams.get("view");
                                     const isActive = pathname === itemPath && (itemView === currentView || (!itemView && !currentView));
-                                    return (
-                                        <Link key={item.name} href={item.slug}
-                                            className={`flex items-center h-10 px-3 gap-3 transition-all rounded-lg group ${isActive ? "bg-white text-[#003366] font-bold shadow-sm" : "text-[#003366]/60 hover:text-[#003366] hover:bg-white/50"}`}
-                                        >
-                                            <item.icon size={18} strokeWidth={isActive ? 2.5 : 2} className={isActive ? "text-[#003366]" : "text-[#003366]/40 group-hover:text-[#003366]"} />
-                                            <span className="flex-1 text-[12px]">{item.name}</span>
-                                        </Link>
-                                    );
-                                })}
+                                    
+                                    // Handle Training special case
+                                    if (item.name === "Training") return null; // We handle this separately or grouped
 
-                                {/* Training Dropdown Group */}
-                                <div>
-                                    <button
-                                        onClick={() => setIsTrainingOpen(prev => !prev)}
-                                        className={`w-full flex items-center h-10 px-3 gap-3 transition-all rounded-lg group ${
-                                            isTrainingActive ? "bg-white text-[#003366] font-bold shadow-sm" : "text-[#003366]/60 hover:text-[#003366] hover:bg-white/50"
-                                        }`}
-                                    >
-                                        <BookOpen size={18} strokeWidth={isTrainingActive ? 2.5 : 2} className={isTrainingActive ? "text-[#003366]" : "text-[#003366]/40 group-hover:text-[#003366]"} />
-                                        <span className="flex-1 text-[12px] text-left">Training</span>
-                                        <ChevronDown
-                                            size={14}
-                                            className={`transition-transform duration-200 text-[#003366]/30 ${isTrainingOpen || isTrainingActive ? "rotate-180" : ""}`}
-                                        />
-                                    </button>
-                                    <AnimatePresence initial={false}>
-                                        {(isTrainingOpen || isTrainingActive) && (
-                                            <motion.div
-                                                initial={{ height: 0, opacity: 0 }}
-                                                animate={{ height: "auto", opacity: 1 }}
-                                                exit={{ height: 0, opacity: 0 }}
-                                                transition={{ duration: 0.2 }}
-                                                className="overflow-hidden"
-                                            >
-                                                <div className="ml-4 pl-3 border-l-2 border-[#003366]/10 mt-0.5 space-y-0.5 py-1">
-                                                    {trainingSubItems.map(sub => {
-                                                        const isSubActive = pathname === new URL(sub.slug, "http://localhost").pathname;
-                                                        return (
-                                                            <Link key={sub.name} href={sub.slug}
-                                                                className={`flex items-center h-9 px-3 gap-3 transition-all rounded-lg group ${isSubActive ? "bg-white/50 text-[#003366] font-bold shadow-sm" : "text-[#003366]/50 hover:text-[#003366] hover:bg-white/30"}`}
-                                                            >
-                                                                <sub.icon size={16} strokeWidth={isSubActive ? 2.5 : 2} className={isSubActive ? "text-[#003366]" : "text-[#003366]/30 group-hover:text-[#003366]"} />
-                                                                <span className="flex-1 text-[11px]">{sub.name}</span>
-                                                            </Link>
-                                                        );
-                                                    })}
+                                    return (
+                                        <Link 
+                                            key={item.name} 
+                                            href={item.slug}
+                                            className={`flex items-center h-11 transition-all rounded-xl relative group ${
+                                                isActive 
+                                                    ? "bg-[#003366] text-white shadow-md shadow-blue-900/20" 
+                                                    : "text-zinc-500 hover:bg-zinc-50 hover:text-[#003366]"
+                                            } ${isSidebarCollapsed ? "justify-center px-0 mx-auto w-11" : "px-3 gap-3"}`}
+                                        >
+                                            <item.icon size={20} strokeWidth={isActive ? 2.5 : 2} className={isActive ? "text-white" : "text-zinc-400 group-hover:text-[#003366]"} />
+                                            {!isSidebarCollapsed && (
+                                                <span className="flex-1 text-[13px] font-semibold tracking-tight">{item.name}</span>
+                                            )}
+                                            {isActive && !isSidebarCollapsed && (
+                                                <div className="absolute right-2 h-1.5 w-1.5 rounded-full bg-white/40" />
+                                            )}
+                                            
+                                            {isSidebarCollapsed && (
+                                                <div className="absolute left-full ml-3 px-2 py-1 bg-zinc-900 text-white text-[10px] font-bold rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-[100] pointer-events-none">
+                                                    {item.name}
                                                 </div>
-                                            </motion.div>
-                                        )}
-                                    </AnimatePresence>
-                                </div>
-
-                                {/* Remaining nav items */}
-                                {navItems.filter(i => !i.hideFromSidebar).slice(1).map((item) => {
-                                    const itemUrl = new URL(item.slug, "http://localhost");
-                                    const itemPath = itemUrl.pathname;
-                                    const itemView = itemUrl.searchParams.get("view");
-                                    const isActive = pathname === itemPath && (itemView === currentView || (!itemView && !currentView));
-                                    return (
-                                        <Link key={item.name} href={item.slug}
-                                            className={`flex items-center h-10 px-3 gap-3 transition-all rounded-lg group ${isActive ? "bg-white text-[#003366] font-bold shadow-sm" : "text-[#003366]/60 hover:text-[#003366] hover:bg-white/50"}`}
-                                        >
-                                            <item.icon size={18} strokeWidth={isActive ? 2.5 : 2} className={isActive ? "text-[#003366]" : "text-[#003366]/40 group-hover:text-[#003366]"} />
-                                            <span className="flex-1 text-[13px]">{item.name}</span>
+                                            )}
                                         </Link>
                                     );
                                 })}
+
+                                {/* Training Section */}
+                                <div className="pt-2">
+                                    <button
+                                        onClick={() => !isSidebarCollapsed && setIsTrainingOpen(prev => !prev)}
+                                        className={`w-full flex items-center h-11 transition-all rounded-xl relative group ${
+                                            isTrainingActive 
+                                                ? "bg-[#003366] text-white shadow-md shadow-blue-900/20" 
+                                                : "text-zinc-500 hover:bg-zinc-50 hover:text-[#003366]"
+                                        } ${isSidebarCollapsed ? "justify-center px-0 mx-auto w-11" : "px-3 gap-3"}`}
+                                    >
+                                        <BookOpen size={20} strokeWidth={isTrainingActive ? 2.5 : 2} className={isTrainingActive ? "text-white" : "text-zinc-400 group-hover:text-[#003366]"} />
+                                        {!isSidebarCollapsed && (
+                                            <>
+                                                <span className="flex-1 text-[13px] font-semibold text-left">Training</span>
+                                                <ChevronDown
+                                                    size={14}
+                                                    className={`transition-transform duration-200 text-white/50 ${isTrainingOpen || isTrainingActive ? "rotate-180" : ""}`}
+                                                />
+                                            </>
+                                        )}
+                                        {isSidebarCollapsed && (
+                                            <div className="absolute left-full ml-3 px-2 py-1 bg-zinc-900 text-white text-[10px] font-bold rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-[100] pointer-events-none">
+                                                Training
+                                            </div>
+                                        )}
+                                    </button>
+                                    
+                                    {!isSidebarCollapsed && (isTrainingOpen || isTrainingActive) && (
+                                        <div className="mt-1 ml-4 pl-3 border-l-2 border-zinc-100 space-y-1">
+                                            {trainingSubItems.map(sub => {
+                                                const isSubActive = pathname === new URL(sub.slug, "http://localhost").pathname;
+                                                return (
+                                                    <Link key={sub.name} href={sub.slug}
+                                                        className={`flex items-center h-10 px-3 gap-3 transition-all rounded-lg group ${isSubActive ? "text-[#003366] font-bold bg-blue-50/50" : "text-zinc-400 hover:text-[#003366] hover:bg-zinc-50"}`}
+                                                    >
+                                                        <sub.icon size={16} strokeWidth={isSubActive ? 2.5 : 2} />
+                                                        <span className="flex-1 text-[12px]">{sub.name}</span>
+                                                    </Link>
+                                                );
+                                            })}
+                                        </div>
+                                    )}
+                                </div>
                             </nav>
                         </div>
 
-                        <div className="mt-auto px-2 pt-4 space-y-2">
+                        <div className="mt-auto p-4 space-y-2">
                             <button
                                 onClick={toggleHand}
                                 disabled={isTogglingHand}
-                                className={`w-full h-10 flex items-center justify-center gap-2 transition-all text-[12px] font-bold rounded-lg ${handRaised
-                                        ? "bg-amber-500 text-white hover:bg-amber-600"
-                                        : "bg-yellow-400 text-[#003366] hover:bg-yellow-500 shadow-sm"
-                                    }`}
+                                className={`w-full flex items-center transition-all font-bold rounded-xl ${
+                                    handRaised ? "bg-amber-500 text-white" : "bg-yellow-400 text-[#003366]"
+                                } ${isSidebarCollapsed ? "h-11 w-11 justify-center px-0 mx-auto" : "h-11 px-4 gap-3 text-[13px]"}`}
                             >
-                                {isTogglingHand ? (
-                                    <div className="h-4 w-4 border-2 border-[#003366]/20 border-t-[#003366] animate-spin rounded-full" />
-                                ) : (
-                                    <Hand size={15} className={handRaised ? "animate-bounce" : ""} />
-                                )}
-                                <span>{handRaised ? "Help Active" : "Raise Hand"}</span>
+                                <Hand size={18} className={handRaised ? "animate-bounce" : ""} />
+                                {!isSidebarCollapsed && <span>{handRaised ? "Active" : "Help"}</span>}
                             </button>
+                            
                             <button
-                                onClick={handleLogout}
-                                className="w-full h-10 flex items-center justify-center gap-2 bg-[#E11D48] text-white hover:bg-[#BE123C] transition-all text-[12px] font-bold rounded-lg shadow-sm"
+                                onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
+                                className={`w-full flex items-center h-11 transition-all font-bold rounded-xl bg-zinc-100 text-zinc-500 hover:bg-zinc-200 ${
+                                    isSidebarCollapsed ? "justify-center px-0 mx-auto w-11" : "px-4 gap-3 text-[13px]"
+                                }`}
                             >
-                                <LogOut size={15} />
-                                <span>Sign Out</span>
+                                <CollapseIcon size={18} className={`transition-transform duration-300 ${isSidebarCollapsed ? "rotate-180" : ""}`} />
+                                {!isSidebarCollapsed && <span>Collapse</span>}
                             </button>
                         </div>
                     </div>
 
-                    {/* Branding Footer */}
-                    <div className="py-3 flex items-center justify-center gap-1.5 border-t border-[#003366]/5">
-                        <span className="text-[10px] font-semibold text-[#003366]/40 tracking-wide">Powered by</span>
-                        <img
-                            src="https://ik.imagekit.io/dypkhqxip/redlixlogo?updatedAt=1777318254456"
-                            alt="Redlix"
-                            className="h-3.5 w-auto object-contain"
-                        />
-                    </div>
+                    {!isSidebarCollapsed && (
+                        <div className="py-4 flex items-center justify-center gap-2 border-t border-zinc-50">
+                            <span className="text-[10px] font-bold text-zinc-300 uppercase tracking-widest">Platform v2.1</span>
+                        </div>
+                    )}
                 </aside>
 
                 {/* ── Main Content ── */}
-                <div className="flex-1 flex flex-col min-w-0 lg:pl-[280px]">
+                <div className={`flex-1 flex flex-col min-w-0 transition-all duration-300 ${isSidebarCollapsed ? "lg:pl-[80px]" : "lg:pl-[260px]"}`}>
                     <main className="flex-1 p-4 lg:p-0 pb-20 lg:pb-10">
                         {children}
                     </main>
