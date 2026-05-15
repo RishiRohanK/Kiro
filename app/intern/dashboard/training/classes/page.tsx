@@ -50,10 +50,20 @@ export default function TrainingClassesPage() {
         checkBatch();
     }, []);
     
+    interface TrainingSession {
+        id: string;
+        title: string;
+        instructor: string;
+        date: string;
+        time: string;
+        link: string;
+        status: string;
+        topic: string;
+    }
+
     // Generate 32 classes including today's session with dynamic status
     const classes = (() => {
-        // ... (previous classes generation logic)
-        const list = [];
+        const list: TrainingSession[] = [];
         const meetingLink = "https://meet.google.com/mji-bixk-xmh";
         const today = new Date();
         const now = new Date();
