@@ -117,7 +117,7 @@ export default function TrainingClassesPage() {
         ];
 
         syllabus.forEach((s, index) => {
-            list.push(createSession(`class-${index}`, s.title, s.date, "6:00 PM - 7:30 PM", s.topic));
+            list.push(createSession(`class-${index}`, s.title, s.date, "6:00 PM - 7:00 PM", s.topic));
         });
         return list;
     })();

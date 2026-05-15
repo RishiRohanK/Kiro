@@ -929,7 +929,7 @@ function InternDashboardContent() {
                         {(() => {
                            const todayStr = currentTime.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
                            const currentHour = currentTime.getHours();
-                           const isSixPM = currentHour >= 18 && currentHour < 20;
+                           const isSixPM = currentHour === 18;
                            const meetingLink = "https://meet.google.com/mji-bixk-xmh";
                            
                            // Master Training Schedule
@@ -987,7 +987,7 @@ function InternDashboardContent() {
 
                            const currentClass = {
                               ...todaySession,
-                              time: "6:00 PM - 7:30 PM",
+                              time: "6:00 PM - 7:00 PM",
                               status: isSixPM ? "In Progress" : "Upcoming"
                            };
 
