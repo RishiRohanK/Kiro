@@ -317,9 +317,8 @@ function InternDashboardContent() {
       if (user && !socket) {
          setSocketStatus("connecting");
          const PROD_URL = process.env.NEXT_PUBLIC_CHAT_SERVER_URL || "https://redlix-chat-relay.onrender.com";
-         
-         // Keep-alive ping for Render free tier
-         fetch(`${PROD_URL}/ping`).catch(() => {});
+
+         fetch(`${PROD_URL}/ping`).catch(() => { });
 
          const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
          const CHAT_SERVER_URL = isLocal ? "http://localhost:5005" : PROD_URL;
@@ -365,14 +364,13 @@ function InternDashboardContent() {
             setSocketStatus("disconnected");
          });
 
-         newSocket.on("receive_message", (msg: ChatMessage) => {
-            setMessages(prev => {
-               // Prevent duplicates (especially for local echo)
-               const exists = prev.some(m => m.id === msg.id || (m.senderId === msg.senderId && m.content === msg.content && Math.abs(new Date(m.createdAt).getTime() - new Date(msg.createdAt).getTime()) < 5000));
-               if (exists) return prev;
-               return [...prev, msg];
-            });
-         });
+          newSocket.on("receive_message", (msg: ChatMessage) => {
+             setMessages(prev => {
+                const exists = prev.some(m => m.id === msg.id || (m.senderId === msg.senderId && m.content === msg.content && Math.abs(new Date(m.createdAt).getTime() - new Date(msg.createdAt).getTime()) < 5000));
+                if (exists) return prev;
+                return [...prev, msg];
+             });
+          });
 
          return () => {
             newSocket.disconnect();
@@ -383,24 +381,20 @@ function InternDashboardContent() {
 
    useEffect(() => {
       if (socket && socketStatus === "connected" && user?.id) {
-         // Correct logic: Find the team where THE CURRENT USER is a member
          const myTeam = schedules.find(s => s.teamInternIds?.includes(user.id));
          const teamId = myTeam?.teamAllocation || "global";
-         
+
          setActiveTeamId(teamId);
          console.log(`CHAT_SYSTEM: Synchronizing with Team ${teamId}`);
          socket.emit("join_team", { teamId, userId: user.id });
-         
-         // Fetch history for the active team/user
+
          fetchMessageHistory(teamId, selectedUser?.id);
       }
    }, [socket, socketStatus, user, schedules, selectedUser?.id]);
 
-   // Remove the old redundant useEffect at line 452
-
    const fetchMessageHistory = async (teamId: string, otherUserId?: string) => {
       try {
-         const url = otherUserId 
+         const url = otherUserId
             ? `/api/messages?teamId=${teamId}&userId=${user?.id}&targetId=${otherUserId}`
             : `/api/messages?teamId=${teamId}`;
          const res = await fetch(url);
@@ -419,14 +413,14 @@ function InternDashboardContent() {
 
    const getSenderColor = (name: string) => {
       const colors = [
-         'text-emerald-500', // Green
-         'text-rose-500',    // Red
-         'text-amber-500',   // Yellow
-         'text-blue-500',    // Blue
-         'text-pink-500',    // Pink
-         'text-indigo-500',  // Indigo
-         'text-orange-500',  // Orange
-         'text-purple-500'   // Purple
+         'text-emerald-500',
+         'text-rose-500',
+         'text-amber-500',
+         'text-blue-500',
+         'text-pink-500',
+         'text-indigo-500',
+         'text-orange-500',
+         'text-purple-500'
       ];
       let hash = 0;
       if (!name) return colors[0];
@@ -578,7 +572,7 @@ function InternDashboardContent() {
          createdAt: new Date().toISOString(),
          targetId: selectedUser?.id || null
       };
-      
+
       setMessages(prev => [...prev, localMsg]);
       setInputText("");
    };
@@ -705,19 +699,17 @@ function InternDashboardContent() {
    const handleApply = async (internshipId: string) => {
       if (!user) return;
       setIsApplying(internshipId);
-      
+
       try {
-         // 1. Fetch current resume data
          const resResume = await fetch(`/api/intern/resume?userId=${user.id}`);
          const resResumeData = await resResume.json();
-         
+
          if (!resResumeData.success || !resResumeData.resumeData) {
             alert("Please create and save your resume in the Resume Builder before applying.");
             router.push("/intern/dashboard/resume");
             return;
          }
 
-         // 2. Submit application
          const resApply = await fetch("/api/intern/apply", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -727,7 +719,7 @@ function InternDashboardContent() {
                resumeData: resResumeData.resumeData
             })
          });
-         
+
          const applyData = await resApply.json();
          if (applyData.success) {
             alert("Application submitted successfully!");
@@ -748,7 +740,7 @@ function InternDashboardContent() {
          {activeTab === "overview" && (
             <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} className="space-y-4">
                {user.batch === "Batch 1" && (
-                  <motion.div 
+                  <motion.div
                      initial={{ opacity: 0, y: -10 }}
                      animate={{ opacity: 1, y: 0 }}
                      className="bg-blue-50 border border-blue-600/10 py-2.5 px-4 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-4"
@@ -764,7 +756,7 @@ function InternDashboardContent() {
                            </p>
                         </div>
                      </div>
-                     <button 
+                     <button
                         onClick={() => setShowWeek2Modal(true)}
                         className="w-full sm:w-fit px-5 h-8 bg-blue-600 text-white text-[10px] font-bold rounded-lg hover:bg-black transition-all shadow-sm shadow-blue-500/20"
                      >
@@ -773,7 +765,7 @@ function InternDashboardContent() {
                   </motion.div>
                )}
                {user.batch === "Batch 3" && (
-                  <motion.div 
+                  <motion.div
                      initial={{ opacity: 0, y: -10 }}
                      animate={{ opacity: 1, y: 0 }}
                      className="bg-emerald-50 border border-emerald-600/10 py-2.5 px-4 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-4"
@@ -791,62 +783,57 @@ function InternDashboardContent() {
                      </div>
                   </motion.div>
                )}
-               {/* Hero Bento Section */}
                <div className="grid grid-cols-12 gap-4 text-left">
-                  {/* Left Column: Greeting & Stats */}
                   <div className="col-span-12 lg:col-span-8 flex flex-col gap-4">
-                      <div className="relative overflow-hidden bg-[#E0E7FF] p-6 text-[#003366] border border-[#003366]/5 rounded-lg">
+                     <div className="relative overflow-hidden bg-[#E0E7FF] p-6 text-[#003366] border border-[#003366]/5 rounded-lg">
 
-                         <div className="relative z-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
-                            <div className="space-y-1">
-                               <h1 className="text-2xl font-bold tracking-tight text-[#003366]">
-                                  {(() => {
-                                     const hour = new Date().getHours();
-                                     if (hour < 12) return "Good morning";
-                                     if (hour < 17) return "Good afternoon";
-                                     return "Good evening";
-                                  })()}, <span className="text-[#0055FF]">{user.name.split(' ')[0]}</span>
-                               </h1>
-                               <p className="text-[#003366]/60 text-[12px] font-medium max-w-sm">
-                                  Welcome back scholar. You have <span className="text-[#003366] font-semibold">{(Array.isArray(tasks) ? tasks : []).filter(t => t.status === 'pending').length} pending</span> tasks today.
-                               </p>
-                            </div>
-                            <div className="flex items-center gap-3">
-                               <div className="flex items-center gap-2 bg-white/40 backdrop-blur-md px-3 py-1.5 border border-white/30">
-                                  <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                                  <span className="text-[9px] font-bold uppercase tracking-widest text-[#003366]/60">Live Sync</span>
-                               </div>
-                               <div className="flex items-center gap-3 bg-white/60 backdrop-blur-md px-4 py-2 border border-white/40">
-                                  <span className="text-[10px] font-semibold uppercase tracking-widest text-[#003366]/40">Active Batch</span>
-                                  <div className="text-[14px] font-semibold text-[#003366]">{user.batch || "Batch 3"}</div>
-                               </div>
-                            </div>
-                         </div>
+                        <div className="relative z-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
+                           <div className="space-y-1">
+                              <h1 className="text-2xl font-bold tracking-tight text-[#003366]">
+                                 {(() => {
+                                    const hour = new Date().getHours();
+                                    if (hour < 12) return "Good morning";
+                                    if (hour < 17) return "Good afternoon";
+                                    return "Good evening";
+                                 })()}, <span className="text-[#0055FF]">{user.name.split(' ')[0]}</span>
+                              </h1>
+                              <p className="text-[#003366]/60 text-[12px] font-medium max-w-sm">
+                                 Welcome back scholar. You have <span className="text-[#003366] font-semibold">{(Array.isArray(tasks) ? tasks : []).filter(t => t.status === 'pending').length} pending</span> tasks today.
+                              </p>
+                           </div>
+                           <div className="flex items-center gap-3">
+                              <div className="flex items-center gap-2 bg-white/40 backdrop-blur-md px-3 py-1.5 border border-white/30">
+                                 <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                                 <span className="text-[9px] font-bold uppercase tracking-widest text-[#003366]/60">Live Sync</span>
+                              </div>
+                              <div className="flex items-center gap-3 bg-white/60 backdrop-blur-md px-4 py-2 border border-white/40">
+                                 <span className="text-[10px] font-semibold uppercase tracking-widest text-[#003366]/40">Active Batch</span>
+                                 <div className="text-[14px] font-semibold text-[#003366]">{user.batch || "Batch 3"}</div>
+                              </div>
+                           </div>
+                        </div>
 
-                         {/* Integrated Stats Row with Separate Containers */}
-                         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-8 pt-6 border-t border-[#003366]/10">
-                            {[
-                               { label: "Attendance", value: `${attendancePercentage}%`, icon: CheckCircle2 },
-                               { label: "Milestones", value: schedules.filter(s => s.isCompleted).length, icon: Target },
-                               { label: "Reports", value: reports.length + examSessions.length, icon: FileTextIcon },
-                               { label: "Warnings", value: examSessions.reduce((acc, s) => acc + (s.violations || 0), 0), icon: AlertCircle }
-                            ].map((stat, i) => (
-                               <div key={i} className="bg-white/40 border border-[#003366]/5 p-3 flex flex-col justify-between group">
-                                  <div className="flex items-center gap-2 opacity-60">
-                                     <stat.icon size={12} className="text-[#003366]" />
-                                     <span className="text-[9px] font-bold uppercase tracking-wider text-[#003366]">{stat.label}</span>
-                                  </div>
-                                  <p className="text-xl font-bold text-[#003366] mt-0.5">{stat.value}</p>
-                               </div>
-                            ))}
-                         </div>
-                      </div>
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-8 pt-6 border-t border-[#003366]/10">
+                           {[
+                              { label: "Attendance", value: `${attendancePercentage}%`, icon: CheckCircle2 },
+                              { label: "Milestones", value: schedules.filter(s => s.isCompleted).length, icon: Target },
+                              { label: "Reports", value: reports.length + examSessions.length, icon: FileTextIcon },
+                              { label: "Warnings", value: examSessions.reduce((acc, s) => acc + (s.violations || 0), 0), icon: AlertCircle }
+                           ].map((stat, i) => (
+                              <div key={i} className="bg-white/40 border border-[#003366]/5 p-3 flex flex-col justify-between group">
+                                 <div className="flex items-center gap-2 opacity-60">
+                                    <stat.icon size={12} className="text-[#003366]" />
+                                    <span className="text-[9px] font-bold uppercase tracking-wider text-[#003366]">{stat.label}</span>
+                                 </div>
+                                 <p className="text-xl font-bold text-[#003366] mt-0.5">{stat.value}</p>
+                              </div>
+                           ))}
+                        </div>
+                     </div>
                   </div>
 
-                  {/* Right Column: Key Actions */}
                   <div className="col-span-12 lg:col-span-4 flex flex-col gap-4 h-full">
-                     {/* Submission Portal Card */}
-                      <div className="flex-1 bg-white border border-zinc-100 p-6 flex flex-col sm:flex-row items-center justify-between shadow-none relative overflow-hidden group min-h-[210px]">
+                     <div className="flex-1 bg-white border border-zinc-100 p-6 flex flex-col sm:flex-row items-center justify-between shadow-none relative overflow-hidden group min-h-[210px]">
                         <div className="absolute top-2 right-2 p-2 bg-blue-50 text-[#003366] z-10">
                            <Paperclip size={18} />
                         </div>
@@ -867,7 +854,6 @@ function InternDashboardContent() {
                            </button>
                         </div>
 
-                        {/* Illustration Aligned to Container Height */}
                         <div className="w-40 h-40 sm:w-48 sm:h-full flex items-center justify-center flex-shrink-0 mt-4 sm:mt-0 pointer-events-none">
                            <img
                               src="https://ik.imagekit.io/dypkhqxip/Image%20folder-amico.svg"
@@ -877,7 +863,6 @@ function InternDashboardContent() {
                         </div>
                      </div>
 
-                     {/* Document Card (Conditional) */}
                      {userStatus?.offerLetterUrl ? (
                         <div className="bg-emerald-600 p-6 shadow-lg shadow-emerald-900/10 flex flex-col justify-between">
                            <div className="flex items-baseline justify-between mb-2">
@@ -893,19 +878,17 @@ function InternDashboardContent() {
                   </div>
                </div>
 
-               {/* Portal Updates Card Section */}
                <div className="mt-8">
                   <div className="flex items-center gap-2 mb-4 border-b border-zinc-100 pb-2">
                      <Newspaper size={16} className="text-[#003366]" />
                      <h2 className="text-[11px] font-bold text-zinc-400 uppercase tracking-[0.2em]">Portal Updates</h2>
                   </div>
-                  
+
                   <div className="space-y-4">
-                     {/* Announcement 0: RX Resume Builder (Newest) */}
                      <div className="bg-white border border-zinc-100 rounded-lg p-6 flex flex-col lg:flex-row items-center gap-8 hover:shadow-md transition-all group relative overflow-hidden">
                         <div className="w-full lg:w-48 h-48 lg:h-48 bg-zinc-50 rounded-md overflow-hidden shrink-0 border border-zinc-100">
-                           <img 
-                              src="https://ik.imagekit.io/dypkhqxip/resumebuilder" 
+                           <img
+                              src="https://ik.imagekit.io/dypkhqxip/resumebuilder"
                               alt="RX Resume Builder"
                               className="w-full h-full object-cover lg:object-contain transition-all duration-500 group-hover:scale-105"
                            />
@@ -922,9 +905,9 @@ function InternDashboardContent() {
                            <p className="text-[13px] text-zinc-500 font-medium leading-relaxed line-clamp-3 max-w-2xl">
                               RX Resume Builder is an intelligent, ATS-friendly resume creation platform designed specifically for students. It offers a dynamic and structured approach to resume building, ensuring your profile stands out.
                            </p>
-                           
+
                            <div className="flex justify-start mt-4">
-                              <Link 
+                              <Link
                                  href="/intern/dashboard/news"
                                  className="flex items-center gap-1 text-[13px] font-semibold text-blue-500 hover:underline"
                               >
@@ -934,11 +917,10 @@ function InternDashboardContent() {
                         </div>
                      </div>
 
-                     {/* Announcement 1: Student Forge Hiring */}
                      <div className="bg-zinc-50 border border-zinc-100 rounded-lg p-6 flex flex-col lg:flex-row items-center gap-8 hover:shadow-md transition-all group relative overflow-hidden">
                         <div className="w-full lg:w-48 h-48 lg:h-48 bg-white rounded-md overflow-hidden shrink-0 border border-zinc-100">
-                           <img 
-                              src="https://ik.imagekit.io/dypkhqxip/hiring" 
+                           <img
+                              src="https://ik.imagekit.io/dypkhqxip/hiring"
                               alt="Student Forge Hiring"
                               className="w-full h-full object-cover lg:object-contain transition-all duration-500 group-hover:scale-105"
                            />
@@ -955,9 +937,9 @@ function InternDashboardContent() {
                            <p className="text-[13px] text-zinc-500 font-medium leading-relaxed line-clamp-3 max-w-2xl">
                               Student Forge is excited to welcome passionate and driven students to be part of our growing team. We are currently hiring Marketing Interns and Web Development Interns who are eager to learn, contribute, and build real-world experience.
                            </p>
-                           
+
                            <div className="flex justify-start mt-4">
-                              <Link 
+                              <Link
                                  href="/intern/dashboard/news"
                                  className="flex items-center gap-1 text-[13px] font-semibold text-blue-500 hover:underline"
                               >
@@ -967,11 +949,10 @@ function InternDashboardContent() {
                         </div>
                      </div>
 
-                     {/* Announcement 2: Summer Bootcamp (Previous) */}
                      <div className="bg-white border border-zinc-100 rounded-lg p-6 flex flex-col lg:flex-row items-center gap-8 hover:shadow-md transition-all group relative overflow-hidden">
                         <div className="w-full lg:w-48 h-48 lg:h-48 bg-zinc-50 rounded-md overflow-hidden shrink-0 border border-zinc-100">
-                           <img 
-                              src="https://ik.imagekit.io/dypkhqxip/Summer%20Bootcamp%20(2).png?updatedAt=1776542583323" 
+                           <img
+                              src="https://ik.imagekit.io/dypkhqxip/Summer%20Bootcamp%20(2).png?updatedAt=1776542583323"
                               alt="Summer Bootcamp"
                               className="w-full h-full object-cover lg:object-contain transition-all duration-500 group-hover:scale-105"
                            />
@@ -988,9 +969,9 @@ function InternDashboardContent() {
                            <p className="text-[13px] text-zinc-500 font-medium leading-relaxed line-clamp-3 max-w-2xl">
                               This notice announces the start of the 30-day "Summer Boot Camp 2026". The program is designed to provide high-quality technical skills to students. We focus on building industry-standard capabilities through practical training.
                            </p>
-                           
+
                            <div className="flex justify-start mt-4">
-                              <Link 
+                              <Link
                                  href="/intern/dashboard/news"
                                  className="flex items-center gap-1 text-[13px] font-semibold text-blue-500 hover:underline"
                               >
@@ -1002,12 +983,11 @@ function InternDashboardContent() {
                   </div>
                </div>
 
-               {/* Custom Floating Chat Icon */}
-               <button 
+               <button
                   onClick={() => setShowSupportModal(true)}
                   className="fixed bottom-8 right-8 z-[60] w-16 h-16 bg-[#1A3797] shadow-xl flex items-center justify-center transition-all hover:scale-110 active:scale-95 group overflow-hidden"
                   style={{
-                     borderRadius: '32px 32px 5px 32px' // Leaf shape
+                     borderRadius: '32px 32px 5px 32px'
                   }}
                >
                   <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -1015,42 +995,38 @@ function InternDashboardContent() {
                      <div className="w-4 h-0.5 bg-[#1A3797] rounded-full" />
                      <div className="w-2.5 h-0.5 bg-[#1A3797] rounded-full" />
                   </div>
-                  
-                  {/* Subtle Shadow Effect */}
+
                   <div className="absolute inset-0 shadow-[inset_0_2px_4px_rgba(255,255,255,0.2)] pointer-events-none" />
                </button>
 
-               {/* Support Window (Message Us) */}
                <AnimatePresence>
                   {showSupportModal && (
                      <div className="fixed inset-0 z-[100] flex items-end justify-end p-6 pointer-events-none">
-                        <motion.div 
+                        <motion.div
                            initial={{ opacity: 0, y: 20, scale: 0.95 }}
                            animate={{ opacity: 1, y: 0, scale: 1 }}
                            exit={{ opacity: 0, y: 20, scale: 0.95 }}
                            className="w-full max-w-[350px] h-[420px] bg-[#F4F7FF] shadow-2xl rounded-none overflow-hidden border border-zinc-200 pointer-events-auto flex flex-col mb-20 mr-2"
                         >
-                           {/* Window Title Bar */}
                            <div className="bg-white/70 backdrop-blur-md px-8 py-6 border-b border-zinc-100 relative flex flex-col items-start">
-                              <button 
+                              <button
                                  onClick={() => setShowSupportModal(false)}
                                  className="absolute top-6 right-6 h-8 w-8 bg-zinc-50 text-zinc-400 rounded-none flex items-center justify-center hover:bg-zinc-100 hover:text-black transition-all"
                               >
                                  <X size={16} />
                               </button>
-                              
+
                               <div className="h-9 w-9 bg-zinc-900 text-white rounded-none flex items-center justify-center mb-4 shadow-sm shadow-zinc-200">
                                  <MessageSquare size={16} />
                               </div>
-                              
+
                               <h3 className="text-base font-bold text-zinc-900 tracking-tight">Help center</h3>
                               <p className="text-zinc-400 text-[10px] mt-0.5 font-medium">We are here to help you</p>
                            </div>
 
-                           {/* Support Link */}
                            <div className="flex-1 p-6 flex flex-col justify-center">
-                              <a 
-                                 href="https://www.redlix.co.in/intern-support" 
+                              <a
+                                 href="https://www.redlix.co.in/intern-support"
                                  target="_blank"
                                  className="group p-5 bg-white border border-zinc-100 rounded-none flex items-center gap-4 hover:border-zinc-300 hover:shadow-xl hover:shadow-blue-500/10 transition-all"
                               >
@@ -1065,12 +1041,11 @@ function InternDashboardContent() {
                               </a>
                            </div>
 
-                           {/* Footer */}
                            <div className="p-4 flex items-center justify-center gap-3 border-t border-zinc-100 bg-white/50">
                               <span className="text-[10px] font-medium text-zinc-400">Powered by</span>
-                              <img 
-                                 src="https://ik.imagekit.io/dypkhqxip/redlixlogo" 
-                                 alt="Redlix" 
+                              <img
+                                 src="https://ik.imagekit.io/dypkhqxip/redlixlogo"
+                                 alt="Redlix"
                                  className="h-4 w-auto drop-shadow-sm"
                               />
                            </div>
@@ -1083,7 +1058,6 @@ function InternDashboardContent() {
 
          {activeTab === "kanban" && (
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6 text-left">
-               { }
                <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
                   <div>
                      <h2 className="text-xl font-bold text-zinc-900">Agile Workspace</h2>
@@ -1097,7 +1071,6 @@ function InternDashboardContent() {
                   </button>
                </div>
 
-               { }
                <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
                   {(["TODO", "IN_PROGRESS", "DONE"] as const).map((status) => {
                      const col = {
@@ -1152,7 +1125,6 @@ function InternDashboardContent() {
 
                      return (
                         <div key={status} className={`flex flex-col gap-3 rounded-2xl p-4 border ${col.bg} ${col.border}`}>
-                           { }
                            <div className={`flex items-center justify-between px-3 py-2 rounded-xl ${col.headerBg}`}>
                               <h3 className={`text-[11px] font-bold uppercase tracking-widest flex items-center gap-2 ${col.headerText}`}>
                                  <Circle size={8} fill="currentColor" className={col.dot} />
@@ -1163,7 +1135,6 @@ function InternDashboardContent() {
                               </span>
                            </div>
 
-                           { }
                            <div className="space-y-2.5 min-h-[180px]">
                               {columnTasks.map((task) => (
                                  <div
@@ -1215,7 +1186,6 @@ function InternDashboardContent() {
                   })}
                </div>
 
-               { }
                <AnimatePresence>
                   {isAddingPersonalTask && (
                      <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/50 backdrop-blur-sm">
@@ -1272,7 +1242,6 @@ function InternDashboardContent() {
 
          {activeTab === "chat" && (
             <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} className="h-[calc(100vh-12rem)] lg:h-[calc(100vh-16rem)] min-h-[500px] flex bg-white border border-zinc-200 rounded-none shadow-2xl shadow-zinc-200/50 overflow-hidden text-left mb-6 relative">
-               { }
                <aside className={`${showChatSidebar ? "flex" : "hidden"} lg:flex absolute inset-0 z-20 lg:relative lg:inset-auto w-full lg:w-72 bg-zinc-50/50 border-r border-zinc-100 flex-col shrink-0`}>
                   <div className="p-6 border-b border-zinc-100 bg-white/50 backdrop-blur-sm flex items-center justify-between">
                      <div>
@@ -1285,7 +1254,6 @@ function InternDashboardContent() {
                   </div>
 
                   <div className="flex-1 overflow-y-auto no-scrollbar py-4">
-                     {/* Search/Filter or Categories could go here */}
                      <div className="px-4 mb-6">
                         <button
                            onClick={() => { setSelectedUser(null); setShowChatSidebar(false); }}
@@ -1300,7 +1268,7 @@ function InternDashboardContent() {
                         <div className="space-y-1 mt-1">
                            {(() => {
                               const teammateIds = new Set<string>();
-                              
+
                               const myTeamNames = schedules
                                  .filter(s => s.teamInternIds?.includes(user.id))
                                  .map(s => s.teamAllocation)
@@ -1312,7 +1280,7 @@ function InternDashboardContent() {
                                        if (id !== user.id) teammateIds.add(id);
                                     });
                                  }
-                                 
+
                                  if (s.teamAllocation && myTeamNames.includes(s.teamAllocation)) {
                                     s.teamInternIds?.forEach(id => {
                                        if (id !== user.id) teammateIds.add(id);
@@ -1361,7 +1329,6 @@ function InternDashboardContent() {
                      </div>
                   </div>
 
-                  { }
                   <div className="p-4 bg-zinc-100/50 border-t border-zinc-200 flex items-center gap-3">
                      <div className="h-9 w-9 bg-black text-white flex items-center justify-center text-xs font-bold rounded-full overflow-hidden">
                         {user.profileImage ? (
@@ -1378,7 +1345,6 @@ function InternDashboardContent() {
                </aside>
 
                <div className={`flex-1 flex flex-col bg-white overflow-hidden ${!showChatSidebar ? "flex" : "hidden lg:flex"}`}>
-                  {/* Window Header */}
                   <div className="px-6 py-4 border-b border-zinc-100 flex items-center justify-between bg-white sticky top-0 z-10">
                      <div className="flex items-center gap-4 truncate">
                         <button onClick={() => setShowChatSidebar(true)} className="lg:hidden p-2 -ml-2 text-zinc-400 hover:text-black transition-colors">
@@ -1400,20 +1366,18 @@ function InternDashboardContent() {
                               {selectedUser ? selectedUser.name : (schedules.find(s => s.week.includes("Week 2"))?.teamAllocation || "Main Group")}
                            </h2>
                            <div className="flex items-center gap-2">
-                              <div className={`h-1.5 w-1.5 rounded-full ${
-                                 socketStatus === "connected" ? "bg-emerald-500 animate-pulse" : 
-                                 socketStatus === "connecting" ? "bg-amber-500" : "bg-rose-500"
-                               }`} />
+                              <div className={`h-1.5 w-1.5 rounded-full ${socketStatus === "connected" ? "bg-emerald-500 animate-pulse" :
+                                    socketStatus === "connecting" ? "bg-amber-500" : "bg-rose-500"
+                                 }`} />
                               <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-tight">
-                                 {socketStatus === "connected" ? "Online" : 
-                                  socketStatus === "connecting" ? "Connecting... " : "Offline"}
+                                 {socketStatus === "connected" ? "Online" :
+                                    socketStatus === "connecting" ? "Connecting... " : "Offline"}
                               </span>
                            </div>
                         </div>
                      </div>
                   </div>
 
-                  { }
                   <div className="flex-1 overflow-y-auto p-4 lg:p-8 space-y-6 lg:space-y-8 bg-zinc-50/30 no-scrollbar">
                      {messages.filter(m =>
                         selectedUser
@@ -1454,7 +1418,6 @@ function InternDashboardContent() {
                      <div ref={chatEndRef} />
                   </div>
 
-                  {/* Input Window */}
                   <form onSubmit={handleSendMessage} className="p-4 bg-zinc-50/50 border-t border-zinc-100 flex gap-3">
                      <div className="flex-1 relative">
                         <input
@@ -1482,7 +1445,9 @@ function InternDashboardContent() {
                      const theme = colors[idx % colors.length];
                      return (
                         <div key={task.id} className={`p-6 border ${theme.border} ${theme.bg} transition-all flex flex-col h-full text-left`}>
-                           <div className="flex items-center justify-between mb-4"><div className="flex items-center gap-2"><div className={`h-1.5 w-1.5 ${theme.dot}`} /><span className={`text-[10px] font-bold ${theme.accent}`}>{task.status === "pending" ? "Todo" : "Done"}</span></div><span className="text-[10px] text-zinc-400">{new Date(task.createdAt).toLocaleDateString()}</span></div>
+                           <div className="flex items-center justify-between mb-8">
+                              <div className="flex items-center gap-2"><div className={`h-1.5 w-1.5 ${theme.dot}`} /><span className={`text-[10px] font-bold ${theme.accent}`}>{task.status === "pending" ? "Todo" : "Done"}</span></div><span className="text-[10px] text-zinc-400">{new Date(task.createdAt).toLocaleDateString()}</span>
+                           </div>
                            <h3 className="text-sm font-bold text-zinc-900 mb-2 leading-tight">{task.title}</h3>
                            <p className="text-xs text-zinc-500 leading-relaxed mb-6 flex-1">{task.description}</p>
                            <div className="pt-4 border-t border-zinc-900/5 flex flex-col gap-3 mt-auto">
@@ -1490,7 +1455,7 @@ function InternDashboardContent() {
                                  {task.attachmentUrl ? <a href={task.attachmentUrl} target="_blank" className="flex items-center gap-2 text-xs font-semibold text-zinc-400 hover:text-[#0055FF] transition-colors">Files <Download size={12} /></a> : <span className="text-[10px] text-zinc-300 italic">No files</span>}
                               </div>
                               <div className="flex gap-2">
-                                 <button 
+                                 <button
                                     onClick={() => {
                                        setSelectedTaskForSubmit(task);
                                        setTaskSubmissionForm({ ...taskSubmissionForm, name: user.name });
@@ -1500,7 +1465,7 @@ function InternDashboardContent() {
                                  >
                                     Submit
                                  </button>
-                                 <button 
+                                 <button
                                     onClick={() => updateTaskStatus(task.id, task.status)}
                                     className={`flex-1 h-10 text-[11px] font-bold uppercase tracking-wider transition-all border ${task.status === "completed" ? "bg-emerald-50 text-emerald-600 border-emerald-100" : "bg-white text-zinc-600 border-zinc-200 hover:bg-zinc-50"}`}
                                  >
@@ -1537,7 +1502,7 @@ function InternDashboardContent() {
                      </div>
                      <div className="mt-4">
                         <div className="h-1.5 w-full bg-zinc-100 rounded-full overflow-hidden">
-                           <motion.div 
+                           <motion.div
                               initial={{ width: 0 }}
                               animate={{ width: `${attendancePercentage}%` }}
                               className="h-full bg-[#0055FF]"
@@ -1576,7 +1541,7 @@ function InternDashboardContent() {
                      <h3 className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest">Recent Activity</h3>
                      <span className="text-[10px] text-zinc-400">Latest records</span>
                   </div>
-                  
+
                   <div className="bg-white border border-zinc-100 rounded-xl overflow-hidden shadow-sm">
                      <div className="overflow-x-auto">
                         <table className="w-full text-left">
@@ -1606,10 +1571,9 @@ function InternDashboardContent() {
                                        <span className="px-2 py-0.5 bg-blue-50 text-blue-600 text-[10px] font-bold rounded uppercase tracking-tighter">Classroom</span>
                                     </td>
                                     <td className="px-6 py-4 text-right">
-                                       <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-tight ${
-                                          log.status === "PRESENT" ? "bg-emerald-50 text-emerald-600" : 
-                                          log.status === "LATE" ? "bg-amber-50 text-amber-600" : "bg-red-50 text-red-600"
-                                       }`}>
+                                       <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-tight ${log.status === "PRESENT" ? "bg-emerald-50 text-emerald-600" :
+                                             log.status === "LATE" ? "bg-amber-50 text-amber-600" : "bg-red-50 text-red-600"
+                                          }`}>
                                           {log.status === "PRESENT" ? "Present" : log.status === "LATE" ? "Late" : "Absent"}
                                        </span>
                                     </td>
@@ -1663,13 +1627,13 @@ function InternDashboardContent() {
                                     <h4 className="text-[16px] font-bold text-zinc-900 truncate leading-none mb-1">{job.title}</h4>
                                     <p className="text-[12px] font-medium text-zinc-500">{job.company}</p>
                                  </div>
-                                 
+
                                  <div className="flex items-center gap-4 text-[11px] font-medium text-zinc-400 mb-6">
                                     <span className="flex items-center gap-1.5"><MapPin size={13} className="text-red-500" /> {job.location || "Remote"}</span>
                                     <span className="flex items-center gap-1.5"><Clock size={13} className="text-zinc-300" /> {job.duration || "3 Months"}</span>
                                  </div>
 
-                                 <button 
+                                 <button
                                     onClick={() => setSelectedInternship(job)}
                                     className="w-full h-11 bg-zinc-900 text-white text-[12px] font-bold hover:bg-red-600 transition-all rounded-none"
                                  >
@@ -1705,12 +1669,11 @@ function InternDashboardContent() {
                                           <p className="text-[10px] text-zinc-400 font-bold">{app.internship?.company || "Company"}</p>
                                        </div>
                                     </div>
-                                    <span className={`text-[10px] font-bold px-3 py-1 rounded-sm ${
-                                       app.status === "PENDING" ? "bg-amber-50 text-amber-600" :
-                                       app.status === "REVIEWED" ? "bg-blue-50 text-blue-600" :
-                                       app.status === "ACCEPTED" ? "bg-emerald-50 text-emerald-600" :
-                                       "bg-zinc-100 text-zinc-400"
-                                    }`}>
+                                    <span className={`text-[10px] font-bold px-3 py-1 rounded-sm ${app.status === "PENDING" ? "bg-amber-50 text-amber-600" :
+                                          app.status === "REVIEWED" ? "bg-blue-50 text-blue-600" :
+                                             app.status === "ACCEPTED" ? "bg-emerald-50 text-emerald-600" :
+                                                "bg-zinc-100 text-zinc-400"
+                                       }`}>
                                        {app.status.charAt(0) + app.status.slice(1).toLowerCase()}
                                     </span>
                                  </div>
@@ -1737,7 +1700,6 @@ function InternDashboardContent() {
                   </div>
                </div>
 
-               {/* Internship Detail Modal */}
                <AnimatePresence>
                   {selectedInternship && (
                      <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-10">
@@ -1789,17 +1751,17 @@ function InternDashboardContent() {
                                  </div>
 
                                  <div className="pt-6 flex flex-col md:flex-row gap-3">
-                                    <button 
+                                    <button
                                        onClick={() => { handleApply(selectedInternship.id); setSelectedInternship(null); }}
                                        disabled={isApplying === selectedInternship.id || myApplications.some(a => a.internshipId === selectedInternship.id)}
                                        className="flex-1 h-14 bg-zinc-900 text-white font-bold text-xs hover:bg-black transition-all rounded-none disabled:opacity-50"
                                     >
-                                       {isApplying === selectedInternship.id ? "Applying..." : 
-                                        myApplications.some(a => a.internshipId === selectedInternship.id) ? "Already applied" : "Apply with resume"}
+                                       {isApplying === selectedInternship.id ? "Applying..." :
+                                          myApplications.some(a => a.internshipId === selectedInternship.id) ? "Already applied" : "Apply with resume"}
                                     </button>
                                     {selectedInternship.applyLink && (
-                                       <a 
-                                          href={selectedInternship.applyLink} 
+                                       <a
+                                          href={selectedInternship.applyLink}
                                           target="_blank"
                                           rel="noopener noreferrer"
                                           className="h-14 px-8 border border-zinc-200 text-zinc-900 flex items-center justify-center font-bold text-[12px] hover:bg-zinc-50 transition-all rounded-none"
@@ -1947,7 +1909,6 @@ function InternDashboardContent() {
                </div>
             )}
          </AnimatePresence>
-         {/* UI/UX Task Submission Modal */}
          <AnimatePresence>
             {showUIUXModal && (
                <motion.div
@@ -2111,7 +2072,7 @@ function InternDashboardContent() {
                </motion.div>
             )}
          </AnimatePresence>
-          <AnimatePresence>
+         <AnimatePresence>
             {showWeek2Modal && (
                <motion.div
                   initial={{ opacity: 0 }}

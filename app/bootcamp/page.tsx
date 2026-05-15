@@ -62,7 +62,6 @@ export default function BootcampPage() {
       <SubNavbar />
 
       <main className="w-full bg-[#F0F2F5] min-h-screen py-1">
-        {/* Banner Section */}
         <div className="w-full bg-white border-b border-zinc-200">
           <div className="w-full max-w-[1400px] mx-auto p-0.5">
             <img
@@ -75,14 +74,12 @@ export default function BootcampPage() {
         </div>
 
         <div className="w-full max-w-[1400px] mx-auto bg-white shadow-sm my-1 border border-zinc-200">
-          {/* Public Notice Header */}
           <div className="border-b-2 border-[#002147] pb-6 mb-6 text-center pt-8 px-6">
             <h1 className="text-xl sm:text-2xl font-semibold text-[#002147] mb-2">Summer Boot Camp 2026 - Training Notification</h1>
             <div className="inline-block px-3 py-0.5 bg-[#002147] text-white text-[11px] font-medium mb-3">Official Release</div>
             <p className="text-[13px] sm:text-[14px] font-medium text-zinc-500">Platform An initiative by Student Forge</p>
           </div>
 
-          {/* Red Alert Section */}
           <div className="mx-6 sm:mx-10 lg:mx-12 mb-8 p-3 bg-red-600 text-white flex items-center justify-center text-center">
             <p className="text-[14px] font-bold">
               Registrations will be closed automatically at 6:00 PM today (15-06-2026)
@@ -91,10 +88,8 @@ export default function BootcampPage() {
 
           <div className="px-6 sm:px-10 lg:px-12 pb-12">
             <div className="flex flex-col lg:flex-row gap-10 items-start">
-              {/* Main Information Block */}
               <div className="flex-1 space-y-10 w-full">
 
-                {/* Section 1: Summary */}
                 <section>
                   <div className="bg-[#F8F9FA] px-4 py-2 border-l-4 border-[#002147] mb-4 shadow-sm">
                     <h2 className="text-[15px] sm:text-[16px] font-semibold text-[#002147]">1. Program Notification</h2>
@@ -109,7 +104,6 @@ export default function BootcampPage() {
                   </div>
                 </section>
 
-                {/* Section 2: Eligibility Criteria */}
                 <section>
                   <div className="bg-[#F8F9FA] px-4 py-2 border-l-4 border-[#002147] mb-4 shadow-sm">
                     <h2 className="text-[15px] sm:text-[16px] font-semibold text-[#002147]">2. Eligibility Criteria</h2>
@@ -127,7 +121,6 @@ export default function BootcampPage() {
                   </div>
                 </section>
 
-                {/* Section 3: Important Dates */}
                 <section>
                   <div className="bg-[#F8F9FA] px-4 py-2 border-l-4 border-[#002147] mb-4 shadow-sm">
                     <h2 className="text-[15px] sm:text-[16px] font-semibold text-[#002147]">3. Important Dates</h2>
@@ -168,7 +161,6 @@ export default function BootcampPage() {
                   </div>
                 </section>
 
-                {/* Section 4: Comprehensive Syllabus (MERN Stack Basics) */}
                 <section>
                   <div className="bg-[#F8F9FA] px-4 py-2 border-l-4 border-[#002147] mb-6 shadow-sm">
                     <h2 className="text-[15px] sm:text-[16px] font-semibold text-[#002147]">4. Comprehensive Syllabus (MERN Stack Basics)</h2>
@@ -333,7 +325,6 @@ export default function BootcampPage() {
                   </div>
                 </section>
 
-                {/* Section 5: Certification Requirements */}
                 <section>
                   <div className="bg-[#F8F9FA] px-4 py-2 border-l-4 border-[#002147] mb-4 shadow-sm">
                     <h2 className="text-[15px] sm:text-[16px] font-semibold text-[#002147]">5. Certification Requirements</h2>
@@ -358,7 +349,6 @@ export default function BootcampPage() {
                   </div>
                 </section>
 
-                {/* Section 6: Industry Immersion (MNC Visit) */}
                 <section>
                   <div className="bg-[#F8F9FA] px-4 py-2 border-l-4 border-[#002147] mb-4 shadow-sm">
                     <h2 className="text-[15px] sm:text-[16px] font-semibold text-[#002147]">6. Industry Immersion (MNC Visit)</h2>
@@ -375,7 +365,6 @@ export default function BootcampPage() {
                 </section>
               </div>
 
-              {/* Registration Form Block */}
               <div className="w-full lg:w-[420px] shrink-0 lg:sticky lg:top-4">
                 <div className="border-[4px] border-[#002147] bg-white p-6 mb-4 shadow-lg">
                   <div className="bg-[#002147] text-white p-5 mb-6 text-center -mx-6 -mt-6">

@@ -249,9 +249,7 @@ export default function InternSignupPage() {
     return (
         <div className="min-h-screen flex flex-col md:flex-row bg-white font-sans overflow-x-hidden">
 
-            {/* Left Side: Minimalist Panel with Animation */}
             <div className="md:w-[60%] bg-[#E0E7FF] relative hidden md:flex flex-col items-center justify-between overflow-hidden pt-12 pb-10 px-12">
-                {/* Top Left Info */}
                 <div className="w-full flex flex-col items-start gap-6 relative z-20">
                     <div className="flex items-center gap-4">
                         <img 
@@ -272,7 +270,6 @@ export default function InternSignupPage() {
                     </div>
                 </div>
 
-                {/* Bottom Animation */}
                 <div className="relative z-10 w-full max-w-[750px] translate-y-32">
                     <iframe 
                         src="https://lottie.host/embed/521c9b48-ae0c-49ba-a951-9c0d31728f01/2oOdwYfKHI.lottie" 
@@ -280,12 +277,10 @@ export default function InternSignupPage() {
                     ></iframe>
                 </div>
 
-                {/* Decorative BG elements */}
                 <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32 blur-3xl"></div>
                 <div className="absolute bottom-0 left-0 w-64 h-64 bg-[#003366]/5 rounded-full -ml-32 -mb-32 blur-3xl"></div>
             </div>
 
-            {/* Right Side: Registration Form */}
             <div className="w-full md:w-[40%] p-8 md:p-16 flex flex-col justify-center relative bg-white">
                 <div className="max-w-[480px] w-full mx-auto space-y-8">
 
