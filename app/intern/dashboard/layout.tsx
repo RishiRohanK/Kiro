@@ -232,7 +232,7 @@ function InternDashboardLayoutContent({
         { name: "Reports", icon: FileText, slug: "/intern/dashboard/reports" },
     ];
 
-    const isTrainingActive = trainingSubItems.some(sub => {
+    const isTrainingActive = pathname === "/intern/dashboard" || trainingSubItems.some(sub => {
         const url = new URL(sub.slug, "http://localhost");
         return pathname === url.pathname;
     });
