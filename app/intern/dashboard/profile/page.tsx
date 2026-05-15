@@ -585,7 +585,7 @@ export default function InternProfile() {
                                                 <div className="h-48 flex items-end gap-6">
                                                     {(() => {
                                                         const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-                                                        const currentYear = new Date().getFullYear();
+                                                        const currentYear = intern.attendances?.length > 0 ? new Date(intern.attendances[0].date).getFullYear() : new Date().getFullYear();
                                                         
                                                         // Group attendance by month
                                                         const monthlyData = months.map((month, index) => {
@@ -600,12 +600,12 @@ export default function InternProfile() {
 
                                                         return monthlyData.map((data, idx) => (
                                                             <div key={idx} className="flex-1 flex flex-col items-center gap-3 group">
-                                                                <div className="w-full relative flex flex-col justify-end h-full">
+                                                                 <div className="w-full relative flex flex-col justify-end h-full">
                                                                     <motion.div 
                                                                         initial={{ height: 0 }}
-                                                                        animate={{ height: `${(data.count / maxCount) * 100}%` }}
+                                                                        animate={{ height: data.count > 0 ? `${Math.max((data.count / maxCount) * 100, 5)}%` : "0%" }}
                                                                         transition={{ delay: idx * 0.05, duration: 0.8, ease: "easeOut" }}
-                                                                        className="w-full bg-orange-500/10 group-hover:bg-orange-500/20 rounded-t-sm transition-all border-t border-orange-500/30 relative"
+                                                                        className="w-full bg-orange-500 rounded-t-sm transition-all relative"
                                                                     >
                                                                         {data.count > 0 && (
                                                                             <span className="absolute -top-6 left-1/2 -translate-x-1/2 text-[10px] font-bold text-orange-600 opacity-0 group-hover:opacity-100 transition-opacity">
