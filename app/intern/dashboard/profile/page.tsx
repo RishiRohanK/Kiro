@@ -16,7 +16,7 @@ import {
     Code,
     Sparkles,
     Target,
-    Heart,
+    Flame,
     User
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -336,6 +336,34 @@ export default function InternProfile() {
     const { intern } = detailedData || {};
     if (!intern) return null;
 
+    const streak = (() => {
+        if (!intern.attendances || intern.attendances.length === 0) return 0;
+        const sorted = [...intern.attendances].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+        let s = 0;
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const firstDate = new Date(sorted[0].date);
+        firstDate.setHours(0, 0, 0, 0);
+        const diff = (today.getTime() - firstDate.getTime()) / (1000 * 60 * 60 * 24);
+        if (diff > 1) return 0;
+        for (let i = 0; i < sorted.length; i++) {
+            if (sorted[i].status === 'PRESENT' || sorted[i].status === 'LATE') {
+                s++;
+                if (i < sorted.length - 1) {
+                    const current = new Date(sorted[i].date);
+                    current.setHours(0, 0, 0, 0);
+                    const next = new Date(sorted[i + 1].date);
+                    next.setHours(0, 0, 0, 0);
+                    const gap = (current.getTime() - next.getTime()) / (1000 * 60 * 60 * 24);
+                    if (gap > 1) break;
+                }
+            } else {
+                break;
+            }
+        }
+        return s;
+    })();
+
     const initials = intern.name.split(' ').map((n: string) => n[0]).join('').toUpperCase();
     const skills = intern.interestedArea?.split(',').map((s: string) => s.trim()).filter((s: string) => s !== "") || [];
     
@@ -472,7 +500,7 @@ export default function InternProfile() {
                                         exit={{ opacity: 0, y: -10 }}
                                         className="space-y-12"
                                     >
-                                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                                        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
                                             {/* Overall Attendance Percentage */}
                                             <div className="bg-zinc-50 border border-zinc-100 p-8 rounded-2xl flex flex-col items-center justify-center text-center space-y-4 shadow-sm">
                                                 <div className="relative h-24 w-24 flex items-center justify-center">
@@ -508,8 +536,15 @@ export default function InternProfile() {
                                                 </div>
                                             </div>
 
-                                            {/* Stats breakdown */}
-                                            <div className="md:col-span-2 grid grid-cols-2 gap-4">
+                                            <div className="md:col-span-3 grid grid-cols-2 md:grid-cols-4 gap-4">
+                                                <div className="bg-white border border-zinc-100 p-6 rounded-2xl space-y-2 relative overflow-hidden">
+                                                    <div className="absolute top-2 right-2 text-orange-500">
+                                                        <Flame size={16} />
+                                                    </div>
+                                                    <p className="text-[11px] font-bold text-zinc-400 uppercase tracking-wider">Current Streak</p>
+                                                    <p className="text-2xl font-bold text-zinc-900">{streak} <span className="text-sm font-normal text-zinc-400">days</span></p>
+                                                    <p className="text-[10px] text-zinc-400 font-medium italic">Consecutive login</p>
+                                                </div>
                                                 <div className="bg-white border border-zinc-100 p-6 rounded-2xl space-y-2">
                                                     <p className="text-[11px] font-bold text-zinc-400 uppercase tracking-wider">Working days</p>
                                                     <p className="text-2xl font-bold text-zinc-900">{intern.attendances?.length || 0}</p>

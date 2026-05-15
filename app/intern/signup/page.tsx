@@ -6,183 +6,183 @@ import { useRouter } from "next/navigation";
 import { ShieldAlert, Loader2, Eye, EyeOff, User, Mail, Phone, Lock, Linkedin, Instagram, School, Bell, Search } from "lucide-react";
 
 const COLLEGES = [
-  {"name": "Indian Institute of Technology (IIT), Hyderabad", "code": "IITH"},
-  {"name": "National Institute of Technology (NIT), Warangal", "code": "NITW"},
-  {"name": "International Institute of Information Technology (IIIT), Hyderabad", "code": "IIITH"},
-  {"name": "JNTUH College of Engineering, Hyderabad", "code": "JNTH"},
-  {"name": "University College of Engineering, Osmania University", "code": "OUCE"},
-  {"name": "Chaitanya Bharathi Institute of Technology (CBIT)", "code": "CBIT"},
-  {"name": "VNR Vignana Jyothi Institute of Engineering and Technology", "code": "VNRV"},
-  {"name": "Vasavi College of Engineering", "code": "VCEH"},
-  {"name": "Gokaraju Rangaraju Institute of Engineering and Technology (GRIET)", "code": "GRRR"},
-  {"name": "Mahatma Gandhi Institute of Technology (MGIT)", "code": "MGIT"},
-  {"name": "CVR College of Engineering", "code": "CVRH"},
-  {"name": "B.V. Raju Institute of Technology (BVRIT), Narsapur", "code": "BVRI"},
-  {"name": "Vardhaman College of Engineering", "code": "VARD"},
-  {"name": "Sreenidhi Institute of Science and Technology (SNIST)", "code": "SNIS"},
-  {"name": "Institute of Aeronautical Engineering (IARE)", "code": "IARE"},
-  {"name": "Maturi Venkata Subba Rao Engineering College (MVSR)", "code": "MVSR"},
-  {"name": "Anurag University", "code": "ANRG"},
-  {"name": "Malla Reddy University", "code": "MRUN"},
-  {"name": "CMR College of Engineering and Technology", "code": "CMRC"},
-  {"name": "Keshav Memorial Institute of Technology (KMIT)", "code": "KMIT"},
-  {"name": "Kakatiya Institute of Technology and Science (KITS), Warangal", "code": "KITS"},
-  {"name": "Malla Reddy College of Engineering and Technology (MRCET)", "code": "MRCE"},
-  {"name": "Guru Nanak Institutions Technical Campus", "code": "GNIT"},
-  {"name": "Vidya Jyothi Institute of Technology (VJIT)", "code": "VJIT"},
-  {"name": "JB Institute of Engineering and Technology", "code": "JBIET"},
-  {"name": "G. Narayanamma Institute of Technology and Science (GNITS)", "code": "GNTS"},
-  {"name": "Stanley College of Engineering and Technology for Women", "code": "STAN"},
-  {"name": "Muffakham Jah College of Engineering and Technology", "code": "MJCET"},
-  {"name": "Methodist College of Engineering and Technology", "code": "METH"},
-  {"name": "Deccan College of Engineering and Technology", "code": "DECC"},
-  {"name": "Lords Institute of Engineering and Technology", "code": "LORD"},
-  {"name": "TKR College of Engineering and Technology", "code": "TKRC"},
-  {"name": "Sphoorthy Engineering College", "code": "SPHY"},
-  {"name": "CMR Technical Campus", "code": "CMRK"},
-  {"name": "Malla Reddy Institute of Technology and Science", "code": "MRIT"},
-  {"name": "Geethanjali College of Engineering and Technology", "code": "GCTC"},
-  {"name": "Bharat Institute of Engineering and Technology", "code": "BIET"},
-  {"name": "Scient Institute of Technology", "code": "SNTI"},
-  {"name": "Srinivas Reddy Memorial College of Engineering", "code": "SRMC"},
-  {"name": "Sumathi Reddy Institute of Technology for Women", "code": "SRIW"},
-  {"name": "Bhoj Reddy Engineering College for Women", "code": "BREW"},
-  {"name": "ACE Engineering College", "code": "ACEH"},
-  {"name": "Holy Mary Institute of Technology and Science", "code": "HITS"},
-  {"name": "Jayamukhi Institute of Technological Sciences", "code": "JITS"},
-  {"name": "Vaagdevi College of Engineering", "code": "VAGD"},
-  {"name": "Vaageswari College of Engineering", "code": "VAGW"},
-  {"name": "Balaji Institute of Technology and Science", "code": "BITS"},
-  {"name": "SVS Group of Institutions", "code": "SVSI"},
-  {"name": "Kamala Institute of Technology and Science", "code": "KITS"},
-  {"name": "CMR Institute of Technology", "code": "CMRM"},
-  {"name": "Vignan's Institute of Management and Technology for Women", "code": "VIGN"},
-  {"name": "Marri Laxman Reddy Institute of Technology", "code": "MLRS"},
-  {"name": "MLR Institute of Technology", "code": "MLID"},
-  {"name": "St. Martin's Engineering College", "code": "SMEC"},
-  {"name": "Nalla Malla Reddy Engineering College", "code": "NMREC"},
-  {"name": "K.G. Reddy College of Engineering and Technology", "code": "KGRH"},
-  {"name": "Nalla Narasimha Reddy Group of Institutions", "code": "NNRG"},
-  {"name": "Bharat Institute of Technology and Science", "code": "BITS"},
-  {"name": "AVN Institute of Engineering and Technology", "code": "AVNI"},
-  {"name": "Abhinav Hi-Tech College of Engineering", "code": "ABHV"},
-  {"name": "Arjun College of Technology and Sciences", "code": "ARJN"},
-  {"name": "Aryabhata Institute of Technology and Science", "code": "ARYA"},
-  {"name": "Aurora's Engineering College", "code": "AURC"},
-  {"name": "Aurora's Scientific and Technological Institute", "code": "AURS"},
-  {"name": "Aurora's Technological and Research Institute", "code": "AURR"},
-  {"name": "Azad College of Engineering and Technology", "code": "AZAD"},
-  {"name": "Bandari Srinivas Institute of Technology", "code": "BSIT"},
-  {"name": "Bhaskar Engineering College", "code": "BASK"},
-  {"name": "Bomma Institute of Technology and Science", "code": "BOMA"},
-  {"name": "Christu Jyothi Institute of Technology and Science", "code": "CJIT"},
-  {"name": "CMR Engineering College", "code": "CMRE"},
-  {"name": "CVSR College of Engineering", "code": "CVSR"},
-  {"name": "Daripally Anantha Ramulu College of Engineering and Technology", "code": "DARC"},
-  {"name": "DRK College of Engineering and Technology", "code": "DRKC"},
-  {"name": "DRK Institute of Science and Technology", "code": "DRKI"},
-  {"name": "Ellenki College of Engineering and Technology", "code": "ELNK"},
-  {"name": "Ellenki Institute of Engineering and Technology", "code": "ELNI"},
-  {"name": "Gandhi Academy of Technical Education", "code": "GATE"},
-  {"name": "Global Institute of Engineering and Technology", "code": "GLOB"},
-  {"name": "Gopal Reddy College of Engineering and Technology", "code": "GOPL"},
-  {"name": "Gouthami Institute of Technology and Management for Women", "code": "GOUT"},
-  {"name": "Hasvita Institute of Engineering and Technology", "code": "HASV"},
-  {"name": "Hi-Tech Institute of Engineering and Technology", "code": "HITE"},
-  {"name": "Hyderabad Institute of Technology and Management", "code": "HITM"},
-  {"name": "Indur Institute of Engineering and Technology", "code": "INDU"},
-  {"name": "Jagruti Institute of Engineering and Technology", "code": "JAGR"},
-  {"name": "Jawaharlal Nehru Institute of Technology", "code": "JNIT"},
-  {"name": "Jawaharlal Nehru Technological University College of Engineering, Jagtial", "code": "JNTJ"},
-  {"name": "Jawaharlal Nehru Technological University College of Engineering, Manthani", "code": "JNTM"},
-  {"name": "Jawaharlal Nehru Technological University College of Engineering, Sultanpur", "code": "JNTS"},
-  {"name": "Joginpally B.R. Engineering College", "code": "JBRE"},
-  {"name": "Jyothishmathi Institute of Technological Sciences", "code": "JYOT"},
-  {"name": "Jyothishmathi Institute of Technology and Science", "code": "JYTS"},
-  {"name": "Khammam Institute of Technology and Sciences", "code": "KITS"},
-  {"name": "Kodada Institute of Technology and Science for Women", "code": "KODW"},
-  {"name": "Kommuri Pratap Reddy Institute of Technology", "code": "KPRT"},
-  {"name": "Kshatriya College of Engineering", "code": "KSHR"},
-  {"name": "Kunda College of Technology and Management", "code": "KUND"},
-  {"name": "Lingaiah Institute of Management and Technology", "code": "LING"},
-  {"name": "Madira Institute of Technology and Sciences", "code": "MADI"},
-  {"name": "Mahaveer Institute of Science and Technology", "code": "MAHA"},
-  {"name": "Malla Reddy College of Engineering", "code": "MRCE"},
-  {"name": "Malla Reddy Engineering College", "code": "MREC"},
-  {"name": "Malla Reddy Engineering College for Women", "code": "MRW"},
-  {"name": "Malla Reddy Institute of Engineering and Technology", "code": "MRIE"},
-  {"name": "Malla Reddy Institute of Technology", "code": "MRIT"},
-  {"name": "Manair College of Engineering and Technology", "code": "MANA"},
-  {"name": "Medak College of Engineering and Technology", "code": "MEDK"},
-  {"name": "Mina Institute of Engineering and Technology for Women", "code": "MINA"},
-  {"name": "Mother Teresa Institute of Science and Technology", "code": "MOTH"},
-  {"name": "Nagole Institute of Technology and Science", "code": "NGLI"},
-  {"name": "Nalanda Institute of Engineering and Technology", "code": "NALA"},
-  {"name": "Narsimha Reddy Engineering College", "code": "NRCM"},
-  {"name": "Nawab Shah Alam Khan College of Engineering and Technology", "code": "NSAK"},
-  {"name": "Nigama Engineering College", "code": "NIGA"},
-  {"name": "Nishitha College of Engineering and Technology", "code": "NISH"},
-  {"name": "Noble College of Engineering and Technology for Women", "code": "NOBL"},
-  {"name": "Noorul Islam College of Engineering", "code": "NOOR"},
-  {"name": "P. Indra Reddy Memorial Engineering College", "code": "PIND"},
-  {"name": "Padmasri Dr. B.V. Raju Institute of Technology", "code": "BVRIT"},
-  {"name": "Pallavi Engineering College", "code": "PALV"},
-  {"name": "Patnam Mahender Reddy Memorial Engineering College", "code": "PATN"},
-  {"name": "Pragathi Engineering College", "code": "PRAG"},
-  {"name": "Priyadarshini College of Engineering and Technology", "code": "PRIY"},
-  {"name": "Progressive Engineering College", "code": "PROG"},
-  {"name": "R.G.R. Siddhanthi College", "code": "RGRS"},
-  {"name": "R.R.S. College of Engineering and Technology", "code": "RRSC"},
-  {"name": "Radhaswamy Institute of Technology", "code": "RADH"},
-  {"name": "Raja Mahendra College of Engineering", "code": "RAJA"},
-  {"name": "Rajiv Gandhi University of Knowledge Technologies", "code": "RGUKT"},
-  {"name": "Ramappa Engineering College", "code": "RAMP"},
-  {"name": "Royal Institute of Technology and Science", "code": "ROYL"},
-  {"name": "S R Engineering College", "code": "SREC"},
-  {"name": "S.S.J. Engineering College", "code": "SSJC"},
-  {"name": "Sagar Institute of Technology", "code": "SAGR"},
-  {"name": "Sai Spurthi Institute of Technology", "code": "SSIT"},
-  {"name": "Samskruti College of Engineering and Technology", "code": "SAMS"},
-  {"name": "Samskruti College of Engineering and Technology (Diploma)", "code": "SAMD"},
-  {"name": "Sanskriti School of Engineering", "code": "SANS"},
-  {"name": "Sant Samarth Engineering College", "code": "SANT"},
-  {"name": "Santhi Ram Engineering College", "code": "SANR"},
-  {"name": "Shadan College of Engineering and Technology", "code": "SHAD"},
-  {"name": "Shadan Women's College of Engineering and Technology", "code": "SHDW"},
-  {"name": "Sree Chaitanya College of Engineering", "code": "SCCC"},
-  {"name": "Sree Chaitanya Institute of Technological Sciences", "code": "SCIS"},
-  {"name": "Sree Dattha Group of Institutions", "code": "SDGI"},
-  {"name": "Sree Dattha Institute of Engineering and Science", "code": "SDES"},
-  {"name": "Sree Visvesvaraya Institute of Technology and Science", "code": "SVTS"},
-  {"name": "Sridevi Women's Engineering College", "code": "SWEC"},
-  {"name": "Sri Indu College of Engineering and Technology", "code": "SIND"},
-  {"name": "Sri Indu Institute of Engineering and Technology", "code": "SIIE"},
-  {"name": "Sri Sai Educational Society's Group of Institutions", "code": "SSES"},
-  {"name": "St. Mary's Engineering College", "code": "STME"},
-  {"name": "St. Mary's Group of Institutions Hyderabad", "code": "STMY"},
-  {"name": "St. Peter's Engineering College", "code": "SPEC"},
-  {"name": "St. Theressa Institute of Engineering and Technology", "code": "STTH"},
-  {"name": "Sudharsan Engineering College", "code": "SUDH"},
-  {"name": "Sujala Bharati Institute of Technology", "code": "SUJB"},
-  {"name": "Sushrutha Institute of Technology", "code": "SUSH"},
-  {"name": "Swarna Bharathi Institute of Science and Technology", "code": "SBIT"},
-  {"name": "Syed Hashim College of Science and Technology", "code": "SYED"},
-  {"name": "Teegala Krishna Reddy Engineering College", "code": "TKRE"},
-  {"name": "Trinity College of Engineering and Technology", "code": "TRIN"},
-  {"name": "Unity College of Engineering", "code": "UNTY"},
-  {"name": "Vagdevi Engineering College", "code": "VAGD"},
-  {"name": "Vardhaman College of Engineering", "code": "VARD"},
-  {"name": "Vashista Institute of Science and Technology", "code": "VASH"},
-  {"name": "Vathsalya Institute of Science and Technology", "code": "VATH"},
-  {"name": "Venkateshwara Institute of Technology", "code": "VENK"},
-  {"name": "Vidya Vikas Institute of Technology", "code": "VVIT"},
-  {"name": "Vignan Institute of Technology and Science", "code": "VGNT"},
-  {"name": "Vignan's Foundation for Science, Technology and Research", "code": "VFST"},
-  {"name": "Vijay Rural Engineering College", "code": "VIJY"},
-  {"name": "Visvesvaraya College of Engineering and Technology", "code": "VCET"},
-  {"name": "Vivekananda Institute of Science and Information Technology", "code": "VISI"},
-  {"name": "Vivekananda Institute of Technology and Science", "code": "VITS"},
-  {"name": "Other / Not Listed", "code": "OTHER"}
+    { "name": "Indian Institute of Technology (IIT), Hyderabad", "code": "IITH" },
+    { "name": "National Institute of Technology (NIT), Warangal", "code": "NITW" },
+    { "name": "International Institute of Information Technology (IIIT), Hyderabad", "code": "IIITH" },
+    { "name": "JNTUH College of Engineering, Hyderabad", "code": "JNTH" },
+    { "name": "University College of Engineering, Osmania University", "code": "OUCE" },
+    { "name": "Chaitanya Bharathi Institute of Technology (CBIT)", "code": "CBIT" },
+    { "name": "VNR Vignana Jyothi Institute of Engineering and Technology", "code": "VNRV" },
+    { "name": "Vasavi College of Engineering", "code": "VCEH" },
+    { "name": "Gokaraju Rangaraju Institute of Engineering and Technology (GRIET)", "code": "GRRR" },
+    { "name": "Mahatma Gandhi Institute of Technology (MGIT)", "code": "MGIT" },
+    { "name": "CVR College of Engineering", "code": "CVRH" },
+    { "name": "B.V. Raju Institute of Technology (BVRIT), Narsapur", "code": "BVRI" },
+    { "name": "Vardhaman College of Engineering", "code": "VARD" },
+    { "name": "Sreenidhi Institute of Science and Technology (SNIST)", "code": "SNIS" },
+    { "name": "Institute of Aeronautical Engineering (IARE)", "code": "IARE" },
+    { "name": "Maturi Venkata Subba Rao Engineering College (MVSR)", "code": "MVSR" },
+    { "name": "Anurag University", "code": "ANRG" },
+    { "name": "Malla Reddy University", "code": "MRUN" },
+    { "name": "CMR College of Engineering and Technology", "code": "CMRC" },
+    { "name": "Keshav Memorial Institute of Technology (KMIT)", "code": "KMIT" },
+    { "name": "Kakatiya Institute of Technology and Science (KITS), Warangal", "code": "KITS" },
+    { "name": "Malla Reddy College of Engineering and Technology (MRCET)", "code": "MRCE" },
+    { "name": "Guru Nanak Institutions Technical Campus", "code": "GNIT" },
+    { "name": "Vidya Jyothi Institute of Technology (VJIT)", "code": "VJIT" },
+    { "name": "JB Institute of Engineering and Technology", "code": "JBIET" },
+    { "name": "G. Narayanamma Institute of Technology and Science (GNITS)", "code": "GNTS" },
+    { "name": "Stanley College of Engineering and Technology for Women", "code": "STAN" },
+    { "name": "Muffakham Jah College of Engineering and Technology", "code": "MJCET" },
+    { "name": "Methodist College of Engineering and Technology", "code": "METH" },
+    { "name": "Deccan College of Engineering and Technology", "code": "DECC" },
+    { "name": "Lords Institute of Engineering and Technology", "code": "LORD" },
+    { "name": "TKR College of Engineering and Technology", "code": "TKRC" },
+    { "name": "Sphoorthy Engineering College", "code": "SPHY" },
+    { "name": "CMR Technical Campus", "code": "CMRK" },
+    { "name": "Malla Reddy Institute of Technology and Science", "code": "MRIT" },
+    { "name": "Geethanjali College of Engineering and Technology", "code": "GCTC" },
+    { "name": "Bharat Institute of Engineering and Technology", "code": "BIET" },
+    { "name": "Scient Institute of Technology", "code": "SNTI" },
+    { "name": "Srinivas Reddy Memorial College of Engineering", "code": "SRMC" },
+    { "name": "Sumathi Reddy Institute of Technology for Women", "code": "SRIW" },
+    { "name": "Bhoj Reddy Engineering College for Women", "code": "BREW" },
+    { "name": "ACE Engineering College", "code": "ACEH" },
+    { "name": "Holy Mary Institute of Technology and Science", "code": "HITS" },
+    { "name": "Jayamukhi Institute of Technological Sciences", "code": "JITS" },
+    { "name": "Vaagdevi College of Engineering", "code": "VAGD" },
+    { "name": "Vaageswari College of Engineering", "code": "VAGW" },
+    { "name": "Balaji Institute of Technology and Science", "code": "BITS" },
+    { "name": "SVS Group of Institutions", "code": "SVSI" },
+    { "name": "Kamala Institute of Technology and Science", "code": "KITS" },
+    { "name": "CMR Institute of Technology", "code": "CMRM" },
+    { "name": "Vignan's Institute of Management and Technology for Women", "code": "VIGN" },
+    { "name": "Marri Laxman Reddy Institute of Technology", "code": "MLRS" },
+    { "name": "MLR Institute of Technology", "code": "MLID" },
+    { "name": "St. Martin's Engineering College", "code": "SMEC" },
+    { "name": "Nalla Malla Reddy Engineering College", "code": "NMREC" },
+    { "name": "K.G. Reddy College of Engineering and Technology", "code": "KGRH" },
+    { "name": "Nalla Narasimha Reddy Group of Institutions", "code": "NNRG" },
+    { "name": "Bharat Institute of Technology and Science", "code": "BITS" },
+    { "name": "AVN Institute of Engineering and Technology", "code": "AVNI" },
+    { "name": "Abhinav Hi-Tech College of Engineering", "code": "ABHV" },
+    { "name": "Arjun College of Technology and Sciences", "code": "ARJN" },
+    { "name": "Aryabhata Institute of Technology and Science", "code": "ARYA" },
+    { "name": "Aurora's Engineering College", "code": "AURC" },
+    { "name": "Aurora's Scientific and Technological Institute", "code": "AURS" },
+    { "name": "Aurora's Technological and Research Institute", "code": "AURR" },
+    { "name": "Azad College of Engineering and Technology", "code": "AZAD" },
+    { "name": "Bandari Srinivas Institute of Technology", "code": "BSIT" },
+    { "name": "Bhaskar Engineering College", "code": "BASK" },
+    { "name": "Bomma Institute of Technology and Science", "code": "BOMA" },
+    { "name": "Christu Jyothi Institute of Technology and Science", "code": "CJIT" },
+    { "name": "CMR Engineering College", "code": "CMRE" },
+    { "name": "CVSR College of Engineering", "code": "CVSR" },
+    { "name": "Daripally Anantha Ramulu College of Engineering and Technology", "code": "DARC" },
+    { "name": "DRK College of Engineering and Technology", "code": "DRKC" },
+    { "name": "DRK Institute of Science and Technology", "code": "DRKI" },
+    { "name": "Ellenki College of Engineering and Technology", "code": "ELNK" },
+    { "name": "Ellenki Institute of Engineering and Technology", "code": "ELNI" },
+    { "name": "Gandhi Academy of Technical Education", "code": "GATE" },
+    { "name": "Global Institute of Engineering and Technology", "code": "GLOB" },
+    { "name": "Gopal Reddy College of Engineering and Technology", "code": "GOPL" },
+    { "name": "Gouthami Institute of Technology and Management for Women", "code": "GOUT" },
+    { "name": "Hasvita Institute of Engineering and Technology", "code": "HASV" },
+    { "name": "Hi-Tech Institute of Engineering and Technology", "code": "HITE" },
+    { "name": "Hyderabad Institute of Technology and Management", "code": "HITM" },
+    { "name": "Indur Institute of Engineering and Technology", "code": "INDU" },
+    { "name": "Jagruti Institute of Engineering and Technology", "code": "JAGR" },
+    { "name": "Jawaharlal Nehru Institute of Technology", "code": "JNIT" },
+    { "name": "Jawaharlal Nehru Technological University College of Engineering, Jagtial", "code": "JNTJ" },
+    { "name": "Jawaharlal Nehru Technological University College of Engineering, Manthani", "code": "JNTM" },
+    { "name": "Jawaharlal Nehru Technological University College of Engineering, Sultanpur", "code": "JNTS" },
+    { "name": "Joginpally B.R. Engineering College", "code": "JBRE" },
+    { "name": "Jyothishmathi Institute of Technological Sciences", "code": "JYOT" },
+    { "name": "Jyothishmathi Institute of Technology and Science", "code": "JYTS" },
+    { "name": "Khammam Institute of Technology and Sciences", "code": "KITS" },
+    { "name": "Kodada Institute of Technology and Science for Women", "code": "KODW" },
+    { "name": "Kommuri Pratap Reddy Institute of Technology", "code": "KPRT" },
+    { "name": "Kshatriya College of Engineering", "code": "KSHR" },
+    { "name": "Kunda College of Technology and Management", "code": "KUND" },
+    { "name": "Lingaiah Institute of Management and Technology", "code": "LING" },
+    { "name": "Madira Institute of Technology and Sciences", "code": "MADI" },
+    { "name": "Mahaveer Institute of Science and Technology", "code": "MAHA" },
+    { "name": "Malla Reddy College of Engineering", "code": "MRCE" },
+    { "name": "Malla Reddy Engineering College", "code": "MREC" },
+    { "name": "Malla Reddy Engineering College for Women", "code": "MRW" },
+    { "name": "Malla Reddy Institute of Engineering and Technology", "code": "MRIE" },
+    { "name": "Malla Reddy Institute of Technology", "code": "MRIT" },
+    { "name": "Manair College of Engineering and Technology", "code": "MANA" },
+    { "name": "Medak College of Engineering and Technology", "code": "MEDK" },
+    { "name": "Mina Institute of Engineering and Technology for Women", "code": "MINA" },
+    { "name": "Mother Teresa Institute of Science and Technology", "code": "MOTH" },
+    { "name": "Nagole Institute of Technology and Science", "code": "NGLI" },
+    { "name": "Nalanda Institute of Engineering and Technology", "code": "NALA" },
+    { "name": "Narsimha Reddy Engineering College", "code": "NRCM" },
+    { "name": "Nawab Shah Alam Khan College of Engineering and Technology", "code": "NSAK" },
+    { "name": "Nigama Engineering College", "code": "NIGA" },
+    { "name": "Nishitha College of Engineering and Technology", "code": "NISH" },
+    { "name": "Noble College of Engineering and Technology for Women", "code": "NOBL" },
+    { "name": "Noorul Islam College of Engineering", "code": "NOOR" },
+    { "name": "P. Indra Reddy Memorial Engineering College", "code": "PIND" },
+    { "name": "Padmasri Dr. B.V. Raju Institute of Technology", "code": "BVRIT" },
+    { "name": "Pallavi Engineering College", "code": "PALV" },
+    { "name": "Patnam Mahender Reddy Memorial Engineering College", "code": "PATN" },
+    { "name": "Pragathi Engineering College", "code": "PRAG" },
+    { "name": "Priyadarshini College of Engineering and Technology", "code": "PRIY" },
+    { "name": "Progressive Engineering College", "code": "PROG" },
+    { "name": "R.G.R. Siddhanthi College", "code": "RGRS" },
+    { "name": "R.R.S. College of Engineering and Technology", "code": "RRSC" },
+    { "name": "Radhaswamy Institute of Technology", "code": "RADH" },
+    { "name": "Raja Mahendra College of Engineering", "code": "RAJA" },
+    { "name": "Rajiv Gandhi University of Knowledge Technologies", "code": "RGUKT" },
+    { "name": "Ramappa Engineering College", "code": "RAMP" },
+    { "name": "Royal Institute of Technology and Science", "code": "ROYL" },
+    { "name": "S R Engineering College", "code": "SREC" },
+    { "name": "S.S.J. Engineering College", "code": "SSJC" },
+    { "name": "Sagar Institute of Technology", "code": "SAGR" },
+    { "name": "Sai Spurthi Institute of Technology", "code": "SSIT" },
+    { "name": "Samskruti College of Engineering and Technology", "code": "SAMS" },
+    { "name": "Samskruti College of Engineering and Technology (Diploma)", "code": "SAMD" },
+    { "name": "Sanskriti School of Engineering", "code": "SANS" },
+    { "name": "Sant Samarth Engineering College", "code": "SANT" },
+    { "name": "Santhi Ram Engineering College", "code": "SANR" },
+    { "name": "Shadan College of Engineering and Technology", "code": "SHAD" },
+    { "name": "Shadan Women's College of Engineering and Technology", "code": "SHDW" },
+    { "name": "Sree Chaitanya College of Engineering", "code": "SCCC" },
+    { "name": "Sree Chaitanya Institute of Technological Sciences", "code": "SCIS" },
+    { "name": "Sree Dattha Group of Institutions", "code": "SDGI" },
+    { "name": "Sree Dattha Institute of Engineering and Science", "code": "SDES" },
+    { "name": "Sree Visvesvaraya Institute of Technology and Science", "code": "SVTS" },
+    { "name": "Sridevi Women's Engineering College", "code": "SWEC" },
+    { "name": "Sri Indu College of Engineering and Technology", "code": "SIND" },
+    { "name": "Sri Indu Institute of Engineering and Technology", "code": "SIIE" },
+    { "name": "Sri Sai Educational Society's Group of Institutions", "code": "SSES" },
+    { "name": "St. Mary's Engineering College", "code": "STME" },
+    { "name": "St. Mary's Group of Institutions Hyderabad", "code": "STMY" },
+    { "name": "St. Peter's Engineering College", "code": "SPEC" },
+    { "name": "St. Theressa Institute of Engineering and Technology", "code": "STTH" },
+    { "name": "Sudharsan Engineering College", "code": "SUDH" },
+    { "name": "Sujala Bharati Institute of Technology", "code": "SUJB" },
+    { "name": "Sushrutha Institute of Technology", "code": "SUSH" },
+    { "name": "Swarna Bharathi Institute of Science and Technology", "code": "SBIT" },
+    { "name": "Syed Hashim College of Science and Technology", "code": "SYED" },
+    { "name": "Teegala Krishna Reddy Engineering College", "code": "TKRE" },
+    { "name": "Trinity College of Engineering and Technology", "code": "TRIN" },
+    { "name": "Unity College of Engineering", "code": "UNTY" },
+    { "name": "Vagdevi Engineering College", "code": "VAGD" },
+    { "name": "Vardhaman College of Engineering", "code": "VARD" },
+    { "name": "Vashista Institute of Science and Technology", "code": "VASH" },
+    { "name": "Vathsalya Institute of Science and Technology", "code": "VATH" },
+    { "name": "Venkateshwara Institute of Technology", "code": "VENK" },
+    { "name": "Vidya Vikas Institute of Technology", "code": "VVIT" },
+    { "name": "Vignan Institute of Technology and Science", "code": "VGNT" },
+    { "name": "Vignan's Foundation for Science, Technology and Research", "code": "VFST" },
+    { "name": "Vijay Rural Engineering College", "code": "VIJY" },
+    { "name": "Visvesvaraya College of Engineering and Technology", "code": "VCET" },
+    { "name": "Vivekananda Institute of Science and Information Technology", "code": "VISI" },
+    { "name": "Vivekananda Institute of Technology and Science", "code": "VITS" },
+    { "name": "Other / Not Listed", "code": "OTHER" }
 ];
 
 export default function InternSignupPage() {
@@ -201,7 +201,7 @@ export default function InternSignupPage() {
 
     const otherOption = COLLEGES.find(c => c.code === "OTHER");
     const filteredColleges = [
-        ...COLLEGES.filter(c => 
+        ...COLLEGES.filter(c =>
             c.code !== "OTHER" && (
                 c.name.toLowerCase().includes(collegeSearch.toLowerCase()) ||
                 c.code.toLowerCase().includes(collegeSearch.toLowerCase())
@@ -252,15 +252,15 @@ export default function InternSignupPage() {
             <div className="md:w-[60%] bg-[#E0E7FF] relative hidden md:flex flex-col items-center justify-between overflow-hidden pt-12 pb-10 px-12">
                 <div className="w-full flex flex-col items-start gap-6 relative z-20">
                     <div className="flex items-center gap-4">
-                        <img 
-                            src="https://ik.imagekit.io/dypkhqxip/platform?updatedAt=1776791557303" 
-                            alt="Student Forge Platform" 
+                        <img
+                            src="https://ik.imagekit.io/dypkhqxip/platform?updatedAt=1776791557303"
+                            alt="Student Forge Platform"
                             className="h-8 w-auto"
                         />
                         <div className="h-6 w-px bg-[#003366]/20"></div>
-                        <img 
-                            src="https://ik.imagekit.io/dypkhqxip/sflogo?updatedAt=1774952380858" 
-                            alt="Student Forge" 
+                        <img
+                            src="https://ik.imagekit.io/dypkhqxip/sflogo?updatedAt=1774952380858"
+                            alt="Student Forge"
                             className="h-7 w-auto"
                         />
                     </div>
@@ -271,8 +271,8 @@ export default function InternSignupPage() {
                 </div>
 
                 <div className="relative z-10 w-full max-w-[750px] translate-y-32">
-                    <iframe 
-                        src="https://lottie.host/embed/521c9b48-ae0c-49ba-a951-9c0d31728f01/2oOdwYfKHI.lottie" 
+                    <iframe
+                        src="https://lottie.host/embed/521c9b48-ae0c-49ba-a951-9c0d31728f01/2oOdwYfKHI.lottie"
                         className="w-full aspect-square border-none scale-125"
                     ></iframe>
                 </div>
@@ -350,18 +350,18 @@ export default function InternSignupPage() {
                                 type="text"
                                 autoComplete="off"
                                 value={college || collegeSearch}
-                                onFocus={() => { setShowDropdown(true); if(college) setCollegeSearch(college); }}
+                                onFocus={() => { setShowDropdown(true); if (college) setCollegeSearch(college); }}
                                 onChange={(e) => { setCollegeSearch(e.target.value); setCollege(""); }}
                                 onBlur={() => setTimeout(() => setShowDropdown(false), 200)}
                                 className="w-full h-12 bg-white border border-zinc-200 pl-11 pr-4 text-[14px] outline-none focus:border-[#003366] transition-all rounded-none"
                                 placeholder="Search & Select College"
                             />
-                            
+
                             {showDropdown && (
                                 <div className="absolute top-full left-0 right-0 bg-white border border-zinc-200 border-t-0 shadow-2xl max-h-60 overflow-y-auto z-40">
                                     {filteredColleges.length > 0 ? (
                                         filteredColleges.map((c, index) => (
-                                            <div 
+                                            <div
                                                 key={`${c.code}-${index}`}
                                                 onClick={() => {
                                                     if (c.code === "OTHER") {
@@ -375,8 +375,7 @@ export default function InternSignupPage() {
                                                 }}
                                                 className="px-4 py-3 text-[13px] text-zinc-600 hover:bg-[#E0E7FF] hover:text-[#003366] cursor-pointer transition-colors border-b border-zinc-50 last:border-0 font-medium flex items-center gap-3"
                                             >
-                                                <div className={`h-8 w-8 rounded-none flex items-center justify-center text-white text-[10px] font-black shrink-0 ${
-                                                    (() => {
+                                                <div className={`h-8 w-8 rounded-none flex items-center justify-center text-white text-[10px] font-black shrink-0 ${(() => {
                                                         const colors = ["bg-blue-600", "bg-emerald-600", "bg-amber-600", "bg-rose-600", "bg-indigo-600", "bg-violet-600", "bg-cyan-600"];
                                                         let hash = 0;
                                                         for (let i = 0; i < c.code.length; i++) {
@@ -384,7 +383,7 @@ export default function InternSignupPage() {
                                                         }
                                                         return colors[Math.abs(hash) % colors.length];
                                                     })()
-                                                }`}>
+                                                    }`}>
                                                     {c.code.substring(0, 2)}
                                                 </div>
                                                 <div className="flex flex-col">
@@ -394,7 +393,7 @@ export default function InternSignupPage() {
                                             </div>
                                         ))
                                     ) : (
-                                        <div 
+                                        <div
                                             onClick={() => {
                                                 setCollege(collegeSearch);
                                                 setShowDropdown(false);

@@ -41,6 +41,7 @@ import {
    Hand,
    School,
    Layers,
+   Flame,
    Plus,
    Trash2,
    Kanban as KanbanIcon,
@@ -813,10 +814,37 @@ function InternDashboardContent() {
                            </div>
                         </div>
 
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-8 pt-6 border-t border-[#003366]/10">
+                        <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mt-8 pt-6 border-t border-[#003366]/10">
                            {[
                               { label: "Attendance", value: `${attendancePercentage}%`, icon: CheckCircle2 },
                               { label: "Milestones", value: schedules.filter(s => s.isCompleted).length, icon: Target },
+                               { label: "Streaks", value: `${(() => {
+                                  if (!attendanceData?.history || attendanceData.history.length === 0) return 0;
+                                  const sorted = [...attendanceData.history].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+                                  let streak = 0;
+                                  const today = new Date();
+                                  today.setHours(0, 0, 0, 0);
+                                  const firstDate = new Date(sorted[0].date);
+                                  firstDate.setHours(0, 0, 0, 0);
+                                  const diff = (today.getTime() - firstDate.getTime()) / (1000 * 60 * 60 * 24);
+                                  if (diff > 1) return 0;
+                                  for (let i = 0; i < sorted.length; i++) {
+                                     if (sorted[i].status === 'PRESENT' || sorted[i].status === 'LATE') {
+                                        streak++;
+                                        if (i < sorted.length - 1) {
+                                           const current = new Date(sorted[i].date);
+                                           current.setHours(0, 0, 0, 0);
+                                           const next = new Date(sorted[i + 1].date);
+                                           next.setHours(0, 0, 0, 0);
+                                           const gap = (current.getTime() - next.getTime()) / (1000 * 60 * 60 * 24);
+                                           if (gap > 1) break;
+                                        }
+                                     } else {
+                                        break;
+                                     }
+                                  }
+                                  return streak;
+                               })()} Days`, icon: Flame },
                               { label: "Reports", value: reports.length + examSessions.length, icon: FileTextIcon },
                               { label: "Warnings", value: examSessions.reduce((acc, s) => acc + (s.violations || 0), 0), icon: AlertCircle }
                            ].map((stat, i) => (
