@@ -907,108 +907,136 @@ function InternDashboardContent() {
                </div>
 
                <div className="mt-8">
-                  <div className="flex items-center gap-2 mb-4 border-b border-zinc-100 pb-2">
-                     <Newspaper size={16} className="text-[#003366]" />
-                     <h2 className="text-[11px] font-bold text-zinc-400 uppercase tracking-[0.2em]">Portal Updates</h2>
-                  </div>
-
-                  <div className="space-y-4">
-                     <div className="bg-white border border-zinc-100 rounded-lg p-6 flex flex-col lg:flex-row items-center gap-8 hover:shadow-md transition-all group relative overflow-hidden">
-                        <div className="w-full lg:w-48 h-48 lg:h-48 bg-zinc-50 rounded-md overflow-hidden shrink-0 border border-zinc-100">
-                           <img
-                              src="https://ik.imagekit.io/dypkhqxip/resumebuilder"
-                              alt="RX Resume Builder"
-                              className="w-full h-full object-cover lg:object-contain transition-all duration-500 group-hover:scale-105"
-                           />
+                  {user.batch === "Batch 3" ? (
+                     <div className="space-y-6">
+                        <div className="flex items-center justify-between border-b border-zinc-100 pb-2">
+                           <div className="flex items-center gap-2">
+                              <Calendar size={16} className="text-[#003366]" />
+                              <h2 className="text-[11px] font-bold text-zinc-400 uppercase tracking-[0.2em]">Upcoming Training Sessions</h2>
+                           </div>
+                           <Link href="/intern/dashboard/training/classes" className="text-[10px] font-bold text-[#003366] hover:underline uppercase tracking-wider">
+                              View All Sessions
+                           </Link>
                         </div>
 
-                        <div className="flex-1 space-y-3 w-full">
-                           <div className="flex items-center gap-3">
-                              <span className="bg-zinc-100 text-[#003366] border border-blue-100 text-[9px] font-bold px-2 py-0.5 rounded">
-                                 New Feature
-                              </span>
-                              <span className="text-[11px] text-zinc-400 font-medium">May 04, 2026</span>
-                           </div>
-                           <h3 className="text-xl font-bold text-[#003366] tracking-tight">RX Resume Builder – Intelligent, ATS-Friendly Resumes</h3>
-                           <p className="text-[13px] text-zinc-500 font-medium leading-relaxed line-clamp-3 max-w-2xl">
-                              RX Resume Builder is an intelligent, ATS-friendly resume creation platform designed specifically for students. It offers a dynamic and structured approach to resume building, ensuring your profile stands out.
-                           </p>
+                        {(() => {
+                           const now = new Date();
+                           const meetingLink = "https://meet.google.com/mji-bixk-xmh";
+                           const isSixPM = now.getHours() >= 18;
+                           
+                           const currentClass = {
+                              title: "Live Technical Orientation & Setup",
+                              date: "15/05/2026",
+                              time: "6:00 PM - 7:30 PM",
+                              topic: "Development Environment & Workflow",
+                              status: isSixPM ? "In Progress" : "Upcoming"
+                           };
 
-                           <div className="flex justify-start mt-4">
-                              <Link
-                                 href="/intern/dashboard/news"
-                                 className="flex items-center gap-1 text-[13px] font-semibold text-blue-500 hover:underline"
-                              >
-                                 View Details <ChevronRight size={14} />
-                              </Link>
-                           </div>
-                        </div>
+                           return (
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                 <div className="bg-white border border-zinc-100 rounded-xl p-6 flex flex-col justify-between hover:shadow-lg transition-all group relative overflow-hidden">
+                                    <div className="absolute top-0 right-0 p-4 opacity-5">
+                                       <School size={80} />
+                                    </div>
+                                    <div className="space-y-4">
+                                       <div className="flex items-center gap-3">
+                                          {currentClass.status === "In Progress" ? (
+                                             <span className="flex items-center gap-1.5 px-2 py-1 bg-red-50 text-red-600 rounded text-[9px] font-black tracking-widest animate-pulse">
+                                                <div className="h-1.5 w-1.5 rounded-full bg-red-600" />
+                                                LIVE NOW
+                                             </span>
+                                          ) : (
+                                             <span className="px-2 py-1 bg-blue-50 text-blue-600 rounded text-[9px] font-black tracking-widest">
+                                                UPCOMING
+                                             </span>
+                                          )}
+                                          <span className="text-[11px] font-medium text-zinc-400">{currentClass.date} • {currentClass.time}</span>
+                                       </div>
+                                       <div className="space-y-1">
+                                          <h3 className="text-xl font-bold text-[#003366] tracking-tight group-hover:text-blue-600 transition-colors">
+                                             {currentClass.title}
+                                          </h3>
+                                          <p className="text-[13px] text-zinc-500 font-medium leading-relaxed">
+                                             Focus: {currentClass.topic}
+                                          </p>
+                                       </div>
+                                    </div>
+                                    <div className="mt-8">
+                                       <a 
+                                          href={meetingLink}
+                                          target="_blank"
+                                          className="inline-flex items-center justify-center gap-2 px-8 h-11 bg-[#003366] text-white text-[11px] font-bold uppercase tracking-widest hover:bg-black transition-all shadow-md shadow-blue-900/10"
+                                       >
+                                          Join Session <ArrowUpRight size={14} />
+                                       </a>
+                                    </div>
+                                 </div>
+
+                                 <div className="bg-zinc-50 border border-zinc-100 rounded-xl p-6 flex flex-col justify-between">
+                                    <div className="space-y-2">
+                                       <h4 className="text-[10px] font-black text-zinc-400 uppercase tracking-widest">System Notice</h4>
+                                       <p className="text-[13px] text-zinc-600 font-medium leading-relaxed">
+                                          Please ensure your development environment is ready before the session begins. Attendance is mandatory for Batch 3 certification.
+                                       </p>
+                                    </div>
+                                    <div className="mt-6 flex items-center gap-4 text-zinc-400">
+                                       <div className="flex items-center gap-2">
+                                          <Users size={14} />
+                                          <span className="text-[11px]">80+ Joined</span>
+                                       </div>
+                                       <div className="flex items-center gap-2">
+                                          <Clock size={14} />
+                                          <span className="text-[11px]">90 Mins</span>
+                                       </div>
+                                    </div>
+                                 </div>
+                              </div>
+                           );
+                        })()}
                      </div>
-
-                     <div className="bg-zinc-50 border border-zinc-100 rounded-lg p-6 flex flex-col lg:flex-row items-center gap-8 hover:shadow-md transition-all group relative overflow-hidden">
-                        <div className="w-full lg:w-48 h-48 lg:h-48 bg-white rounded-md overflow-hidden shrink-0 border border-zinc-100">
-                           <img
-                              src="https://ik.imagekit.io/dypkhqxip/hiring"
-                              alt="Student Forge Hiring"
-                              className="w-full h-full object-cover lg:object-contain transition-all duration-500 group-hover:scale-105"
-                           />
+                  ) : (
+                     <>
+                        <div className="flex items-center gap-2 mb-4 border-b border-zinc-100 pb-2">
+                           <Newspaper size={16} className="text-[#003366]" />
+                           <h2 className="text-[11px] font-bold text-zinc-400 uppercase tracking-[0.2em]">Portal Updates</h2>
                         </div>
 
-                        <div className="flex-1 space-y-3 w-full">
-                           <div className="flex items-center gap-3">
-                              <span className="bg-white text-emerald-600 border border-emerald-100 text-[9px] font-bold px-2 py-0.5 rounded">
-                                 Active
-                              </span>
-                              <span className="text-[11px] text-zinc-400 font-medium">May 04, 2026</span>
-                           </div>
-                           <h3 className="text-xl font-bold text-[#003366] tracking-tight">Join Student Forge – We’re Hiring Interns</h3>
-                           <p className="text-[13px] text-zinc-500 font-medium leading-relaxed line-clamp-3 max-w-2xl">
-                              Student Forge is excited to welcome passionate and driven students to be part of our growing team. We are currently hiring Marketing Interns and Web Development Interns who are eager to learn, contribute, and build real-world experience.
-                           </p>
+                        <div className="space-y-4">
+                           <div className="bg-white border border-zinc-100 rounded-lg p-6 flex flex-col lg:flex-row items-center gap-8 hover:shadow-md transition-all group relative overflow-hidden">
+                              <div className="w-full lg:w-48 h-48 lg:h-48 bg-zinc-50 rounded-md overflow-hidden shrink-0 border border-zinc-100">
+                                 <img
+                                    src="https://ik.imagekit.io/dypkhqxip/resumebuilder"
+                                    alt="RX Resume Builder"
+                                    className="w-full h-full object-cover lg:object-contain transition-all duration-500 group-hover:scale-105"
+                                 />
+                              </div>
 
-                           <div className="flex justify-start mt-4">
-                              <Link
-                                 href="/intern/dashboard/news"
-                                 className="flex items-center gap-1 text-[13px] font-semibold text-blue-500 hover:underline"
-                              >
-                                 View Details <ChevronRight size={14} />
-                              </Link>
-                           </div>
-                        </div>
-                     </div>
+                              <div className="flex-1 space-y-3 w-full">
+                                 <div className="flex items-center gap-3">
+                                    <span className="bg-zinc-100 text-[#003366] border border-blue-100 text-[9px] font-bold px-2 py-0.5 rounded">
+                                       New Feature
+                                    </span>
+                                    <span className="text-[11px] text-zinc-400 font-medium">May 04, 2026</span>
+                                 </div>
+                                 <h3 className="text-xl font-bold text-[#003366] tracking-tight">RX Resume Builder – Intelligent, ATS-Friendly Resumes</h3>
+                                 <p className="text-[13px] text-zinc-500 font-medium leading-relaxed line-clamp-3 max-w-2xl">
+                                    RX Resume Builder is an intelligent, ATS-friendly resume creation platform designed specifically for students. It offers a dynamic and structured approach to resume building, ensuring your profile stands out.
+                                 </p>
 
-                     <div className="bg-white border border-zinc-100 rounded-lg p-6 flex flex-col lg:flex-row items-center gap-8 hover:shadow-md transition-all group relative overflow-hidden">
-                        <div className="w-full lg:w-48 h-48 lg:h-48 bg-zinc-50 rounded-md overflow-hidden shrink-0 border border-zinc-100">
-                           <img
-                              src="https://ik.imagekit.io/dypkhqxip/Summer%20Bootcamp%20(2).png?updatedAt=1776542583323"
-                              alt="Summer Bootcamp"
-                              className="w-full h-full object-cover lg:object-contain transition-all duration-500 group-hover:scale-105"
-                           />
-                        </div>
-
-                        <div className="flex-1 space-y-3 w-full">
-                           <div className="flex items-center gap-3">
-                              <span className="bg-zinc-100 text-zinc-500 border border-zinc-200 text-[9px] font-bold px-2 py-0.5 rounded">
-                                 Notice
-                              </span>
-                              <span className="text-[11px] text-zinc-400 font-medium">April 20, 2026</span>
-                           </div>
-                           <h3 className="text-xl font-bold text-zinc-800 tracking-tight">Summer boot camp 2026 announcement</h3>
-                           <p className="text-[13px] text-zinc-500 font-medium leading-relaxed line-clamp-3 max-w-2xl">
-                              This notice announces the start of the 30-day "Summer Boot Camp 2026". The program is designed to provide high-quality technical skills to students. We focus on building industry-standard capabilities through practical training.
-                           </p>
-
-                           <div className="flex justify-start mt-4">
-                              <Link
-                                 href="/intern/dashboard/news"
-                                 className="flex items-center gap-1 text-[13px] font-semibold text-blue-500 hover:underline"
-                              >
-                                 View Details <ChevronRight size={14} />
-                              </Link>
+                                 <div className="flex justify-start mt-4">
+                                    <Link
+                                       href="/intern/dashboard/news"
+                                       className="flex items-center gap-1 text-[13px] font-semibold text-blue-500 hover:underline"
+                                    >
+                                       View Details <ChevronRight size={14} />
+                                    </Link>
+                                 </div>
+                              </div>
                            </div>
                         </div>
-                     </div>
-                  </div>
+                     </>
+                  )}
+               </div>
                </div>
 
                <button
