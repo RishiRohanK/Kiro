@@ -393,30 +393,40 @@ function InternDashboardLayoutContent({
                             '--sidebar-width': isSidebarCollapsed ? '80px' : '280px' 
                         } as any}
                     >
-                        <div className="flex-1 max-w-[1600px] mx-auto px-4 md:px-8 flex items-center justify-start gap-1 md:gap-8 overflow-x-auto scrollbar-hide">
-                            {trainingSubItems.map((sub) => {
-                                const isSubActive = pathname === new URL(sub.slug, "http://localhost").pathname;
-                                return (
-                                    <Link 
-                                        key={sub.name} 
-                                        href={sub.slug}
-                                        className={`flex items-center gap-2.5 px-4 h-full relative group transition-all shrink-0 ${
-                                            isSubActive ? "text-white" : "text-white/70 hover:text-white"
-                                        }`}
-                                    >
-                                        <sub.icon size={16} strokeWidth={isSubActive ? 2.5 : 2} className={isSubActive ? "text-white shadow-[0_0_10px_rgba(255,255,255,0.3)]" : "text-white/60 group-hover:text-white transition-colors"} />
-                                        <span className={`text-[11px] font-black uppercase tracking-widest whitespace-nowrap transition-all ${isSubActive ? "opacity-100" : "opacity-70 group-hover:opacity-100"}`}>
-                                            {sub.name}
-                                        </span>
-                                        {isSubActive && (
-                                            <motion.div 
-                                                layoutId="activeSubNav"
-                                                className="absolute bottom-0 left-0 right-0 h-[3px] bg-blue-500 rounded-t-full shadow-[0_-4px_12px_rgba(59,130,246,0.5)]"
-                                            />
-                                        )}
-                                    </Link>
-                                );
-                            })}
+                        <div className="flex-1 max-w-[1600px] mx-auto px-4 md:px-8 flex items-center justify-between h-full">
+                            <div className="flex items-center gap-1 md:gap-8 h-full overflow-x-auto scrollbar-hide">
+                                {trainingSubItems.map((sub) => {
+                                    const isSubActive = pathname === new URL(sub.slug, "http://localhost").pathname;
+                                    return (
+                                        <Link 
+                                            key={sub.name} 
+                                            href={sub.slug}
+                                            className={`flex items-center gap-2.5 px-4 h-full relative group transition-all shrink-0 ${
+                                                isSubActive ? "text-white" : "text-white/70 hover:text-white"
+                                            }`}
+                                        >
+                                            <sub.icon size={16} strokeWidth={isSubActive ? 2.5 : 2} className={isSubActive ? "text-white shadow-[0_0_10px_rgba(255,255,255,0.3)]" : "text-white/60 group-hover:text-white transition-colors"} />
+                                            <span className={`text-[12px] font-bold whitespace-nowrap transition-all ${isSubActive ? "opacity-100" : "opacity-70 group-hover:opacity-100"}`}>
+                                                {sub.name}
+                                            </span>
+                                            {isSubActive && (
+                                                <motion.div 
+                                                    layoutId="activeSubNav"
+                                                    className="absolute bottom-0 left-0 right-0 h-[3px] bg-blue-500 rounded-t-full shadow-[0_-4px_12px_rgba(59,130,246,0.5)]"
+                                                />
+                                            )}
+                                        </Link>
+                                    );
+                                })}
+                            </div>
+
+                            <button 
+                                onClick={handleLogout}
+                                className="flex items-center gap-2 px-4 h-8 bg-red-600 hover:bg-red-700 text-white text-[11px] font-bold rounded-md transition-all shadow-lg shadow-red-900/20 shrink-0 ml-4"
+                            >
+                                <LogOut size={14} strokeWidth={2.5} />
+                                Logout
+                            </button>
                         </div>
                     </motion.div>
                 )}
