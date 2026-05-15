@@ -51,6 +51,7 @@ const COLLEGES = [
   {"name": "Holy Mary Institute of Technology and Science", "code": "HITS"},
   {"name": "Jayamukhi Institute of Technological Sciences", "code": "JITS"},
   {"name": "Vaagdevi College of Engineering", "code": "VAGD"},
+  {"name": "Vaageswari College of Engineering", "code": "VAGW"},
   {"name": "Balaji Institute of Technology and Science", "code": "BITS"},
   {"name": "SVS Group of Institutions", "code": "SVSI"},
   {"name": "Kamala Institute of Technology and Science", "code": "KITS"},
@@ -142,6 +143,7 @@ const COLLEGES = [
   {"name": "Sagar Institute of Technology", "code": "SAGR"},
   {"name": "Sai Spurthi Institute of Technology", "code": "SSIT"},
   {"name": "Samskruti College of Engineering and Technology", "code": "SAMS"},
+  {"name": "Samskruti College of Engineering and Technology (Diploma)", "code": "SAMD"},
   {"name": "Sanskriti School of Engineering", "code": "SANS"},
   {"name": "Sant Samarth Engineering College", "code": "SANT"},
   {"name": "Santhi Ram Engineering College", "code": "SANR"},
@@ -179,7 +181,8 @@ const COLLEGES = [
   {"name": "Vijay Rural Engineering College", "code": "VIJY"},
   {"name": "Visvesvaraya College of Engineering and Technology", "code": "VCET"},
   {"name": "Vivekananda Institute of Science and Information Technology", "code": "VISI"},
-  {"name": "Vivekananda Institute of Technology and Science", "code": "VITS"}
+  {"name": "Vivekananda Institute of Technology and Science", "code": "VITS"},
+  {"name": "Other / Not Listed", "code": "OTHER"}
 ];
 
 export default function InternSignupPage() {
@@ -196,10 +199,16 @@ export default function InternSignupPage() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
 
-    const filteredColleges = COLLEGES.filter(c => 
-        c.name.toLowerCase().includes(collegeSearch.toLowerCase()) ||
-        c.code.toLowerCase().includes(collegeSearch.toLowerCase())
-    );
+    const otherOption = COLLEGES.find(c => c.code === "OTHER");
+    const filteredColleges = [
+        ...COLLEGES.filter(c => 
+            c.code !== "OTHER" && (
+                c.name.toLowerCase().includes(collegeSearch.toLowerCase()) ||
+                c.code.toLowerCase().includes(collegeSearch.toLowerCase())
+            )
+        ),
+        ...(otherOption ? [otherOption] : [])
+    ];
 
     const handleSignup = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -360,8 +369,13 @@ export default function InternSignupPage() {
                                             <div 
                                                 key={`${c.code}-${index}`}
                                                 onClick={() => {
-                                                    setCollege(c.name);
-                                                    setCollegeSearch(c.name);
+                                                    if (c.code === "OTHER") {
+                                                        setCollege(collegeSearch || "Other / Not Listed");
+                                                        setCollegeSearch(collegeSearch || "Other / Not Listed");
+                                                    } else {
+                                                        setCollege(c.name);
+                                                        setCollegeSearch(c.name);
+                                                    }
                                                     setShowDropdown(false);
                                                 }}
                                                 className="px-4 py-3 text-[13px] text-zinc-600 hover:bg-[#E0E7FF] hover:text-[#003366] cursor-pointer transition-colors border-b border-zinc-50 last:border-0 font-medium flex items-center gap-3"
@@ -385,7 +399,21 @@ export default function InternSignupPage() {
                                             </div>
                                         ))
                                     ) : (
-                                        <div className="px-11 py-3 text-[13px] text-zinc-400 italic">No colleges found</div>
+                                        <div 
+                                            onClick={() => {
+                                                setCollege(collegeSearch);
+                                                setShowDropdown(false);
+                                            }}
+                                            className="px-4 py-4 text-[13px] text-zinc-600 hover:bg-[#E0E7FF] hover:text-[#003366] cursor-pointer transition-colors font-medium flex items-center gap-3"
+                                        >
+                                            <div className="h-8 w-8 bg-[#003366] text-white flex items-center justify-center text-[10px] font-black shrink-0">
+                                                OT
+                                            </div>
+                                            <div className="flex flex-col">
+                                                <span className="leading-tight">Add "{collegeSearch}" as my college</span>
+                                                <span className="text-[10px] text-zinc-400 font-bold uppercase tracking-widest">Not in list? Click to use this name</span>
+                                            </div>
+                                        </div>
                                     )}
                                 </div>
                             )}

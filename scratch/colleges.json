@@ -44,6 +44,7 @@
   {"name": "Holy Mary Institute of Technology and Science", "code": "HITS"},
   {"name": "Jayamukhi Institute of Technological Sciences", "code": "JITS"},
   {"name": "Vaagdevi College of Engineering", "code": "VAGD"},
+  {"name": "Vaageswari College of Engineering", "code": "VAGW"},
   {"name": "Balaji Institute of Technology and Science", "code": "BITS"},
   {"name": "SVS Group of Institutions", "code": "SVSI"},
   {"name": "Kamala Institute of Technology and Science", "code": "KITS"},
@@ -135,6 +136,7 @@
   {"name": "Sagar Institute of Technology", "code": "SAGR"},
   {"name": "Sai Spurthi Institute of Technology", "code": "SSIT"},
   {"name": "Samskruti College of Engineering and Technology", "code": "SAMS"},
+  {"name": "Samskruti College of Engineering and Technology (Diploma)", "code": "SAMD"},
   {"name": "Sanskriti School of Engineering", "code": "SANS"},
   {"name": "Sant Samarth Engineering College", "code": "SANT"},
   {"name": "Santhi Ram Engineering College", "code": "SANR"},
@@ -172,5 +174,6 @@
   {"name": "Vijay Rural Engineering College", "code": "VIJY"},
   {"name": "Visvesvaraya College of Engineering and Technology", "code": "VCET"},
   {"name": "Vivekananda Institute of Science and Information Technology", "code": "VISI"},
-  {"name": "Vivekananda Institute of Technology and Science", "code": "VITS"}
+  {"name": "Vivekananda Institute of Technology and Science", "code": "VITS"},
+  {"name": "Other / Not Listed", "code": "OTHER"}
 ]
