@@ -3,9 +3,11 @@
 import { useState, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ShieldAlert, Loader2, Eye, EyeOff, Lock } from "lucide-react";
+import { ShieldAlert, Loader2, Eye, EyeOff, ChevronRight } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import ReCAPTCHA from "react-google-recaptcha";
+
+import { StickyBanner } from "@/components/ui/sticky-banner";
 
 export default function InternSigninPage() {
     const router = useRouter();
@@ -29,13 +31,10 @@ export default function InternSigninPage() {
 
     const handleSignin = async (e: React.FormEvent) => {
         e.preventDefault();
+        const isLocal = process.env.NODE_ENV === 'development' || window.location.hostname === 'localhost';
 
-        const isLocal = process.env.NODE_ENV === 'development' || 
-                       window.location.hostname === 'localhost' || 
-                       window.location.hostname === '127.0.0.1';
-        
         if (!captchaToken && !isLocal) {
-            setError("Please complete the security verification.");
+            setError("Please complete security verification.");
             return;
         }
 
@@ -45,11 +44,7 @@ export default function InternSigninPage() {
         try {
             const res = await fetch("/api/intern/signin", {
                 method: "POST",
-                body: JSON.stringify({
-                    email,
-                    password,
-                    captcha_token: captchaToken
-                }),
+                body: JSON.stringify({ email, password, captcha_token: captchaToken }),
                 headers: { "Content-Type": "application/json" },
             });
 
@@ -59,7 +54,6 @@ export default function InternSigninPage() {
                 router.push("/intern/dashboard");
             } else {
                 setError(data.error || "Login failed.");
-                // Reset captcha on failure
                 setCaptchaToken(null);
                 recaptchaRef.current?.reset();
             }
@@ -71,167 +65,178 @@ export default function InternSigninPage() {
     };
 
     return (
-        <div className="min-h-screen bg-white text-[#495057] font-sans flex flex-col items-center selection:bg-blue-50">
-            {/* Breadcrumbs */}
-            <div className="w-full max-w-[850px] pt-8 px-6 flex justify-start">
-                <nav className="flex items-center gap-2 text-[13px] font-medium text-zinc-400">
-                    <Link href="/" className="hover:text-black transition-colors">Portal</Link>
-                    <span className="text-zinc-200 text-[10px]">/</span>
-                    <span className="text-zinc-900">Intern Login</span>
+        <div className="h-screen w-full bg-[#F9FAFB] text-[#1F2937] font-sans flex flex-col overflow-hidden selection:bg-blue-100">
+            <StickyBanner className="bg-gradient-to-b from-[#003366] to-[#002244]">
+                <p className="mx-0 max-w-[90%] text-white drop-shadow-md text-[12px] md:text-[13px] font-medium leading-tight text-center md:text-left">
+                    Welcome to the Student Forge Intern Portal. Access your training modules, track daily progress, and manage tasks in your personalized dashboard.{" "}
+                    <Link href="/intern/dashboard" className="transition duration-200 hover:underline font-bold whitespace-nowrap">
+                        Go to dashboard
+                    </Link>
+                </p>
+            </StickyBanner>
+            {/* Top Navigation / Breadcrumbs */}
+            <div className="w-full max-w-[950px] mx-auto pt-6 px-8 flex-none">
+                <nav className="flex items-center gap-2 text-[11px] font-medium text-slate-400">
+                    <Link href="/" className="hover:text-slate-900 transition-colors">Portal</Link>
+                    <ChevronRight size={10} />
+                    <span className="text-slate-900">Intern Access</span>
                 </nav>
             </div>
 
-            <div className="flex-1 flex items-center justify-center p-6 lg:p-10 w-full">
-            <div className="w-full max-w-[850px] bg-white border border-zinc-200 flex flex-col md:flex-row relative z-10">
+            {/* Main Center Container */}
+            <div className="flex-1 flex items-center justify-center p-4">
+                <div className="w-full max-w-[950px] h-[620px] bg-white border border-slate-200 shadow-sm flex overflow-hidden rounded-xl">
 
-                {/* Left Side: Branding & Illustration */}
-                <div className="md:w-5/12 bg-[#D1E0FF] p-8 md:p-10 flex flex-col justify-center relative overflow-hidden">
-                    <div className="space-y-4 relative z-10">
-                        <img
-                            src="https://ik.imagekit.io/dypkhqxip/platform?updatedAt=1776791557303"
-                            alt="Student Forge"
-                            className="h-8 w-auto mb-6"
-                        />
-                        <div className="space-y-1">
-                            <h1 className="text-[#003366] text-xl font-bold font-sans">Student Forge Portal</h1>
-                            <p className="text-[#003366] text-[13px] font-medium opacity-80 leading-relaxed">
-                                Access your workspace and manage your internship seamlessly.
-                            </p>
-                        </div>
-                    </div>
-
-                    <div className="mt-8 relative z-10">
-                        <img
-                            src="https://ik.imagekit.io/dypkhqxip/Happy%20student-bro.svg"
-                            alt="Illustration"
-                            className="w-full h-auto max-w-[240px] mx-auto opacity-90"
-                        />
-                    </div>
-                </div>
-
-                {/* Right Side: Form Section */}
-                <div className="md:w-7/12 p-8 md:p-10 relative">
-                    <div className="max-w-[340px] mx-auto">
-                        <div className="mb-6">
-                            <h2 className="text-lg font-bold text-zinc-800">Sign In</h2>
-                            <p className="text-[12px] text-zinc-400 font-medium">Continue to your dashboard</p>
+                    {/* Left Panel: Brand Experience */}
+                    <div className="hidden md:flex md:w-[40%] bg-slate-50 border-r border-slate-100 p-12 flex-col justify-between relative">
+                        <div className="relative z-10">
+                            <img
+                                src="https://ik.imagekit.io/dypkhqxip/platform?updatedAt=1776791557303"
+                                alt="Student Forge"
+                                className="h-6 w-auto mb-10 opacity-90"
+                            />
+                            <div className="space-y-3">
+                                <h1 className="text-[#003366] text-xl font-semibold tracking-tight">Intern Workspace</h1>
+                                <p className="text-slate-500 text-[13px] leading-relaxed">
+                                    A unified platform to manage your tasks, learn from experts, and track your career growth.
+                                </p>
+                            </div>
                         </div>
 
-                        <form onSubmit={handleSignin} className="space-y-4">
-                            <div className="space-y-1">
-                                <label className="text-[11px] font-bold text-zinc-400 block">
-                                    Email
-                                </label>
-                                <input
-                                    required
-                                    type="email"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    className="w-full h-10 bg-zinc-50 border border-zinc-200 px-4 text-[13px] outline-none transition-all focus:border-[#003366] focus:bg-white"
-                                    placeholder="name@example.com"
-                                />
+                        <div className="flex justify-center relative z-10">
+                            <img
+                                src="https://ik.imagekit.io/dypkhqxip/Happy%20student-bro.svg"
+                                alt="Illustration"
+                                className="w-full h-auto max-w-[200px] opacity-80"
+                            />
+                        </div>
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-blue-50/50 rounded-full blur-3xl -mr-16 -mt-16"></div>
+                    </div>
+
+                    {/* Right Panel: Sign In Form */}
+                    <div className="w-full md:w-[60%] flex flex-col justify-center px-8 lg:px-20 py-8 overflow-y-auto">
+                        <div className="max-w-[340px] mx-auto w-full">
+                            <div className="mb-6">
+                                <h2 className="text-xl font-semibold text-slate-900 tracking-tight">Sign In</h2>
+                                <p className="text-[13px] text-slate-400 mt-1">Please enter your credentials to continue</p>
                             </div>
 
-                            <div className="space-y-1">
-                                <div className="flex justify-between items-center">
-                                    <label className="text-[11px] font-bold text-zinc-400">
-                                        Password
+                            <form onSubmit={handleSignin} className="space-y-4">
+                                <div className="space-y-1.5">
+                                    <label className="text-[10px] font-semibold text-slate-500">
+                                        Email Address
                                     </label>
-                                    <Link href="/intern/forgot-password" title="Recover Password" className="text-[11px] text-[#003366] font-bold hover:underline">
-                                        Forgot?
-                                    </Link>
-                                </div>
-                                <div className="relative">
                                     <input
                                         required
-                                        type={showPassword ? "text" : "password"}
-                                        value={password}
-                                        onChange={(e) => setPassword(e.target.value)}
-                                        className="w-full h-10 bg-zinc-50 border border-zinc-200 px-4 pr-12 text-[13px] outline-none transition-all focus:border-[#003366] focus:bg-white"
-                                        placeholder="••••••••"
+                                        type="email"
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)}
+                                        className="w-full h-10 bg-slate-50/50 border border-slate-200 px-3.5 text-[13px] rounded-lg outline-none transition-all focus:border-[#003366] focus:bg-white focus:ring-4 focus:ring-blue-50/50"
+                                        placeholder="intern@studentforge.in"
                                     />
+                                </div>
+
+                                <div className="space-y-1.5">
+                                    <div className="flex justify-between items-center">
+                                        <label className="text-[10px] font-semibold text-slate-500">
+                                            Password
+                                        </label>
+                                        <Link href="/intern/forgot-password" className="text-[11px] text-[#003366] font-medium hover:underline underline-offset-4">
+                                            Forgot?
+                                        </Link>
+                                    </div>
+                                    <div className="relative">
+                                        <input
+                                            required
+                                            type={showPassword ? "text" : "password"}
+                                            value={password}
+                                            onChange={(e) => setPassword(e.target.value)}
+                                            className="w-full h-10 bg-slate-50/50 border border-slate-200 px-3.5 pr-10 text-[13px] rounded-lg outline-none transition-all focus:border-[#003366] focus:bg-white focus:ring-4 focus:ring-blue-50/50"
+                                            placeholder="••••••••"
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={() => setShowPassword(!showPassword)}
+                                            className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-300 hover:text-slate-500 transition-colors"
+                                        >
+                                            {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div className="py-1">
+                                    <div className="transform scale-[0.8] origin-left">
+                                        <ReCAPTCHA
+                                            ref={recaptchaRef}
+                                            sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || "6LfA4LssAAAAAJjVmCALHZYPY4bwg_XzQ7ZNCMGI"}
+                                            onChange={(token) => setCaptchaToken(token)}
+                                        />
+                                    </div>
+                                </div>
+
+                                {error && (
+                                    <div className="p-2.5 bg-red-50 text-red-600 text-[11px] font-medium flex items-center gap-2 border border-red-100 rounded-lg animate-in fade-in zoom-in-95">
+                                        <ShieldAlert size={14} className="shrink-0" />
+                                        <span>{error}</span>
+                                    </div>
+                                )}
+
+                                <div className="space-y-3 pt-1">
                                     <button
-                                        type="button"
-                                        onClick={() => setShowPassword(!showPassword)}
-                                        className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-300 hover:text-zinc-600"
+                                        disabled={loading}
+                                        type="submit"
+                                        className="w-full h-10 bg-[#003366] text-white text-[13px] font-medium rounded-lg transition-all hover:bg-[#002244] active:scale-[0.98] flex items-center justify-center gap-2 shadow-sm disabled:opacity-70"
                                     >
-                                        {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                                        {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Sign In"}
+                                    </button>
+
+                                    <div className="relative flex items-center py-2">
+                                        <div className="flex-grow border-t border-slate-100"></div>
+                                        <span className="flex-shrink mx-3 text-[10px] font-medium text-slate-300">or</span>
+                                        <div className="flex-grow border-t border-slate-100"></div>
+                                    </div>
+
+                                    <button
+                                        onClick={signInWithGoogle}
+                                        type="button"
+                                        className="w-full h-10 flex items-center justify-center gap-2.5 bg-white border border-slate-200 text-[13px] font-medium text-slate-600 hover:bg-slate-50 hover:border-slate-300 transition-all rounded-lg"
+                                    >
+                                        <svg className="w-4 h-4" viewBox="0 0 24 24">
+                                            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
+                                            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
+                                            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05" />
+                                            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.66l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
+                                        </svg>
+                                        Continue with Google
                                     </button>
                                 </div>
+                            </form>
+
+                            <div className="mt-8 text-center pt-6 border-t border-slate-50">
+                                <p className="text-[13px] text-slate-500">
+                                    Need an account? <Link href="/intern/signup" className="text-[#003366] font-semibold hover:underline underline-offset-4 decoration-1">Register now</Link>
+                                </p>
                             </div>
-
-                            <div className="flex items-center justify-between">
-                                <label className="flex items-center gap-2 cursor-pointer group">
-                                    <input type="checkbox" className="w-3 h-3 border-zinc-300 text-[#003366] focus:ring-[#003366] rounded-none" />
-                                    <span className="text-[11px] text-zinc-400 group-hover:text-zinc-700 select-none font-medium">Keep me signed in</span>
-                                </label>
-                            </div>
-
-                            <div className="pt-1 overflow-hidden">
-                                <ReCAPTCHA
-                                    ref={recaptchaRef}
-                                    sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || "6LfA4LssAAAAAJjVmCALHZYPY4bwg_XzQ7ZNCMGI"}
-                                    onChange={(token) => setCaptchaToken(token)}
-                                />
-                            </div>
-
-                            {error && (
-                                <div className="p-2.5 bg-red-50 text-red-500 text-[10px] font-bold flex items-center gap-2 border border-red-100 animate-in fade-in slide-in-from-top-1">
-                                    <ShieldAlert size={12} className="shrink-0" />
-                                    <span>{error}</span>
-                                </div>
-                            )}
-
-                            <button
-                                disabled={loading}
-                                type="submit"
-                                className="w-full h-11 bg-[#003366] text-white text-[12px] font-bold transition-all hover:bg-[#002244] active:scale-[0.98] flex items-center justify-center gap-2 disabled:opacity-50"
-                            >
-                                {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Sign In"}
-                            </button>
-
-                            <div className="relative flex items-center py-1">
-                                <div className="flex-grow border-t border-zinc-100"></div>
-                                <span className="flex-shrink mx-3 text-[9px] font-bold text-zinc-200">or</span>
-                                <div className="flex-grow border-t border-zinc-100"></div>
-                            </div>
-
-                            <button
-                                onClick={signInWithGoogle}
-                                type="button"
-                                className="w-full h-10 flex items-center justify-center gap-3 bg-white border border-zinc-200 text-[12px] font-semibold text-zinc-600 hover:bg-zinc-50 transition-all"
-                            >
-                                <svg className="w-3.5 h-3.5" viewBox="0 0 24 24">
-                                    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
-                                    <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
-                                    <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05" />
-                                    <path d="M12 5.38c1.62 0 3.06.56 4.21 1.66l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
-                                </svg>
-                                <span>Google Account</span>
-                            </button>
-                        </form>
-
-                        <div className="mt-6 text-center pt-4 border-t border-zinc-50">
-                            <p className="text-[12px] text-zinc-400 font-medium">
-                                No Intern account? <Link href="/intern/signup" className="text-[#003366] font-bold hover:underline">Register</Link>
-                            </p>
                         </div>
                     </div>
                 </div>
             </div>
-            </div>
 
-            {/* Footer Section */}
-            <footer className="w-full bg-zinc-50 border-t border-zinc-100 py-10 px-6 mt-auto">
-                <div className="max-w-[850px] mx-auto flex flex-col items-center gap-4 text-center">
-                    <div className="space-y-3">
-                        <p className="text-[11px] text-zinc-500 font-medium leading-relaxed">
-                            © 2025-2026 Student Forge Technologies Private Limited. All Rights Reserved. 
-                            Unauthorized access or use of this platform is strictly prohibited.
+            {/* Bottom Footer */}
+            <footer className="w-full py-8 px-8 flex-none bg-slate-100 border-t border-slate-200">
+                <div className="max-w-[950px] mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+                    <div className="flex flex-col items-center md:items-start gap-1">
+                        <p className="text-[10px] text-slate-500 font-medium leading-relaxed">
+                            © {new Date().getFullYear()} Student Forge Technologies Pvt Ltd. All rights reserved.
                         </p>
-                        <p className="text-[10px] text-zinc-400 font-bold uppercase tracking-widest">
-                            platform.studentforge.in is a registered trademark. Secured with enterprise-grade encryption.
+                        <p className="text-[9px] text-slate-400 font-medium">
+                            Powered by Cheetah Servers • Redlix Systems, Hyderabad
                         </p>
+                    </div>
+                    <div className="flex items-center gap-6 text-[10px] text-slate-400 font-semibold">
+                        <span className="hover:text-slate-900 cursor-pointer transition-colors">Privacy Policy</span>
+                        <span className="hover:text-slate-600 cursor-pointer transition-colors">Terms of Service</span>
+                        <span className="hover:text-slate-600 cursor-pointer transition-colors">Security</span>
                     </div>
                 </div>
             </footer>

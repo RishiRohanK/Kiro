@@ -3,7 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ShieldAlert, Loader2, Eye, EyeOff, User, Mail, Phone, Lock, Linkedin, Instagram, School, Bell, Search } from "lucide-react";
+import { ShieldAlert, Loader2, Eye, EyeOff, User, Mail, Phone, Lock, Linkedin, Instagram, School, ChevronRight, Info, Github } from "lucide-react";
+import { StickyBanner } from "@/components/ui/sticky-banner";
 
 const COLLEGES = [
     { "name": "Indian Institute of Technology (IIT), Hyderabad", "code": "IITH" },
@@ -249,281 +250,233 @@ export default function InternSignupPage() {
     const REGISTRATIONS_CLOSED = true;
 
     return (
-        <div className="min-h-screen flex flex-col md:flex-row bg-white font-sans overflow-x-hidden">
+        <div className="h-screen w-full bg-[#FAFAFA] text-[#1A1C1E] font-sans flex flex-col overflow-hidden selection:bg-blue-100">
+            <StickyBanner className="bg-gradient-to-b from-rose-600 to-rose-700">
+                <p className="mx-0 max-w-[90%] text-white drop-shadow-md text-[12px] md:text-[13px] font-medium leading-tight text-center md:text-left">
+                    Enrollment for the Summer Bootcamp 2026 is now officially closed. If you have already registered, please sign in to access your dashboard.{" "}
+                    <Link href="/intern/signin" className="transition duration-200 hover:underline font-bold whitespace-nowrap">
+                        Sign in here
+                    </Link>
+                </p>
+            </StickyBanner>
 
-            <div className="md:w-[60%] bg-[#E0E7FF] relative hidden md:flex flex-col items-center justify-between overflow-hidden pt-12 pb-10 px-12">
-                <div className="w-full flex flex-col items-start gap-6 relative z-20">
-                    <div className="flex items-center gap-4">
-                        <img
-                            src="https://ik.imagekit.io/dypkhqxip/platform?updatedAt=1776791557303"
-                            alt="Student Forge Platform"
-                            className="h-8 w-auto"
-                        />
-                        <div className="h-6 w-px bg-[#003366]/20"></div>
-                        <img
-                            src="https://ik.imagekit.io/dypkhqxip/sflogo?updatedAt=1774952380858"
-                            alt="Student Forge"
-                            className="h-7 w-auto"
-                        />
-                    </div>
-                    <div className="space-y-1">
-                        <h2 className="text-[#003366] text-xl font-bold">Platform Workspace</h2>
-                        <p className="text-[#003366]/60 text-[14px] font-medium">An official Student Forge Initiative</p>
-                    </div>
-                </div>
+            {/* Minimal Header */}
+            <header className="px-10 pt-6 flex-none">
+                <nav className="flex items-center gap-2 text-[11px] font-medium text-slate-400">
+                    <Link href="/" className="hover:text-blue-600 transition-colors">Portal</Link>
+                    <ChevronRight size={10} className="text-slate-300" />
+                    <span className="text-slate-600">Intern Enrollment</span>
+                </nav>
+            </header>
 
-                <div className="relative z-10 w-full max-w-[750px] translate-y-32">
-                    <iframe
-                        src="https://lottie.host/embed/521c9b48-ae0c-49ba-a951-9c0d31728f01/2oOdwYfKHI.lottie"
-                        className="w-full aspect-square border-none scale-125"
-                    ></iframe>
-                </div>
+            <main className="flex-1 flex items-center justify-center p-6">
+                <div className="w-full max-w-[1050px] h-[640px] bg-white border border-slate-200 shadow-sm flex overflow-hidden rounded-xl">
 
-                <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32 blur-3xl"></div>
-                <div className="absolute bottom-0 left-0 w-64 h-64 bg-[#003366]/5 rounded-full -ml-32 -mb-32 blur-3xl"></div>
-            </div>
-
-            <div className="w-full md:w-[40%] p-8 md:p-16 flex flex-col justify-center relative bg-white">
-                <div className="max-w-[480px] w-full mx-auto space-y-8">
-
-                    <div className="space-y-6">
-                        {REGISTRATIONS_CLOSED ? (
-                            <div className="p-6 bg-rose-50 border border-rose-100 rounded-none flex flex-col gap-4">
-                                <div className="flex items-center gap-4">
-                                    <div className="h-10 w-10 bg-rose-600 text-white flex items-center justify-center shrink-0">
-                                        <ShieldAlert size={20} />
-                                    </div>
-                                    <div>
-                                        <p className="text-[14px] font-bold text-rose-900 leading-none mb-1">Registrations Closed</p>
-                                        <p className="text-[11px] text-rose-700 font-medium leading-none">Enrollment for the Summer Bootcamp 2026 is now officially closed.</p>
-                                    </div>
-                                </div>
-                                <div className="pt-4 border-t border-rose-100">
-                                    <p className="text-[12px] text-rose-600 font-medium leading-relaxed">
-                                        The registration deadline (May 15, 2026 - 6:00 PM) has passed. We are no longer accepting new interns for this batch. If you have already registered, please login to access your dashboard.
-                                    </p>
-                                </div>
+                    {/* Left Branding Panel */}
+                    <div className="hidden md:flex md:w-[35%] bg-slate-50 border-r border-slate-100 p-10 flex-col justify-between relative">
+                        <div className="relative z-10">
+                            <div className="flex items-center gap-3 mb-10">
+                                <img src="https://ik.imagekit.io/dypkhqxip/platform" alt="Platform" className="h-5 opacity-90" />
+                                <div className="h-4 w-px bg-slate-200"></div>
+                                <img src="https://ik.imagekit.io/dypkhqxip/sflogo" alt="SF" className="h-4 opacity-80" />
                             </div>
-                        ) : (
-                            <div className="p-4 bg-emerald-50 rounded-none flex items-center gap-4">
-                                <div className="h-10 w-10 bg-emerald-600 text-white flex items-center justify-center shrink-0">
-                                    <Bell size={20} />
-                                </div>
-                                <div>
-                                    <p className="text-[14px] font-bold text-emerald-900 leading-none mb-1">Welcome to bootcamp interns</p>
-                                    <p className="text-[11px] text-emerald-700 font-medium leading-none">Register your account to access your industrial workspace.</p>
-                                </div>
-                            </div>
-                        )}
-                        <h1 className="text-[#003366] text-2xl font-bold tracking-tight">
-                            {REGISTRATIONS_CLOSED ? "Enrollment Ended" : "Register account"}
-                        </h1>
-                    </div>
-
-                    <form onSubmit={handleSignup} className={`space-y-5 ${REGISTRATIONS_CLOSED ? "opacity-40 pointer-events-none grayscale" : ""}`}>
-                        <div className="grid grid-cols-2 gap-4">
-                            <div className="relative group">
-                                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 group-focus-within:text-[#003366]">
-                                    <User size={16} />
-                                </span>
-                                <input
-                                    required
-                                    type="text"
-                                    value={firstName}
-                                    onChange={(e) => setFirstName(e.target.value)}
-                                    className="w-full h-12 bg-white border border-zinc-200 pl-11 pr-4 text-[14px] outline-none focus:border-[#003366] transition-all rounded-none"
-                                    placeholder="First Name"
-                                />
-                            </div>
-                            <div className="relative group">
-                                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 group-focus-within:text-[#003366]">
-                                    <User size={16} />
-                                </span>
-                                <input
-                                    required
-                                    type="text"
-                                    value={lastName}
-                                    onChange={(e) => setLastName(e.target.value)}
-                                    className="w-full h-12 bg-white border border-zinc-200 pl-11 pr-4 text-[14px] outline-none focus:border-[#003366] transition-all rounded-none"
-                                    placeholder="Last Name"
-                                />
+                            <div className="space-y-3">
+                                <h1 className="text-lg font-semibold text-[#003366] tracking-tight">Industrial Workspace</h1>
+                                <p className="text-slate-500 text-[13px] leading-relaxed">
+                                    Join the professional ecosystem designed for the next generation of engineers and creators.
+                                </p>
                             </div>
                         </div>
 
-                        <div className="relative group">
-                            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 group-focus-within:text-[#003366]">
-                                <Phone size={16} />
-                            </span>
-                            <input
-                                required
-                                type="tel"
-                                value={phone}
-                                onChange={(e) => setPhone(e.target.value)}
-                                className="w-full h-12 bg-white border border-zinc-200 pl-11 pr-4 text-[14px] outline-none focus:border-[#003366] transition-all rounded-none"
-                                placeholder="Enter Phone Number"
-                            />
+                        <div className="relative z-10 flex justify-center">
+                            <iframe
+                                src="https://lottie.host/embed/521c9b48-ae0c-49ba-a951-9c0d31728f01/2oOdwYfKHI.lottie"
+                                className="w-48 h-48 border-none opacity-80 grayscale-[20%]"
+                            ></iframe>
                         </div>
 
-                        <div className="relative group z-30">
-                            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 group-focus-within:text-[#003366]">
-                                <School size={16} />
-                            </span>
-                            <input
-                                required
-                                type="text"
-                                autoComplete="off"
-                                value={college || collegeSearch}
-                                onFocus={() => { setShowDropdown(true); if (college) setCollegeSearch(college); }}
-                                onChange={(e) => { setCollegeSearch(e.target.value); setCollege(""); }}
-                                onBlur={() => setTimeout(() => setShowDropdown(false), 200)}
-                                className="w-full h-12 bg-white border border-zinc-200 pl-11 pr-4 text-[14px] outline-none focus:border-[#003366] transition-all rounded-none"
-                                placeholder="Search & Select College"
-                            />
+                        <div className="absolute -bottom-16 -left-16 w-48 h-48 bg-blue-50 rounded-full blur-3xl opacity-40"></div>
+                    </div>
 
-                            {showDropdown && (
-                                <div className="absolute top-full left-0 right-0 bg-white border border-zinc-200 border-t-0 shadow-2xl max-h-60 overflow-y-auto z-40">
-                                    {filteredColleges.length > 0 ? (
-                                        filteredColleges.map((c, index) => (
-                                            <div
-                                                key={`${c.code}-${index}`}
-                                                onClick={() => {
-                                                    if (c.code === "OTHER") {
-                                                        setCollege(collegeSearch || "Other / Not Listed");
-                                                        setCollegeSearch(collegeSearch || "Other / Not Listed");
-                                                    } else {
-                                                        setCollege(c.name);
-                                                        setCollegeSearch(c.name);
-                                                    }
-                                                    setShowDropdown(false);
-                                                }}
-                                                className="px-4 py-3 text-[13px] text-zinc-600 hover:bg-[#E0E7FF] hover:text-[#003366] cursor-pointer transition-colors border-b border-zinc-50 last:border-0 font-medium flex items-center gap-3"
-                                            >
-                                                <div className={`h-8 w-8 rounded-none flex items-center justify-center text-white text-[10px] font-black shrink-0 ${(() => {
-                                                        const colors = ["bg-blue-600", "bg-emerald-600", "bg-amber-600", "bg-rose-600", "bg-indigo-600", "bg-violet-600", "bg-cyan-600"];
-                                                        let hash = 0;
-                                                        for (let i = 0; i < c.code.length; i++) {
-                                                            hash = c.code.charCodeAt(i) + ((hash << 5) - hash);
-                                                        }
-                                                        return colors[Math.abs(hash) % colors.length];
-                                                    })()
-                                                    }`}>
-                                                    {c.code.substring(0, 2)}
+                    {/* Right Form Panel */}
+                    <div className="flex-1 flex flex-col p-10 lg:px-16 overflow-y-auto custom-scrollbar">
+                        <div className="max-w-[520px] w-full mx-auto">
+
+                            {/* Enrollment Status Bar */}
+                            <div className="mb-8">
+                                {REGISTRATIONS_CLOSED ? (
+                                    <div className="flex items-center gap-3 p-3.5 bg-rose-50 border border-rose-100 rounded-lg">
+                                        <div className="h-8 w-8 bg-rose-600 text-white flex items-center justify-center rounded-md shrink-0">
+                                            <ShieldAlert size={16} />
+                                        </div>
+                                        <div>
+                                            <p className="text-[12px] font-semibold text-rose-900 leading-tight">Enrollment Period Ended</p>
+                                            <p className="text-[11px] text-rose-700 font-medium">Summer Bootcamp 2026 intake is now closed.</p>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className="flex items-center gap-3 p-3.5 bg-emerald-50 border border-emerald-100 rounded-lg">
+                                        <div className="h-8 w-8 bg-emerald-600 text-white flex items-center justify-center rounded-md shrink-0">
+                                            <Info size={16} />
+                                        </div>
+                                        <div>
+                                            <p className="text-[12px] font-semibold text-emerald-900 leading-tight">Registration Open</p>
+                                            <p className="text-[11px] text-emerald-700 font-medium">Enter your details to create your industrial profile.</p>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+
+                            <div className={`space-y-6 ${REGISTRATIONS_CLOSED ? "opacity-80 grayscale pointer-events-none select-none" : ""}`}>
+                                <h2 className="text-xl font-semibold text-slate-900 tracking-tight">Register Intern Account</h2>
+
+                                <form onSubmit={handleSignup} className="space-y-4">
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div className="space-y-1.5">
+                                            <label className="text-[10px] font-semibold text-slate-500 ml-1">First Name</label>
+                                            <input required value={firstName} onChange={(e) => setFirstName(e.target.value)} className="signup-input" placeholder="Ex: John" />
+                                        </div>
+                                        <div className="space-y-1.5">
+                                            <label className="text-[10px] font-semibold text-slate-500 ml-1">Last Name</label>
+                                            <input required value={lastName} onChange={(e) => setLastName(e.target.value)} className="signup-input" placeholder="Ex: Doe" />
+                                        </div>
+                                    </div>
+
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div className="space-y-1.5">
+                                            <label className="text-[10px] font-semibold text-slate-500 ml-1">Contact Phone</label>
+                                            <input required type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} className="signup-input" placeholder="+91 00000 00000" />
+                                        </div>
+                                        <div className="space-y-1.5 relative group">
+                                            <label className="text-[10px] font-semibold text-slate-500 ml-1">College/University</label>
+                                            <div className="relative">
+                                                <input
+                                                    required
+                                                    autoComplete="off"
+                                                    value={college || collegeSearch}
+                                                    onFocus={() => setShowDropdown(true)}
+                                                    onChange={(e) => { setCollegeSearch(e.target.value); setCollege(""); }}
+                                                    onBlur={() => setTimeout(() => setShowDropdown(false), 200)}
+                                                    className="signup-input pr-8"
+                                                    placeholder="Search College..."
+                                                />
+                                                <School size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-300" />
+                                            </div>
+
+                                            {showDropdown && (
+                                                <div className="absolute top-full left-0 right-0 bg-white border border-slate-200 shadow-xl rounded-lg mt-1 max-h-48 overflow-y-auto z-50 animate-in fade-in slide-in-from-top-2">
+                                                    {filteredColleges.map((c, idx) => (
+                                                        <div
+                                                            key={idx}
+                                                            onClick={() => { setCollege(c.name); setCollegeSearch(c.name); }}
+                                                            className="px-4 py-2.5 text-[12px] hover:bg-slate-50 cursor-pointer flex justify-between items-center group/item border-b border-slate-50 last:border-0"
+                                                        >
+                                                            <span className="text-slate-600 group-hover/item:text-[#003366] font-medium">{c.name}</span>
+                                                            <span className="text-[9px] font-semibold bg-slate-100 text-slate-400 px-1.5 rounded uppercase">{c.code}</span>
+                                                        </div>
+                                                    ))}
                                                 </div>
-                                                <div className="flex flex-col">
-                                                    <span className="leading-tight">{c.name}</span>
-                                                    <span className="text-[10px] text-zinc-400 font-bold uppercase tracking-widest">{c.code}</span>
-                                                </div>
-                                            </div>
-                                        ))
-                                    ) : (
-                                        <div
-                                            onClick={() => {
-                                                setCollege(collegeSearch);
-                                                setShowDropdown(false);
-                                            }}
-                                            className="px-4 py-4 text-[13px] text-zinc-600 hover:bg-[#E0E7FF] hover:text-[#003366] cursor-pointer transition-colors font-medium flex items-center gap-3"
-                                        >
-                                            <div className="h-8 w-8 bg-[#003366] text-white flex items-center justify-center text-[10px] font-black shrink-0">
-                                                OT
-                                            </div>
-                                            <div className="flex flex-col">
-                                                <span className="leading-tight">Add "{collegeSearch}" as my college</span>
-                                                <span className="text-[10px] text-zinc-400 font-bold uppercase tracking-widest">Not in list? Click to use this name</span>
-                                            </div>
+                                            )}
+                                        </div>
+                                    </div>
+
+                                    <div className="space-y-1.5">
+                                        <label className="text-[10px] font-semibold text-slate-500 ml-1">Work Email</label>
+                                        <input required type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="signup-input" placeholder="name@college.edu" />
+                                    </div>
+
+                                    <div className="space-y-1.5">
+                                        <label className="text-[10px] font-semibold text-slate-500 ml-1">Password</label>
+                                        <div className="relative">
+                                            <input required type={showPassword ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} className="signup-input" placeholder="Min. 8 characters" />
+                                            <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-300 hover:text-slate-500">
+                                                {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex items-start gap-2.5 py-1">
+                                        <input type="checkbox" required className="mt-0.5 w-3.5 h-3.5 rounded border-slate-300 text-[#003366] focus:ring-[#003366]" />
+                                        <span className="text-[11px] text-slate-500 leading-normal">
+                                            I agree to the <Link href="/terms" className="text-[#003366] font-semibold hover:underline">Terms of Service</Link> and data processing protocols.
+                                        </span>
+                                    </div>
+
+                                    {error && (
+                                        <div className="p-3 bg-red-50 text-red-600 text-[11px] font-medium border border-red-100 rounded-lg flex items-center gap-2">
+                                            <ShieldAlert size={14} /> {error}
                                         </div>
                                     )}
+
+                                    <button disabled={loading} type="submit" className="w-full h-10 bg-[#003366] text-white text-[13px] font-semibold rounded-lg hover:bg-[#002244] transition-all active:scale-[0.98] flex items-center justify-center gap-2 shadow-sm">
+                                        {loading ? <Loader2 size={16} className="animate-spin" /> : "Create Intern Account"}
+                                    </button>
+                                </form>
+                            </div>
+
+                            {/* Socials & Login Link */}
+                            <div className="mt-8 flex flex-col items-center gap-6">
+                                <div className="flex items-center gap-4 w-full">
+                                    <div className="h-px bg-slate-100 flex-1"></div>
+                                    <span className="text-[10px] text-slate-300 font-semibold uppercase tracking-widest">Connect</span>
+                                    <div className="h-px bg-slate-100 flex-1"></div>
                                 </div>
-                            )}
-                        </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div className="relative group">
-                                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 group-focus-within:text-[#003366]">
-                                    <Mail size={16} />
-                                </span>
-                                <input
-                                    required
-                                    type="email"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    className="w-full h-12 bg-white border border-zinc-200 pl-11 pr-4 text-[14px] outline-none focus:border-[#003366] transition-all rounded-none"
-                                    placeholder="Enter Email Address"
-                                />
-                            </div>
-                            <div className="relative group">
-                                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 group-focus-within:text-[#003366]">
-                                    <Lock size={16} />
-                                </span>
-                                <input
-                                    required
-                                    type={showPassword ? "text" : "password"}
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    className="w-full h-12 bg-white border border-zinc-200 pl-11 pr-12 text-[14px] outline-none focus:border-[#003366] transition-all rounded-none"
-                                    placeholder="Set password"
-                                />
-                                <button
-                                    type="button"
-                                    onClick={() => setShowPassword(!showPassword)}
-                                    className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600"
-                                >
-                                    {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-                                </button>
+                                <div className="flex gap-3">
+                                    <Link href="https://github.com/studentforge" target="_blank" className="social-icon"><Github size={18} /></Link>
+                                    <Link href="https://www.linkedin.com/company/student-forge/" target="_blank" className="social-icon"><Linkedin size={18} /></Link>
+                                    <Link href="https://www.instagram.com/studentforge/" target="_blank" className="social-icon"><Instagram size={18} /></Link>
+                                    <Link href="https://discord.gg/9ZAnhkXD" target="_blank" className="social-icon">
+                                        <svg viewBox="0 0 24 24" className="w-4.5 h-4.5 fill-current"><path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152c-.03-.005-.059.012-.072.0371-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495-.013-.025-.042-.042-.072-.037a19.7363 19.7363 0 00-4.8852 1.515c-.012.002-.023.011-.032.0277C.5334 9.0458-.319 13.5799.0992 18.0578c.002.019.013.04.0312.0561 2.0528 1.5076 4.0413 2.4228 5.9929 3.0294.032.01.0660-.003.0842-.0276.4616-.6304.8731-1.2952 1.226-1.9942.018-.033.004-.074-.0416-.1057-.6528-.2476-1.2743-.5495-1.8722-.8923-.048-.028-.051-.097-.0076-.1277.1258-.0943.2517-.1923.3718-.2914.025-.019.059-.026.0776-.0105 3.9278 1.7933 8.18 1.7933 12.0614 0 .018-.008.052-.001.0775.0095.1201.099.246.1981.3728.2924.044.03.041.099-.0066.1276a12.2986 12.2986 0 01-1.873.8914c-.045.016-.06.073-.0407.1067.3604.698.7719 1.3628 1.225 1.9932.018.024.049.038.0842.0286 1.961-.6067 3.9495-1.5219 6.0023-3.0294.018-.013.03-.034.0313-.0552.5004-5.177-.8382-9.6739-3.5485-13.6604a.0683.0683 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189z" /></svg>
+                                    </Link>
+                                </div>
+
+                                <p className="text-[13px] text-slate-500 font-medium">
+                                    Already registered? <Link href="/intern/signin" className="text-[#003366] font-semibold hover:underline decoration-1 underline-offset-4">Sign in here</Link>
+                                </p>
                             </div>
                         </div>
-
-                        <div className="flex items-start gap-2 pt-2">
-                            <input type="checkbox" required className="mt-1 w-3.5 h-3.5 border-zinc-300 rounded-none text-[#003366] focus:ring-0" />
-                            <p className="text-[12px] text-zinc-500 font-medium">
-                                By registering you agree to the Student Forge <Link href="/terms" className="text-[#003366] font-bold hover:underline">Terms of Use</Link>
-                            </p>
-                        </div>
-
-                        {error && (
-                            <div className="p-3 bg-red-50 text-red-500 text-[11px] font-bold flex items-center gap-2 border border-red-100">
-                                <ShieldAlert size={14} className="shrink-0" />
-                                <span>{error}</span>
-                            </div>
-                        )}
-
-                        <button
-                            disabled={loading}
-                            type="submit"
-                            className="w-full h-12 bg-[#003366] text-white text-[14px] font-bold transition-all hover:bg-[#002244] active:scale-[0.98] flex items-center justify-center gap-2 disabled:opacity-50 rounded-none"
-                        >
-                            {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : "Create Account"}
-                        </button>
-                    </form>
-
-                    <div className="space-y-6 pt-2">
-                        <div className="flex flex-col items-center gap-4">
-                            <p className="text-[12px] text-zinc-400 font-bold tracking-widest">Connect with us</p>
-                            <div className="flex gap-3">
-                                <Link href="https://discord.gg/9ZAnhkXD" target="_blank" className="w-10 h-10 bg-[#5865F2] text-white flex items-center justify-center hover:opacity-80 transition-all shadow-sm rounded-none">
-                                    <svg viewBox="0 0 24 24" className="w-5 h-5 fill-current" xmlns="http://www.w3.org/2000/svg"><path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152c-.03-.005-.059.012-.072.0371-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495-.013-.025-.042-.042-.072-.037a19.7363 19.7363 0 00-4.8852 1.515c-.012.002-.023.011-.032.0277C.5334 9.0458-.319 13.5799.0992 18.0578c.002.019.013.04.0312.0561 2.0528 1.5076 4.0413 2.4228 5.9929 3.0294.032.01.0660-.003.0842-.0276.4616-.6304.8731-1.2952 1.226-1.9942.018-.033.004-.074-.0416-.1057-.6528-.2476-1.2743-.5495-1.8722-.8923-.048-.028-.051-.097-.0076-.1277.1258-.0943.2517-.1923.3718-.2914.025-.019.059-.026.0776-.0105 3.9278 1.7933 8.18 1.7933 12.0614 0 .018-.008.052-.001.0775.0095.1201.099.246.1981.3728.2924.044.03.041.099-.0066.1276a12.2986 12.2986 0 01-1.873.8914c-.045.016-.06.073-.0407.1067.3604.698.7719 1.3628 1.225 1.9932.018.024.049.038.0842.0286 1.961-.6067 3.9495-1.5219 6.0023-3.0294.018-.013.03-.034.0313-.0552.5004-5.177-.8382-9.6739-3.5485-13.6604a.0683.0683 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189z" /></svg>
-                                </Link>
-                                <Link href="https://www.linkedin.com/company/student-forge/" target="_blank" className="w-10 h-10 bg-[#0077B5] text-white flex items-center justify-center hover:opacity-80 transition-all shadow-sm rounded-none">
-                                    <Linkedin size={18} />
-                                </Link>
-                                <Link href="https://www.instagram.com/studentforge/" target="_blank" className="w-10 h-10 bg-[#E1306C] text-white flex items-center justify-center hover:opacity-80 transition-all shadow-sm rounded-none">
-                                    <Instagram size={18} />
-                                </Link>
-                            </div>
-                        </div>
-
-                        <p className="text-center text-[13px] text-zinc-500 font-medium">
-                            Already have an account ? <Link href="/intern/signin" className="text-[#003366] font-bold hover:underline">Login</Link>
-                        </p>
-                    </div>
-
-                    <div className="pt-8 border-t border-zinc-100">
-                        <p className="text-center text-[11px] text-zinc-400 font-medium">
-                            Copyright Student Forge Technologies Pvt. Ltd © 2025-2026. <br />
-                            All Rights Reserved.
-                        </p>
                     </div>
                 </div>
-            </div>
+            </main>
+
+            {/* Bottom Footer */}
+            <footer className="w-full py-8 px-10 flex-none bg-slate-100 border-t border-slate-200 mt-auto">
+                <div className="max-w-[1050px] mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+                    <div className="flex flex-col items-center md:items-start gap-1">
+                        <p className="text-[10px] text-slate-500 font-medium leading-relaxed">
+                            © {new Date().getFullYear()} Student Forge Technologies Pvt Ltd. All rights reserved.
+                        </p>
+                        <p className="text-[9px] text-slate-400 font-medium">
+                            Powered by Cheetah Servers • Redlix Systems, Hyderabad
+                        </p>
+                    </div>
+                    <div className="flex items-center gap-6 text-[10px] text-slate-400 font-semibold">
+                        <span className="hover:text-slate-900 cursor-pointer transition-colors">Privacy Policy</span>
+                        <span className="hover:text-slate-600 cursor-pointer transition-colors">Terms of Service</span>
+                        <span className="hover:text-slate-600 cursor-pointer transition-colors">Security</span>
+                    </div>
+                </div>
+            </footer>
+
+            <style jsx>{`
+                .signup-input {
+                    @apply w-full h-11 bg-white border border-slate-300 px-4 text-[14px] text-slate-900 rounded-lg outline-none transition-all focus:border-[#003366] focus:ring-4 focus:ring-blue-50/50 placeholder:text-slate-400;
+                }
+                .social-icon {
+                    @apply w-10 h-10 bg-white border border-slate-200 text-slate-400 flex items-center justify-center rounded-xl hover:bg-slate-50 hover:border-slate-300 hover:text-[#003366] transition-all shadow-sm;
+                }
+                .custom-scrollbar::-webkit-scrollbar {
+                    width: 4px;
+                }
+                .custom-scrollbar::-webkit-scrollbar-track {
+                    background: transparent;
+                }
+                .custom-scrollbar::-webkit-scrollbar-thumb {
+                    background: #e2e8f0;
+                    border-radius: 10px;
+                }
+            `}</style>
         </div>
     );
 }
