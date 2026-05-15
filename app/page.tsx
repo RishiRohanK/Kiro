@@ -3,43 +3,44 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  HelpCircle, X, ShieldCheck, Briefcase, Building2,
-  ArrowRight, Globe, LifeBuoy, Info, ChevronRight
+import { 
+  HelpCircle, X, ShieldCheck, 
+  ChevronRight, Info, Menu
 } from "lucide-react";
 import FloatingLines from "@/components/ui/FloatingLines";
 
 interface PortalOption {
   title: string;
   description: string;
+  icon: any;
   href: string;
-  icon: React.ElementType;
-  status: string;
+  status: "Active" | "Maintenance";
   delay: number;
 }
 
-export default function PortalPage() {
+const options: PortalOption[] = [
+  {
+    title: "Internship Workspace",
+    description: "Access your daily training modules, track curricula progress, and manage your technical assignments.",
+    icon: ShieldCheck,
+    href: "/intern/signin",
+    status: "Active",
+    delay: 0.1
+  },
+  {
+    title: "Course Catalog",
+    description: "Explore our full range of industry-vetted courses, from MERN stack development to systems architecture.",
+    icon: ShieldCheck,
+    href: "/courses",
+    status: "Active",
+    delay: 0.2
+  }
+];
+
+export default function LandingPage() {
   const [showGuide, setShowGuide] = useState(false);
   const [showCookies, setShowCookies] = useState(false);
-
-  const options: PortalOption[] = [
-    {
-      title: "Intern Portal",
-      description: "Log in here to track your attendance, manage your daily tasks, and check your training progress.",
-      href: "/intern/signin",
-      icon: Briefcase,
-      status: "Active",
-      delay: 0.1,
-    },
-    {
-      title: "Explore Courses",
-      description: "Browse our wide range of professional courses and training programs designed to help you succeed.",
-      href: "/courses",
-      icon: Globe,
-      status: "Active",
-      delay: 0.2,
-    },
-  ];
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const consent = localStorage.getItem("sf_cookie_consent");
@@ -51,10 +52,10 @@ export default function PortalPage() {
 
   return (
     <div className="min-h-screen w-full bg-[#F8FAFC] text-slate-900 font-sans flex flex-col overflow-hidden selection:bg-blue-100 relative">
-
+      
       {/* Animated Background Overlay */}
       <div className="absolute inset-0 z-0 opacity-[0.4] pointer-events-none">
-        <FloatingLines
+        <FloatingLines 
           enabledWaves={['top', 'middle', 'bottom']}
           lineCount={[10, 15, 20]}
           lineDistance={[8, 6, 4]}
@@ -66,32 +67,42 @@ export default function PortalPage() {
           mixBlendMode="multiply"
         />
       </div>
+
       {/* Main Navbar */}
-      <nav className="flex-none bg-white border-b border-slate-200 px-10 py-4 flex items-center justify-between relative z-30">
-        <div className="flex items-center gap-6">
-          <Link href="/" className="flex items-center gap-4 group">
-            <img src="https://ik.imagekit.io/dypkhqxip/sflogo" alt="Student Forge" className="h-8 w-auto group-hover:scale-105 transition-transform" />
-            <div className="h-5 w-px bg-slate-200" />
-            <span className="text-[15px] font-semibold text-slate-900 tracking-tight">STUDENT FORGE</span>
+      <nav className="flex-none bg-white border-b border-slate-200 px-4 md:px-10 py-4 flex items-center justify-between relative z-30">
+        <div className="flex items-center gap-3 md:gap-6">
+          <Link href="/" className="flex items-center gap-3 md:gap-4 group">
+            <img src="https://ik.imagekit.io/dypkhqxip/sflogo" alt="Student Forge" className="h-7 md:h-8 w-auto group-hover:scale-105 transition-transform" />
+            <div className="h-4 md:h-5 w-px bg-slate-200" />
+            <span className="text-[13px] md:text-[15px] font-semibold text-slate-900 tracking-tight whitespace-nowrap uppercase">PLATFORM</span>
           </Link>
         </div>
 
-        <div className="flex items-center gap-3">
-          <button
+        <div className="flex items-center gap-2 md:gap-3">
+          <button 
             onClick={() => setShowGuide(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-slate-50 text-[13px] font-medium text-slate-600 hover:bg-slate-100 rounded-none transition-all border border-slate-100"
+            className="hidden sm:flex items-center gap-2 px-3 md:px-4 py-2 bg-slate-50 text-[12px] md:text-[13px] font-medium text-slate-600 hover:bg-slate-100 rounded-none transition-all border border-slate-100"
           >
-            <HelpCircle size={16} /> <span>Help Guide</span>
+            <HelpCircle size={15} /> <span>Help Guide</span>
           </button>
-          <Link href="/support" className="px-5 py-2 bg-blue-600 text-white text-[13px] font-medium rounded-none hover:bg-blue-700 transition-all shadow-sm">
-            Technical Support
+          
+          <Link href="/support" className="hidden sm:flex px-4 md:px-5 py-2 bg-blue-600 text-white text-[12px] md:text-[13px] font-medium rounded-none hover:bg-blue-700 transition-all shadow-sm">
+            Support
           </Link>
+
+          <button 
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="flex md:hidden items-center justify-center p-2 text-slate-600 bg-slate-50 border border-slate-100 hover:bg-slate-100"
+          >
+            {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
         </div>
       </nav>
 
       {/* Sub-Navbar (Platform Menu) */}
-      <div className="flex-none bg-slate-100 border-b border-slate-200 px-10 py-2.5 relative z-20">
-        <div className="max-w-7xl mx-auto flex items-center gap-8 overflow-x-auto no-scrollbar">
+      <div className="flex-none bg-slate-100 border-b border-slate-200 px-4 md:px-10 relative z-20">
+        {/* Desktop View */}
+        <div className="hidden md:flex max-w-7xl mx-auto items-center gap-8 py-2 overflow-x-auto no-scrollbar scroll-smooth">
           <Link href="/" className="subnav-link text-blue-600 border-b-2 border-blue-600">Home</Link>
           <Link href="/intern/signin" className="subnav-link">Intern Portal</Link>
           <Link href="/courses" className="subnav-link">Course Catalog</Link>
@@ -102,9 +113,55 @@ export default function PortalPage() {
         </div>
       </div>
 
-      <style jsx>{`
+      {/* Mobile Menu Overlay */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div 
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className="md:hidden fixed inset-0 top-[73px] z-[40] bg-white/95 backdrop-blur-md flex flex-col p-6"
+          >
+            <div className="flex flex-col gap-1">
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2 px-2">Navigation</span>
+              <Link onClick={() => setIsMobileMenuOpen(false)} href="/" className="mob-link-v2 active">Home</Link>
+              <Link onClick={() => setIsMobileMenuOpen(false)} href="/intern/signin" className="mob-link-v2">Intern Portal</Link>
+              <Link onClick={() => setIsMobileMenuOpen(false)} href="/courses" className="mob-link-v2">Course Catalog</Link>
+              <Link onClick={() => setIsMobileMenuOpen(false)} href="/bootcamp" className="mob-link-v2">Summer Bootcamp</Link>
+              <Link onClick={() => setIsMobileMenuOpen(false)} href="/cleed/login" className="mob-link-v2">Institutional</Link>
+              <Link onClick={() => setIsMobileMenuOpen(false)} href="/privacy" className="mob-link-v2">Security & Privacy</Link>
+              <Link onClick={() => setIsMobileMenuOpen(false)} href="/terms" className="mob-link-v2">User Agreement</Link>
+            </div>
+            
+            <div className="mt-auto pt-8 border-t border-slate-100 flex flex-col gap-3">
+               <button 
+                 onClick={() => { setShowGuide(true); setIsMobileMenuOpen(false); }} 
+                 className="flex items-center justify-between w-full p-4 bg-slate-50 text-slate-700 text-[13px] font-medium border border-slate-200"
+               >
+                 <span>Help Guide</span>
+                 <HelpCircle size={16} className="text-slate-400" />
+               </button>
+               <Link 
+                 href="/support" 
+                 onClick={() => setIsMobileMenuOpen(false)}
+                 className="flex items-center justify-center w-full p-4 bg-blue-600 text-white text-[13px] font-bold uppercase tracking-wider"
+               >
+                 Technical Support
+               </Link>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <style jsx global>{`
         .subnav-link {
-          @apply text-[12px] font-medium text-slate-500 hover:text-blue-600 transition-colors whitespace-nowrap py-1 px-1;
+          @apply text-[12px] font-medium text-slate-500 hover:text-slate-900 py-2 transition-all whitespace-nowrap;
+        }
+        .mob-link-v2 {
+          @apply px-4 py-3.5 text-[15px] font-medium text-slate-600 hover:bg-slate-50 hover:text-blue-600 transition-all border-b border-slate-50 flex items-center;
+        }
+        .mob-link-v2.active {
+          @apply text-blue-600 font-bold bg-blue-50/50;
         }
         .no-scrollbar::-webkit-scrollbar {
           display: none;
@@ -116,11 +173,11 @@ export default function PortalPage() {
       `}</style>
 
       {/* Main Content Area */}
-      <main className="flex-1 flex flex-col items-start justify-center p-8 md:px-20 relative z-10 overflow-y-auto">
-        <div className="w-full max-w-4xl space-y-10 py-6">
-
+      <main className="flex-1 flex flex-col items-start justify-center p-6 md:p-8 md:px-20 relative z-10 overflow-y-auto">
+        <div className="w-full max-w-4xl space-y-8 md:space-y-10 py-6">
+          
           {/* Left-Aligned Heading & Tag */}
-          <motion.div
+          <motion.div 
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             className="text-left space-y-4"
@@ -130,10 +187,10 @@ export default function PortalPage() {
                 Official Access Point
               </span>
             </div>
-
+            
             <div className="space-y-3">
               <h1 className="text-2xl md:text-4xl font-medium text-slate-900 tracking-tight leading-tight">
-                Welcome to the <span className="text-blue-600">Student Forge Hub</span>
+                Welcome to the <span className="text-blue-600">Student Forge Platform</span>
               </h1>
               <p className="text-slate-500 text-[14px] md:text-[16px] max-w-lg font-medium leading-relaxed">
                 Choose your workspace portal below to start your professional journey.
@@ -148,19 +205,28 @@ export default function PortalPage() {
             ))}
           </div>
         </div>
-
       </main>
 
       {/* Footer */}
-      <footer className="flex-none bg-white border-t border-slate-200 px-8 py-6">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="text-center md:text-left">
-            <p className="text-[12px] text-slate-500">
-              © {new Date().getFullYear()} Student Forge Technologies Pvt Ltd. All rights reserved.
-            </p>
-            <p className="text-[11px] text-slate-400 mt-1">
-              Powered by Cheetah Servers
-            </p>
+      <footer className="flex-none bg-white border-t border-slate-200 px-6 md:px-20 py-6 relative z-30">
+        <div className="max-w-4xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
+          <div className="flex flex-col md:flex-row items-center gap-6 text-center md:text-left">
+            <Link href="https://kiro.redlix.co.in/lms">
+              <img 
+                src="https://ik.imagekit.io/dypkhqxip/Screenshot_2026-05-14_at_17.46.09-removebg-preview.png?updatedAt=1778760997901" 
+                alt="Official Logo" 
+                className="h-14 w-auto opacity-90 hover:opacity-100 transition-opacity cursor-pointer"
+              />
+            </Link>
+            <div className="h-8 w-px bg-slate-200 hidden md:block" />
+            <div>
+              <p className="text-[12px] text-slate-500 font-medium">
+                © {new Date().getFullYear()} Student Forge Technologies Pvt Ltd.
+              </p>
+              <p className="text-[11px] text-slate-400 mt-1">
+                Powered by Cheetah Servers • Redlix Systems, Hyderabad
+              </p>
+            </div>
           </div>
 
           <div className="flex items-center gap-6">
@@ -183,23 +249,23 @@ export default function PortalPage() {
             <motion.div
               initial={{ scale: 0.95 }}
               animate={{ scale: 1 }}
-              className="bg-white max-w-md w-full p-8 shadow-xl rounded-2xl relative"
+              className="bg-white max-w-md w-full p-8 shadow-xl rounded-none relative"
             >
               <button onClick={() => setShowGuide(false)} className="absolute top-6 right-6 text-slate-400 hover:text-slate-600">
                 <X size={20} />
               </button>
               <div className="space-y-6">
-                <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center">
+                <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-none border border-blue-100 flex items-center justify-center">
                   <Info size={24} />
                 </div>
-                <h2 className="text-xl font-medium text-slate-900">How to use the platform</h2>
+                <h2 className="text-xl font-medium text-slate-900 tracking-tight">How to use the platform</h2>
                 <div className="space-y-4 text-[14px] text-slate-600 leading-relaxed">
                   <p>• If you are an <span className="font-semibold">intern</span>, please use the Intern Portal to log in and manage your tasks.</p>
                   <p>• Use the <span className="font-semibold">Explore Courses</span> portal to browse through our current training programs and materials.</p>
                 </div>
                 <button
                   onClick={() => setShowGuide(false)}
-                  className="w-full py-3 bg-blue-600 text-white text-[14px] font-medium rounded-lg hover:bg-blue-700 transition-colors"
+                  className="w-full py-3 bg-blue-600 text-white text-[14px] font-medium rounded-none hover:bg-blue-700 transition-colors"
                 >
                   Close Guide
                 </button>
@@ -219,7 +285,7 @@ export default function PortalPage() {
               <div className="space-y-6">
                 <div className="flex items-center gap-3 font-medium">
                   <ShieldCheck size={22} className="text-blue-100" />
-                  <span className="text-lg">Privacy & Security Control</span>
+                  <span className="text-lg tracking-tight">Privacy & Security Control</span>
                 </div>
 
                 <div className="space-y-4 text-[14px] text-blue-50 leading-relaxed max-w-4xl">
@@ -310,4 +376,3 @@ function PortalCard({ option }: { option: PortalOption }) {
     </motion.div>
   );
 }
-

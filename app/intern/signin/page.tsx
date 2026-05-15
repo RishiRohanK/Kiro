@@ -65,7 +65,7 @@ export default function InternSigninPage() {
     };
 
     return (
-        <div className="h-screen w-full bg-[#F9FAFB] text-[#1F2937] font-sans flex flex-col overflow-hidden selection:bg-blue-100">
+        <div className="min-h-screen w-full bg-[#F9FAFB] text-[#1F2937] font-sans flex flex-col selection:bg-blue-100">
             <StickyBanner className="bg-gradient-to-b from-[#003366] to-[#002244]">
                 <p className="mx-0 max-w-[90%] text-white drop-shadow-md text-[12px] md:text-[13px] font-medium leading-tight text-center md:text-left">
                     Welcome to the Student Forge Intern Portal. Access your training modules, track daily progress, and manage tasks in your personalized dashboard.{" "}
@@ -84,8 +84,8 @@ export default function InternSigninPage() {
             </div>
 
             {/* Main Center Container */}
-            <div className="flex-1 flex items-center justify-center p-4">
-                <div className="w-full max-w-[950px] h-[620px] bg-white border border-slate-200 shadow-sm flex overflow-hidden rounded-xl">
+            <div className="flex-1 flex items-center justify-center p-4 md:p-8">
+                <div className="w-full max-w-[950px] min-h-[500px] md:h-[620px] bg-white border border-slate-200 shadow-sm flex flex-col md:flex-row overflow-hidden rounded-xl">
 
                     {/* Left Panel: Brand Experience */}
                     <div className="hidden md:flex md:w-[40%] bg-slate-50 border-r border-slate-100 p-12 flex-col justify-between relative">
@@ -114,7 +114,7 @@ export default function InternSigninPage() {
                     </div>
 
                     {/* Right Panel: Sign In Form */}
-                    <div className="w-full md:w-[60%] flex flex-col justify-center px-8 lg:px-20 py-8 overflow-y-auto">
+                    <div className="w-full md:w-[60%] flex flex-col justify-center px-6 lg:px-20 py-10 md:py-8 overflow-y-auto">
                         <div className="max-w-[340px] mx-auto w-full">
                             <div className="mb-6">
                                 <h2 className="text-xl font-semibold text-slate-900 tracking-tight">Sign In</h2>
@@ -223,15 +223,25 @@ export default function InternSigninPage() {
             </div>
 
             {/* Bottom Footer */}
-            <footer className="w-full py-8 px-8 flex-none bg-slate-100 border-t border-slate-200">
-                <div className="max-w-[950px] mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
-                    <div className="flex flex-col items-center md:items-start gap-1">
-                        <p className="text-[10px] text-slate-500 font-medium leading-relaxed">
-                            © {new Date().getFullYear()} Student Forge Technologies Pvt Ltd. All rights reserved.
-                        </p>
-                        <p className="text-[9px] text-slate-400 font-medium">
-                            Powered by Cheetah Servers • Redlix Systems, Hyderabad
-                        </p>
+            <footer className="w-full py-6 px-8 flex-none bg-slate-100 border-t border-slate-200">
+                <div className="max-w-[950px] mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+                    <div className="flex flex-col md:flex-row items-center gap-6 text-center md:text-left">
+                        <Link href="https://kiro.redlix.co.in/lms">
+                            <img 
+                                src="https://ik.imagekit.io/dypkhqxip/Screenshot_2026-05-14_at_17.46.09-removebg-preview.png?updatedAt=1778760997901" 
+                                alt="Logo" 
+                                className="h-14 w-auto opacity-80 hover:opacity-100 transition-all cursor-pointer"
+                            />
+                        </Link>
+                        <div className="h-6 w-px bg-slate-300 hidden md:block" />
+                        <div className="flex flex-col gap-1">
+                            <p className="text-[10px] text-slate-500 font-medium leading-relaxed">
+                                © {new Date().getFullYear()} Student Forge Technologies Pvt Ltd.
+                            </p>
+                            <p className="text-[9px] text-slate-400 font-medium">
+                                Powered by Cheetah Servers • Redlix Systems, Hyderabad
+                            </p>
+                        </div>
                     </div>
                     <div className="flex items-center gap-6 text-[10px] text-slate-400 font-semibold">
                         <span className="hover:text-slate-900 cursor-pointer transition-colors">Privacy Policy</span>

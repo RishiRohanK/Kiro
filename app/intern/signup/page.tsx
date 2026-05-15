@@ -250,7 +250,7 @@ export default function InternSignupPage() {
     const REGISTRATIONS_CLOSED = true;
 
     return (
-        <div className="h-screen w-full bg-[#FAFAFA] text-[#1A1C1E] font-sans flex flex-col overflow-hidden selection:bg-blue-100">
+        <div className="min-h-screen w-full bg-[#FAFAFA] text-[#1A1C1E] font-sans flex flex-col selection:bg-blue-100">
             <StickyBanner className="bg-gradient-to-b from-rose-600 to-rose-700">
                 <p className="mx-0 max-w-[90%] text-white drop-shadow-md text-[12px] md:text-[13px] font-medium leading-tight text-center md:text-left">
                     Enrollment for the Summer Bootcamp 2026 is now officially closed. If you have already registered, please sign in to access your dashboard.{" "}
@@ -269,8 +269,8 @@ export default function InternSignupPage() {
                 </nav>
             </header>
 
-            <main className="flex-1 flex items-center justify-center p-6">
-                <div className="w-full max-w-[1050px] h-[640px] bg-white border border-slate-200 shadow-sm flex overflow-hidden rounded-xl">
+            <main className="flex-1 flex items-center justify-center p-4 md:p-10">
+                <div className="w-full max-w-[1050px] min-h-[600px] md:h-[700px] bg-white border border-slate-200 shadow-sm flex flex-col md:flex-row overflow-hidden rounded-xl">
 
                     {/* Left Branding Panel */}
                     <div className="hidden md:flex md:w-[35%] bg-slate-50 border-r border-slate-100 p-10 flex-col justify-between relative">
@@ -299,7 +299,7 @@ export default function InternSignupPage() {
                     </div>
 
                     {/* Right Form Panel */}
-                    <div className="flex-1 flex flex-col p-10 lg:px-16 overflow-y-auto custom-scrollbar">
+                    <div className="flex-1 flex flex-col p-6 md:p-10 lg:px-16 overflow-y-auto custom-scrollbar">
                         <div className="max-w-[520px] w-full mx-auto">
 
                             {/* Enrollment Status Bar */}
@@ -441,15 +441,25 @@ export default function InternSignupPage() {
             </main>
 
             {/* Bottom Footer */}
-            <footer className="w-full py-8 px-10 flex-none bg-slate-100 border-t border-slate-200 mt-auto">
-                <div className="max-w-[1050px] mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
-                    <div className="flex flex-col items-center md:items-start gap-1">
-                        <p className="text-[10px] text-slate-500 font-medium leading-relaxed">
-                            © {new Date().getFullYear()} Student Forge Technologies Pvt Ltd. All rights reserved.
-                        </p>
-                        <p className="text-[9px] text-slate-400 font-medium">
-                            Powered by Cheetah Servers • Redlix Systems, Hyderabad
-                        </p>
+            <footer className="w-full py-6 px-10 flex-none bg-slate-100 border-t border-slate-200 mt-auto">
+                <div className="max-w-[1050px] mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+                    <div className="flex flex-col md:flex-row items-center gap-6 text-center md:text-left">
+                        <Link href="https://kiro.redlix.co.in/lms">
+                            <img 
+                                src="https://ik.imagekit.io/dypkhqxip/Screenshot_2026-05-14_at_17.46.09-removebg-preview.png?updatedAt=1778760997901" 
+                                alt="Logo" 
+                                className="h-14 w-auto opacity-80 hover:opacity-100 transition-all cursor-pointer"
+                            />
+                        </Link>
+                        <div className="h-6 w-px bg-slate-300 hidden md:block" />
+                        <div className="flex flex-col gap-1">
+                            <p className="text-[10px] text-slate-500 font-medium leading-relaxed">
+                                © {new Date().getFullYear()} Student Forge Technologies Pvt Ltd.
+                            </p>
+                            <p className="text-[9px] text-slate-400 font-medium">
+                                Powered by Cheetah Servers • Redlix Systems, Hyderabad
+                            </p>
+                        </div>
                     </div>
                     <div className="flex items-center gap-6 text-[10px] text-slate-400 font-semibold">
                         <span className="hover:text-slate-900 cursor-pointer transition-colors">Privacy Policy</span>
