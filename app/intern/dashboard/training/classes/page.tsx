@@ -148,9 +148,9 @@ export default function TrainingClassesPage() {
                         <div className="mb-8">
                             <div className="relative w-72 h-72 mx-auto">
                                 <img 
-                                    src="https://ik.imagekit.io/dypkhqxip/Access-denied-bro.svg" 
+                                    src="https://img.freepik.com/free-vector/boycott-abstract-concept-vector-illustration-political-program-consumer-activism-collective-behavior-cancel-culture-moral-purchasing-solidarity-action-public-protest-abstract-metaphor_335657-1933.jpg?semt=ais_hybrid&w=740&q=80" 
                                     alt="Access Restricted" 
-                                    className="w-full h-full object-contain grayscale opacity-40"
+                                    className="w-full h-full object-contain grayscale opacity-60"
                                 />
                             </div>
                         </div>
