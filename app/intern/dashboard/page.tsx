@@ -1037,7 +1037,6 @@ function InternDashboardContent() {
                      </>
                   )}
                </div>
-               </div>
 
                <button
                   onClick={() => setShowSupportModal(true)}
