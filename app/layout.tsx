@@ -26,7 +26,6 @@ export const metadata: Metadata = {
   },
 };
 
-import SmoothScroll from "./components/home/SmoothScroll";
 
 export default function RootLayout({
   children,
@@ -48,9 +47,7 @@ export default function RootLayout({
       >
         <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="afterInteractive" />
         <Script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.9.10/dist/dotlottie-wc.js" strategy="lazyOnload" type="module" />
-        <SmoothScroll>
-          {children}
-        </SmoothScroll>
+        {children}
       </body>
     </html>
   );
