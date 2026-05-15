@@ -165,8 +165,20 @@ function InternDashboardLayoutContent({
             }
         };
         fetchStreak();
-        const interval = setInterval(fetchStreak, 300000);
-        return () => clearInterval(interval);
+
+        // Listen for real-time updates from child components
+        const handleUpdate = () => fetchStreak();
+        window.addEventListener('attendance-updated', handleUpdate);
+        
+        // Expose global refresh for other components
+        (window as any).refreshInternStreak = fetchStreak;
+
+        const interval = setInterval(fetchStreak, 15000); // Poll every 15 seconds for real-time feel
+        return () => {
+            clearInterval(interval);
+            window.removeEventListener('attendance-updated', handleUpdate);
+            delete (window as any).refreshInternStreak;
+        };
     }, [user]);
 
     const toggleHand = async () => {
@@ -370,21 +382,41 @@ function InternDashboardLayoutContent({
 
                 {/* Sidebar Desktop */}
                 <aside 
-                    className={`hidden lg:flex fixed left-0 top-14 bottom-0 flex-col z-40 transition-all duration-300 ease-in-out border-r border-zinc-200/50 ${
+                    onMouseEnter={() => isSidebarCollapsed && setIsSidebarCollapsed(false)}
+                    onMouseLeave={() => !isSidebarCollapsed && localStorage.getItem('sidebar_manual_collapse') === 'true' && setIsSidebarCollapsed(true)}
+                    className={`hidden lg:flex fixed left-0 top-14 bottom-0 flex-col z-40 transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] border-r border-zinc-200/50 ${
                         isSidebarCollapsed ? "w-[80px]" : "w-[260px]"
-                    } bg-white shadow-sm`}
+                    } bg-white shadow-[4px_0_24px_rgba(0,0,0,0.02)]`}
                 >
-                    <div className="flex-1 flex flex-col overflow-y-auto overflow-x-hidden">
+                    <div className="flex-1 flex flex-col overflow-y-auto overflow-x-hidden scrollbar-hide">
                         {/* Sidebar Header/Streak Section */}
-                        <div className={`p-4 transition-all duration-300 ${isSidebarCollapsed ? "items-center" : "items-start"}`}>
-                            <div className={`flex items-center gap-3 bg-orange-50 p-3 rounded-2xl border border-orange-100 ${isSidebarCollapsed ? "justify-center w-12 h-12 p-0" : "w-full"}`}>
-                                <div className="bg-orange-500 p-2 rounded-xl shadow-lg shadow-orange-200">
+                        <div className={`p-4 transition-all duration-300 ${isSidebarCollapsed ? "px-4" : "px-5"}`}>
+                            <div className={`flex items-center gap-3 bg-gradient-to-br from-orange-50 to-orange-100/50 p-3 rounded-2xl border border-orange-200/50 relative group/streak ${isSidebarCollapsed ? "justify-center w-12 h-12 p-0 mx-auto" : "w-full"}`}>
+                                <div className="bg-orange-500 p-2 rounded-xl shadow-lg shadow-orange-200 relative">
                                     <Flame size={isSidebarCollapsed ? 20 : 22} className="text-white animate-pulse" />
+                                    {isSidebarCollapsed && (
+                                        <div className="absolute -top-2 -right-2 bg-zinc-900 text-white text-[9px] font-black h-5 w-5 rounded-full flex items-center justify-center border-2 border-white shadow-sm">
+                                            {streakCount}
+                                        </div>
+                                    )}
                                 </div>
                                 {!isSidebarCollapsed && (
                                     <div className="flex flex-col">
-                                        <span className="text-[10px] font-bold text-orange-400 uppercase tracking-widest">Attendance Streak</span>
-                                        <span className="text-lg font-black text-orange-600 leading-tight">{streakCount} Days</span>
+                                        <span className="text-[9px] font-black text-orange-400 uppercase tracking-[0.2em] mb-0.5">Live Streak</span>
+                                        <div className="flex items-baseline gap-1 overflow-hidden">
+                                            <AnimatePresence mode="wait">
+                                                <motion.span 
+                                                    key={streakCount}
+                                                    initial={{ y: 10, opacity: 0 }}
+                                                    animate={{ y: 0, opacity: 1 }}
+                                                    exit={{ y: -10, opacity: 0 }}
+                                                    className="text-xl font-black text-orange-600 leading-none"
+                                                >
+                                                    {streakCount}
+                                                </motion.span>
+                                            </AnimatePresence>
+                                            <span className="text-[10px] font-bold text-orange-500 uppercase tracking-tighter">Days</span>
+                                        </div>
                                     </div>
                                 )}
                             </div>
@@ -487,13 +519,17 @@ function InternDashboardLayoutContent({
                             </button>
                             
                             <button
-                                onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
-                                className={`w-full flex items-center h-11 transition-all font-bold rounded-xl bg-zinc-100 text-zinc-500 hover:bg-zinc-200 ${
+                                onClick={() => {
+                                    const newState = !isSidebarCollapsed;
+                                    setIsSidebarCollapsed(newState);
+                                    localStorage.setItem('sidebar_manual_collapse', newState.toString());
+                                }}
+                                className={`w-full flex items-center h-11 transition-all font-bold rounded-xl bg-zinc-50 text-zinc-400 hover:bg-zinc-100 hover:text-zinc-600 border border-zinc-100/50 ${
                                     isSidebarCollapsed ? "justify-center px-0 mx-auto w-11" : "px-4 gap-3 text-[13px]"
                                 }`}
                             >
-                                <CollapseIcon size={18} className={`transition-transform duration-300 ${isSidebarCollapsed ? "rotate-180" : ""}`} />
-                                {!isSidebarCollapsed && <span>Collapse</span>}
+                                <CollapseIcon size={18} className={`transition-transform duration-500 ${isSidebarCollapsed ? "rotate-180" : ""}`} />
+                                {!isSidebarCollapsed && <span>Collapse Menu</span>}
                             </button>
                         </div>
                     </div>
