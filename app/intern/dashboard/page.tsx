@@ -53,7 +53,8 @@ import {
    ArrowRight,
    Newspaper,
    MapPin,
-   Sparkles
+   Sparkles,
+   Bell
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { io } from "socket.io-client";
