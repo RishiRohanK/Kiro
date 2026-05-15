@@ -84,7 +84,7 @@ export default function BootcampPage() {
 
           {/* Red Alert Section */}
           <div className="mx-6 sm:mx-10 lg:mx-12 mb-8 p-3 bg-red-600 text-white flex items-center justify-center text-center">
-            <p className="text-[13px] font-bold uppercase tracking-wide">
+            <p className="text-[14px] font-bold">
               Registrations will be closed automatically at 6:00 PM today (15-06-2026)
             </p>
           </div>
