@@ -11,6 +11,9 @@ import { Role } from "@prisma/client";
 
 export async function POST(req: Request) {
     
+    // REGISTRATION FREEZE: Closed as of May 15, 2026 - 6:00 PM
+    return NextResponse.json({ error: "Registrations are now closed for the Summer Bootcamp 2026." }, { status: 403 });
+
     try {
         const { name, email, password, college, phone } = await req.json();
 

@@ -381,8 +381,49 @@ function InternDashboardLayoutContent({
                 </div>
             </header>
 
+            {/* ── Training Sub-Navbar (Conditional) ── */}
+            <AnimatePresence>
+                {isTrainingActive && (
+                    <motion.div 
+                        initial={{ y: -50, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        exit={{ y: -50, opacity: 0 }}
+                        className="fixed top-14 left-0 right-0 h-12 bg-zinc-900 border-b border-zinc-800 z-40 flex items-center shadow-lg lg:left-[var(--sidebar-width)] transition-all duration-500"
+                        style={{ 
+                            '--sidebar-width': isSidebarCollapsed ? '80px' : '280px' 
+                        } as any}
+                    >
+                        <div className="flex-1 max-w-[1600px] mx-auto px-4 md:px-8 flex items-center justify-start gap-1 md:gap-8 overflow-x-auto scrollbar-hide">
+                            {trainingSubItems.map((sub) => {
+                                const isSubActive = pathname === new URL(sub.slug, "http://localhost").pathname;
+                                return (
+                                    <Link 
+                                        key={sub.name} 
+                                        href={sub.slug}
+                                        className={`flex items-center gap-2.5 px-4 h-full relative group transition-all shrink-0 ${
+                                            isSubActive ? "text-white" : "text-zinc-400 hover:text-zinc-200"
+                                        }`}
+                                    >
+                                        <sub.icon size={16} strokeWidth={isSubActive ? 2.5 : 2} className={isSubActive ? "text-blue-400" : "group-hover:text-zinc-300"} />
+                                        <span className={`text-[11px] font-bold uppercase tracking-widest whitespace-nowrap ${isSubActive ? "opacity-100" : "opacity-70 group-hover:opacity-100"}`}>
+                                            {sub.name}
+                                        </span>
+                                        {isSubActive && (
+                                            <motion.div 
+                                                layoutId="activeSubNav"
+                                                className="absolute bottom-0 left-0 right-0 h-[3px] bg-blue-500 rounded-t-full shadow-[0_-4px_12px_rgba(59,130,246,0.5)]"
+                                            />
+                                        )}
+                                    </Link>
+                                );
+                            })}
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
             {/* ── Body: Sidebar + Main ── */}
-            <div className="flex h-[calc(100vh-56px)] overflow-hidden">
+            <div className={`flex h-[calc(100vh-56px)] overflow-hidden transition-all duration-500 ${isTrainingActive ? "pt-12" : ""}`}>
 
                 {/* Sidebar Desktop */}
                 <aside 

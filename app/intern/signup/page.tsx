@@ -246,6 +246,8 @@ export default function InternSignupPage() {
         }
     };
 
+    const REGISTRATIONS_CLOSED = true;
+
     return (
         <div className="min-h-screen flex flex-col md:flex-row bg-white font-sans overflow-x-hidden">
 
@@ -285,19 +287,40 @@ export default function InternSignupPage() {
                 <div className="max-w-[480px] w-full mx-auto space-y-8">
 
                     <div className="space-y-6">
-                        <div className="p-4 bg-emerald-50 rounded-none flex items-center gap-4">
-                            <div className="h-10 w-10 bg-emerald-600 text-white flex items-center justify-center shrink-0">
-                                <Bell size={20} />
+                        {REGISTRATIONS_CLOSED ? (
+                            <div className="p-6 bg-rose-50 border border-rose-100 rounded-none flex flex-col gap-4">
+                                <div className="flex items-center gap-4">
+                                    <div className="h-10 w-10 bg-rose-600 text-white flex items-center justify-center shrink-0">
+                                        <ShieldAlert size={20} />
+                                    </div>
+                                    <div>
+                                        <p className="text-[14px] font-bold text-rose-900 leading-none mb-1">Registrations Closed</p>
+                                        <p className="text-[11px] text-rose-700 font-medium leading-none">Enrollment for the Summer Bootcamp 2026 is now officially closed.</p>
+                                    </div>
+                                </div>
+                                <div className="pt-4 border-t border-rose-100">
+                                    <p className="text-[12px] text-rose-600 font-medium leading-relaxed">
+                                        The registration deadline (May 15, 2026 - 6:00 PM) has passed. We are no longer accepting new interns for this batch. If you have already registered, please login to access your dashboard.
+                                    </p>
+                                </div>
                             </div>
-                            <div>
-                                <p className="text-[14px] font-bold text-emerald-900 leading-none mb-1">Welcome to bootcamp interns</p>
-                                <p className="text-[11px] text-emerald-700 font-medium leading-none">Register your account to access your industrial workspace.</p>
+                        ) : (
+                            <div className="p-4 bg-emerald-50 rounded-none flex items-center gap-4">
+                                <div className="h-10 w-10 bg-emerald-600 text-white flex items-center justify-center shrink-0">
+                                    <Bell size={20} />
+                                </div>
+                                <div>
+                                    <p className="text-[14px] font-bold text-emerald-900 leading-none mb-1">Welcome to bootcamp interns</p>
+                                    <p className="text-[11px] text-emerald-700 font-medium leading-none">Register your account to access your industrial workspace.</p>
+                                </div>
                             </div>
-                        </div>
-                        <h1 className="text-[#003366] text-2xl font-bold tracking-tight">Register account</h1>
+                        )}
+                        <h1 className="text-[#003366] text-2xl font-bold tracking-tight">
+                            {REGISTRATIONS_CLOSED ? "Enrollment Ended" : "Register account"}
+                        </h1>
                     </div>
 
-                    <form onSubmit={handleSignup} className="space-y-5">
+                    <form onSubmit={handleSignup} className={`space-y-5 ${REGISTRATIONS_CLOSED ? "opacity-40 pointer-events-none grayscale" : ""}`}>
                         <div className="grid grid-cols-2 gap-4">
                             <div className="relative group">
                                 <span className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 group-focus-within:text-[#003366]">
