@@ -82,6 +82,17 @@ export default function BootcampPage() {
             <p className="text-[13px] sm:text-[14px] font-medium text-zinc-500">Platform An initiative by Student Forge</p>
           </div>
 
+          {/* Red Alert Section */}
+          <div className="mx-6 sm:mx-10 lg:mx-12 mb-8 p-4 bg-red-50 border-l-4 border-red-600 flex items-center gap-4 animate-pulse">
+            <div className="h-10 w-10 bg-red-600 text-white flex items-center justify-center shrink-0 rounded-full">
+              <Clock size={20} />
+            </div>
+            <div>
+              <p className="text-[14px] font-bold text-red-900 leading-none mb-1">Urgent: Registration Closing Soon</p>
+              <p className="text-[12px] text-red-700 font-medium leading-none">Till 6:00 PM today 15-06-2026 the registrations will be closed automatically.</p>
+            </div>
+          </div>
+
           <div className="px-6 sm:px-10 lg:px-12 pb-12">
             <div className="flex flex-col lg:flex-row gap-10 items-start">
               {/* Main Information Block */}
