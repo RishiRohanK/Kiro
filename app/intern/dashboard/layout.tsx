@@ -57,6 +57,10 @@ function InternDashboardLayoutContent({
 
     useEffect(() => {
         setMounted(true);
+        const savedCollapse = localStorage.getItem('sidebar_manual_collapse');
+        if (savedCollapse === 'true') {
+            setIsSidebarCollapsed(true);
+        }
         const initSession = async () => {
             let userData = null;
             const storedUser = localStorage.getItem("intern_user");
@@ -382,8 +386,6 @@ function InternDashboardLayoutContent({
 
                 {/* Sidebar Desktop */}
                 <aside 
-                    onMouseEnter={() => isSidebarCollapsed && setIsSidebarCollapsed(false)}
-                    onMouseLeave={() => !isSidebarCollapsed && localStorage.getItem('sidebar_manual_collapse') === 'true' && setIsSidebarCollapsed(true)}
                     className={`hidden lg:flex fixed left-0 top-14 bottom-0 flex-col z-40 transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] border-r border-zinc-200/50 ${
                         isSidebarCollapsed ? "w-[80px]" : "w-[260px]"
                     } bg-white shadow-[4px_0_24px_rgba(0,0,0,0.02)]`}
@@ -530,6 +532,7 @@ function InternDashboardLayoutContent({
                             >
                                 <CollapseIcon size={18} className={`transition-transform duration-500 ${isSidebarCollapsed ? "rotate-180" : ""}`} />
                                 {!isSidebarCollapsed && <span>Collapse Menu</span>}
+                                {isSidebarCollapsed && <div className="absolute left-full ml-3 px-2 py-1 bg-zinc-900 text-white text-[10px] font-bold rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-[100] pointer-events-none">Expand Menu</div>}
                             </button>
                         </div>
                     </div>
