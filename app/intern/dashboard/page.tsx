@@ -245,6 +245,13 @@ function InternDashboardContent() {
    }, [router]);
 
    const [showAttendanceAlert, setShowAttendanceAlert] = useState(true);
+   const [currentTime, setCurrentTime] = useState(new Date());
+
+   useEffect(() => {
+      const timer = setInterval(() => setCurrentTime(new Date()), 60000);
+      return () => clearInterval(timer);
+   }, []);
+
    const [showChatSidebar, setShowChatSidebar] = useState(true);
    const [showUIUXModal, setShowUIUXModal] = useState(false);
    const [uiuxSubmitting, setUiuxSubmitting] = useState(false);
@@ -919,14 +926,12 @@ function InternDashboardContent() {
                               View All Sessions
                            </Link>
                         </div>
-
                         {(() => {
-                           // Dynamic Session Logic (Synchronized with Classes Page)
-                           const now = new Date();
-                           const todayStr = now.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
-                           const isSixPM = now.getHours() >= 18;
+                           const todayStr = currentTime.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
+                           const currentHour = currentTime.getHours();
+                           const isSixPM = currentHour >= 18 && currentHour < 20;
                            const meetingLink = "https://meet.google.com/mji-bixk-xmh";
-
+                           
                            // Master Training Schedule
                            const trainingSessions = [
                               { date: "15/05/2026", title: "Live Technical Orientation & Setup", topic: "Development Environment & Workflow" },
