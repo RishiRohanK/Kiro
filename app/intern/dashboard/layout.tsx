@@ -382,49 +382,50 @@ function InternDashboardLayoutContent({
             </header>
 
             {/* ── Body: Sidebar + Main ── */}
-            <div className="flex min-h-[calc(100vh-56px)]">
+            <div className="flex h-[calc(100vh-56px)] overflow-hidden">
 
                 {/* Sidebar Desktop */}
                 <aside 
-                    className={`hidden lg:flex fixed left-0 top-14 bottom-0 flex-col z-40 transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] border-r border-zinc-200/50 ${
-                        isSidebarCollapsed ? "w-[80px]" : "w-[260px]"
-                    } bg-white shadow-[4px_0_24px_rgba(0,0,0,0.02)]`}
+                    className={`hidden lg:flex flex-col z-40 transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] border-r border-zinc-200/50 ${
+                        isSidebarCollapsed ? "w-[80px]" : "w-[280px]"
+                    } bg-white shadow-[4px_0_24px_rgba(0,0,0,0.02)] h-full`}
                 >
-                    <div className="flex-1 flex flex-col overflow-y-auto overflow-x-hidden scrollbar-hide">
-                        {/* Sidebar Header/Streak Section */}
-                        <div className={`p-4 transition-all duration-300 ${isSidebarCollapsed ? "px-4" : "px-5"}`}>
-                            <div className={`flex items-center gap-3 bg-gradient-to-br from-orange-50 to-orange-100/50 p-3 rounded-2xl border border-orange-200/50 relative group/streak ${isSidebarCollapsed ? "justify-center w-12 h-12 p-0 mx-auto" : "w-full"}`}>
-                                <div className="bg-orange-500 p-2 rounded-xl shadow-lg shadow-orange-200 relative">
-                                    <Flame size={isSidebarCollapsed ? 20 : 22} className="text-white animate-pulse" />
-                                    {isSidebarCollapsed && (
-                                        <div className="absolute -top-2 -right-2 bg-zinc-900 text-white text-[9px] font-black h-5 w-5 rounded-full flex items-center justify-center border-2 border-white shadow-sm">
-                                            {streakCount}
+                    <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
+                        {/* Scrollable Area */}
+                        <div className="flex-1 overflow-y-auto overflow-x-hidden scrollbar-hide py-4 px-3 space-y-1">
+                            {/* Sidebar Header/Streak Section */}
+                            <div className={`mb-6 transition-all duration-300 ${isSidebarCollapsed ? "px-1" : "px-2"}`}>
+                                <div className={`flex items-center gap-3 bg-gradient-to-br from-orange-50 to-orange-100/50 p-3 rounded-2xl border border-orange-200/50 relative group/streak ${isSidebarCollapsed ? "justify-center w-12 h-12 p-0 mx-auto" : "w-full"}`}>
+                                    <div className="bg-orange-500 p-2 rounded-xl shadow-lg shadow-orange-200 relative shrink-0">
+                                        <Flame size={isSidebarCollapsed ? 20 : 22} className="text-white animate-pulse" />
+                                        {isSidebarCollapsed && (
+                                            <div className="absolute -top-2 -right-2 bg-zinc-900 text-white text-[9px] font-black h-5 w-5 rounded-full flex items-center justify-center border-2 border-white shadow-sm">
+                                                {streakCount}
+                                            </div>
+                                        )}
+                                    </div>
+                                    {!isSidebarCollapsed && (
+                                        <div className="flex flex-col min-w-0">
+                                            <span className="text-[9px] font-black text-orange-400 uppercase tracking-[0.2em] mb-0.5 truncate">Live Streak</span>
+                                            <div className="flex items-baseline gap-1">
+                                                <AnimatePresence mode="wait">
+                                                    <motion.span 
+                                                        key={streakCount}
+                                                        initial={{ y: 10, opacity: 0 }}
+                                                        animate={{ y: 0, opacity: 1 }}
+                                                        exit={{ y: -10, opacity: 0 }}
+                                                        className="text-xl font-black text-orange-600 leading-none"
+                                                    >
+                                                        {streakCount}
+                                                    </motion.span>
+                                                </AnimatePresence>
+                                                <span className="text-[10px] font-bold text-orange-500 uppercase tracking-tighter">Days</span>
+                                            </div>
                                         </div>
                                     )}
                                 </div>
-                                {!isSidebarCollapsed && (
-                                    <div className="flex flex-col">
-                                        <span className="text-[9px] font-black text-orange-400 uppercase tracking-[0.2em] mb-0.5">Live Streak</span>
-                                        <div className="flex items-baseline gap-1 overflow-hidden">
-                                            <AnimatePresence mode="wait">
-                                                <motion.span 
-                                                    key={streakCount}
-                                                    initial={{ y: 10, opacity: 0 }}
-                                                    animate={{ y: 0, opacity: 1 }}
-                                                    exit={{ y: -10, opacity: 0 }}
-                                                    className="text-xl font-black text-orange-600 leading-none"
-                                                >
-                                                    {streakCount}
-                                                </motion.span>
-                                            </AnimatePresence>
-                                            <span className="text-[10px] font-bold text-orange-500 uppercase tracking-tighter">Days</span>
-                                        </div>
-                                    </div>
-                                )}
                             </div>
-                        </div>
 
-                        <div className="flex flex-col py-4 px-3 space-y-1">
                             <nav className="space-y-1">
                                 {navItems.filter(i => !i.hideFromSidebar).map((item) => {
                                     const itemUrl = new URL(item.slug, "http://localhost");
@@ -432,8 +433,7 @@ function InternDashboardLayoutContent({
                                     const itemView = itemUrl.searchParams.get("view");
                                     const isActive = pathname === itemPath && (itemView === currentView || (!itemView && !currentView));
                                     
-                                    // Handle Training special case
-                                    if (item.name === "Training") return null; // We handle this separately or grouped
+                                    if (item.name === "Training") return null;
 
                                     return (
                                         <Link 
@@ -447,7 +447,7 @@ function InternDashboardLayoutContent({
                                         >
                                             <item.icon size={20} strokeWidth={isActive ? 2.5 : 2} className={isActive ? "text-white" : "text-zinc-400 group-hover:text-[#003366]"} />
                                             {!isSidebarCollapsed && (
-                                                <span className="flex-1 text-[13px] font-semibold tracking-tight">{item.name}</span>
+                                                <span className="flex-1 text-[13px] font-semibold tracking-tight truncate">{item.name}</span>
                                             )}
                                             {isActive && !isSidebarCollapsed && (
                                                 <div className="absolute right-2 h-1.5 w-1.5 rounded-full bg-white/40" />
@@ -475,7 +475,7 @@ function InternDashboardLayoutContent({
                                         <BookOpen size={20} strokeWidth={isTrainingActive ? 2.5 : 2} className={isTrainingActive ? "text-white" : "text-zinc-400 group-hover:text-[#003366]"} />
                                         {!isSidebarCollapsed && (
                                             <>
-                                                <span className="flex-1 text-[13px] font-semibold text-left">Training</span>
+                                                <span className="flex-1 text-[13px] font-semibold text-left truncate">Training</span>
                                                 <ChevronDown
                                                     size={14}
                                                     className={`transition-transform duration-200 text-white/50 ${isTrainingOpen || isTrainingActive ? "rotate-180" : ""}`}
@@ -498,7 +498,7 @@ function InternDashboardLayoutContent({
                                                         className={`flex items-center h-10 px-3 gap-3 transition-all rounded-lg group ${isSubActive ? "text-[#003366] font-bold bg-blue-50/50" : "text-zinc-400 hover:text-[#003366] hover:bg-zinc-50"}`}
                                                     >
                                                         <sub.icon size={16} strokeWidth={isSubActive ? 2.5 : 2} />
-                                                        <span className="flex-1 text-[12px]">{sub.name}</span>
+                                                        <span className="flex-1 text-[12px] truncate">{sub.name}</span>
                                                     </Link>
                                                 );
                                             })}
@@ -508,16 +508,17 @@ function InternDashboardLayoutContent({
                             </nav>
                         </div>
 
-                        <div className="mt-auto p-4 space-y-2">
+                        {/* Sidebar Footer - Controls */}
+                        <div className="mt-auto p-4 space-y-2 border-t border-zinc-50 bg-white">
                             <button
                                 onClick={toggleHand}
                                 disabled={isTogglingHand}
                                 className={`w-full flex items-center transition-all font-bold rounded-xl ${
-                                    handRaised ? "bg-amber-500 text-white" : "bg-yellow-400 text-[#003366]"
+                                    handRaised ? "bg-amber-500 text-white shadow-lg shadow-amber-200/50" : "bg-yellow-400 text-[#003366] hover:bg-yellow-300"
                                 } ${isSidebarCollapsed ? "h-11 w-11 justify-center px-0 mx-auto" : "h-11 px-4 gap-3 text-[13px]"}`}
                             >
-                                <Hand size={18} className={handRaised ? "animate-bounce" : ""} />
-                                {!isSidebarCollapsed && <span>{handRaised ? "Active" : "Help"}</span>}
+                                <Hand size={18} className={handRaised ? "animate-bounce" : "shrink-0"} />
+                                {!isSidebarCollapsed && <span className="truncate">{handRaised ? "Active" : "Help"}</span>}
                             </button>
                             
                             <button
@@ -530,24 +531,26 @@ function InternDashboardLayoutContent({
                                     isSidebarCollapsed ? "justify-center px-0 mx-auto w-11" : "px-4 gap-3 text-[13px]"
                                 }`}
                             >
-                                <CollapseIcon size={18} className={`transition-transform duration-500 ${isSidebarCollapsed ? "rotate-180" : ""}`} />
-                                {!isSidebarCollapsed && <span>Collapse Menu</span>}
+                                <CollapseIcon size={18} className={`transition-transform duration-500 shrink-0 ${isSidebarCollapsed ? "rotate-180" : ""}`} />
+                                {!isSidebarCollapsed && <span className="truncate">Collapse Menu</span>}
                                 {isSidebarCollapsed && <div className="absolute left-full ml-3 px-2 py-1 bg-zinc-900 text-white text-[10px] font-bold rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-[100] pointer-events-none">Expand Menu</div>}
                             </button>
+
+                            {!isSidebarCollapsed && (
+                                <div className="pt-2 flex items-center justify-center">
+                                    <span className="text-[10px] font-bold text-zinc-300 uppercase tracking-widest">Platform v2.1</span>
+                                </div>
+                            )}
                         </div>
                     </div>
-
-                    {!isSidebarCollapsed && (
-                        <div className="py-4 flex items-center justify-center gap-2 border-t border-zinc-50">
-                            <span className="text-[10px] font-bold text-zinc-300 uppercase tracking-widest">Platform v2.1</span>
-                        </div>
-                    )}
                 </aside>
 
-                {/* ── Main Content ── */}
-                <div className={`flex-1 flex flex-col min-w-0 transition-all duration-300 ${isSidebarCollapsed ? "lg:pl-[80px]" : "lg:pl-[260px]"}`}>
-                    <main className="flex-1 p-4 lg:p-0 pb-20 lg:pb-10">
-                        {children}
+                {/* ── Main Content Area ── */}
+                <div className="flex-1 min-w-0 flex flex-col h-full bg-[#FBFBFB] relative">
+                    <main className="flex-1 overflow-y-auto overflow-x-hidden scrollbar-hide">
+                        <div className="w-full max-w-[1600px] mx-auto p-4 md:p-6 lg:p-8 xl:p-10 pb-32 lg:pb-16">
+                            {children}
+                        </div>
                     </main>
 
                     { }

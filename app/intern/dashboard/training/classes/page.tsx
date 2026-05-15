@@ -135,15 +135,15 @@ export default function TrainingClassesPage() {
     const isBatch3 = userBatch === "Batch 3";
 
     return (
-        <div className="min-h-screen bg-[#FBFBFB] font-sans pb-20">
+        <div className="w-full space-y-8">
             {/* Header - Changed to Blue */}
-            <div className="px-5 lg:px-10 py-8 flex items-center gap-4">
+            <div className="py-4 flex items-center gap-4">
                 <ClipboardList size={32} className="text-[#003366]" />
                 <h1 className="text-3xl font-medium text-zinc-800 tracking-tight">Training</h1>
             </div>
 
             {!isBatch3 ? (
-                <div className="px-5 lg:px-10 py-12">
+                <div className="py-12">
                     <div className="w-full min-h-[450px] bg-white border border-zinc-100 rounded-2xl flex flex-col items-center justify-center text-center p-12 shadow-sm">
                         <div className="mb-8">
                             <div className="relative w-72 h-72 mx-auto">
@@ -171,7 +171,7 @@ export default function TrainingClassesPage() {
             ) : (
                 <>
                     {/* Navigation & Controls */}
-                    <div className="px-5 lg:px-10 py-1 flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-zinc-200">
+                    <div className="py-1 flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-zinc-200">
                         {/* Tabs - Changed to Blue */}
                         <div className="flex items-center gap-8">
                             {tabs.map((tab) => (
@@ -221,7 +221,7 @@ export default function TrainingClassesPage() {
                     </div>
 
                     {/* Filters Row */}
-                    <div className="px-5 lg:px-10 py-8 flex flex-col md:flex-row items-center justify-between gap-4">
+                    <div className="py-8 flex flex-col md:flex-row items-center justify-between gap-4">
                         {/* Status Pills - Changed to Blue */}
                         <div className="flex items-center gap-3 w-full md:w-auto overflow-x-auto pb-2 md:pb-0 scrollbar-hide">
                             {statuses.map((s) => (
@@ -251,7 +251,7 @@ export default function TrainingClassesPage() {
                     </div>
 
                     {/* Content Area */}
-                    <div className="px-5 lg:px-10 py-6">
+                    <div className="py-6">
                         {filteredClasses.length > 0 ? (
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 {filteredClasses.map((cls, idx) => (
