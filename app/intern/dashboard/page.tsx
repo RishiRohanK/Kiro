@@ -933,64 +933,109 @@ function InternDashboardContent() {
                            };
 
                            return (
-                              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                 <div className="bg-white border border-zinc-100 rounded-xl p-6 flex flex-col justify-between hover:shadow-lg transition-all group relative overflow-hidden">
-                                    <div className="absolute top-0 right-0 p-4 opacity-5">
-                                       <School size={80} />
-                                    </div>
-                                    <div className="space-y-4">
-                                       <div className="flex items-center gap-3">
-                                          {currentClass.status === "In Progress" ? (
-                                             <span className="flex items-center gap-1.5 px-2 py-1 bg-red-50 text-red-600 rounded text-[9px] font-black tracking-widest animate-pulse">
-                                                <div className="h-1.5 w-1.5 rounded-full bg-red-600" />
-                                                LIVE NOW
-                                             </span>
-                                          ) : (
-                                             <span className="px-2 py-1 bg-blue-50 text-blue-600 rounded text-[9px] font-black tracking-widest">
-                                                UPCOMING
-                                             </span>
-                                          )}
-                                          <span className="text-[11px] font-medium text-zinc-400">{currentClass.date} • {currentClass.time}</span>
-                                       </div>
-                                       <div className="space-y-1">
-                                          <h3 className="text-xl font-bold text-[#003366] tracking-tight group-hover:text-blue-600 transition-colors">
-                                             {currentClass.title}
-                                          </h3>
-                                          <p className="text-[13px] text-zinc-500 font-medium leading-relaxed">
-                                             Focus: {currentClass.topic}
-                                          </p>
-                                       </div>
-                                    </div>
-                                    <div className="mt-8">
-                                       <a 
-                                          href={meetingLink}
-                                          target="_blank"
-                                          className="inline-flex items-center justify-center gap-2 px-8 h-11 bg-[#003366] text-white text-[11px] font-bold uppercase tracking-widest hover:bg-black transition-all shadow-md shadow-blue-900/10"
-                                       >
-                                          Join Session <ArrowUpRight size={14} />
-                                       </a>
-                                    </div>
-                                 </div>
+                               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                  {/* Training Card (Mirrored from Classes Page) */}
+                                  <div className="bg-white border border-zinc-100 rounded-xl overflow-hidden hover:shadow-lg hover:border-[#003366]/20 transition-all group flex flex-col sm:flex-row min-h-[180px]">
+                                     {/* Left Side: Image */}
+                                     <div className="sm:w-1/3 h-40 sm:h-auto relative overflow-hidden bg-zinc-100 border-r border-zinc-50 shrink-0">
+                                        <img 
+                                           src="https://images.unsplash.com/photo-1587620962725-abab7fe55159?q=80&w=1000&auto=format&fit=crop" 
+                                           alt="Technical Orientation" 
+                                           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                        />
+                                        {currentClass.status === "In Progress" && (
+                                           <div className="absolute top-2 left-2 px-2 py-1 bg-red-500/90 backdrop-blur-sm rounded text-[8px] font-black text-white tracking-widest animate-pulse">
+                                              LIVE
+                                           </div>
+                                        )}
+                                     </div>
 
-                                 <div className="bg-zinc-50 border border-zinc-100 rounded-xl p-6 flex flex-col justify-between">
-                                    <div className="space-y-2">
-                                       <h4 className="text-[10px] font-black text-zinc-400 uppercase tracking-widest">System Notice</h4>
-                                       <p className="text-[13px] text-zinc-600 font-medium leading-relaxed">
-                                          Please ensure your development environment is ready before the session begins. Attendance is mandatory for Batch 3 certification.
-                                       </p>
-                                    </div>
-                                    <div className="mt-6 flex items-center gap-4 text-zinc-400">
-                                       <div className="flex items-center gap-2">
-                                          <Users size={14} />
-                                          <span className="text-[11px]">80+ Joined</span>
-                                       </div>
-                                       <div className="flex items-center gap-2">
-                                          <Clock size={14} />
-                                          <span className="text-[11px]">90 Mins</span>
-                                       </div>
-                                    </div>
-                                 </div>
-                              </div>
+                                     {/* Right Side: Content */}
+                                     <div className="flex-1 p-5 flex flex-col justify-between">
+                                        <div className="space-y-3">
+                                           <div className="flex items-center justify-between">
+                                              <div className="flex items-center gap-2">
+                                                 <Calendar size={13} className="text-zinc-300" />
+                                                 <span className="text-[11px] font-medium text-zinc-400">{currentClass.date}</span>
+                                              </div>
+                                              <div className="flex items-center gap-2">
+                                                 {currentClass.status === "In Progress" ? (
+                                                    <span className="flex items-center gap-1 text-[9px] font-bold text-red-500 animate-pulse">
+                                                       <div className="h-1.5 w-1.5 rounded-full bg-red-500" />
+                                                       LIVE NOW
+                                                    </span>
+                                                 ) : (
+                                                    <span className="text-[9px] font-bold px-2 py-0.5 rounded tracking-wide text-emerald-600 bg-emerald-50">
+                                                       TODAY
+                                                    </span>
+                                                 )}
+                                              </div>
+                                           </div>
+
+                                           <div>
+                                              <h3 className="text-[15px] font-bold text-[#003366] group-hover:text-blue-600 transition-colors leading-tight">
+                                                 {currentClass.title}
+                                              </h3>
+                                              <div className="flex flex-wrap items-center gap-3 mt-3 text-zinc-400">
+                                                 <div className="flex items-center gap-1.5">
+                                                    <Clock size={12} className="text-zinc-300" />
+                                                    <span className="text-[11px]">{currentClass.time}</span>
+                                                 </div>
+                                                 <div className="flex items-center gap-1.5">
+                                                    <User size={12} className="text-zinc-300" />
+                                                    <span className="text-[11px] font-medium">Technical Team</span>
+                                                 </div>
+                                              </div>
+                                           </div>
+                                        </div>
+
+                                        <div className="mt-5">
+                                           <a 
+                                              href={meetingLink}
+                                              target="_blank"
+                                              rel="noopener noreferrer"
+                                              className="block w-full py-2.5 text-[10px] font-bold uppercase tracking-widest rounded-lg transition-all text-center border bg-[#003366] text-white border-[#003366] hover:bg-black shadow-md shadow-blue-900/10"
+                                           >
+                                              Join Session
+                                           </a>
+                                        </div>
+                                     </div>
+                                  </div>
+
+                                  {/* Notice Card */}
+                                  <div className="bg-zinc-50 border border-zinc-100 rounded-xl p-6 flex flex-col justify-between">
+                                     <div className="space-y-4">
+                                        <div className="flex items-center gap-2">
+                                           <Bell size={16} className="text-amber-500" />
+                                           <h4 className="text-[10px] font-black text-zinc-400 uppercase tracking-widest">Mandatory Instructions</h4>
+                                        </div>
+                                        <div className="space-y-3">
+                                           <div className="flex gap-3">
+                                              <div className="h-5 w-5 rounded-full bg-white border border-zinc-200 flex items-center justify-center shrink-0 text-[10px] font-bold text-zinc-500">1</div>
+                                              <p className="text-[13px] text-zinc-600 font-medium leading-tight">Ensure stable internet connection</p>
+                                           </div>
+                                           <div className="flex gap-3">
+                                              <div className="h-5 w-5 rounded-full bg-white border border-zinc-200 flex items-center justify-center shrink-0 text-[10px] font-bold text-zinc-500">2</div>
+                                              <p className="text-[13px] text-zinc-600 font-medium leading-tight">Install Node.js and VS Code</p>
+                                           </div>
+                                           <div className="flex gap-3">
+                                              <div className="h-5 w-5 rounded-full bg-white border border-zinc-200 flex items-center justify-center shrink-0 text-[10px] font-bold text-zinc-500">3</div>
+                                              <p className="text-[13px] text-zinc-600 font-medium leading-tight">Keep cameras on during orientation</p>
+                                           </div>
+                                        </div>
+                                     </div>
+                                     <div className="mt-6 flex items-center gap-4 text-zinc-400">
+                                        <div className="flex items-center gap-2">
+                                           <Users size={14} />
+                                           <span className="text-[11px] font-bold tracking-tight">80+ Joined</span>
+                                        </div>
+                                        <div className="flex items-center gap-2">
+                                           <Clock size={14} />
+                                           <span className="text-[11px] font-bold tracking-tight">90 Mins</span>
+                                        </div>
+                                     </div>
+                                  </div>
+                               </div>
                            );
                         })()}
                      </div>
