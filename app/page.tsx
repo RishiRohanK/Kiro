@@ -86,7 +86,7 @@ export default function LandingPage() {
             <HelpCircle size={15} /> <span>Help Guide</span>
           </button>
           
-          <Link href="/support" className="hidden sm:flex px-4 md:px-5 py-2 bg-blue-600 text-white text-[12px] md:text-[13px] font-medium rounded-none hover:bg-blue-700 transition-all shadow-sm">
+          <Link href="https://www.redlix.co.in/intern-support" className="hidden sm:flex px-4 md:px-5 py-2 bg-blue-600 text-white text-[12px] md:text-[13px] font-medium rounded-none hover:bg-blue-700 transition-all shadow-sm">
             Support
           </Link>
 
@@ -142,7 +142,7 @@ export default function LandingPage() {
                  <HelpCircle size={16} className="text-slate-400" />
                </button>
                <Link 
-                 href="/support" 
+                 href="https://www.redlix.co.in/intern-support" 
                  onClick={() => setIsMobileMenuOpen(false)}
                  className="flex items-center justify-center w-full p-4 bg-blue-600 text-white text-[13px] font-bold uppercase tracking-wider"
                >
