@@ -598,7 +598,7 @@ function InternDashboardLayoutContent({
 
                 {/* ── Main Content Area ── */}
                 <div className="flex-1 min-w-0 flex flex-col h-full bg-[#FBFBFB] relative">
-                    <main className="flex-1 overflow-y-auto overflow-x-hidden scrollbar-hide">
+                    <main className="flex-1 overflow-y-auto overflow-x-hidden">
                         <div className="w-full max-w-[1600px] mx-auto p-4 md:p-6 lg:p-8 xl:p-10 pb-32 lg:pb-16">
                             {children}
                         </div>
