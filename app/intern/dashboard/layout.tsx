@@ -401,11 +401,11 @@ function InternDashboardLayoutContent({
                                         key={sub.name} 
                                         href={sub.slug}
                                         className={`flex items-center gap-2.5 px-4 h-full relative group transition-all shrink-0 ${
-                                            isSubActive ? "text-white" : "text-zinc-400 hover:text-zinc-200"
+                                            isSubActive ? "text-white" : "text-white/70 hover:text-white"
                                         }`}
                                     >
-                                        <sub.icon size={16} strokeWidth={isSubActive ? 2.5 : 2} className={isSubActive ? "text-blue-400" : "group-hover:text-zinc-300"} />
-                                        <span className={`text-[11px] font-bold uppercase tracking-widest whitespace-nowrap ${isSubActive ? "opacity-100" : "opacity-70 group-hover:opacity-100"}`}>
+                                        <sub.icon size={16} strokeWidth={isSubActive ? 2.5 : 2} className={isSubActive ? "text-white shadow-[0_0_10px_rgba(255,255,255,0.3)]" : "text-white/60 group-hover:text-white transition-colors"} />
+                                        <span className={`text-[11px] font-black uppercase tracking-widest whitespace-nowrap transition-all ${isSubActive ? "opacity-100" : "opacity-70 group-hover:opacity-100"}`}>
                                             {sub.name}
                                         </span>
                                         {isSubActive && (
