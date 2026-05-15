@@ -54,7 +54,7 @@ export default function TrainingClassesPage() {
     const classes = (() => {
         // ... (previous classes generation logic)
         const list = [];
-        const meetingLink = "https://meet.google.com/ugc-gfdx-sbq";
+        const meetingLink = "https://meet.google.com/mji-bixk-xmh";
         const today = new Date();
         const now = new Date();
         
