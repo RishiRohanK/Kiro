@@ -80,31 +80,45 @@ export default function TrainingClassesPage() {
             };
         };
 
-        // Today's Session (15-05-2026)
-        list.push(createSession(
-            "class-today",
-            "Live Technical Orientation & Setup",
-            "15/05/2026",
-            "6:00 PM - 7:30 PM",
-            "Development Environment & Workflow"
-        ));
+        // Master Training Syllabus (32 Days)
+        const syllabus = [
+            { date: "15/05/2026", title: "Day 01: Introduction to Web & HTML Structure", topic: "Personal portfolio page" },
+            { date: "16/05/2026", title: "Day 02: Forms, Tables & Semantic HTML", topic: "Student registration form" },
+            { date: "17/05/2026", title: "Day 03: CSS Selectors, Box Model & Flexbox", topic: "Style the form professionally" },
+            { date: "18/05/2026", title: "Day 04: Responsive Design & Media Queries", topic: "Responsive navbar & card layout" },
+            { date: "19/05/2026", title: "Day 05: JS Variables, Functions & Arrays", topic: "Student marks calculator" },
+            { date: "20/05/2026", title: "Day 06: DOM Manipulation & LocalStorage", topic: "To-do list using DOM" },
+            { date: "21/05/2026", title: "Day 07: ES6: Arrow functions & Destructuring", topic: "Convert old JS code into ES6" },
+            { date: "22/05/2026", title: "Day 08: Async JS: Promises & Async/Await", topic: "Fetch users from External API" },
+            { date: "23/05/2026", title: "Day 09: React Intro: JSX & Components", topic: "Greeting card application" },
+            { date: "24/05/2026", title: "Day 10: React State (useState) & Events", topic: "Counter app & Dark mode toggle" },
+            { date: "25/05/2026", title: "Day 11: React Lists & Controlled Forms", topic: "Student form with display data" },
+            { date: "26/05/2026", title: "Day 12: React Router: Navigation", topic: "Multi-page React website" },
+            { date: "27/05/2026", title: "Day 13: React Hooks: useEffect & API", topic: "Fetch products API & display" },
+            { date: "28/05/2026", title: "Day 14: Professional Project Structure", topic: "Refactor previous applications" },
+            { date: "29/05/2026", title: "Day 15: Redux Basics: Store & Actions", topic: "Cart counter using Redux" },
+            { date: "30/05/2026", title: "Day 16: Node.js & NPM Ecosystem", topic: "Simple Node server setup" },
+            { date: "31/05/2026", title: "Day 17: Express.js: Routes & Middleware", topic: "Student API (GET & POST)" },
+            { date: "01/06/2026", title: "Day 18: MongoDB Basics & CRUD", topic: "Store & fetch student records" },
+            { date: "02/06/2026", title: "Day 19: MongoDB Atlas & Mongoose", topic: "Connect Atlas to Backend" },
+            { date: "03/06/2026", title: "Day 20: Full CRUD API Implementation", topic: "Notes management backend" },
+            { date: "04/06/2026", title: "Day 21: React + Backend API Integration", topic: "Connect React app with API" },
+            { date: "05/06/2026", title: "Day 22: Auth Basics: JWT & Bcrypt", topic: "Secure Register/Login system" },
+            { date: "06/06/2026", title: "Day 23: Protected Routes & Tokens", topic: "Protect Dashboard access" },
+            { date: "07/06/2026", title: "Day 24: Deployment: Vercel & GitHub", topic: "Full-stack deployment" },
+            { date: "08/06/2026", title: "Day 25: Mini Project: Movie Search UI", topic: "Movie Search App Interface" },
+            { date: "09/06/2026", title: "Day 26: Mini Project: Movie Search Logic", topic: "Complete API & Responsive Design" },
+            { date: "10/06/2026", title: "Day 27: Major Project: Environment", topic: "Frontend, Backend & DB Setup" },
+            { date: "11/06/2026", title: "Day 28: Major Project: Backend Systems", topic: "Auth & CRUD API completion" },
+            { date: "12/06/2026", title: "Day 29: Major Project: Integration", topic: "Dashboard & API Connection" },
+            { date: "13/06/2026", title: "Day 30: Final Deployment & Revision", topic: "Portfolio update & Prep" },
+            { date: "14/06/2026", title: "Day 31: Official Final Assessment", topic: "Skills Audit & Evaluation" },
+            { date: "15/06/2026", title: "Day 32: Grand Finale & Graduation", topic: "Certifications & Awards" }
+        ];
 
-        const startDate = new Date("2026-05-16");
-        for (let i = 0; i < 31; i++) {
-            const date = new Date(startDate);
-            date.setDate(startDate.getDate() + i);
-            
-            const dateStr = date.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
-            const isLastDay = dateStr === "15/06/2026";
-            
-            list.push(createSession(
-                `class-${i}`,
-                isLastDay ? "Final Review & Graduation" : `Fullstack Development - Session ${i + 1}`,
-                dateStr,
-                isLastDay ? "6:00 PM - 7:30 PM" : "5:00 PM - 6:00 PM",
-                isLastDay ? "Final Assessment & Roadmap" : "Industry Standards & Best Practices"
-            ));
-        }
+        syllabus.forEach((s, index) => {
+            list.push(createSession(`class-${index}`, s.title, s.date, "6:00 PM - 7:30 PM", s.topic));
+        });
         return list;
     })();
 
