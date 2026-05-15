@@ -386,7 +386,7 @@ export default function BootcampPage() {
                   {isRegistrationClosed ? (
                     <div className="py-12 text-center space-y-6">
                       <div className="w-16 h-16 border-2 border-red-500 flex items-center justify-center mx-auto bg-red-50">
-                         <zap className="w-8 h-8 text-red-500" />
+                         <Zap className="w-8 h-8 text-red-500" />
                       </div>
                       <div>
                         <h3 className="text-xl font-semibold text-red-600 tracking-tight">Access Restricted</h3>
