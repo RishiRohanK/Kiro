@@ -921,15 +921,68 @@ function InternDashboardContent() {
                         </div>
 
                         {(() => {
+                           // Dynamic Session Logic (Synchronized with Classes Page)
                            const now = new Date();
-                           const meetingLink = "https://meet.google.com/mji-bixk-xmh";
+                           const todayStr = now.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
                            const isSixPM = now.getHours() >= 18;
-                           
+                           const meetingLink = "https://meet.google.com/mji-bixk-xmh";
+
+                           // Master Training Schedule
+                           const trainingSessions = [
+                              { date: "15/05/2026", title: "Live Technical Orientation & Setup", topic: "Development Environment & Workflow" },
+                              { date: "16/05/2026", title: "Git & Version Control Essentials", topic: "Branching, PRs, and Conflicts" },
+                              { date: "17/05/2026", title: "React Fundamentals: Day 1", topic: "JSX, Components & Props" },
+                              { date: "18/05/2026", title: "React Fundamentals: Day 2", topic: "State Management & Hooks" },
+                              { date: "19/05/2026", title: "Advanced Styling: Tailwind & Framer", topic: "Animations & Responsive UI" },
+                              { date: "20/05/2026", title: "Backend Essentials: Node & Express", topic: "API Design & Routing" },
+                              { date: "21/05/2026", title: "Database Architecture: SQL vs NoSQL", topic: "Prisma & Schema Design" },
+                              { date: "22/05/2026", title: "Authentication: JWT & OAuth", topic: "Securing Modern Web Apps" },
+                              { date: "23/05/2026", title: "Deployment & CI/CD", topic: "Vercel, Docker & Actions" },
+                              { date: "24/05/2026", title: "State Management: Redux & Context", topic: "Global State Patterns" },
+                              { date: "25/05/2026", title: "Unit Testing & QA", topic: "Jest & React Testing Library" },
+                              { date: "26/05/2026", title: "Performance Optimization", topic: "Memoization & Lazy Loading" },
+                              { date: "27/05/2026", title: "TypeScript Integration", topic: "Type Safety in React" },
+                              { date: "28/05/2026", title: "API Integration: GraphQL vs REST", topic: "Apollo Client & Fetch" },
+                              { date: "29/05/2026", title: "Mobile Development: Day 1", topic: "React Native Basics" },
+                              { date: "30/05/2026", title: "Mobile Development: Day 2", topic: "Navigation & Device Features" },
+                              { date: "31/05/2026", title: "System Design Principles", topic: "Scalability & Microservices" },
+                              { date: "01/06/2026", title: "DevOps & Cloud Computing", topic: "AWS, GCP & Azure" },
+                              { date: "02/06/2026", title: "Cybersecurity Best Practices", topic: "OWASP Top 10 & Sanitization" },
+                              { date: "03/06/2026", title: "AI & ML Integration", topic: "OpenAI API & Vector DBs" },
+                              { date: "04/06/2026", title: "Real-time Apps: WebSockets", topic: "Socket.io & Live Updates" },
+                              { date: "05/06/2026", title: "Project Management: Agile/Scrum", topic: "Sprint Planning & Retros" },
+                              { date: "06/06/2026", title: "Soft Skills for Developers", topic: "Communication & Leadership" },
+                              { date: "07/06/2026", title: "Open Source Contribution", topic: "Contributing to Github" },
+                              { date: "08/06/2026", title: "Portfolio Building", topic: "Showcasing Your Work" },
+                              { date: "09/06/2026", title: "Interview Prep: Technical", topic: "Data Structures & Algos" },
+                              { date: "10/06/2026", title: "Interview Prep: Behavioral", topic: "Culture Fit & Soft Skills" },
+                              { date: "11/06/2026", title: "Freelancing & Client Management", topic: "Building a Dev Business" },
+                              { date: "12/06/2026", title: "Cloud Native Apps: Day 1", topic: "Serverless Functions" },
+                              { date: "13/06/2026", title: "Cloud Native Apps: Day 2", topic: "Edge Computing" },
+                              { date: "14/06/2026", title: "Future of Web Development", topic: "Web3, VR & Beyond" },
+                              { date: "15/06/2026", title: "Grand Finale: Graduation Day", topic: "Certifications & Awards" }
+                           ];
+
+                           const todaySession = trainingSessions.find(s => s.date === todayStr);
+
+                           if (!todaySession) {
+                              return (
+                                 <div className="bg-zinc-50 border border-zinc-100 rounded-xl p-8 text-center flex flex-col items-center gap-3">
+                                    <Calendar size={32} className="text-zinc-300" />
+                                    <div>
+                                       <h4 className="text-[14px] font-bold text-zinc-600">No training scheduled for today</h4>
+                                       <p className="text-[11px] text-zinc-400">Next session starts tomorrow at 6:00 PM</p>
+                                    </div>
+                                    <Link href="/intern/dashboard/training/classes" className="mt-2 text-[11px] font-bold text-[#003366] hover:underline">
+                                       View Full Schedule
+                                    </Link>
+                                 </div>
+                              );
+                           }
+
                            const currentClass = {
-                              title: "Live Technical Orientation & Setup",
-                              date: "15/05/2026",
+                              ...todaySession,
                               time: "6:00 PM - 7:30 PM",
-                              topic: "Development Environment & Workflow",
                               status: isSixPM ? "In Progress" : "Upcoming"
                            };
 
