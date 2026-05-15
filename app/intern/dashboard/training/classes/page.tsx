@@ -16,17 +16,77 @@ import { motion } from "framer-motion";
 export default function TrainingClassesPage() {
     const [activeTab, setActiveTab] = useState("Classes");
     const [viewMode, setViewMode] = useState("Regular");
-    const [statusFilter, setStatusFilter] = useState("In Progress");
+    const [statusFilter, setStatusFilter] = useState("Upcoming");
 
     const tabs = ["Class Groups", "Classes", "Activities"];
+    
+    // Generate 32 classes including today's session with dynamic status
+    const classes = (() => {
+        const list = [];
+        const meetingLink = "https://meet.google.com/ugc-gfdx-sbq";
+        const today = new Date();
+        const now = new Date();
+        
+        const createSession = (id: string, title: string, dateStr: string, timeStr: string, topic: string) => {
+            const classDate = new Date(dateStr.split('/').reverse().join('-'));
+            const isToday = today.toDateString() === classDate.toDateString();
+            const isFuture = classDate > today;
+            const isSixPM = now.getHours() >= 18;
+            
+            let status = "Upcoming";
+            if (isToday && isSixPM) status = "In Progress";
+            else if (!isToday && !isFuture) status = "Past";
+
+            return {
+                id,
+                title,
+                instructor: "Redlix Technical Team",
+                date: dateStr,
+                time: timeStr,
+                link: meetingLink,
+                status,
+                topic
+            };
+        };
+
+        // Today's Session (15-05-2026)
+        list.push(createSession(
+            "class-today",
+            "Live Technical Orientation & Setup",
+            "15/05/2026",
+            "6:00 PM - 7:30 PM",
+            "Development Environment & Workflow"
+        ));
+
+        const startDate = new Date("2026-05-16");
+        for (let i = 0; i < 31; i++) {
+            const date = new Date(startDate);
+            date.setDate(startDate.getDate() + i);
+            
+            const dateStr = date.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
+            const isLastDay = dateStr === "15/06/2026";
+            
+            list.push(createSession(
+                `class-${i}`,
+                isLastDay ? "Final Review & Graduation" : `Fullstack Development - Session ${i + 1}`,
+                dateStr,
+                isLastDay ? "6:00 PM - 7:30 PM" : "5:00 PM - 6:00 PM",
+                isLastDay ? "Final Assessment & Roadmap" : "Industry Standards & Best Practices"
+            ));
+        }
+        return list;
+    })();
+
+    const filteredClasses = classes.filter(c => c.status === statusFilter);
+
     const statuses = [
-        { name: "In Progress", count: 0 },
-        { name: "Upcoming", count: 0 },
+        { name: "In Progress", count: classes.filter(c => c.status === "In Progress").length },
+        { name: "Upcoming", count: classes.filter(c => c.status === "Upcoming").length },
         { name: "Past", count: 0 }
     ];
 
     return (
-        <div className="min-h-screen bg-[#FBFBFB] font-sans">
+        <div className="min-h-screen bg-[#FBFBFB] font-sans pb-20">
             {/* Header - Changed to Blue */}
             <div className="px-5 lg:px-10 py-8 flex items-center gap-4">
                 <ClipboardList size={32} className="text-[#003366]" />
@@ -107,29 +167,123 @@ export default function TrainingClassesPage() {
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400" size={14} />
                     <input 
                         type="text" 
-                        placeholder="Search" 
+                        placeholder="Search sessions..." 
                         className="w-full pl-10 pr-4 py-2.5 bg-white border border-zinc-200 rounded-md text-[13px] focus:outline-none focus:ring-1 focus:ring-[#003366] focus:border-[#003366] transition-all"
                     />
                 </div>
             </div>
 
             {/* Content Area */}
-            <div className="px-5 lg:px-10 py-4">
-                <div className="w-full min-h-[400px] bg-white border border-zinc-100 rounded-md flex flex-col items-center justify-center text-center p-12 shadow-sm">
-                    <div className="mb-8">
-                        <div className="relative w-72 h-72 mx-auto">
-                            <img 
-                                src="https://ik.imagekit.io/dypkhqxip/Exams-bro.svg" 
-                                alt="No classes available" 
-                                className="w-full h-full object-contain"
-                            />
-                        </div>
+            <div className="px-5 lg:px-10 py-6">
+                {filteredClasses.length > 0 ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {filteredClasses.map((cls, idx) => (
+                            <motion.div 
+                                key={cls.id}
+                                initial={{ opacity: 0, y: 5 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: Math.min(idx * 0.03, 0.5) }}
+                                className="bg-white border border-zinc-100 rounded-xl overflow-hidden hover:shadow-lg hover:border-[#003366]/20 transition-all group flex flex-col sm:flex-row h-full"
+                            >
+                                {/* Left Side: Image */}
+                                <div className="sm:w-1/3 h-40 sm:h-auto relative overflow-hidden bg-zinc-100 border-r border-zinc-50">
+                                    <img 
+                                        src="https://images.unsplash.com/photo-1587620962725-abab7fe55159?q=80&w=1000&auto=format&fit=crop" 
+                                        alt={cls.title} 
+                                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                    />
+                                    {cls.status === "In Progress" && (
+                                        <div className="absolute top-2 left-2 px-2 py-1 bg-red-500/90 backdrop-blur-sm rounded text-[8px] font-black text-white tracking-widest animate-pulse">
+                                            LIVE
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* Right Side: Content */}
+                                <div className="flex-1 p-5 flex flex-col justify-between">
+                                    <div className="space-y-3">
+                                        <div className="flex items-center justify-between">
+                                            <div className="flex items-center gap-2">
+                                                <Calendar size={13} className="text-zinc-300" />
+                                                <span className="text-[11px] font-medium text-zinc-400">{cls.date}</span>
+                                            </div>
+                                            <div className="flex items-center gap-2">
+                                                {cls.status === "In Progress" ? (
+                                                    <span className="flex items-center gap-1 text-[9px] font-medium text-red-500 animate-pulse">
+                                                        <div className="h-1.5 w-1.5 rounded-full bg-red-500" />
+                                                        LIVE NOW
+                                                    </span>
+                                                ) : (
+                                                    <span className={`text-[9px] font-medium px-2 py-0.5 rounded tracking-wide ${
+                                                        new Date(cls.date.split('/').reverse().join('-')).toDateString() === new Date().toDateString() 
+                                                        ? "text-emerald-600 bg-emerald-50" 
+                                                        : "text-blue-600 bg-blue-50"
+                                                    }`}>
+                                                        {new Date(cls.date.split('/').reverse().join('-')).toDateString() === new Date().toDateString() ? "TODAY" : cls.status.toUpperCase()}
+                                                    </span>
+                                                )}
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <h3 className="text-[15px] font-medium text-zinc-800 group-hover:text-[#003366] transition-colors leading-tight line-clamp-2">
+                                                {cls.title}
+                                            </h3>
+                                            <div className="flex flex-wrap items-center gap-3 mt-3 text-zinc-400">
+                                                <div className="flex items-center gap-1.5">
+                                                    <Clock size={12} className="text-zinc-300" />
+                                                    <span className="text-[11px]">{cls.time}</span>
+                                                </div>
+                                                <div className="flex items-center gap-1.5">
+                                                    <User size={12} className="text-zinc-300" />
+                                                    <span className="text-[11px] truncate max-w-[100px]">{cls.instructor}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="mt-5 flex items-center gap-2">
+                                        {new Date(cls.date.split('/').reverse().join('-')).toDateString() === new Date().toDateString() ? (
+                                            <a 
+                                                href={cls.link}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="flex-1 py-2 text-[10px] font-medium uppercase tracking-widest rounded-lg transition-all text-center border bg-[#003366] text-white border-[#003366] hover:bg-[#002244] shadow-md shadow-blue-900/10"
+                                            >
+                                                Join Session
+                                            </a>
+                                        ) : (
+                                            <button 
+                                                disabled
+                                                className="flex-1 py-2 text-[10px] font-medium uppercase tracking-widest rounded-lg text-zinc-300 border border-zinc-100 bg-zinc-50 cursor-not-allowed"
+                                            >
+                                                Locked
+                                            </button>
+                                        )}
+                                        <button className="p-2 text-zinc-300 hover:text-zinc-500 transition-colors">
+                                            <MoreVertical size={16} />
+                                        </button>
+                                    </div>
+                                </div>
+                            </motion.div>
+                        ))}
                     </div>
-                    <h3 className="text-[16px] font-bold text-zinc-800 mb-2 tracking-tight">No classes available</h3>
-                    <p className="text-[13px] text-zinc-400 max-w-sm mx-auto font-medium leading-relaxed">
-                        No classes available at the moment.
-                    </p>
-                </div>
+                ) : (
+                    <div className="w-full min-h-[400px] bg-white border border-zinc-100 rounded-lg flex flex-col items-center justify-center text-center p-12 shadow-sm">
+                        <div className="mb-8">
+                            <div className="relative w-64 h-64 mx-auto">
+                                <img 
+                                    src="https://ik.imagekit.io/dypkhqxip/Exams-bro.svg" 
+                                    alt="No classes available" 
+                                    className="w-full h-full object-contain grayscale opacity-50"
+                                />
+                            </div>
+                        </div>
+                        <p className="text-[12px] text-zinc-400 max-w-sm mx-auto">
+                            Check back later for updated training schedules.
+                        </p>
+                    </div>
+                )}
             </div>
         </div>
     );

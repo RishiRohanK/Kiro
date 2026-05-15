@@ -31,10 +31,15 @@ export default function BootcampPage() {
     transactionId: ""
   });
 
+  // Registration Deadline: May 15, 2026, 6:00 PM
+  const deadline = new Date("2026-05-15T18:00:00");
+  const isRegistrationClosed = new Date() >= deadline;
+
   const nextStep = () => setStep(prev => prev + 1);
   const prevStep = () => setStep(prev => prev - 1);
 
   const handleSubmit = async (e: React.FormEvent) => {
+    if (isRegistrationClosed) return;
     e.preventDefault();
     setIsSubmitting(true);
     try {
@@ -80,9 +85,11 @@ export default function BootcampPage() {
             <p className="text-[13px] sm:text-[14px] font-medium text-zinc-500">Platform An initiative by Student Forge</p>
           </div>
 
-          <div className="mx-6 sm:mx-10 lg:mx-12 mb-8 p-3 bg-red-600 text-white flex items-center justify-center text-center">
-            <p className="text-[14px] font-bold">
-              Registrations will be closed automatically at 6:00 PM today (15-06-2026)
+          <div className={`mx-6 sm:mx-10 lg:mx-12 mb-8 p-3 flex items-center justify-center text-center border-2 ${isRegistrationClosed ? "bg-red-50 border-red-200 text-red-600" : "bg-red-600 border-red-700 text-white"}`}>
+            <p className="text-[14px] font-bold uppercase tracking-tight">
+              {isRegistrationClosed 
+                ? "Registrations are now CLOSED for the 2026 Cohort." 
+                : "Registrations will be closed automatically at 6:00 PM today (15-05-2026)"}
             </p>
           </div>
 
@@ -140,7 +147,7 @@ export default function BootcampPage() {
                         </tr>
                         <tr>
                           <td className="px-5 py-3 bg-[#F8F9FA] border-r border-zinc-200 italic text-zinc-600">Portal Closure for New Requests</td>
-                          <td className="px-5 py-3 font-medium">May 05, 2026</td>
+                          <td className="px-5 py-3 font-medium text-red-600">May 15, 2026 (6:00 PM)</td>
                         </tr>
                         <tr>
                           <td className="px-5 py-3 bg-[#F8F9FA] border-r border-zinc-200 italic text-zinc-600 text-blue-900 font-medium">Training Operations Start</td>
@@ -366,13 +373,30 @@ export default function BootcampPage() {
               </div>
 
               <div className="w-full lg:w-[420px] shrink-0 lg:sticky lg:top-4">
-                <div className="border-[4px] border-[#002147] bg-white p-6 mb-4 shadow-lg">
-                  <div className="bg-[#002147] text-white p-5 mb-6 text-center -mx-6 -mt-6">
-                    <h2 className="text-lg sm:text-xl font-semibold">Enrollment Portal</h2>
-                    <p className="text-[10px] text-zinc-400 mt-1 font-medium">Secure Admission System</p>
+                <div className={`border-[4px] bg-white p-6 mb-4 shadow-lg transition-all ${isRegistrationClosed ? "border-red-500 opacity-80" : "border-[#002147]"}`}>
+                  <div className={`${isRegistrationClosed ? "bg-red-500" : "bg-[#002147]"} text-white p-5 mb-6 text-center -mx-6 -mt-6`}>
+                    <h2 className="text-lg sm:text-xl font-semibold">
+                      {isRegistrationClosed ? "Portal Closed" : "Enrollment Portal"}
+                    </h2>
+                    <p className="text-[10px] text-white/70 mt-1 font-medium">
+                      {isRegistrationClosed ? "Registrations are no longer accepted" : "Secure Admission System"}
+                    </p>
                   </div>
 
-                  {step === 4 ? (
+                  {isRegistrationClosed ? (
+                    <div className="py-12 text-center space-y-6">
+                      <div className="w-16 h-16 border-2 border-red-500 flex items-center justify-center mx-auto bg-red-50">
+                         <zap className="w-8 h-8 text-red-500" />
+                      </div>
+                      <div>
+                        <h3 className="text-xl font-semibold text-red-600 tracking-tight">Access Restricted</h3>
+                        <p className="text-[13px] text-zinc-500 mt-2 leading-relaxed font-medium">The registration window for the Summer 2026 Cohort closed on May 15, 2026 at 6:00 PM.</p>
+                      </div>
+                      <div className="p-4 bg-zinc-50 border border-zinc-200 text-[11px] text-zinc-400 font-medium leading-relaxed italic">
+                        Please follow our official channels for notifications regarding the next cohort opening.
+                      </div>
+                    </div>
+                  ) : step === 4 ? (
                     <div className="py-12 text-center space-y-6 animate-in zoom-in duration-500">
                       <div className="w-16 h-16 border-2 border-[#002147] flex items-center justify-center mx-auto bg-emerald-50 border-emerald-500">
                         <CheckCircle2 className="w-8 h-8 text-emerald-600" />
@@ -399,30 +423,30 @@ export default function BootcampPage() {
                           <div className="space-y-4">
                             <div className="space-y-1">
                               <label className="text-[11px] font-medium text-zinc-500">1.1 Applicant Full Name</label>
-                              <input required value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} className="w-full h-11 border border-zinc-200 bg-zinc-50 px-4 text-[14px] focus:bg-white focus:border-[#002147] outline-none font-medium placeholder:text-zinc-300" placeholder="Type here..." />
+                              <input required disabled={isRegistrationClosed} value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} className="w-full h-11 border border-zinc-200 bg-zinc-50 px-4 text-[14px] focus:bg-white focus:border-[#002147] outline-none font-medium placeholder:text-zinc-300" placeholder="Type here..." />
                             </div>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                               <div className="space-y-1">
                                 <label className="text-[11px] font-medium text-zinc-500">1.2 Institution Name</label>
-                                <input required value={formData.college} onChange={(e) => setFormData({ ...formData, college: e.target.value })} className="w-full h-11 border border-zinc-200 bg-zinc-50 px-4 text-[14px] focus:bg-white focus:border-[#002147] outline-none font-medium" />
+                                <input required disabled={isRegistrationClosed} value={formData.college} onChange={(e) => setFormData({ ...formData, college: e.target.value })} className="w-full h-11 border border-zinc-200 bg-zinc-50 px-4 text-[14px] focus:bg-white focus:border-[#002147] outline-none font-medium" />
                               </div>
                               <div className="space-y-1">
                                 <label className="text-[11px] font-medium text-zinc-500">1.3 Full-Stack | UI/UX</label>
-                                <input required value={formData.branch} onChange={(e) => setFormData({ ...formData, branch: e.target.value })} className="w-full h-11 border border-zinc-200 bg-zinc-50 px-4 text-[14px] focus:bg-white focus:border-[#002147] outline-none font-medium" />
+                                <input required disabled={isRegistrationClosed} value={formData.branch} onChange={(e) => setFormData({ ...formData, branch: e.target.value })} className="w-full h-11 border border-zinc-200 bg-zinc-50 px-4 text-[14px] focus:bg-white focus:border-[#002147] outline-none font-medium" />
                               </div>
                             </div>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                               <div className="space-y-1">
                                 <label className="text-[11px] font-medium text-zinc-500">1.4 Primary Email</label>
-                                <input required type="email" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} className="w-full h-11 border border-zinc-200 bg-zinc-50 px-4 text-[14px] focus:bg-white focus:border-[#002147] outline-none font-medium" />
+                                <input required disabled={isRegistrationClosed} type="email" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} className="w-full h-11 border border-zinc-200 bg-zinc-50 px-4 text-[14px] focus:bg-white focus:border-[#002147] outline-none font-medium" />
                               </div>
                               <div className="space-y-1">
                                 <label className="text-[11px] font-medium text-zinc-500">1.5 Primary Mobile</label>
-                                <input required type="tel" value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} className="w-full h-11 border border-zinc-200 bg-zinc-50 px-4 text-[14px] focus:bg-white focus:border-[#002147] outline-none font-medium" placeholder="+91" />
+                                <input required disabled={isRegistrationClosed} type="tel" value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} className="w-full h-11 border border-zinc-200 bg-zinc-50 px-4 text-[14px] focus:bg-white focus:border-[#002147] outline-none font-medium" placeholder="+91" />
                               </div>
                             </div>
                           </div>
-                          <button onClick={nextStep} disabled={!formData.name || !formData.email} className="w-full h-12 bg-[#002147] text-white text-[13px] font-medium transition-all hover:bg-black flex items-center justify-center gap-3">Continue to Payment <ArrowRight className="w-5 h-5" /></button>
+                          <button onClick={nextStep} disabled={isRegistrationClosed || !formData.name || !formData.email} className="w-full h-12 bg-[#002147] text-white text-[13px] font-medium transition-all hover:bg-black flex items-center justify-center gap-3 disabled:opacity-50">Continue to Payment <ArrowRight className="w-5 h-5" /></button>
                         </div>
                       )}
 
@@ -442,7 +466,7 @@ export default function BootcampPage() {
                           </div>
                           <div className="flex gap-4">
                             <button onClick={prevStep} className="flex-1 h-12 border border-zinc-200 text-zinc-900 text-[11px] font-medium hover:bg-zinc-50">Go Back</button>
-                            <button onClick={nextStep} className="flex-1 h-12 bg-[#002147] text-white text-[11px] font-medium hover:bg-black shadow-lg shadow-blue-900/10">I've Done Payment</button>
+                            <button onClick={nextStep} disabled={isRegistrationClosed} className="flex-1 h-12 bg-[#002147] text-white text-[11px] font-medium hover:bg-black shadow-lg shadow-blue-900/10 disabled:opacity-50">I've Done Payment</button>
                           </div>
                         </div>
                       )}
@@ -457,6 +481,7 @@ export default function BootcampPage() {
                             <label className="text-[11px] font-medium text-zinc-500">Payment Reference (UTR / ID)</label>
                             <input
                               required
+                              disabled={isRegistrationClosed}
                               value={formData.transactionId}
                               onChange={(e) => setFormData({ ...formData, transactionId: e.target.value })}
                               className="w-full h-12 border border-zinc-200 bg-zinc-50 px-4 text-[14px] focus:bg-white focus:border-[#002147] outline-none font-medium"
@@ -467,8 +492,8 @@ export default function BootcampPage() {
                             <button onClick={prevStep} className="flex-1 h-12 border border-zinc-200 text-zinc-900 text-[11px] font-medium hover:bg-zinc-50">Back</button>
                             <button
                               onClick={handleSubmit}
-                              disabled={isSubmitting || !formData.transactionId}
-                              className="flex-1 h-12 bg-[#002147] text-white text-[11px] font-medium hover:bg-black"
+                              disabled={isRegistrationClosed || isSubmitting || !formData.transactionId}
+                              className="flex-1 h-12 bg-[#002147] text-white text-[11px] font-medium hover:bg-black disabled:opacity-50"
                             >
                               {isSubmitting ? "Sending..." : "Submit Form"}
                             </button>
