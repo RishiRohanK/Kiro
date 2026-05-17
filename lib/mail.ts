@@ -179,6 +179,27 @@ export const sendTeamAssignmentEmail = async (email: string, name: string, proje
     }
 };
 
+export const sendTaskAssignmentEmail = async (email: string, name: string, taskTitle: string, taskDescription: string) => {
+    const title = "New Task Assignment Allocated";
+    const content = `Hello ${name},<br/><br/>You have been assigned a new task: <b>${taskTitle}</b>.<br/><br/><b>Task Description:</b><br/>${taskDescription.replace(/\n/g, "<br/>")}<br/><br/>Please review the details and start working on the deliverables in your intern dashboard.`;
+    const ctaUrl = `${BASE_URL}/intern/dashboard`;
+    const html = getSimpleTemplate(title, content, "View Task in Dashboard", ctaUrl, "Student Forge Team");
+
+    try {
+        await transporter.sendMail({
+            from: '"Student Forge" <studentforgetechnologies@gmail.com>',
+            to: email,
+            subject: `New Task Assigned: ${taskTitle}`,
+            html: html,
+        });
+        return true;
+    } catch (error) {
+        console.error("Task Assignment Mail Error:", error);
+        return false;
+    }
+};
+
+
 export const sendInterviewEmail = async (email: string, name: string, position: string, timing: string) => {
     const title = "Interview Invitation";
     const content = `Hello ${name},<br/><br/>Congratulations! Your application for the <b>${position}</b> position has been shortlisted. We would like to invite you for an interview to further discuss your profile.<br/><br/><b>Interview Timing:</b> ${timing}<br/><b>Location:</b> STUDENT FORGE Corporate office in Hyderabad, Telangana<br/><b>Address:</b> HF2R+CCV, Devender Colony, Kompally, Hyderabad, Telangana 500100<br/><br/>Please confirm your availability by replying to this email. We look forward to meeting you.`;

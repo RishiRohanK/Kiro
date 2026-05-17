@@ -9,6 +9,10 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "All fields are required" }, { status: 400 });
     }
 
+    const user = await prisma.user.findUnique({
+      where: { id: internId }
+    });
+
     const task = await prisma.task.create({
       data: {
         title,
@@ -22,6 +26,15 @@ export async function POST(req: Request) {
         user: true,
       },
     });
+
+    if (user && user.email) {
+      try {
+        const { sendTaskAssignmentEmail } = await import("@/lib/mail");
+        await sendTaskAssignmentEmail(user.email, user.name || "Intern", title, description);
+      } catch (err) {
+        console.error("Error sending task assignment email:", err);
+      }
+    }
 
     return NextResponse.json(task);
   } catch (error) {

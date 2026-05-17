@@ -117,6 +117,7 @@ interface HiringApplication {
 
 interface Task {
    id: string;
+   batch?: string;
    title: string;
    description: string;
    attachmentUrl?: string;
@@ -3462,6 +3463,131 @@ export default function CleedDashboard() {
                               )}
                            </div>
                         )}
+                     </div>
+                  </motion.div>
+               )}
+
+               {activeTab === "assign" && (
+                  <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-8">
+                     <div className="grid md:grid-cols-2 gap-8 text-left">
+                        <div className="space-y-6">
+                           <h2 className="text-2xl font-bold tracking-tighter text-zinc-900">Assign Task to Intern</h2>
+                           <p className="text-[12px] text-zinc-500 font-medium">Allocate technical milestones, homework, or general goals to a selected intern.</p>
+                           <form onSubmit={handlePostTask} className="space-y-4 bg-white border border-zinc-200 p-6 rounded-none shadow-sm">
+                              <div className="space-y-1">
+                                 <label className="text-[11px] font-bold text-zinc-400 uppercase tracking-wider">Target Intern</label>
+                                 <select
+                                    required
+                                    className="w-full h-11 bg-zinc-50 border border-zinc-100 px-4 text-sm font-bold outline-none focus:border-red-600 rounded-none"
+                                    onChange={(e) => {
+                                       const intern = interns.find(i => i.id === e.target.value);
+                                       if (intern) setSelectedIntern(intern);
+                                    }}
+                                    value={selectedIntern?.id || ""}
+                                 >
+                                    <option value="">Select a student...</option>
+                                    {interns.filter(i => i.isApproved).map(i => (
+                                       <option key={i.id} value={i.id}>
+                                          {i.name} ({i.email})
+                                       </option>
+                                    ))}
+                                 </select>
+                              </div>
+                              <div className="space-y-1">
+                                 <label className="text-[11px] font-bold text-zinc-400 uppercase tracking-wider">Task Title</label>
+                                 <input 
+                                    required 
+                                    value={taskData.title} 
+                                    onChange={(e) => setTaskData({ ...taskData, title: e.target.value })} 
+                                    className="w-full h-11 bg-white border border-zinc-200 px-4 text-sm font-bold outline-none focus:border-red-600 rounded-none" 
+                                    placeholder="e.g., Build Auth System" 
+                                 />
+                              </div>
+                              <div className="space-y-1">
+                                 <label className="text-[11px] font-bold text-zinc-400 uppercase tracking-wider">Description</label>
+                                 <textarea 
+                                    required 
+                                    rows={4} 
+                                    value={taskData.description} 
+                                    onChange={(e) => setTaskData({ ...taskData, description: e.target.value })} 
+                                    className="w-full bg-white border border-zinc-200 p-4 text-sm font-bold outline-none focus:border-red-600 resize-none rounded-none" 
+                                    placeholder="Outline task details and deliverables..." 
+                                 />
+                              </div>
+                              <div className="grid grid-cols-2 gap-4">
+                                 <div className="space-y-1">
+                                    <label className="text-[11px] font-bold text-zinc-400 uppercase tracking-wider">Batch</label>
+                                    <select 
+                                       value={taskData.batch} 
+                                       onChange={(e) => setTaskData({ ...taskData, batch: e.target.value })} 
+                                       className="w-full h-11 bg-white border border-zinc-200 px-4 text-sm font-bold outline-none focus:border-red-600 rounded-none"
+                                    >
+                                       <option value="Batch 1">Batch 1</option>
+                                       <option value="Batch 2">Batch 2</option>
+                                       <option value="Batch 3">Batch 3</option>
+                                       <option value="All">All Batches</option>
+                                    </select>
+                                 </div>
+                                 <div className="space-y-1">
+                                    <label className="text-[11px] font-bold text-zinc-400 uppercase tracking-wider">Attachment URL (Optional)</label>
+                                    <input 
+                                       value={taskData.attachmentUrl} 
+                                       onChange={(e) => setTaskData({ ...taskData, attachmentUrl: e.target.value })} 
+                                       className="w-full h-11 bg-white border border-zinc-200 px-4 text-sm font-bold outline-none focus:border-red-600 rounded-none" 
+                                       placeholder="https://docs.google.com/..." 
+                                    />
+                                 </div>
+                              </div>
+                              <button disabled={sendingTask} className="w-full h-12 bg-black text-white text-[11px] font-bold tracking-widest hover:bg-zinc-800 transition-all rounded-none shadow-sm disabled:opacity-50">
+                                 {sendingTask ? "ASSIGNING..." : "DISPATCH TASK"}
+                              </button>
+                              {formSuccess && <p className="text-emerald-600 text-[10px] font-bold text-center">Task allocated successfully.</p>}
+                           </form>
+                        </div>
+                        <div className="space-y-6">
+                           <h2 className="text-2xl font-bold tracking-tighter text-zinc-900 text-left">Task Assignment Log</h2>
+                           <div className="space-y-3 max-h-[600px] overflow-y-auto pr-2 no-scrollbar">
+                              {tasks.length === 0 ? (
+                                 <div className="bg-white border border-zinc-200 p-6 text-center">
+                                    <p className="text-zinc-400 font-medium text-[11px] tracking-widest uppercase">No tasks issued yet.</p>
+                                 </div>
+                              ) : (
+                                 tasks.map((task) => (
+                                    <div key={task.id} className="bg-white border border-zinc-200 p-6 flex flex-col gap-4 group transition-all rounded-none hover:border-zinc-400 shadow-sm">
+                                       <div className="flex items-start justify-between">
+                                          <div className="space-y-1 overflow-hidden text-left">
+                                             <div className="flex items-center gap-2">
+                                                <h4 className="text-[14px] font-bold leading-tight truncate">{task.title}</h4>
+                                                <span className={`text-[9px] font-bold px-1.5 py-0.5 border ${task.status === "completed" ? "bg-emerald-100 text-emerald-700 border-emerald-200" : "bg-amber-100 text-amber-700 border-amber-200"}`}>
+                                                   {task.status.toUpperCase()}
+                                                </span>
+                                             </div>
+                                             <p className="text-[11px] font-bold text-red-600">
+                                                Assigned To: {task.user?.name || "Intern"} ({task.user?.email || "No Email"})
+                                             </p>
+                                             <p className="text-[9px] text-zinc-400 font-bold">
+                                                Batch: {task.batch || "General"} · Issued {new Date(task.createdAt).toLocaleDateString()}
+                                             </p>
+                                          </div>
+                                       </div>
+                                       <div className="pt-4 border-t border-zinc-100 text-left">
+                                          <p className="text-[12px] text-zinc-600 font-medium whitespace-pre-wrap">{task.description}</p>
+                                          {task.attachmentUrl && (
+                                             <a 
+                                                href={task.attachmentUrl} 
+                                                target="_blank" 
+                                                rel="noreferrer" 
+                                                className="mt-3 inline-flex items-center gap-1.5 text-[10px] font-bold text-blue-600 hover:underline"
+                                             >
+                                                View Attachment Link
+                                             </a>
+                                          )}
+                                       </div>
+                                    </div>
+                                 ))
+                              )}
+                           </div>
+                        </div>
                      </div>
                   </motion.div>
                )}
