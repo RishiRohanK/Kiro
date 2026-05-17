@@ -452,6 +452,11 @@ function InternDashboardContent() {
          const data = await res.json();
          setUserStatus(data);
 
+         const lastAckLetter = localStorage.getItem(`letter_ack_${id}`);
+         if (data.letterUrl && data.letterUrl !== lastAckLetter) {
+            setShowLetterModal(true);
+         }
+
          const lastAckOffer = localStorage.getItem(`offer_letter_ack_${id}`);
          if (data.offerLetterUrl && data.offerLetterUrl !== lastAckOffer) {
             setShowOfferLetterModal(true);
@@ -748,6 +753,62 @@ function InternDashboardContent() {
       <div key={activeTab} className="w-full space-y-8">
          {activeTab === "overview" && (
             <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} className="space-y-4">
+               {userStatus?.offerLetterUrl && (
+                  <motion.div
+                     initial={{ opacity: 0, y: -10 }}
+                     animate={{ opacity: 1, y: 0 }}
+                     className="bg-emerald-50 border border-emerald-600/10 py-3 px-4 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-4 shadow-sm"
+                  >
+                     <div className="flex items-center gap-4">
+                        <div className="h-8 w-8 bg-emerald-600 text-white rounded-full flex items-center justify-center shrink-0">
+                           <ShieldCheck size={18} />
+                        </div>
+                        <div>
+                           <h4 className="text-[13px] font-bold text-emerald-900">Your Internship Offer Letter is Ready!</h4>
+                           <p className="text-[11px] text-emerald-700 font-medium leading-relaxed">
+                              Your official Student Forge onboarding documents are signed and issued.
+                           </p>
+                        </div>
+                     </div>
+                     <a
+                        href={userStatus.offerLetterUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-full sm:w-fit px-5 h-8 bg-emerald-600 text-white text-[10px] font-bold rounded-lg hover:bg-black transition-all flex items-center justify-center gap-2 shadow-sm shadow-emerald-500/20"
+                     >
+                        Download Offer Letter <Download size={12} />
+                     </a>
+                  </motion.div>
+               )}
+
+               {userStatus?.letterUrl && (
+                  <motion.div
+                     initial={{ opacity: 0, y: -10 }}
+                     animate={{ opacity: 1, y: 0 }}
+                     className="bg-blue-50 border border-blue-600/10 py-3 px-4 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-4 shadow-sm"
+                  >
+                     <div className="flex items-center gap-4">
+                        <div className="h-8 w-8 bg-[#0055FF] text-white rounded-full flex items-center justify-center shrink-0">
+                           <FileBadge size={18} />
+                        </div>
+                        <div>
+                           <h4 className="text-[13px] font-bold text-blue-900">Your Project Completion Certificate is Ready!</h4>
+                           <p className="text-[11px] text-blue-700 font-medium leading-relaxed">
+                              Congratulations! Your official Student Forge Project Completion Certificate has been successfully issued.
+                           </p>
+                        </div>
+                     </div>
+                     <a
+                        href={userStatus.letterUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-full sm:w-fit px-5 h-8 bg-[#0055FF] text-white text-[10px] font-bold rounded-lg hover:bg-black transition-all flex items-center justify-center gap-2 shadow-sm shadow-blue-500/20"
+                     >
+                        Download Certificate <Download size={12} />
+                     </a>
+                  </motion.div>
+               )}
+
                {user.batch === "Batch 1" && (
                   <motion.div
                      initial={{ opacity: 0, y: -10 }}
@@ -772,26 +833,7 @@ function InternDashboardContent() {
                         Submit Now
                      </button>
                   </motion.div>
-               )}
-               {user.batch === "Batch 3" && (
-                  <motion.div
-                     initial={{ opacity: 0, y: -10 }}
-                     animate={{ opacity: 1, y: 0 }}
-                     className="bg-emerald-50 border border-emerald-600/10 py-2.5 px-4 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-4"
-                  >
-                     <div className="flex items-center gap-4">
-                        <div className="h-8 w-8 bg-emerald-600 text-white rounded-full flex items-center justify-center shrink-0">
-                           <Sparkles size={15} />
-                        </div>
-                        <div>
-                           <h4 className="text-[13px] font-bold text-emerald-900">Welcome Bootcamp Interns</h4>
-                           <p className="text-[11px] text-emerald-700 font-medium leading-relaxed">
-                              Your registration is successful! Welcome to the Student Forge Industrial Program.
-                           </p>
-                        </div>
-                     </div>
-                  </motion.div>
-               )}
+                )}
                <div className="grid grid-cols-12 gap-4 text-left">
                   <div className="col-span-12 lg:col-span-8 flex flex-col gap-4">
                      <div className="relative overflow-hidden bg-[#E0E7FF] p-6 text-[#003366] border border-[#003366]/5 rounded-lg">
@@ -898,19 +940,6 @@ function InternDashboardContent() {
                            />
                         </div>
                      </div>
-
-                     {userStatus?.offerLetterUrl ? (
-                        <div className="bg-emerald-600 p-6 shadow-lg shadow-emerald-900/10 flex flex-col justify-between">
-                           <div className="flex items-baseline justify-between mb-2">
-                              <h3 className="text-xs font-bold text-white uppercase tracking-widest opacity-80">Certification</h3>
-                              <ShieldCheck size={18} className="text-white/40" />
-                           </div>
-                           <p className="text-[15px] font-bold text-white mb-6 leading-tight">Your Offer Letter is now ready.</p>
-                           <a href={userStatus.offerLetterUrl} target="_blank" className="w-full h-11 bg-white text-emerald-700 text-[11px] font-bold uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-zinc-50 transition-all">
-                              Get PDF <Download size={14} />
-                           </a>
-                        </div>
-                     ) : null}
                   </div>
                </div>
 

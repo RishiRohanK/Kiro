@@ -236,6 +236,14 @@ export default function CleedDashboard() {
    const [formSuccess, setFormSuccess] = useState(false);
    const [letterSuccess, setLetterSuccess] = useState(false);
    const [offerLetterSuccess, setOfferLetterSuccess] = useState(false);
+
+   // Project certificate states
+   const [certSubTab, setCertSubTab] = useState<"offer" | "individual" | "group">("offer");
+   const [groupLetterUrl, setGroupLetterUrl] = useState("");
+   const [selectedGroupInternIds, setSelectedGroupInternIds] = useState<string[]>([]);
+   const [sendingGroupLetter, setSendingGroupLetter] = useState(false);
+   const [groupLetterSuccess, setGroupLetterSuccess] = useState(false);
+
    const [scheduleData, setScheduleData] = useState<any>({
       week: "",
       typeOfWork: "",
@@ -251,7 +259,7 @@ export default function CleedDashboard() {
       projectName: "",
       projectDocLink: "",
       teamLead: "",
-      teamInternIds: [] // Array to store selected intern IDs
+      teamInternIds: []
    });
    const [sendingSchedule, setSendingSchedule] = useState(false);
    const [scheduleSuccess, setScheduleSuccess] = useState(false);
@@ -275,7 +283,6 @@ export default function CleedDashboard() {
    const [sendingEvent, setSendingEvent] = useState(false);
    const [eventSuccess, setEventSuccess] = useState(false);
 
-   // Internships Form
    const [internshipData, setInternshipData] = useState({
       title: "",
       description: "",
@@ -306,14 +313,12 @@ export default function CleedDashboard() {
    const [sendingOffer, setSendingOffer] = useState(false);
    const [offerSuccess, setOfferSuccess] = useState(false);
 
-   // Interview Schedule State
    const [isInterviewModalOpen, setIsInterviewModalOpen] = useState(false);
    const [selectedApplicant, setSelectedApplicant] = useState<HiringApplication | null>(null);
    const [interviewTiming, setInterviewTiming] = useState("");
    const [isSendingInterview, setIsSendingInterview] = useState(false);
    const [interviewSuccess, setInterviewSuccess] = useState(false);
 
-   // Exam Control State
    const [examIsActive, setExamIsActive] = useState(false);
    const [globalExitKey, setGlobalExitKey] = useState("000000");
    const [isUpdatingExam, setIsUpdatingExam] = useState(false);
@@ -323,13 +328,11 @@ export default function CleedDashboard() {
    const [feedbacks, setFeedbacks] = useState<any[]>([]);
    const [uiuxSubmissions, setUiuxSubmissions] = useState<any[]>([]);
 
-   // Scheduled Exams State
    const [examsList, setExamsList] = useState<any[]>([]);
    const [richExamsList, setRichExamsList] = useState<any[]>([]);
    const [examFormData, setExamFormData] = useState({ title: "", description: "", date: "", duration: "", batch: "All" });
    const [sendingExamForm, setSendingExamForm] = useState(false);
 
-   // Resources State
    const [resourcesList, setResourcesList] = useState<any[]>([]);
    const [copySuccess, setCopySuccess] = useState<string | null>(null);
    const [resourceFormData, setResourceFormData] = useState({ 
@@ -537,7 +540,7 @@ export default function CleedDashboard() {
 
    useEffect(() => {
       fetchData();
-      const interval = setInterval(fetchData, 60000); // 1 minute interval for fresh data
+      const interval = setInterval(fetchData, 60000); 
       
       const fetchFeedbacks = async () => {
          try {
@@ -1099,6 +1102,31 @@ export default function CleedDashboard() {
       }
    };
 
+   const handleSendGroupLetter = async (e: React.FormEvent) => {
+      e.preventDefault();
+      if (selectedGroupInternIds.length === 0 || !groupLetterUrl) return;
+      setSendingGroupLetter(true);
+      try {
+         const res = await fetch("/api/cleed/letter/bulk", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ internIds: selectedGroupInternIds, letterUrl: groupLetterUrl }),
+         });
+
+         if (res.ok) {
+            setGroupLetterSuccess(true);
+            setGroupLetterUrl("");
+            setSelectedGroupInternIds([]);
+            setTimeout(() => setGroupLetterSuccess(false), 3000);
+            fetchData();
+         }
+      } catch (err) {
+         console.error("Group letter transmission failed");
+      } finally {
+         setSendingGroupLetter(false);
+      }
+   };
+
    const handleDeleteIntern = async (id: string) => {
       if (!confirm("Are you sure you want to permanently remove this intern? All their data (attendance, tasks, submissions) will be deleted.")) return;
       try {
@@ -1559,7 +1587,6 @@ export default function CleedDashboard() {
    return (
       <div className="min-h-screen bg-[#F5F7FA] font-sans text-zinc-900 pb-20 md:pb-0">
          { }
-         { }
          <div className="md:hidden fixed top-0 left-0 right-0 h-16 bg-white z-[60] flex items-center justify-between px-6 pt-[env(safe-area-inset-top)] box-content border-b border-zinc-100 shadow-sm group">
             <div className="flex items-center gap-2">
                <span className="text-xl font-black text-zinc-900 tracking-tighter uppercase leading-none select-none">Cleed</span>
@@ -1633,7 +1660,6 @@ export default function CleedDashboard() {
          </AnimatePresence>
 
          { }
-         {/* Desktop Sidebar (Red) */}
          <aside className="hidden md:flex fixed left-0 top-0 h-full w-20 lg:w-[260px] border-r border-red-700 z-50 flex-col pt-[env(safe-area-inset-top)]" style={{ backgroundColor: '#F5332C' }}>
             <div className="p-8 pb-4 flex items-center justify-start gap-2">
                <span className="text-2xl font-black text-white tracking-tighter uppercase leading-none select-none">Cleed</span>
@@ -1786,7 +1812,6 @@ export default function CleedDashboard() {
             </div>
 
             <div className="p-4 md:p-8 lg:p-12 max-w-7xl mx-auto space-y-8 pb-[env(safe-area-inset-bottom,20px)]">
-               { }
                {activeTab === "internships" && (
                   <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-8">
                      <div className="grid md:grid-cols-2 gap-8 text-left">
@@ -2504,7 +2529,6 @@ export default function CleedDashboard() {
 
                {activeTab === "overview" && (
                   <div className="space-y-10 animate-in fade-in duration-500 text-left">
-                     { }
                      <div className="border-b border-zinc-200 pb-5 flex items-center justify-between">
                         <h1 className="text-3xl font-light tracking-tighter text-zinc-900 leading-tight">
                            {(() => {
@@ -2531,7 +2555,6 @@ export default function CleedDashboard() {
                         )}
                      </div>
 
-                     { }
                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                         {[
                            { label: "Total interns", value: interns.length, color: "text-zinc-900", bg: "bg-white" },
@@ -2546,7 +2569,6 @@ export default function CleedDashboard() {
                         ))}
                      </div>
 
-                     { }
                      <div className="space-y-4">
                         <div className="flex items-center justify-between border-b border-zinc-200 pb-2">
                            <h2 className="text-[11px] font-bold text-zinc-400">Recent Onboarding</h2>
@@ -2588,11 +2610,6 @@ export default function CleedDashboard() {
                   </div>
                )}
 
-
-
-
-
-               { }
                {activeTab === "interns" && (
                   <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-8 text-left">
                      <div className="space-y-6">
@@ -2716,221 +2733,208 @@ export default function CleedDashboard() {
                   </motion.div>
                )}
 
-               <AnimatePresence>
-                  {viewingIntern && (
-                     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-6 bg-zinc-950/40 backdrop-blur-sm">
-                        <motion.div 
-                           initial={{ opacity: 0, scale: 0.95, y: 20 }}
-                           animate={{ opacity: 1, scale: 1, y: 0 }}
-                           exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                           className="bg-white max-w-2xl w-full shadow-2xl border border-zinc-200 overflow-hidden"
-                        >
-                           <div className="relative h-32 bg-zinc-900 overflow-hidden">
-                              <div className="absolute inset-0 opacity-20 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]" />
-                              <button 
-                                 onClick={() => setViewingIntern(null)}
-                                 className="absolute top-4 right-4 h-8 w-8 bg-black/20 hover:bg-black/40 text-white flex items-center justify-center transition-all rounded-none"
-                              >
-                                 <CloseIcon size={18} />
-                              </button>
-                           </div>
+               {activeTab === "certification" && (
+                  <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-8">
+                     <div className="flex justify-center">
+                        <div className="flex bg-zinc-50 border border-zinc-200/80 p-1.5 rounded-none font-bold">
+                           <button
+                              type="button"
+                              onClick={() => setCertSubTab("offer")}
+                              className={`px-6 py-2.5 text-[10px] tracking-widest uppercase transition-all rounded-none ${certSubTab === "offer" ? "bg-zinc-900 text-white shadow-sm" : "text-zinc-500 hover:text-zinc-900"}`}
+                           >
+                              Offer Letters
+                           </button>
+                           <button
+                              type="button"
+                              onClick={() => setCertSubTab("individual")}
+                              className={`px-6 py-2.5 text-[10px] tracking-widest uppercase transition-all rounded-none ${certSubTab === "individual" ? "bg-zinc-900 text-white shadow-sm" : "text-zinc-500 hover:text-zinc-900"}`}
+                           >
+                              Individual Certificates
+                           </button>
+                           <button
+                              type="button"
+                              onClick={() => setCertSubTab("group")}
+                              className={`px-6 py-2.5 text-[10px] tracking-widest uppercase transition-all rounded-none ${certSubTab === "group" ? "bg-zinc-900 text-white shadow-sm" : "text-zinc-500 hover:text-zinc-900"}`}
+                           >
+                              Group Certificates
+                           </button>
+                        </div>
+                     </div>
 
-                           <div className="px-8 pb-10">
-                              <div className="relative -mt-16 mb-6 flex items-end gap-6">
-                                 <div className="h-32 w-32 border-4 border-white bg-zinc-100 shadow-lg overflow-hidden flex-shrink-0">
-                                    {viewingIntern.profileImage ? (
-                                       <img src={viewingIntern.profileImage} alt={viewingIntern.name} className="h-full w-full object-cover rounded-none" />
-                                    ) : (
-                                       <div className="h-full w-full bg-zinc-900 text-white flex items-center justify-center text-4xl font-bold">
-                                          {viewingIntern.name?.charAt(0) || "U"}
-                                       </div>
+                     {certSubTab === "offer" && (
+                        <div className="max-w-2xl mx-auto bg-white border border-zinc-100 p-8">
+                           <div className="space-y-2 mb-8">
+                              <h2 className="text-xl font-bold tracking-tight text-zinc-900 line-clamp-1">Offer letter issuance</h2>
+                              <p className="text-[12px] text-zinc-500 font-medium">Dispatch official offer documents to newly onboarded interns. This will also send an automated notification email.</p>
+                           </div>
+                           <form onSubmit={handleSendOfferLetter} className="space-y-6">
+                              <div className="space-y-1">
+                                 <label className="text-[11px] font-bold text-zinc-400">Target intern</label>
+                                 <select
+                                    className="w-full h-11 bg-zinc-50 border border-zinc-100 px-4 text-sm font-bold outline-none focus:border-blue-600"
+                                    onChange={(e) => {
+                                       const intern = interns.find(i => i.id === e.target.value);
+                                       if (intern) setSelectedIntern(intern);
+                                    }}
+                                 >
+                                    <option value="">Select a student...</option>
+                                    {interns.filter(i => i.isApproved).map(i => (
+                                       <option key={i.id} value={i.id}>
+                                          {i.name} {i.offerLetterUrl ? "✓ Offer Issued" : ""}
+                                       </option>
+                                    ))}
+                                 </select>
+                              </div>
+                              <div className="space-y-1">
+                                 <label className="text-[11px] font-bold text-zinc-400">Document link (PDF/Image)</label>
+                                 <input required value={offerLetterUrl} onChange={(e) => setOfferLetterUrl(e.target.value)} className="w-full h-11 bg-white border border-zinc-100 px-4 text-sm font-bold outline-none focus:border-blue-600" placeholder="https://res.cloudinary.com/..." />
+                              </div>
+                              <button disabled={sendingOfferLetter || !selectedIntern} className="w-full h-14 bg-zinc-900 text-white text-[13px] font-bold hover:bg-blue-600 transition-all disabled:opacity-50">
+                                 {sendingOfferLetter ? "Dispatching offer..." : "Issue offer letter"}
+                              </button>
+                           </form>
+                        </div>
+                     )}
+
+                     {certSubTab === "individual" && (
+                        <div className="max-w-2xl mx-auto bg-white border border-zinc-100 p-8">
+                           <div className="space-y-2 mb-8">
+                              <h2 className="text-xl font-bold tracking-tight text-zinc-900 line-clamp-1">Individual Certificate Issuance</h2>
+                              <p className="text-[12px] text-zinc-500 font-medium">Issue an official project completion certificate to a specific intern. This updates their certification status and sends a real-time email notification.</p>
+                           </div>
+                           <form onSubmit={handleSendLetter} className="space-y-6">
+                              <div className="space-y-1">
+                                 <label className="text-[11px] font-bold text-zinc-400">Target intern</label>
+                                 <select
+                                    required
+                                    className="w-full h-11 bg-zinc-50 border border-zinc-100 px-4 text-sm font-bold outline-none focus:border-blue-600"
+                                    onChange={(e) => {
+                                       const intern = interns.find(i => i.id === e.target.value);
+                                       if (intern) setSelectedIntern(intern);
+                                    }}
+                                 >
+                                    <option value="">Select a student...</option>
+                                    {interns.filter(i => i.isApproved).map(i => (
+                                       <option key={i.id} value={i.id}>
+                                          {i.name} {i.letterUrl ? "✓ Cert Issued" : ""}
+                                       </option>
+                                    ))}
+                                 </select>
+                              </div>
+                              <div className="space-y-1">
+                                 <label className="text-[11px] font-bold text-zinc-400">Document link (PDF/Image)</label>
+                                 <input required value={letterUrl} onChange={(e) => setLetterUrl(e.target.value)} className="w-full h-11 bg-white border border-zinc-100 px-4 text-sm font-bold outline-none focus:border-blue-600" placeholder="https://res.cloudinary.com/..." />
+                              </div>
+                              <button disabled={sendingLetter || !selectedIntern} className="w-full h-14 bg-zinc-900 text-white text-[13px] font-bold hover:bg-blue-600 transition-all disabled:opacity-50">
+                                 {sendingLetter ? "Dispatching certificate..." : "Issue project certificate"}
+                              </button>
+                           </form>
+                        </div>
+                     )}
+
+                     {certSubTab === "group" && (
+                        <div className="max-w-2xl mx-auto bg-white border border-zinc-100 p-8">
+                           <div className="space-y-2 mb-8">
+                              <h2 className="text-xl font-bold tracking-tight text-zinc-900 line-clamp-1">Group Certificate Issuance</h2>
+                              <p className="text-[12px] text-zinc-500 font-medium">Issue project certificates to a group of interns at once. Selected interns will receive their certificates and personal email notifications immediately.</p>
+                           </div>
+                           <form onSubmit={handleSendGroupLetter} className="space-y-6">
+                              <div className="space-y-2">
+                                 <div className="flex items-center justify-between">
+                                    <label className="text-[11px] font-bold text-zinc-400">Select target interns</label>
+                                    <button
+                                       type="button"
+                                       onClick={() => {
+                                          const approvedInternIds = interns.filter(i => i.isApproved).map(i => i.id);
+                                          if (selectedGroupInternIds.length === approvedInternIds.length) {
+                                             setSelectedGroupInternIds([]);
+                                          } else {
+                                             setSelectedGroupInternIds(approvedInternIds);
+                                          }
+                                       }}
+                                       className="text-[10px] font-bold text-[#0055FF] hover:text-black transition-colors"
+                                    >
+                                       {selectedGroupInternIds.length === interns.filter(i => i.isApproved).length ? "Deselect All" : "Select All"}
+                                    </button>
+                                 </div>
+                                 <div className="grid grid-cols-2 gap-2 max-h-[220px] overflow-y-auto p-4 bg-zinc-50 border border-zinc-100 rounded-none">
+                                    {interns.filter(i => i.isApproved).map((intern) => (
+                                       <label key={intern.id} className={`flex items-center gap-3 p-2.5 border transition-all cursor-pointer rounded-none ${selectedGroupInternIds.includes(intern.id) ? 'bg-zinc-900 border-zinc-900 text-white shadow-md' : 'bg-white border-zinc-100 hover:border-zinc-200 text-zinc-800'}`}>
+                                          <input
+                                             type="checkbox"
+                                             checked={selectedGroupInternIds.includes(intern.id)}
+                                             onChange={(e) => {
+                                                if (e.target.checked) {
+                                                   setSelectedGroupInternIds([...selectedGroupInternIds, intern.id]);
+                                                } else {
+                                                   setSelectedGroupInternIds(selectedGroupInternIds.filter(id => id !== intern.id));
+                                                }
+                                             }}
+                                             className="h-3.5 w-3.5 accent-blue-600 cursor-pointer"
+                                          />
+                                          <span className="text-[11px] font-bold truncate">{intern.name}</span>
+                                       </label>
+                                    ))}
+                                    {interns.filter(i => i.isApproved).length === 0 && (
+                                       <p className="col-span-2 text-center text-zinc-400 text-xs py-4">No approved interns available.</p>
                                     )}
                                  </div>
-                                 <div className="pb-2 space-y-1">
-                                    <h3 className="text-2xl font-black text-zinc-900 tracking-tight uppercase">{viewingIntern.name}</h3>
-                                    <div className="flex items-center gap-3">
-                                       <span className="bg-zinc-100 px-2 py-0.5 text-[10px] font-bold text-zinc-500 uppercase tracking-widest border border-zinc-200">{viewingIntern.batch || 'Batch Active'}</span>
-                                       <span className={`px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest border ${viewingIntern.isApproved ? 'bg-emerald-50 text-emerald-600 border-emerald-100' : 'bg-amber-50 text-amber-600 border-amber-100'}`}>
-                                          {viewingIntern.isApproved ? 'Authorized' : 'Pending Rev'}
-                                       </span>
-                                    </div>
-                                 </div>
+                                 {selectedGroupInternIds.length > 0 && (
+                                    <p className="text-[10px] font-bold text-emerald-600">{selectedGroupInternIds.length} interns selected for dispatch.</p>
+                                 )}
                               </div>
-
-                              <div className="grid md:grid-cols-2 gap-10">
-                                 <div className="space-y-6">
-                                    <div className="space-y-4">
-                                       <h4 className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest border-b border-zinc-100 pb-2">Academic Protocol</h4>
-                                       <div className="grid grid-cols-1 gap-4">
-                                          <div>
-                                             <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-tighter">Institution</p>
-                                             <p className="text-[13px] font-bold text-zinc-900 truncate">{viewingIntern.college || 'Not Synchronized'}</p>
-                                          </div>
-                                          <div className="grid grid-cols-2 gap-4">
-                                             <div>
-                                                <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-tighter">Department</p>
-                                                <p className="text-[13px] font-bold text-zinc-900 uppercase">{viewingIntern.department || viewingIntern.branch || 'N/A'}</p>
-                                             </div>
-                                             <div>
-                                                <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-tighter">Academic Year</p>
-                                                <p className="text-[13px] font-bold text-zinc-900 uppercase">{viewingIntern.year || 'N/A'}</p>
-                                             </div>
-                                          </div>
-                                          <div>
-                                             <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-tighter">Graduation Node</p>
-                                             <p className="text-[13px] font-bold text-zinc-900">{viewingIntern.graduationYear || 'N/A'}</p>
-                                          </div>
-                                       </div>
-                                    </div>
-
-                                    <div className="space-y-4">
-                                       <h4 className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest border-b border-zinc-100 pb-2">Identity Details</h4>
-                                       <div className="grid grid-cols-2 gap-4">
-                                          <div>
-                                             <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-tighter">Date of Birth</p>
-                                             <p className="text-[13px] font-bold text-zinc-900 tabular-nums">{viewingIntern.dob || 'N/A'}</p>
-                                          </div>
-                                          <div>
-                                             <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-tighter">Email Identity</p>
-                                             <p className="text-[13px] font-bold text-zinc-900 truncate">{viewingIntern.email}</p>
-                                          </div>
-                                       </div>
-                                    </div>
-                                 </div>
-
-                                 <div className="space-y-6">
-                                    <div className="space-y-4">
-                                       <h4 className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest border-b border-zinc-100 pb-2">Technical Archetype</h4>
-                                       <div className="p-4 bg-zinc-50 border border-zinc-100 min-h-[120px]">
-                                          <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-tighter mb-2">Area of Interest</p>
-                                          <p className="text-[13px] font-bold text-zinc-900 leading-relaxed italic">
-                                             "{viewingIntern.interestedArea || 'Technical mission parameters have not been defined for this identity yet.'}"
-                                          </p>
-                                       </div>
-                                    </div>
-
-                                    <div className="flex flex-col gap-3 pt-4">
-                                       <button 
-                                          onClick={() => {
-                                             window.location.href = `mailto:${viewingIntern.email}`;
-                                          }}
-                                          className="flex items-center justify-center gap-2 h-12 bg-black text-white text-[11px] font-bold uppercase tracking-widest hover:bg-zinc-800 transition-all rounded-none"
-                                       >
-                                          <Mail size={16} /> Contact Intern
-                                       </button>
-                                       {viewingIntern.githubLink && (
-                                          <a 
-                                             href={viewingIntern.githubLink}
-                                             target="_blank"
-                                             className="flex items-center justify-center gap-2 h-12 bg-white border border-zinc-200 text-zinc-900 text-[11px] font-bold uppercase tracking-widest hover:bg-zinc-50 transition-all rounded-none"
-                                          >
-                                             <Github size={16} /> Technical Profile
-                                          </a>
-                                       )}
-                                    </div>
-                                 </div>
+                              <div className="space-y-1">
+                                 <label className="text-[11px] font-bold text-zinc-400">Document link (PDF/Image)</label>
+                                 <input required value={groupLetterUrl} onChange={(e) => setGroupLetterUrl(e.target.value)} className="w-full h-11 bg-white border border-zinc-100 px-4 text-sm font-bold outline-none focus:border-blue-600" placeholder="https://res.cloudinary.com/..." />
                               </div>
-                           </div>
-                        </motion.div>
-                     </div>
-                  )}
-               </AnimatePresence>
-
-               {activeTab === "assign" && (
-                  <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-12">
-                     <div className="max-w-2xl bg-white border border-zinc-100 p-8">
-                        <div className="space-y-2 mb-8">
-                           <h2 className="text-2xl font-bold tracking-tight text-zinc-900 line-clamp-1">Dispatch task</h2>
-                           <p className="text-[14px] text-zinc-500 font-medium">Allocate technical missions to authorized student identities.</p>
+                              <button disabled={sendingGroupLetter || selectedGroupInternIds.length === 0} className="w-full h-14 bg-zinc-900 text-white text-[13px] font-bold hover:bg-blue-600 transition-all disabled:opacity-50">
+                                 {sendingGroupLetter ? "Dispatching bulk certificates..." : `Issue certificates to ${selectedGroupInternIds.length} interns`}
+                              </button>
+                           </form>
                         </div>
-                        <form onSubmit={handlePostTask} className="space-y-6">
-                           <div className="space-y-1">
-                              <label className="text-[11px] font-bold text-zinc-400">Target identity</label>
-                              <select
-                                 className="w-full h-11 bg-zinc-50 border border-zinc-100 px-4 text-sm font-bold outline-none focus:border-blue-600"
-                                 onChange={(e) => {
-                                    const intern = interns.find(i => i.id === e.target.value);
-                                    if (intern) setSelectedIntern(intern);
-                                 }}
-                              >
-                                 <option value="">Select a student...</option>
-                                 {interns.filter(i => i.isApproved).map(i => (
-                                    <option key={i.id} value={i.id}>{i.name} ({i.email})</option>
-                                 ))}
-                              </select>
-                           </div>
-                           <div className="space-y-1">
-                              <label className="text-[11px] font-bold text-zinc-400">Mission title</label>
-                              <input required value={taskData.title} onChange={(e) => setTaskData({ ...taskData, title: e.target.value })} className="w-full h-11 bg-white border border-zinc-100 px-4 text-sm font-bold outline-none focus:border-blue-600" placeholder="e.g., Database Schema Synchronization" />
-                           </div>
-                           <div className="space-y-1">
-                              <label className="text-[11px] font-bold text-zinc-400">Mission parameters</label>
-                              <textarea required rows={4} value={taskData.description} onChange={(e) => setTaskData({ ...taskData, description: e.target.value })} className="w-full bg-white border border-zinc-100 p-4 text-sm font-bold outline-none focus:border-blue-600 resize-none" placeholder="Detail the technical requirements..." />
-                           </div>
-                           <button disabled={sendingTask || !selectedIntern} className="w-full h-14 bg-zinc-900 text-white text-[13px] font-bold hover:bg-blue-600 transition-all disabled:opacity-50">
-                              {sendingTask ? "Dispatching mission..." : "Initiate dispatch"}
-                           </button>
-                           {formSuccess && <p className="text-emerald-600 text-[11px] font-bold text-center">Mission synchronized successfully.</p>}
-                        </form>
-                     </div>
-                  </motion.div>
-               )}
-
-               { }
-               {activeTab === "certification" && (
-                  <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-12">
-                     { }
-                     <div className="max-w-2xl mx-auto bg-white border border-zinc-100 p-8">
-                        <div className="space-y-2 mb-8">
-                           <h2 className="text-xl font-bold tracking-tight text-zinc-900 line-clamp-1">Offer letter issuance</h2>
-                           <p className="text-[12px] text-zinc-500 font-medium">Dispatch official offer documents to newly onboarded interns. This will also send an automated notification email.</p>
-                        </div>
-                        <form onSubmit={handleSendOfferLetter} className="space-y-6">
-                           <div className="space-y-1">
-                              <label className="text-[11px] font-bold text-zinc-400">Target intern</label>
-                              <select
-                                 className="w-full h-11 bg-zinc-50 border border-zinc-100 px-4 text-sm font-bold outline-none focus:border-blue-600"
-                                 onChange={(e) => {
-                                    const intern = interns.find(i => i.id === e.target.value);
-                                    if (intern) setSelectedIntern(intern);
-                                 }}
-                              >
-                                 <option value="">Select a student...</option>
-                                 {interns.filter(i => i.isApproved).map(i => (
-                                    <option key={i.id} value={i.id}>
-                                       {i.name} {i.offerLetterUrl ? "✓ Offer Issued" : ""}
-                                    </option>
-                                 ))}
-                              </select>
-                           </div>
-                           <div className="space-y-1">
-                              <label className="text-[11px] font-bold text-zinc-400">Document link (PDF/Image)</label>
-                              <input required value={offerLetterUrl} onChange={(e) => setOfferLetterUrl(e.target.value)} className="w-full h-11 bg-white border border-zinc-100 px-4 text-sm font-bold outline-none focus:border-blue-600" placeholder="https://res.cloudinary.com/..." />
-                           </div>
-                           <button disabled={sendingOfferLetter || !selectedIntern} className="w-full h-14 bg-zinc-900 text-white text-[13px] font-bold hover:bg-blue-600 transition-all disabled:opacity-50">
-                              {sendingOfferLetter ? "Dispatching offer..." : "Issue offer letter"}
-                           </button>
-                        </form>
-                     </div>
+                     )}
                   </motion.div>
                )}
 
                <AnimatePresence>
-                  {offerLetterSuccess && (
-                     <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/20 backdrop-blur-sm">
-                        <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }} className="bg-white max-w-[320px] w-full p-8 border border-zinc-100 shadow-2xl text-center relative">
-                           <div className="h-12 w-12 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-5">
-                              <Check size={24} />
-                           </div>
-                           <h3 className="text-sm font-bold text-zinc-900 mb-2">Offer Dispatch Successful</h3>
-                           <p className="text-[11px] text-zinc-500 font-medium mb-6">Internship offer has been synchronized with the student's dashboard and notification email dispatched.</p>
-                           <button onClick={() => setOfferLetterSuccess(false)} className="w-full h-11 bg-zinc-900 text-white text-[11px] font-bold hover:bg-black transition-all">Dismiss Protocol</button>
-                        </motion.div>
-                     </div>
-                  )}
-               </AnimatePresence>
+                   {offerLetterSuccess && (
+                      <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/20 backdrop-blur-sm">
+                         <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }} className="bg-white max-w-[320px] w-full p-8 border border-zinc-100 shadow-2xl text-center relative">
+                            <div className="h-12 w-12 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-5">
+                               <Check size={24} />
+                            </div>
+                            <h3 className="text-sm font-bold text-zinc-900 mb-2">Offer Dispatch Successful</h3>
+                            <p className="text-[11px] text-zinc-500 font-medium mb-6">Internship offer has been synchronized with the student's dashboard and notification email dispatched.</p>
+                            <button onClick={() => setOfferLetterSuccess(false)} className="w-full h-11 bg-zinc-900 text-white text-[11px] font-bold hover:bg-black transition-all">Dismiss Protocol</button>
+                         </motion.div>
+                      </div>
+                   )}
+                   {letterSuccess && (
+                      <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/20 backdrop-blur-sm">
+                         <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }} className="bg-white max-w-[320px] w-full p-8 border border-zinc-100 shadow-2xl text-center relative">
+                            <div className="h-12 w-12 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-5">
+                               <Check size={24} />
+                            </div>
+                            <h3 className="text-sm font-bold text-zinc-900 mb-2">Certificate Dispatch Successful</h3>
+                            <p className="text-[11px] text-zinc-500 font-medium mb-6">The project certificate has been successfully associated with the intern's record and notification email dispatched.</p>
+                            <button onClick={() => setLetterSuccess(false)} className="w-full h-11 bg-zinc-900 text-white text-[11px] font-bold hover:bg-black transition-all">Dismiss Protocol</button>
+                         </motion.div>
+                      </div>
+                   )}
+                   {groupLetterSuccess && (
+                      <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/20 backdrop-blur-sm">
+                         <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }} className="bg-white max-w-[320px] w-full p-8 border border-zinc-100 shadow-2xl text-center relative">
+                            <div className="h-12 w-12 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-5">
+                               <Check size={24} />
+                            </div>
+                            <h3 className="text-sm font-bold text-zinc-900 mb-2">Group Dispatch Successful</h3>
+                            <p className="text-[11px] text-zinc-500 font-medium mb-6">Bulk project certificates have been associated with all selected intern records and notification emails dispatched in parallel.</p>
+                            <button onClick={() => setGroupLetterSuccess(false)} className="w-full h-11 bg-zinc-900 text-white text-[11px] font-bold hover:bg-black transition-all">Dismiss Protocol</button>
+                         </motion.div>
+                      </div>
+                   )}
+                </AnimatePresence>
 
-               { }
                {activeTab === "mentorship" && (
                   <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-8 text-left">
                      <div className="bg-white border border-zinc-100 p-8">

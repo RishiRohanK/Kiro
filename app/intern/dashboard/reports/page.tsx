@@ -15,6 +15,7 @@ export default function InternReportsPage() {
   const [attendance, setAttendance] = useState<number>(0);
   const [loading, setLoading] = useState(true);
   const [showResponses, setShowResponses] = useState<string | null>(null);
+  const [userStatus, setUserStatus] = useState<any>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -23,6 +24,9 @@ export default function InternReportsPage() {
       const user = JSON.parse(storedUser);
 
       try {
+        const statusRes = await fetch(`/api/intern/status?id=${user.id}`);
+        const statusData = await statusRes.json();
+        setUserStatus(statusData);
         const exRes = await fetch("/api/exams/session");
         const exData = await exRes.json();
         const userSessions = Array.isArray(exData) ? exData.filter((s: any) => s.userId === user.id) : [];
@@ -171,6 +175,69 @@ export default function InternReportsPage() {
                 )}
             </div>
         </section>
+
+        {/* My Documents & Certifications */}
+        {(userStatus?.offerLetterUrl || userStatus?.letterUrl) && (
+          <section className="space-y-6">
+              <div className="flex items-center gap-2 border-b border-zinc-200 pb-3">
+                  <CheckCircle2 size={16} className="text-zinc-400" />
+                  <h2 className="text-[13px] font-bold text-zinc-500 uppercase tracking-widest">My Documents & Certifications</h2>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {userStatus?.offerLetterUrl && (
+                     <motion.div 
+                         initial={{ opacity: 0, y: 5 }}
+                         animate={{ opacity: 1, y: 0 }}
+                         className="bg-white border border-zinc-100 p-6 rounded-md flex flex-col md:flex-row items-center justify-between gap-4 hover:shadow-md transition-all"
+                     >
+                         <div className="flex items-center gap-4">
+                             <div className="h-10 w-10 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center shrink-0">
+                                 <CheckCircle2 size={20} />
+                             </div>
+                             <div>
+                                 <h4 className="text-sm font-bold text-zinc-800">Internship Offer Letter</h4>
+                                 <p className="text-[11px] text-zinc-400 font-medium">Issued official onboarding and terms document.</p>
+                             </div>
+                         </div>
+                         <a 
+                             href={userStatus.offerLetterUrl} 
+                             target="_blank" 
+                             rel="noopener noreferrer"
+                             className="w-full md:w-auto px-5 h-10 bg-emerald-600 hover:bg-black text-white text-[11px] font-bold uppercase tracking-widest flex items-center justify-center gap-2 transition-all rounded"
+                         >
+                             Download Offer Letter
+                         </a>
+                     </motion.div>
+                  )}
+
+                  {userStatus?.letterUrl && (
+                     <motion.div 
+                         initial={{ opacity: 0, y: 5 }}
+                         animate={{ opacity: 1, y: 0 }}
+                         className="bg-white border border-zinc-100 p-6 rounded-md flex flex-col md:flex-row items-center justify-between gap-4 hover:shadow-md transition-all"
+                     >
+                         <div className="flex items-center gap-4">
+                             <div className="h-10 w-10 bg-blue-50 text-[#0055FF] rounded-full flex items-center justify-center shrink-0">
+                                 <BarChart3 size={20} />
+                             </div>
+                             <div>
+                                 <h4 className="text-sm font-bold text-zinc-800">Project Completion Certificate</h4>
+                                 <p className="text-[11px] text-zinc-400 font-medium">Issued official technical project completion certificate.</p>
+                             </div>
+                         </div>
+                         <a 
+                             href={userStatus.letterUrl} 
+                             target="_blank" 
+                             rel="noopener noreferrer"
+                             className="w-full md:w-auto px-5 h-10 bg-[#0055FF] hover:bg-black text-white text-[11px] font-bold uppercase tracking-widest flex items-center justify-center gap-2 transition-all rounded"
+                         >
+                             Download Certificate
+                         </a>
+                     </motion.div>
+                  )}
+              </div>
+          </section>
+        )}
       </div>
     </div>
   );

@@ -51,7 +51,6 @@ function InternDashboardLayoutContent({
     const [isProfileComplete, setIsProfileComplete] = useState(true);
     const [checkingProfile, setCheckingProfile] = useState(true);
     const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
-    const [isTrainingOpen, setIsTrainingOpen] = useState(false);
     const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
     const [streakCount, setStreakCount] = useState(0);
 
@@ -390,7 +389,7 @@ function InternDashboardLayoutContent({
                         exit={{ y: -50, opacity: 0 }}
                         className="fixed top-14 left-0 right-0 h-12 bg-zinc-900 border-b border-zinc-800 z-40 flex items-center shadow-lg lg:left-[var(--sidebar-width)] transition-all duration-500"
                         style={{ 
-                            '--sidebar-width': isSidebarCollapsed ? '80px' : '280px' 
+                            '--sidebar-width': isSidebarCollapsed ? '68px' : '240px' 
                         } as any}
                     >
                         <div className="flex-1 max-w-[1600px] mx-auto px-4 md:px-8 flex items-center justify-between h-full">
@@ -405,8 +404,8 @@ function InternDashboardLayoutContent({
                                                 isSubActive ? "text-white" : "text-white/70 hover:text-white"
                                             }`}
                                         >
-                                            <sub.icon size={16} strokeWidth={isSubActive ? 2.5 : 2} className={isSubActive ? "text-white shadow-[0_0_10px_rgba(255,255,255,0.3)]" : "text-white/60 group-hover:text-white transition-colors"} />
-                                            <span className={`text-[12px] font-bold whitespace-nowrap transition-all ${isSubActive ? "opacity-100" : "opacity-70 group-hover:opacity-100"}`}>
+                                            <sub.icon size={18} strokeWidth={isSubActive ? 2.25 : 1.75} className={isSubActive ? "text-white shadow-[0_0_10px_rgba(255,255,255,0.3)]" : "text-white/60 group-hover:text-white transition-colors"} />
+                                            <span className={`text-[13px] font-bold whitespace-nowrap transition-all ${isSubActive ? "opacity-100" : "opacity-70 group-hover:opacity-100"}`}>
                                                 {sub.name}
                                             </span>
                                             {isSubActive && (
@@ -422,9 +421,9 @@ function InternDashboardLayoutContent({
 
                             <button 
                                 onClick={handleLogout}
-                                className="flex items-center gap-2 px-4 h-8 bg-red-600 hover:bg-red-700 text-white text-[11px] font-bold rounded-md transition-all shadow-lg shadow-red-900/20 shrink-0 ml-4"
+                                className="flex items-center gap-2 px-4 h-9 bg-red-600 hover:bg-red-700 text-white text-[12px] font-bold rounded-lg transition-all shadow-lg shadow-red-900/20 shrink-0 ml-4"
                             >
-                                <LogOut size={14} strokeWidth={2.5} />
+                                <LogOut size={16} strokeWidth={2.25} />
                                 Logout
                             </button>
                         </div>
@@ -437,35 +436,35 @@ function InternDashboardLayoutContent({
 
                 {/* Sidebar Desktop */}
                 <aside 
-                    className={`hidden lg:flex flex-col z-40 transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] border-r border-zinc-200/50 ${
-                        isSidebarCollapsed ? "w-[80px]" : "w-[280px]"
-                    } bg-white shadow-[4px_0_24px_rgba(0,0,0,0.02)] h-full`}
+                    className={`hidden lg:flex flex-col z-40 transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] border-r border-zinc-200/40 ${
+                        isSidebarCollapsed ? "w-[68px]" : "w-[240px]"
+                    } bg-white shadow-[2px_0_12px_rgba(0,0,0,0.01)] h-full`}
                 >
                     <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
                         {/* Scrollable Area */}
-                        <div className="flex-1 overflow-y-auto overflow-x-hidden scrollbar-hide py-4 px-3 space-y-1">
+                        <div className="flex-1 overflow-y-auto overflow-x-hidden scrollbar-hide py-5 px-3 space-y-1.5">
                             {/* Sidebar Header/Streak Section */}
-                            <div className={`mb-6 transition-all duration-300 ${isSidebarCollapsed ? "px-1" : "px-2"}`}>
-                                <div className={`flex items-center gap-3 bg-gradient-to-br from-orange-50 to-orange-100/50 p-3 rounded-2xl border border-orange-200/50 relative group/streak ${isSidebarCollapsed ? "justify-center w-12 h-12 p-0 mx-auto" : "w-full"}`}>
-                                    <div className="bg-orange-500 p-2 rounded-xl shadow-lg shadow-orange-200 relative shrink-0">
-                                        <Flame size={isSidebarCollapsed ? 20 : 22} className="text-white animate-pulse" />
+                            <div className={`mb-5 transition-all duration-300 ${isSidebarCollapsed ? "px-0" : "px-1.5"}`}>
+                                <div className={`flex items-center bg-orange-50/40 p-2.5 rounded-2xl border border-orange-100 relative group/streak ${isSidebarCollapsed ? "justify-center w-11 h-11 p-0 mx-auto" : "w-full gap-3"}`}>
+                                    <div className="bg-gradient-to-br from-orange-400 to-orange-500 p-2 rounded-xl shadow-sm relative shrink-0">
+                                        <Flame size={18} className="text-white animate-pulse" />
                                         {isSidebarCollapsed && (
-                                            <div className="absolute -top-2 -right-2 bg-zinc-900 text-white text-[9px] font-black h-5 w-5 rounded-full flex items-center justify-center border-2 border-white shadow-sm">
+                                            <div className="absolute -top-1.5 -right-1.5 bg-orange-600 text-white text-[9px] font-black h-4.5 w-4.5 rounded-full flex items-center justify-center border border-white shadow-sm">
                                                 {streakCount}
                                             </div>
                                         )}
                                     </div>
                                     {!isSidebarCollapsed && (
                                         <div className="flex flex-col min-w-0">
-                                            <span className="text-[9px] font-black text-orange-400 uppercase tracking-[0.2em] mb-0.5 truncate">Live Streak</span>
+                                            <span className="text-[9px] font-black text-orange-400 uppercase tracking-wider leading-none mb-1 truncate">Live Streak</span>
                                             <div className="flex items-baseline gap-1">
                                                 <AnimatePresence mode="wait">
                                                     <motion.span 
                                                         key={streakCount}
-                                                        initial={{ y: 10, opacity: 0 }}
+                                                        initial={{ y: 5, opacity: 0 }}
                                                         animate={{ y: 0, opacity: 1 }}
-                                                        exit={{ y: -10, opacity: 0 }}
-                                                        className="text-xl font-black text-orange-600 leading-none"
+                                                        exit={{ y: -5, opacity: 0 }}
+                                                        className="text-base font-black text-orange-600 leading-none"
                                                     >
                                                         {streakCount}
                                                     </motion.span>
@@ -477,96 +476,64 @@ function InternDashboardLayoutContent({
                                 </div>
                             </div>
 
-                            <nav className="space-y-1">
+                            <nav className="space-y-1.5">
                                 {navItems.filter(i => !i.hideFromSidebar).map((item) => {
                                     const itemUrl = new URL(item.slug, "http://localhost");
                                     const itemPath = itemUrl.pathname;
                                     const itemView = itemUrl.searchParams.get("view");
                                     const isActive = pathname === itemPath && (itemView === currentView || (!itemView && !currentView));
                                     
-                                    if (item.name === "Training") return null;
-
                                     return (
                                         <Link 
                                             key={item.name} 
                                             href={item.slug}
                                             className={`flex items-center h-11 transition-all rounded-xl relative group ${
                                                 isActive 
-                                                    ? "bg-[#003366] text-white shadow-md shadow-blue-900/20" 
-                                                    : "text-zinc-500 hover:bg-zinc-50 hover:text-[#003366]"
-                                            } ${isSidebarCollapsed ? "justify-center px-0 mx-auto w-11" : "px-3 gap-3"}`}
+                                                    ? "bg-[#003366] text-white shadow-[0_4px_12px_rgba(0,51,102,0.15)] font-semibold" 
+                                                    : "text-zinc-600 hover:bg-[#E8EDFF]/40 hover:text-[#003366]"
+                                            } ${isSidebarCollapsed ? "justify-center px-0 mx-auto w-11" : "px-3.5 gap-3"}`}
                                         >
-                                            <item.icon size={20} strokeWidth={isActive ? 2.5 : 2} className={isActive ? "text-white" : "text-zinc-400 group-hover:text-[#003366]"} />
+                                            <item.icon 
+                                                size={18} 
+                                                strokeWidth={isActive ? 2.25 : 1.75} 
+                                                className={`shrink-0 transition-colors ${
+                                                    isActive 
+                                                        ? "text-white" 
+                                                        : "text-zinc-400 group-hover:text-[#003366]"
+                                                }`} 
+                                            />
                                             {!isSidebarCollapsed && (
-                                                <span className="flex-1 text-[13px] font-semibold tracking-tight truncate">{item.name}</span>
+                                                <span className="flex-1 text-[13.5px] font-medium tracking-tight truncate">{item.name}</span>
                                             )}
                                             {isActive && !isSidebarCollapsed && (
-                                                <div className="absolute right-2 h-1.5 w-1.5 rounded-full bg-white/40" />
+                                                <motion.div 
+                                                    layoutId="activeDot"
+                                                    className="absolute right-3.5 h-1.5 w-1.5 rounded-full bg-white/60"
+                                                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                                                />
                                             )}
                                             
                                             {isSidebarCollapsed && (
-                                                <div className="absolute left-full ml-3 px-2 py-1 bg-zinc-900 text-white text-[10px] font-bold rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-[100] pointer-events-none">
+                                                <div className="absolute left-full ml-3 px-2.5 py-1.5 bg-zinc-900/95 backdrop-blur-sm text-white text-[11px] font-medium rounded-lg opacity-0 group-hover:opacity-100 transition-all duration-200 transform translate-x-2 group-hover:translate-x-0 whitespace-nowrap z-[100] pointer-events-none shadow-lg border border-zinc-800/50">
                                                     {item.name}
                                                 </div>
                                             )}
                                         </Link>
                                     );
                                 })}
-
-                                {/* Training Section */}
-                                <div className="pt-2">
-                                    <button
-                                        onClick={() => !isSidebarCollapsed && setIsTrainingOpen(prev => !prev)}
-                                        className={`w-full flex items-center h-11 transition-all rounded-xl relative group ${
-                                            isTrainingActive 
-                                                ? "bg-[#003366] text-white shadow-md shadow-blue-900/20" 
-                                                : "text-zinc-500 hover:bg-zinc-50 hover:text-[#003366]"
-                                        } ${isSidebarCollapsed ? "justify-center px-0 mx-auto w-11" : "px-3 gap-3"}`}
-                                    >
-                                        <BookOpen size={20} strokeWidth={isTrainingActive ? 2.5 : 2} className={isTrainingActive ? "text-white" : "text-zinc-400 group-hover:text-[#003366]"} />
-                                        {!isSidebarCollapsed && (
-                                            <>
-                                                <span className="flex-1 text-[13px] font-semibold text-left truncate">Training</span>
-                                                <ChevronDown
-                                                    size={14}
-                                                    className={`transition-transform duration-200 text-white/50 ${isTrainingOpen || isTrainingActive ? "rotate-180" : ""}`}
-                                                />
-                                            </>
-                                        )}
-                                        {isSidebarCollapsed && (
-                                            <div className="absolute left-full ml-3 px-2 py-1 bg-zinc-900 text-white text-[10px] font-bold rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-[100] pointer-events-none">
-                                                Training
-                                            </div>
-                                        )}
-                                    </button>
-                                    
-                                    {!isSidebarCollapsed && (isTrainingOpen || isTrainingActive) && (
-                                        <div className="mt-1 ml-4 pl-3 border-l-2 border-zinc-100 space-y-1">
-                                            {trainingSubItems.map(sub => {
-                                                const isSubActive = pathname === new URL(sub.slug, "http://localhost").pathname;
-                                                return (
-                                                    <Link key={sub.name} href={sub.slug}
-                                                        className={`flex items-center h-10 px-3 gap-3 transition-all rounded-lg group ${isSubActive ? "text-[#003366] font-bold bg-blue-50/50" : "text-zinc-400 hover:text-[#003366] hover:bg-zinc-50"}`}
-                                                    >
-                                                        <sub.icon size={16} strokeWidth={isSubActive ? 2.5 : 2} />
-                                                        <span className="flex-1 text-[12px] truncate">{sub.name}</span>
-                                                    </Link>
-                                                );
-                                            })}
-                                        </div>
-                                    )}
-                                </div>
                             </nav>
                         </div>
 
                         {/* Sidebar Footer - Controls */}
-                        <div className="mt-auto p-4 space-y-2 border-t border-zinc-50 bg-white">
+                        <div className="mt-auto p-3.5 space-y-2 border-t border-zinc-100 bg-white">
                             <button
                                 onClick={toggleHand}
                                 disabled={isTogglingHand}
-                                className={`w-full flex items-center transition-all font-bold rounded-xl ${
-                                    handRaised ? "bg-amber-500 text-white shadow-lg shadow-amber-200/50" : "bg-yellow-400 text-[#003366] hover:bg-yellow-300"
-                                } ${isSidebarCollapsed ? "h-11 w-11 justify-center px-0 mx-auto" : "h-11 px-4 gap-3 text-[13px]"}`}
+                                className={`w-full flex items-center transition-all font-semibold rounded-xl ${
+                                    handRaised 
+                                        ? "bg-amber-500 text-white shadow-sm hover:bg-amber-600" 
+                                        : "bg-amber-50/50 text-amber-700 border border-amber-200/60 hover:bg-amber-100/70 hover:text-amber-800"
+                                } ${isSidebarCollapsed ? "h-11 w-11 justify-center px-0 mx-auto" : "h-11 px-3.5 gap-3 text-[13px]"}`}
                             >
                                 <Hand size={18} className={handRaised ? "animate-bounce" : "shrink-0"} />
                                 {!isSidebarCollapsed && <span className="truncate">{handRaised ? "Active" : "Help"}</span>}
@@ -578,18 +545,22 @@ function InternDashboardLayoutContent({
                                     setIsSidebarCollapsed(newState);
                                     localStorage.setItem('sidebar_manual_collapse', newState.toString());
                                 }}
-                                className={`w-full flex items-center h-11 transition-all font-bold rounded-xl bg-zinc-50 text-zinc-400 hover:bg-zinc-100 hover:text-zinc-600 border border-zinc-100/50 ${
-                                    isSidebarCollapsed ? "justify-center px-0 mx-auto w-11" : "px-4 gap-3 text-[13px]"
+                                className={`w-full flex items-center h-11 transition-all font-semibold rounded-xl bg-zinc-50/60 text-zinc-500 hover:bg-zinc-100/80 hover:text-zinc-700 border border-zinc-200/40 ${
+                                    isSidebarCollapsed ? "justify-center px-0 mx-auto w-11" : "px-3.5 gap-3 text-[13px]"
                                 }`}
                             >
                                 <CollapseIcon size={18} className={`transition-transform duration-500 shrink-0 ${isSidebarCollapsed ? "rotate-180" : ""}`} />
                                 {!isSidebarCollapsed && <span className="truncate">Collapse Menu</span>}
-                                {isSidebarCollapsed && <div className="absolute left-full ml-3 px-2 py-1 bg-zinc-900 text-white text-[10px] font-bold rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-[100] pointer-events-none">Expand Menu</div>}
+                                {isSidebarCollapsed && (
+                                    <div className="absolute left-full ml-3 px-2.5 py-1.5 bg-zinc-900/95 backdrop-blur-sm text-white text-[11px] font-medium rounded-lg opacity-0 group-hover:opacity-100 transition-all duration-200 transform translate-x-2 group-hover:translate-x-0 whitespace-nowrap z-[100] pointer-events-none shadow-lg border border-zinc-800/50">
+                                        Expand Menu
+                                    </div>
+                                )}
                             </button>
 
                             {!isSidebarCollapsed && (
-                                <div className="pt-2 flex items-center justify-center">
-                                    <span className="text-[10px] font-bold text-zinc-300 uppercase tracking-widest">Platform v2.1</span>
+                                <div className="pt-1 flex items-center justify-center">
+                                    <span className="text-[9px] font-bold text-zinc-300 uppercase tracking-widest leading-none">Platform v2.1</span>
                                 </div>
                             )}
                         </div>
