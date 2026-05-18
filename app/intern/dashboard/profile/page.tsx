@@ -443,6 +443,16 @@ export default function InternProfile() {
                                                     <img src="https://media.collegedekho.com/media/img/institute/logo/Malla_reddy_University_logo.png" alt="MRUN" className="h-8 w-auto object-contain" />
                                                 ) : intern.college?.toLowerCase().includes('siddhartha') ? (
                                                     <img src="https://media.licdn.com/dms/image/v2/C560BAQGV5F0LXyUOTQ/company-logo_200_200/company-logo_200_200/0/1631333448241?e=2147483647&v=beta&t=k2u15Yhys2ZYnLgwW7o6z0zJlZ2bdM80l0vEr0HpfHk" alt="SIET" className="h-8 w-auto object-contain" />
+                                                ) : intern.college?.toLowerCase().includes('sridevi') ? (
+                                                    <img src="https://media.licdn.com/dms/image/v2/C510BAQGyKdTUQ04Oyg/company-logo_200_200/company-logo_200_200/0/1631423254444?e=2147483647&v=beta&t=Mb1KuCUuwUy47R_K2nqY3GSWuGs6-LMwBRZIUU-ufBQ" alt="SWEC" className="h-8 w-auto object-contain" />
+                                                ) : intern.college?.toLowerCase().includes('samskruti') ? (
+                                                    <img src="https://www.samskruti.ac.in/assets/images/logo/engg-website-logo-2.png" alt="SCET" className="h-8 w-auto object-contain" />
+                                                ) : intern.college?.toLowerCase().includes('aurora') ? (
+                                                    <img src="https://ik.imagekit.io/syustaging/SYU_PREPROD/LOGO_iIx7UI8hr.webp?tr=w-3840" alt="ADU" className="h-8 w-auto object-contain" />
+                                                ) : intern.college?.toLowerCase().includes('vaageswari') ? (
+                                                    <img src="https://assets.allegiance-educare.com/colleges/thumb/250_250_14819612261420606562logo%20veg.jpg" alt="VGEC" className="h-8 w-auto object-contain" />
+                                                ) : intern.college?.toLowerCase().includes('sumathi reddy') ? (
+                                                    <img src="https://media.licdn.com/dms/image/v2/D4D0BAQEWhPxE6vvFiQ/company-logo_200_200/B4DZhZ8yLKHAAM-/0/1753855764165/sumathi_reddy_institute_of_technology_for_women_logo?e=2147483647&v=beta&t=cEdqkedLD2E8iQHSGYXIj-IVeL7DdlRQlmpG6hRXqqw" alt="SRIW" className="h-8 w-auto object-contain" />
                                                 ) : (
                                                     <div className="bg-blue-50 p-1.5 rounded-full">
                                                         <User size={14} className="text-[#003366]" />
