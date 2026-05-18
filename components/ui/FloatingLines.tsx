@@ -332,7 +332,9 @@ export default function FloatingLines({
     camera.position.z = 1;
 
     const renderer = new WebGLRenderer({ antialias: true, alpha: false });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    // Cap pixel ratio to 1.0 on desktop and 0.75 on mobile to drastically reduce GPU draw calls on high-DPI screens
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+    renderer.setPixelRatio(isMobile ? 0.75 : 1.0);
     renderer.domElement.style.width = '100%';
     renderer.domElement.style.height = '100%';
     container.appendChild(renderer.domElement);
@@ -456,14 +458,37 @@ export default function FloatingLines({
       targetInfluenceRef.current = 0.0;
     };
 
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        active = false;
+      } else {
+        if (!active) {
+          active = true;
+          lastRenderTime = performance.now();
+          raf = requestAnimationFrame(renderLoop);
+        }
+      }
+    };
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
     if (interactive) {
       renderer.domElement.addEventListener('pointermove', handlePointerMove);
       renderer.domElement.addEventListener('pointerleave', handlePointerLeave);
     }
 
     let raf = 0;
-    const renderLoop = () => {
+    let lastRenderTime = 0;
+    const fpsInterval = 1000 / 30; // Throttle to 30 FPS for background canvas animations (slashes CPU/GPU load)
+
+    const renderLoop = (timestamp = 0) => {
       if (!active) return;
+
+      raf = requestAnimationFrame(renderLoop);
+
+      const elapsed = timestamp - lastRenderTime;
+      if (elapsed < fpsInterval) return;
+
+      lastRenderTime = timestamp - (elapsed % fpsInterval);
 
       uniforms.iTime.value = clock.getElapsedTime();
 
@@ -481,7 +506,6 @@ export default function FloatingLines({
       }
 
       renderer.render(scene, camera);
-      raf = requestAnimationFrame(renderLoop);
     };
     renderLoop();
 
@@ -491,6 +515,8 @@ export default function FloatingLines({
       cancelAnimationFrame(raf);
 
       if (ro) ro.disconnect();
+
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
 
       if (interactive) {
         renderer.domElement.removeEventListener('pointermove', handlePointerMove);

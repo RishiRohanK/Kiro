@@ -57,8 +57,8 @@ export default function LandingPage() {
       <div className="absolute inset-0 z-0 opacity-[0.4] pointer-events-none">
         <FloatingLines 
           enabledWaves={['top', 'middle', 'bottom']}
-          lineCount={[10, 15, 20]}
-          lineDistance={[8, 6, 4]}
+          lineCount={[4, 5, 6]}
+          lineDistance={[6, 5, 4]}
           bendRadius={5.0}
           bendStrength={-0.5}
           interactive={true}
