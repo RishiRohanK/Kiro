@@ -71,10 +71,8 @@ export default function LandingPage() {
       {/* Main Navbar */}
       <nav className="flex-none bg-white border-b border-slate-200 px-4 md:px-10 py-4 flex items-center justify-between relative z-30">
         <div className="flex items-center gap-3 md:gap-6">
-          <Link href="/" className="flex items-center gap-3 md:gap-4 group">
+          <Link href="/" className="flex items-center group">
             <img src="https://ik.imagekit.io/dypkhqxip/sflogo" alt="Student Forge" className="h-7 md:h-8 w-auto group-hover:scale-105 transition-transform" />
-            <div className="h-4 md:h-5 w-px bg-slate-200" />
-            <span className="text-[13px] md:text-[15px] font-semibold text-slate-900 tracking-tight whitespace-nowrap uppercase">PLATFORM</span>
           </Link>
         </div>
 
@@ -105,11 +103,8 @@ export default function LandingPage() {
         <div className="hidden md:flex max-w-7xl mx-auto items-center gap-8 py-2 overflow-x-auto no-scrollbar scroll-smooth">
           <Link href="/" className="subnav-link text-blue-600 border-b-2 border-blue-600">Home</Link>
           <Link href="/intern/signin" className="subnav-link">Intern Portal</Link>
-          <Link href="/courses" className="subnav-link">Course Catalog</Link>
-          <Link href="/bootcamp" className="subnav-link">Summer Bootcamp</Link>
-          <Link href="/cleed/login" className="subnav-link">Institutional</Link>
-          <Link href="/privacy" className="subnav-link">Security & Privacy</Link>
-          <Link href="/terms" className="subnav-link">User Agreement</Link>
+          <Link href="/courses" className="subnav-link">Courses</Link>
+          <Link href="/bootcamp" className="subnav-link">Bootcamp</Link>
         </div>
       </div>
 
@@ -126,11 +121,8 @@ export default function LandingPage() {
               <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2 px-2">Navigation</span>
               <Link onClick={() => setIsMobileMenuOpen(false)} href="/" className="mob-link-v2 active">Home</Link>
               <Link onClick={() => setIsMobileMenuOpen(false)} href="/intern/signin" className="mob-link-v2">Intern Portal</Link>
-              <Link onClick={() => setIsMobileMenuOpen(false)} href="/courses" className="mob-link-v2">Course Catalog</Link>
-              <Link onClick={() => setIsMobileMenuOpen(false)} href="/bootcamp" className="mob-link-v2">Summer Bootcamp</Link>
-              <Link onClick={() => setIsMobileMenuOpen(false)} href="/cleed/login" className="mob-link-v2">Institutional</Link>
-              <Link onClick={() => setIsMobileMenuOpen(false)} href="/privacy" className="mob-link-v2">Security & Privacy</Link>
-              <Link onClick={() => setIsMobileMenuOpen(false)} href="/terms" className="mob-link-v2">User Agreement</Link>
+              <Link onClick={() => setIsMobileMenuOpen(false)} href="/courses" className="mob-link-v2">Courses</Link>
+              <Link onClick={() => setIsMobileMenuOpen(false)} href="/bootcamp" className="mob-link-v2">Bootcamp</Link>
             </div>
             
             <div className="mt-auto pt-8 border-t border-slate-100 flex flex-col gap-3">
