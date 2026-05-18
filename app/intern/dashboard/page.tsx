@@ -682,6 +682,34 @@ function InternDashboardContent() {
    const attendancePercentage = attendanceData.totalTrackingDays > 0 ? Math.min(100, Math.round((attendanceCount / attendanceData.totalTrackingDays) * 100)) : 0;
    const isLowAttendance = attendancePercentage < 75;
 
+   const streakCount = (() => {
+      if (!attendanceData?.history || attendanceData.history.length === 0) return 0;
+      const sorted = [...attendanceData.history].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+      let streak = 0;
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const firstDate = new Date(sorted[0].date);
+      firstDate.setHours(0, 0, 0, 0);
+      const diff = (today.getTime() - firstDate.getTime()) / (1000 * 60 * 60 * 24);
+      if (diff > 1) return 0;
+      for (let i = 0; i < sorted.length; i++) {
+         if (sorted[i].status === 'PRESENT' || sorted[i].status === 'LATE') {
+            streak++;
+            if (i < sorted.length - 1) {
+               const current = new Date(sorted[i].date);
+               current.setHours(0, 0, 0, 0);
+               const next = new Date(sorted[i + 1].date);
+               next.setHours(0, 0, 0, 0);
+               const gap = (current.getTime() - next.getTime()) / (1000 * 60 * 60 * 24);
+               if (gap > 1) break;
+             }
+         } else {
+            break;
+         }
+      }
+      return streak;
+   })();
+
    const handleWeek2Submit = async (e: React.FormEvent) => {
       e.preventDefault();
       if (!user) return;
@@ -851,6 +879,21 @@ function InternDashboardContent() {
                               <p className="text-[#003366]/60 text-[12px] font-medium max-w-sm">
                                  Welcome back scholar. You have <span className="text-[#003366] font-semibold">{(Array.isArray(tasks) ? tasks : []).filter(t => t.status === 'pending').length} pending</span> tasks today.
                               </p>
+                              {streakCount > 0 ? (
+                                 <div className="mt-3 flex items-center gap-2 bg-gradient-to-r from-orange-500/20 to-red-500/10 border border-orange-500/20 px-3 py-1.5 rounded-lg w-fit shadow-sm">
+                                    <Flame size={16} className="text-orange-500 fill-orange-500 animate-bounce" />
+                                    <span className="text-[11px] font-bold text-orange-800">
+                                       Active <span className="underline decoration-wavy decoration-orange-500 font-black">{streakCount}-Day Attendance Streak!</span> Keep the fire burning! 🔥
+                                    </span>
+                                 </div>
+                              ) : (
+                                 <div className="mt-3 flex items-center gap-2 bg-zinc-500/10 border border-zinc-500/10 px-3 py-1.5 rounded-lg w-fit">
+                                    <Flame size={16} className="text-zinc-400" />
+                                    <span className="text-[11px] font-semibold text-zinc-500">
+                                       No active streak today. Check-in daily to start your fire!
+                                     </span>
+                                 </div>
+                              )}
                            </div>
                            <div className="flex items-center gap-3">
                               <div className="flex items-center gap-2 bg-white/40 backdrop-blur-md px-3 py-1.5 border border-white/30">
@@ -868,44 +911,38 @@ function InternDashboardContent() {
                            {[
                               { label: "Attendance", value: `${attendancePercentage}%`, icon: CheckCircle2 },
                               { label: "Milestones", value: schedules.filter(s => s.isCompleted).length, icon: Target },
-                               { label: "Streaks", value: `${(() => {
-                                  if (!attendanceData?.history || attendanceData.history.length === 0) return 0;
-                                  const sorted = [...attendanceData.history].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-                                  let streak = 0;
-                                  const today = new Date();
-                                  today.setHours(0, 0, 0, 0);
-                                  const firstDate = new Date(sorted[0].date);
-                                  firstDate.setHours(0, 0, 0, 0);
-                                  const diff = (today.getTime() - firstDate.getTime()) / (1000 * 60 * 60 * 24);
-                                  if (diff > 1) return 0;
-                                  for (let i = 0; i < sorted.length; i++) {
-                                     if (sorted[i].status === 'PRESENT' || sorted[i].status === 'LATE') {
-                                        streak++;
-                                        if (i < sorted.length - 1) {
-                                           const current = new Date(sorted[i].date);
-                                           current.setHours(0, 0, 0, 0);
-                                           const next = new Date(sorted[i + 1].date);
-                                           next.setHours(0, 0, 0, 0);
-                                           const gap = (current.getTime() - next.getTime()) / (1000 * 60 * 60 * 24);
-                                           if (gap > 1) break;
-                                        }
-                                     } else {
-                                        break;
-                                     }
-                                  }
-                                  return streak;
-                               })()} Days`, icon: Flame },
+                              { label: "Streaks", value: `${streakCount} Days`, icon: Flame },
                               { label: "Reports", value: reports.length + examSessions.length, icon: FileTextIcon },
                               { label: "Warnings", value: examSessions.reduce((acc, s) => acc + (s.violations || 0), 0), icon: AlertCircle }
-                           ].map((stat, i) => (
-                              <div key={i} className="bg-white/40 border border-[#003366]/5 p-3 flex flex-col justify-between group">
-                                 <div className="flex items-center gap-2 opacity-60">
-                                    <stat.icon size={12} className="text-[#003366]" />
-                                    <span className="text-[9px] font-bold uppercase tracking-wider text-[#003366]">{stat.label}</span>
+                           ].map((stat, i) => {
+                              const isStreak = stat.label === "Streaks";
+                              return (
+                                 <div 
+                                    key={i} 
+                                    className={isStreak 
+                                       ? "bg-gradient-to-br from-orange-500/10 via-red-500/10 to-amber-500/10 border border-orange-500/30 p-3 flex flex-col justify-between group relative overflow-hidden shadow-sm" 
+                                       : "bg-white/40 border border-[#003366]/5 p-3 flex flex-col justify-between group"
+                                    }
+                                 >
+                                    {isStreak && (
+                                       <div className="absolute -right-4 -bottom-4 w-12 h-12 bg-orange-500/10 rounded-full blur-xl pointer-events-none group-hover:scale-125 transition-transform duration-500" />
+                                    )}
+                                    <div className="flex items-center gap-2 opacity-60">
+                                       <stat.icon 
+                                          size={12} 
+                                          className={isStreak ? "text-orange-500 animate-bounce" : "text-[#003366]"} 
+                                       />
+                                       <span className={isStreak ? "text-[9px] font-extrabold uppercase tracking-wider text-orange-600" : "text-[9px] font-bold uppercase tracking-wider text-[#003366]"}>
+                                          {stat.label}
+                                       </span>
+                                    </div>
+                                    <p className={isStreak ? "text-xl font-black text-orange-700 mt-0.5 flex items-center gap-1" : "text-xl font-bold text-[#003366] mt-0.5"}>
+                                       {stat.value}
+                                       {isStreak && <Flame size={14} className="text-red-500 fill-orange-500 animate-pulse" />}
+                                    </p>
                                  </div>
-                                 <p className="text-xl font-bold text-[#003366] mt-0.5">{stat.value}</p>
-                              </div>
-                           ))}
+                              );
+                           })}
                         </div>
                      </div>
                   </div>
@@ -1711,15 +1748,40 @@ function InternDashboardContent() {
                      <p className="text-[10px] text-zinc-400 font-medium leading-tight mt-2">Required: 75% for certification.</p>
                   </div>
 
-                  <div className="p-6 bg-white border border-zinc-200 rounded-xl shadow-sm flex flex-col justify-between">
+                  <div className="p-6 bg-gradient-to-br from-orange-500/10 via-red-500/5 to-amber-500/5 border border-orange-500/20 rounded-xl shadow-sm flex flex-col justify-between relative overflow-hidden group">
+                     <div className="absolute -right-4 -bottom-4 w-16 h-16 bg-orange-500/5 rounded-full blur-xl pointer-events-none group-hover:scale-125 transition-transform duration-500" />
                      <div>
-                        <h4 className="text-[10px] font-bold uppercase tracking-wider text-zinc-400 mb-1">Consistency</h4>
-                        <p className="text-xl font-bold text-zinc-900">Steady</p>
+                        <div className="flex items-center gap-1.5 mb-1">
+                           <Flame size={12} className="text-orange-500 fill-orange-500 animate-bounce" />
+                           <h4 className="text-[10px] font-bold uppercase tracking-wider text-orange-600">Active Streak</h4>
+                        </div>
+                        <p className="text-3xl font-black text-orange-700 flex items-center gap-2">
+                           {streakCount} <span className="text-sm font-bold text-orange-500">Days</span>
+                        </p>
                      </div>
-                     <div className="flex gap-1 mt-4">
-                        {[1, 2, 3, 4, 5, 6, 7].map((i) => (
-                           <div key={i} className={`h-1.5 flex-1 rounded-full ${i <= 6 ? "bg-green-500" : "bg-zinc-100"}`} />
-                        ))}
+                     <div className="mt-4">
+                        <div className="flex gap-1">
+                           {(() => {
+                              const history = attendanceData?.history || [];
+                              const sorted = [...history].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()).slice(-7);
+                              const slots = Array(7).fill(false);
+                              sorted.forEach((item, index) => {
+                                 if (index < 7) {
+                                    slots[index] = item.status === 'PRESENT' || item.status === 'LATE';
+                                 }
+                              });
+                              return slots.map((isPresent, idx) => (
+                                 <div 
+                                    key={idx} 
+                                    className={`h-1.5 flex-1 rounded-full ${isPresent ? "bg-orange-500 shadow-sm shadow-orange-500/50" : "bg-zinc-100"}`} 
+                                    title={isPresent ? "Present" : "No record/Absent"}
+                                 />
+                              ));
+                           })()}
+                        </div>
+                        <p className="text-[9px] text-orange-600 font-bold mt-2">
+                           {streakCount > 0 ? "🔥 Keep the fire burning!" : "Mark attendance to start your streak!"}
+                        </p>
                      </div>
                   </div>
                </div>
