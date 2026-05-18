@@ -159,12 +159,18 @@ export default function TrainingClassesPage() {
     const isBatch3 = userBatch === "Batch 3";
 
     return (
-        <div className="w-full space-y-8">
-            {/* Header - Changed to Blue */}
-            <div className="py-4 flex items-center gap-4">
-                <ClipboardList size={32} className="text-[#003366]" />
-                <h1 className="text-3xl font-medium text-zinc-800 tracking-tight">Training</h1>
-            </div>
+        <div className="w-full space-y-6">
+            <header className="mb-8 border-b border-zinc-100 pb-5 flex items-center gap-3">
+                <ClipboardList size={22} strokeWidth={2.25} className="text-[#003366]" />
+                <div>
+                    <h1 className="text-xl font-bold tracking-tight text-zinc-900 leading-none">
+                        Training & Curriculum
+                    </h1>
+                    <p className="text-zinc-500 text-xs mt-1 leading-relaxed">
+                        Access live virtual classroom sessions, daily lecture topics, and syllabus modules.
+                    </p>
+                </div>
+            </header>
 
             {!isBatch3 ? (
                 <div className="py-12">

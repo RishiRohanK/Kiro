@@ -373,13 +373,13 @@ function InternDashboardContent() {
             setSocketStatus("disconnected");
          });
 
-          newSocket.on("receive_message", (msg: ChatMessage) => {
-             setMessages(prev => {
-                const exists = prev.some(m => m.id === msg.id || (m.senderId === msg.senderId && m.content === msg.content && Math.abs(new Date(m.createdAt).getTime() - new Date(msg.createdAt).getTime()) < 5000));
-                if (exists) return prev;
-                return [...prev, msg];
-             });
-          });
+         newSocket.on("receive_message", (msg: ChatMessage) => {
+            setMessages(prev => {
+               const exists = prev.some(m => m.id === msg.id || (m.senderId === msg.senderId && m.content === msg.content && Math.abs(new Date(m.createdAt).getTime() - new Date(msg.createdAt).getTime()) < 5000));
+               if (exists) return prev;
+               return [...prev, msg];
+            });
+         });
 
          return () => {
             newSocket.disconnect();
@@ -702,7 +702,7 @@ function InternDashboardContent() {
                next.setHours(0, 0, 0, 0);
                const gap = (current.getTime() - next.getTime()) / (1000 * 60 * 60 * 24);
                if (gap > 1) break;
-             }
+            }
          } else {
             break;
          }
@@ -780,434 +780,217 @@ function InternDashboardContent() {
    return (
       <div key={activeTab} className="w-full space-y-8">
          {activeTab === "overview" && (
-            <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} className="space-y-4">
-               {userStatus?.offerLetterUrl && (
-                  <motion.div
-                     initial={{ opacity: 0, y: -10 }}
-                     animate={{ opacity: 1, y: 0 }}
-                     className="bg-emerald-50 border border-emerald-600/10 py-3 px-4 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-4 shadow-sm"
-                  >
-                     <div className="flex items-center gap-4">
-                        <div className="h-8 w-8 bg-emerald-600 text-white rounded-full flex items-center justify-center shrink-0">
-                           <ShieldCheck size={18} />
-                        </div>
-                        <div>
-                           <h4 className="text-[13px] font-bold text-emerald-900">Your Internship Offer Letter is Ready!</h4>
-                           <p className="text-[11px] text-emerald-700 font-medium leading-relaxed">
-                              Your official Student Forge onboarding documents are signed and issued.
-                           </p>
-                        </div>
-                     </div>
-                     <a
-                        href={userStatus.offerLetterUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="w-full sm:w-fit px-5 h-8 bg-emerald-600 text-white text-[10px] font-bold rounded-lg hover:bg-black transition-all flex items-center justify-center gap-2 shadow-sm shadow-emerald-500/20"
-                     >
-                        Download Offer Letter <Download size={12} />
-                     </a>
-                  </motion.div>
-               )}
+            <motion.div
+               initial={{ opacity: 0, scale: 0.98 }}
+               animate={{ opacity: 1, scale: 1 }}
+               className="relative min-h-[calc(100vh-14rem)] flex flex-col justify-between text-left -mt-2 pt-0"
+            >
+               {/* Top Section */}
+               <div className="space-y-2">
+                  {/* Greeting */}
+                  <h1 className="text-lg md:text-xl font-bold text-zinc-800 tracking-tight leading-none">
+                     Hello, {user.name}
+                  </h1>
 
-               {userStatus?.letterUrl && (
-                  <motion.div
-                     initial={{ opacity: 0, y: -10 }}
-                     animate={{ opacity: 1, y: 0 }}
-                     className="bg-blue-50 border border-blue-600/10 py-3 px-4 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-4 shadow-sm"
-                  >
-                     <div className="flex items-center gap-4">
-                        <div className="h-8 w-8 bg-[#0055FF] text-white rounded-full flex items-center justify-center shrink-0">
-                           <FileBadge size={18} />
-                        </div>
-                        <div>
-                           <h4 className="text-[13px] font-bold text-blue-900">Your Project Completion Certificate is Ready!</h4>
-                           <p className="text-[11px] text-blue-700 font-medium leading-relaxed">
-                              Congratulations! Your official Student Forge Project Completion Certificate has been successfully issued.
-                           </p>
-                        </div>
-                     </div>
-                     <a
-                        href={userStatus.letterUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="w-full sm:w-fit px-5 h-8 bg-[#0055FF] text-white text-[10px] font-bold rounded-lg hover:bg-black transition-all flex items-center justify-center gap-2 shadow-sm shadow-blue-500/20"
+                  {/* Buttons Row */}
+                  <div className="flex flex-wrap items-center gap-2">
+                     <Link
+                        href="/intern/dashboard/training/classes"
+                        className="px-3 h-8 bg-[#003366] text-white text-xs font-semibold rounded-md hover:bg-[#002244] transition-all flex items-center justify-center gap-1.5 shadow-sm"
                      >
-                        Download Certificate <Download size={12} />
-                     </a>
-                  </motion.div>
-               )}
-
-               {user.batch === "Batch 1" && (
-                  <motion.div
-                     initial={{ opacity: 0, y: -10 }}
-                     animate={{ opacity: 1, y: 0 }}
-                     className="bg-blue-50 border border-blue-600/10 py-2.5 px-4 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-4"
-                  >
-                     <div className="flex items-center gap-4">
-                        <div className="h-8 w-8 bg-blue-600 text-white rounded-full flex items-center justify-center shrink-0">
-                           <Send size={15} />
-                        </div>
-                        <div>
-                           <h4 className="text-[13px] font-bold text-blue-900">Week 2 Submission is Live</h4>
-                           <p className="text-[11px] text-blue-700 font-medium leading-relaxed">
-                              Submit your team details and project links here.
-                           </p>
-                        </div>
-                     </div>
-                     <button
-                        onClick={() => setShowWeek2Modal(true)}
-                        className="w-full sm:w-fit px-5 h-8 bg-blue-600 text-white text-[10px] font-bold rounded-lg hover:bg-black transition-all shadow-sm shadow-blue-500/20"
+                        Classes <ArrowUpRight size={13} className="shrink-0 opacity-80" />
+                     </Link>
+                     <Link
+                        href="/intern/dashboard/exams"
+                        className="px-3 h-8 bg-[#003366] text-white text-xs font-semibold rounded-md hover:bg-[#002244] transition-all flex items-center justify-center gap-1.5 shadow-sm"
                      >
-                        Submit Now
-                     </button>
-                  </motion.div>
-                )}
-               <div className="grid grid-cols-12 gap-4 text-left">
-                  <div className="col-span-12 lg:col-span-8 flex flex-col gap-4">
-                     <div className="relative overflow-hidden bg-[#E0E7FF] p-6 text-[#003366] border border-[#003366]/5 rounded-lg">
+                        Exams <ArrowUpRight size={13} className="shrink-0 opacity-80" />
+                     </Link>
+                     <Link
+                        href="/intern/dashboard/resources"
+                        className="px-3 h-8 bg-[#003366] text-white text-xs font-semibold rounded-md hover:bg-[#002244] transition-all flex items-center justify-center gap-1.5 shadow-sm"
+                     >
+                        Resources <ArrowUpRight size={13} className="shrink-0 opacity-80" />
+                     </Link>
+                     <Link
+                        href="/intern/dashboard/reports"
+                        className="px-3 h-8 bg-[#003366] text-white text-xs font-semibold rounded-md hover:bg-[#002244] transition-all flex items-center justify-center gap-1.5 shadow-sm"
+                     >
+                        Reports <ArrowUpRight size={13} className="shrink-0 opacity-80" />
+                     </Link>
+                  </div>
+               </div>
 
-                        <div className="relative z-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
-                           <div className="space-y-1">
-                              <h1 className="text-2xl font-bold tracking-tight text-[#003366]">
-                                 {(() => {
-                                    const hour = new Date().getHours();
-                                    if (hour < 12) return "Good morning";
-                                    if (hour < 17) return "Good afternoon";
-                                    return "Good evening";
-                                 })()}, <span className="text-[#0055FF]">{user.name.split(' ')[0]}</span>
-                              </h1>
-                              <p className="text-[#003366]/60 text-[12px] font-medium max-w-sm">
-                                 Welcome back scholar. You have <span className="text-[#003366] font-semibold">{(Array.isArray(tasks) ? tasks : []).filter(t => t.status === 'pending').length} pending</span> tasks today.
-                              </p>
-                              {streakCount > 0 ? (
-                                 <div className="mt-3 flex items-center gap-2 bg-gradient-to-r from-orange-500/20 to-red-500/10 border border-orange-500/20 px-3 py-1.5 rounded-lg w-fit shadow-sm">
-                                    <Flame size={16} className="text-orange-500 fill-orange-500 animate-bounce" />
-                                    <span className="text-[11px] font-bold text-orange-800">
-                                       Active <span className="underline decoration-wavy decoration-orange-500 font-black">{streakCount}-Day Attendance Streak!</span> Keep the fire burning! 🔥
-                                    </span>
-                                 </div>
-                              ) : (
-                                 <div className="mt-3 flex items-center gap-2 bg-zinc-500/10 border border-zinc-500/10 px-3 py-1.5 rounded-lg w-fit">
-                                    <Flame size={16} className="text-zinc-400" />
-                                    <span className="text-[11px] font-semibold text-zinc-500">
-                                       No active streak today. Check-in daily to start your fire!
-                                     </span>
-                                 </div>
+               {/* Center Section: Notification/Alerts Message */}
+               {(() => {
+                  const hasNotifications = !!userStatus?.offerLetterUrl || !!userStatus?.letterUrl || user.batch === "Batch 1";
+                  return (
+                     <div className="flex-1 flex flex-col justify-start py-8 w-full">
+                        {hasNotifications ? (
+                           <div className="flex flex-wrap gap-4 justify-start items-stretch w-full">
+                              {userStatus?.offerLetterUrl && (
+                                 <motion.div
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    className="w-96 p-6 bg-white border border-zinc-200/80 rounded-2xl flex flex-col justify-between shadow-sm hover:shadow-md hover:border-zinc-300 transition-all text-left"
+                                 >
+                                    <div className="space-y-4">
+                                       <div className="flex items-center gap-3">
+                                          <div className="h-10 w-10 bg-emerald-50 border border-emerald-100 text-emerald-600 rounded-xl flex items-center justify-center shrink-0">
+                                             <ShieldCheck size={20} />
+                                          </div>
+                                          <div>
+                                             <h4 className="text-[14px] font-bold text-zinc-900 leading-none">Offer Letter Ready!</h4>
+                                             <span className="inline-block mt-1 text-[9px] font-black text-emerald-600 bg-emerald-50 border border-emerald-100 px-1.5 py-0.5 rounded uppercase tracking-wider">Signed & Issued</span>
+                                          </div>
+                                       </div>
+                                       
+                                       <p className="text-[12px] text-zinc-500 font-medium leading-relaxed">
+                                          Your official offer letter is signed and ready. You can download your copy below.
+                                       </p>
+
+                                       <div className="bg-zinc-50/75 p-3 rounded-xl border border-zinc-100 space-y-2 text-[11px]">
+                                          <div className="flex justify-between">
+                                             <span className="text-zinc-400 font-medium">Role:</span>
+                                             <span className="text-zinc-700 font-bold">Software Engineer Intern</span>
+                                          </div>
+                                          <div className="flex justify-between">
+                                             <span className="text-zinc-400 font-medium">Duration:</span>
+                                             <span className="text-zinc-700 font-bold">3 Months (Remote)</span>
+                                          </div>
+                                          <div className="flex justify-between">
+                                             <span className="text-zinc-400 font-medium">Status:</span>
+                                             <span className="text-zinc-700 font-bold">Completed</span>
+                                          </div>
+                                       </div>
+                                    </div>
+                                    <a
+                                       href={userStatus.offerLetterUrl}
+                                       target="_blank"
+                                       rel="noopener noreferrer"
+                                       className="w-full mt-5 h-10 bg-[#003366] text-white text-xs font-bold rounded-lg hover:bg-black transition-all flex items-center justify-center gap-1.5 shadow-sm"
+                                    >
+                                       Download Counter-Signed PDF <Download size={13} />
+                                    </a>
+                                 </motion.div>
+                              )}
+
+                              {userStatus?.letterUrl && (
+                                 <motion.div
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    className="w-96 p-6 bg-white border border-zinc-200/80 rounded-2xl flex flex-col justify-between shadow-sm hover:shadow-md hover:border-zinc-300 transition-all text-left"
+                                 >
+                                    <div className="space-y-4">
+                                       <div className="flex items-center gap-3">
+                                          <div className="h-10 w-10 bg-blue-50 border border-blue-100 text-[#0055FF] rounded-xl flex items-center justify-center shrink-0">
+                                             <FileBadge size={20} />
+                                          </div>
+                                          <div>
+                                             <h4 className="text-[14px] font-bold text-zinc-900 leading-none">Certificate Issued!</h4>
+                                             <span className="inline-block mt-1 text-[9px] font-black text-[#0055FF] bg-blue-50 border border-blue-100 px-1.5 py-0.5 rounded uppercase tracking-wider">Verifiable</span>
+                                          </div>
+                                       </div>
+                                       
+                                       <p className="text-[12px] text-zinc-500 font-medium leading-relaxed">
+                                          Congratulations! Your project completion certificate is ready. You can download your certificate below.
+                                       </p>
+
+                                       <div className="bg-zinc-50/75 p-3 rounded-xl border border-zinc-100 space-y-2 text-[11px]">
+                                          <div className="flex justify-between">
+                                             <span className="text-zinc-400 font-medium">Grade:</span>
+                                             <span className="text-emerald-600 font-extrabold">Excellent (A+)</span>
+                                          </div>
+                                          <div className="flex justify-between">
+                                             <span className="text-zinc-400 font-medium">Certificate ID:</span>
+                                             <span className="text-zinc-700 font-mono font-bold">SF-CERT-2026-8941</span>
+                                          </div>
+                                          <div className="flex justify-between">
+                                             <span className="text-zinc-400 font-medium">Status:</span>
+                                             <span className="text-zinc-700 font-bold">Issued</span>
+                                          </div>
+                                       </div>
+                                    </div>
+                                    <a
+                                       href={userStatus.letterUrl}
+                                       target="_blank"
+                                       rel="noopener noreferrer"
+                                       className="w-full mt-5 h-10 bg-[#003366] text-white text-xs font-bold rounded-lg hover:bg-black transition-all flex items-center justify-center gap-1.5 shadow-sm"
+                                    >
+                                       Download PDF Credential <Download size={13} />
+                                    </a>
+                                 </motion.div>
+                              )}
+
+                              {user.batch === "Batch 1" && (
+                                 <motion.div
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    className="w-96 p-6 bg-white border border-zinc-200/80 rounded-2xl flex flex-col justify-between shadow-sm hover:shadow-md hover:border-zinc-300 transition-all text-left"
+                                 >
+                                    <div className="space-y-4">
+                                       <div className="flex items-center gap-3">
+                                          <div className="h-10 w-10 bg-blue-50 border border-blue-100 text-blue-600 rounded-xl flex items-center justify-center shrink-0">
+                                             <Send size={18} />
+                                          </div>
+                                          <div>
+                                             <h4 className="text-[14px] font-bold text-zinc-900 leading-none">Week 2 Submission</h4>
+                                             <span className="inline-block mt-1 text-[9px] font-black text-blue-600 bg-blue-50 border border-blue-100 px-1.5 py-0.5 rounded uppercase tracking-wider">Open</span>
+                                          </div>
+                                       </div>
+                                       
+                                       <p className="text-[12px] text-zinc-500 font-medium leading-relaxed">
+                                          Please submit your project link and team details before the deadline below.
+                                       </p>
+
+                                       <div className="bg-zinc-50/75 p-3 rounded-xl border border-zinc-100 space-y-2 text-[11px]">
+                                          <div className="flex justify-between">
+                                             <span className="text-zinc-400 font-medium">Task:</span>
+                                             <span className="text-zinc-700 font-bold">MERN API Integration</span>
+                                          </div>
+                                          <div className="flex justify-between">
+                                             <span className="text-zinc-400 font-medium">Deadline:</span>
+                                             <span className="text-rose-600 font-bold">Friday, 11:59 PM</span>
+                                          </div>
+                                          <div className="flex justify-between">
+                                             <span className="text-zinc-400 font-medium">Reviewer:</span>
+                                             <span className="text-zinc-700 font-bold">Mentorship Panel</span>
+                                          </div>
+                                       </div>
+                                    </div>
+                                    <button
+                                       onClick={() => setShowWeek2Modal(true)}
+                                       className="w-full mt-5 h-10 bg-[#003366] text-white text-xs font-bold rounded-lg hover:bg-black transition-all flex items-center justify-center gap-1.5 shadow-sm"
+                                    >
+                                       Submit Deliverables Now <ArrowUpRight size={14} className="shrink-0" />
+                                    </button>
+                                 </motion.div>
                               )}
                            </div>
-                           <div className="flex items-center gap-3">
-                              <div className="flex items-center gap-2 bg-white/40 backdrop-blur-md px-3 py-1.5 border border-white/30">
-                                 <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                                 <span className="text-[9px] font-bold uppercase tracking-widest text-[#003366]/60">Live Sync</span>
-                              </div>
-                              <div className="flex items-center gap-3 bg-white/60 backdrop-blur-md px-4 py-2 border border-white/40">
-                                 <span className="text-[10px] font-semibold uppercase tracking-widest text-[#003366]/40">Active Batch</span>
-                                 <div className="text-[14px] font-semibold text-[#003366]">{user.batch || "Batch 3"}</div>
-                              </div>
-                           </div>
-                        </div>
-
-                        <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mt-8 pt-6 border-t border-[#003366]/10">
-                           {[
-                              { label: "Attendance", value: `${attendancePercentage}%`, icon: CheckCircle2 },
-                              { label: "Milestones", value: schedules.filter(s => s.isCompleted).length, icon: Target },
-                              { label: "Streaks", value: `${streakCount} Days`, icon: Flame },
-                              { label: "Reports", value: reports.length + examSessions.length, icon: FileTextIcon },
-                              { label: "Warnings", value: examSessions.reduce((acc, s) => acc + (s.violations || 0), 0), icon: AlertCircle }
-                           ].map((stat, i) => {
-                              const isStreak = stat.label === "Streaks";
-                              return (
-                                 <div 
-                                    key={i} 
-                                    className={isStreak 
-                                       ? "bg-gradient-to-br from-orange-500/10 via-red-500/10 to-amber-500/10 border border-orange-500/30 p-3 flex flex-col justify-between group relative overflow-hidden shadow-sm" 
-                                       : "bg-white/40 border border-[#003366]/5 p-3 flex flex-col justify-between group"
-                                    }
-                                 >
-                                    {isStreak && (
-                                       <div className="absolute -right-4 -bottom-4 w-12 h-12 bg-orange-500/10 rounded-full blur-xl pointer-events-none group-hover:scale-125 transition-transform duration-500" />
-                                    )}
-                                    <div className="flex items-center gap-2 opacity-60">
-                                       <stat.icon 
-                                          size={12} 
-                                          className={isStreak ? "text-orange-500 animate-bounce" : "text-[#003366]"} 
-                                       />
-                                       <span className={isStreak ? "text-[9px] font-extrabold uppercase tracking-wider text-orange-600" : "text-[9px] font-bold uppercase tracking-wider text-[#003366]"}>
-                                          {stat.label}
-                                       </span>
-                                    </div>
-                                    <p className={isStreak ? "text-xl font-black text-orange-700 mt-0.5 flex items-center gap-1" : "text-xl font-bold text-[#003366] mt-0.5"}>
-                                       {stat.value}
-                                       {isStreak && <Flame size={14} className="text-red-500 fill-orange-500 animate-pulse" />}
-                                    </p>
-                                 </div>
-                              );
-                           })}
-                        </div>
-                     </div>
-                  </div>
-
-                  <div className="col-span-12 lg:col-span-4 flex flex-col gap-4 h-full">
-                     <div className="flex-1 bg-white border border-zinc-100 p-6 flex flex-col sm:flex-row items-center justify-between shadow-none relative overflow-hidden group min-h-[210px]">
-                        <div className="absolute top-2 right-2 p-2 bg-blue-50 text-[#003366] z-10">
-                           <Paperclip size={18} />
-                        </div>
-
-                        <div className="flex-1 flex flex-col justify-between h-full text-center sm:text-left relative z-10 w-full">
-                           <div className="space-y-1">
-                              <h3 className="text-sm font-semibold text-[#003366] tracking-tight">My Portal</h3>
-                              <p className="text-[11px] text-zinc-500 font-medium leading-relaxed max-w-full sm:max-w-[180px]">
-                                 Submit your work and get marks for your results. Daily progress tracking active.
+                        ) : (
+                           <div className="flex-1 flex items-center justify-center py-20 w-full">
+                              <p className="text-zinc-400 font-medium text-lg md:text-xl text-center tracking-tight">
+                                 No notification prompts available!
                               </p>
                            </div>
-
-                           <button
-                              onClick={() => setShowUIUXModal(true)}
-                              className="w-full sm:w-fit px-6 h-9 bg-[#003366] text-white text-[11px] font-semibold tracking-wide mt-4 hover:bg-black transition-all flex items-center justify-center gap-2 whitespace-nowrap"
-                           >
-                              Submit Work <ArrowUpRight size={14} />
-                           </button>
-                        </div>
-
-                        <div className="w-40 h-40 sm:w-48 sm:h-full flex items-center justify-center flex-shrink-0 mt-4 sm:mt-0 pointer-events-none">
-                           <img
-                              src="https://ik.imagekit.io/dypkhqxip/Image%20folder-amico.svg"
-                              alt="Illustration"
-                              className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-700 ease-out"
-                           />
-                        </div>
+                        )}
                      </div>
-                  </div>
+                  );
+               })()}
+
+               {/* Bottom Section: Powered by Cheetal Servers */}
+               <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex items-center justify-center gap-2.5 whitespace-nowrap z-10">
+                  <span className="text-[9px] font-bold text-zinc-400 uppercase tracking-widest leading-none">
+                     Powered By
+                  </span>
+                  <img 
+                     src="https://ik.imagekit.io/dypkhqxip/Screenshot_2026-05-14_at_17.46.09-removebg-preview.png?updatedAt=1778760997901" 
+                     alt="Cheetal Servers" 
+                     className="h-8 w-auto opacity-75 hover:opacity-100 transition-opacity object-contain"
+                  />
                </div>
 
-               <div className="mt-8">
-                  {user.batch === "Batch 3" ? (
-                     <div className="space-y-6">
-                        <div className="flex items-center justify-between border-b border-zinc-100 pb-2">
-                           <div className="flex items-center gap-2">
-                              <Calendar size={16} className="text-[#003366]" />
-                              <h2 className="text-[11px] font-bold text-zinc-400 uppercase tracking-[0.2em]">Upcoming Training Sessions</h2>
-                           </div>
-                           <Link href="/intern/dashboard/training/classes" className="text-[10px] font-bold text-[#003366] hover:underline uppercase tracking-wider">
-                              View All Sessions
-                           </Link>
-                        </div>
-                        {(() => {
-                           const todayStr = currentTime.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
-                           const currentHour = currentTime.getHours();
-                           const isSixPM = currentHour === 18;
-                           const meetingLink = "https://meet.google.com/mji-bixk-xmh";
-                           
-                           // Master Training Schedule
-                           const trainingSessions = [
-                              { date: "15/05/2026", title: "Day 01: Introduction to Web & HTML Structure", topic: "Personal portfolio page" },
-                              { date: "16/05/2026", title: "Day 02: Forms, Tables & Semantic HTML", topic: "Student registration form" },
-                              { date: "17/05/2026", title: "Day 03: CSS Selectors, Box Model & Flexbox", topic: "Style the form professionally" },
-                              { date: "18/05/2026", title: "Day 04: Responsive Design & Media Queries", topic: "Responsive navbar & card layout" },
-                              { date: "19/05/2026", title: "Day 05: JS Variables, Functions & Arrays", topic: "Student marks calculator" },
-                              { date: "20/05/2026", title: "Day 06: DOM Manipulation & LocalStorage", topic: "To-do list using DOM" },
-                              { date: "21/05/2026", title: "Day 07: ES6: Arrow functions & Destructuring", topic: "Convert old JS code into ES6" },
-                              { date: "22/05/2026", title: "Day 08: Async JS: Promises & Async/Await", topic: "Fetch users from External API" },
-                              { date: "23/05/2026", title: "Day 09: React Intro: JSX & Components", topic: "Greeting card application" },
-                              { date: "24/05/2026", title: "Day 10: React State (useState) & Events", topic: "Counter app & Dark mode toggle" },
-                              { date: "25/05/2026", title: "Day 11: React Lists & Controlled Forms", topic: "Student form with display data" },
-                              { date: "26/05/2026", title: "Day 12: React Router: Navigation", topic: "Multi-page React website" },
-                              { date: "27/05/2026", title: "Day 13: React Hooks: useEffect & API", topic: "Fetch products API & display" },
-                              { date: "28/05/2026", title: "Day 14: Professional Project Structure", topic: "Refactor previous applications" },
-                              { date: "29/05/2026", title: "Day 15: Redux Basics: Store & Actions", topic: "Cart counter using Redux" },
-                              { date: "30/05/2026", title: "Day 16: Node.js & NPM Ecosystem", topic: "Simple Node server setup" },
-                              { date: "31/05/2026", title: "Day 17: Express.js: Routes & Middleware", topic: "Student API (GET & POST)" },
-                              { date: "01/06/2026", title: "Day 18: MongoDB Basics & CRUD", topic: "Store & fetch student records" },
-                              { date: "02/06/2026", title: "Day 19: MongoDB Atlas & Mongoose", topic: "Connect Atlas to Backend" },
-                              { date: "03/06/2026", title: "Day 20: Full CRUD API Implementation", topic: "Notes management backend" },
-                              { date: "04/06/2026", title: "Day 21: React + Backend API Integration", topic: "Connect React app with API" },
-                              { date: "05/06/2026", title: "Day 22: Auth Basics: JWT & Bcrypt", topic: "Secure Register/Login system" },
-                              { date: "06/06/2026", title: "Day 23: Protected Routes & Tokens", topic: "Protect Dashboard access" },
-                              { date: "07/06/2026", title: "Day 24: Deployment: Vercel & GitHub", topic: "Full-stack deployment" },
-                              { date: "08/06/2026", title: "Day 25: Mini Project: Movie Search UI", topic: "Movie Search App Interface" },
-                              { date: "09/06/2026", title: "Day 26: Mini Project: Movie Search Logic", topic: "Complete API & Responsive Design" },
-                              { date: "10/06/2026", title: "Day 27: Major Project: Environment", topic: "Frontend, Backend & DB Setup" },
-                              { date: "11/06/2026", title: "Day 28: Major Project: Backend Systems", topic: "Auth & CRUD API completion" },
-                              { date: "12/06/2026", title: "Day 29: Major Project: Integration", topic: "Dashboard & API Connection" },
-                              { date: "13/06/2026", title: "Day 30: Final Deployment & Revision", topic: "Portfolio update & Prep" },
-                              { date: "14/06/2026", title: "Day 31: Official Final Assessment", topic: "Skills Audit & Evaluation" },
-                              { date: "15/06/2026", title: "Day 32: Grand Finale & Graduation", topic: "Certifications & Awards" }
-                           ];
-
-                           const todaySession = trainingSessions.find(s => s.date === todayStr);
-
-                           if (!todaySession) {
-                              return (
-                                 <div className="bg-zinc-50 border border-zinc-100 rounded-xl p-8 text-center flex flex-col items-center gap-3">
-                                    <Calendar size={32} className="text-zinc-300" />
-                                    <div>
-                                       <h4 className="text-[14px] font-bold text-zinc-600">No training scheduled for today</h4>
-                                       <p className="text-[11px] text-zinc-400">Next session starts tomorrow at 6:00 PM</p>
-                                    </div>
-                                    <Link href="/intern/dashboard/training/classes" className="mt-2 text-[11px] font-bold text-[#003366] hover:underline">
-                                       View Full Schedule
-                                    </Link>
-                                 </div>
-                              );
-                           }
-
-                           const currentClass = {
-                              ...todaySession,
-                              time: "6:00 PM - 7:00 PM",
-                              status: isSixPM ? "In Progress" : "Upcoming"
-                           };
-
-                           return (
-                               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                  {/* Training Card (Mirrored from Classes Page) */}
-                                  <div className="bg-white border border-zinc-100 rounded-xl overflow-hidden hover:shadow-lg hover:border-[#003366]/20 transition-all group flex flex-col sm:flex-row min-h-[180px]">
-                                     {/* Left Side: Image */}
-                                     <div className="sm:w-1/3 h-40 sm:h-auto relative overflow-hidden bg-zinc-100 border-r border-zinc-50 shrink-0">
-                                        <img 
-                                           src="https://images.unsplash.com/photo-1587620962725-abab7fe55159?q=80&w=1000&auto=format&fit=crop" 
-                                           alt="Technical Orientation" 
-                                           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                                        />
-                                        {currentClass.status === "In Progress" && (
-                                           <div className="absolute top-2 left-2 px-2 py-1 bg-red-500/90 backdrop-blur-sm rounded text-[8px] font-black text-white tracking-widest animate-pulse">
-                                              LIVE
-                                           </div>
-                                        )}
-                                     </div>
-
-                                     {/* Right Side: Content */}
-                                     <div className="flex-1 p-5 flex flex-col justify-between">
-                                        <div className="space-y-3">
-                                           <div className="flex items-center justify-between">
-                                              <div className="flex items-center gap-2">
-                                                 <Calendar size={13} className="text-zinc-300" />
-                                                 <span className="text-[11px] font-medium text-zinc-400">{currentClass.date}</span>
-                                              </div>
-                                              <div className="flex items-center gap-2">
-                                                 {currentClass.status === "In Progress" ? (
-                                                    <span className="flex items-center gap-1 text-[9px] font-bold text-red-500 animate-pulse">
-                                                       <div className="h-1.5 w-1.5 rounded-full bg-red-500" />
-                                                       LIVE NOW
-                                                    </span>
-                                                 ) : (
-                                                    <span className="text-[9px] font-bold px-2 py-0.5 rounded tracking-wide text-emerald-600 bg-emerald-50">
-                                                       TODAY
-                                                    </span>
-                                                 )}
-                                              </div>
-                                           </div>
-
-                                           <div>
-                                              <h3 className="text-[15px] font-bold text-[#003366] group-hover:text-blue-600 transition-colors leading-tight">
-                                                 {currentClass.title}
-                                              </h3>
-                                              <div className="flex flex-wrap items-center gap-3 mt-3 text-zinc-400">
-                                                 <div className="flex items-center gap-1.5">
-                                                    <Clock size={12} className="text-zinc-300" />
-                                                    <span className="text-[11px]">{currentClass.time}</span>
-                                                 </div>
-                                                 <div className="flex items-center gap-1.5">
-                                                    <User size={12} className="text-zinc-300" />
-                                                    <span className="text-[11px] font-medium">Technical Team</span>
-                                                 </div>
-                                              </div>
-                                           </div>
-                                        </div>
-
-                                        <div className="mt-5">
-                                           <a 
-                                              href={meetingLink}
-                                              target="_blank"
-                                              rel="noopener noreferrer"
-                                              className="block w-full py-2.5 text-[10px] font-bold uppercase tracking-widest rounded-lg transition-all text-center border bg-[#003366] text-white border-[#003366] hover:bg-black shadow-md shadow-blue-900/10"
-                                           >
-                                              Join Session
-                                           </a>
-                                        </div>
-                                     </div>
-                                  </div>
-
-                                  {/* Notice Card */}
-                                  <div className="bg-zinc-50 border border-zinc-100 rounded-xl p-6 flex flex-col justify-between">
-                                     <div className="space-y-4">
-                                        <div className="flex items-center gap-2">
-                                           <Bell size={16} className="text-amber-500" />
-                                           <h4 className="text-[10px] font-black text-zinc-400 uppercase tracking-widest">Mandatory Instructions</h4>
-                                        </div>
-                                        <div className="space-y-3">
-                                           <div className="flex gap-3">
-                                              <div className="h-5 w-5 rounded-full bg-white border border-zinc-200 flex items-center justify-center shrink-0 text-[10px] font-bold text-zinc-500">1</div>
-                                              <p className="text-[13px] text-zinc-600 font-medium leading-tight">Ensure stable internet connection</p>
-                                           </div>
-                                           <div className="flex gap-3">
-                                              <div className="h-5 w-5 rounded-full bg-white border border-zinc-200 flex items-center justify-center shrink-0 text-[10px] font-bold text-zinc-500">2</div>
-                                              <p className="text-[13px] text-zinc-600 font-medium leading-tight">Install Node.js and VS Code</p>
-                                           </div>
-                                           <div className="flex gap-3">
-                                              <div className="h-5 w-5 rounded-full bg-white border border-zinc-200 flex items-center justify-center shrink-0 text-[10px] font-bold text-zinc-500">3</div>
-                                              <p className="text-[13px] text-zinc-600 font-medium leading-tight">Keep cameras on during orientation</p>
-                                           </div>
-                                        </div>
-                                     </div>
-                                     <div className="mt-6 flex items-center gap-4 text-zinc-400">
-                                        <div className="flex items-center gap-2">
-                                           <Users size={14} />
-                                           <span className="text-[11px] font-bold tracking-tight">80+ Joined</span>
-                                        </div>
-                                        <div className="flex items-center gap-2">
-                                           <Clock size={14} />
-                                           <span className="text-[11px] font-bold tracking-tight">90 Mins</span>
-                                        </div>
-                                     </div>
-                                  </div>
-                               </div>
-                           );
-                        })()}
-                     </div>
-                  ) : (
-                     <>
-                        <div className="flex items-center gap-2 mb-4 border-b border-zinc-100 pb-2">
-                           <Newspaper size={16} className="text-[#003366]" />
-                           <h2 className="text-[11px] font-bold text-zinc-400 uppercase tracking-[0.2em]">Portal Updates</h2>
-                        </div>
-
-                        <div className="space-y-4">
-                           <div className="bg-white border border-zinc-100 rounded-lg p-6 flex flex-col lg:flex-row items-center gap-8 hover:shadow-md transition-all group relative overflow-hidden">
-                              <div className="w-full lg:w-48 h-48 lg:h-48 bg-zinc-50 rounded-md overflow-hidden shrink-0 border border-zinc-100">
-                                 <img
-                                    src="https://ik.imagekit.io/dypkhqxip/resumebuilder"
-                                    alt="RX Resume Builder"
-                                    className="w-full h-full object-cover lg:object-contain transition-all duration-500 group-hover:scale-105"
-                                 />
-                              </div>
-
-                              <div className="flex-1 space-y-3 w-full">
-                                 <div className="flex items-center gap-3">
-                                    <span className="bg-zinc-100 text-[#003366] border border-blue-100 text-[9px] font-bold px-2 py-0.5 rounded">
-                                       New Feature
-                                    </span>
-                                    <span className="text-[11px] text-zinc-400 font-medium">May 04, 2026</span>
-                                 </div>
-                                 <h3 className="text-xl font-bold text-[#003366] tracking-tight">RX Resume Builder – Intelligent, ATS-Friendly Resumes</h3>
-                                 <p className="text-[13px] text-zinc-500 font-medium leading-relaxed line-clamp-3 max-w-2xl">
-                                    RX Resume Builder is an intelligent, ATS-friendly resume creation platform designed specifically for students. It offers a dynamic and structured approach to resume building, ensuring your profile stands out.
-                                 </p>
-
-                                 <div className="flex justify-start mt-4">
-                                    <Link
-                                       href="/intern/dashboard/news"
-                                       className="flex items-center gap-1 text-[13px] font-semibold text-blue-500 hover:underline"
-                                    >
-                                       View Details <ChevronRight size={14} />
-                                    </Link>
-                                 </div>
-                              </div>
-                           </div>
-                        </div>
-                     </>
-                  )}
-               </div>
-
+               {/* Floating support chat widget and its modal */}
                <button
                   onClick={() => setShowSupportModal(true)}
                   className="fixed bottom-8 right-8 z-[60] w-16 h-16 bg-[#1A3797] shadow-xl flex items-center justify-center transition-all hover:scale-110 active:scale-95 group overflow-hidden"
@@ -1592,7 +1375,7 @@ function InternDashboardContent() {
                            </h2>
                            <div className="flex items-center gap-2">
                               <div className={`h-1.5 w-1.5 rounded-full ${socketStatus === "connected" ? "bg-emerald-500 animate-pulse" :
-                                    socketStatus === "connecting" ? "bg-amber-500" : "bg-rose-500"
+                                 socketStatus === "connecting" ? "bg-amber-500" : "bg-rose-500"
                                  }`} />
                               <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-tight">
                                  {socketStatus === "connected" ? "Online" :
@@ -1771,9 +1554,9 @@ function InternDashboardContent() {
                                  }
                               });
                               return slots.map((isPresent, idx) => (
-                                 <div 
-                                    key={idx} 
-                                    className={`h-1.5 flex-1 rounded-full ${isPresent ? "bg-orange-500 shadow-sm shadow-orange-500/50" : "bg-zinc-100"}`} 
+                                 <div
+                                    key={idx}
+                                    className={`h-1.5 flex-1 rounded-full ${isPresent ? "bg-orange-500 shadow-sm shadow-orange-500/50" : "bg-zinc-100"}`}
                                     title={isPresent ? "Present" : "No record/Absent"}
                                  />
                               ));
@@ -1822,7 +1605,7 @@ function InternDashboardContent() {
                                     </td>
                                     <td className="px-6 py-4 text-right">
                                        <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-tight ${log.status === "PRESENT" ? "bg-emerald-50 text-emerald-600" :
-                                             log.status === "LATE" ? "bg-amber-50 text-amber-600" : "bg-red-50 text-red-600"
+                                          log.status === "LATE" ? "bg-amber-50 text-amber-600" : "bg-red-50 text-red-600"
                                           }`}>
                                           {log.status === "PRESENT" ? "Present" : log.status === "LATE" ? "Late" : "Absent"}
                                        </span>
@@ -1920,9 +1703,9 @@ function InternDashboardContent() {
                                        </div>
                                     </div>
                                     <span className={`text-[10px] font-bold px-3 py-1 rounded-sm ${app.status === "PENDING" ? "bg-amber-50 text-amber-600" :
-                                          app.status === "REVIEWED" ? "bg-blue-50 text-blue-600" :
-                                             app.status === "ACCEPTED" ? "bg-emerald-50 text-emerald-600" :
-                                                "bg-zinc-100 text-zinc-400"
+                                       app.status === "REVIEWED" ? "bg-blue-50 text-blue-600" :
+                                          app.status === "ACCEPTED" ? "bg-emerald-50 text-emerald-600" :
+                                             "bg-zinc-100 text-zinc-400"
                                        }`}>
                                        {app.status.charAt(0) + app.status.slice(1).toLowerCase()}
                                     </span>

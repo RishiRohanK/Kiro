@@ -321,7 +321,7 @@ export default function InternProfile() {
                             <button 
                                 disabled={submitting} 
                                 type="submit" 
-                                className="bg-zinc-900 text-white px-12 py-5 text-[11px] font-bold uppercase tracking-widest hover:bg-black transition-all disabled:opacity-50 flex items-center gap-3"
+                                className="bg-[#003366] text-white px-8 h-10 text-[11px] font-bold uppercase tracking-wider hover:bg-[#002244] transition-all disabled:opacity-50 flex items-center gap-2 rounded-lg"
                             >
                                 {submitting ? <Loader2 className="animate-spin" size={14} /> : <Save size={14} />}
                                 {submitting ? "Saving Changes" : "Save Profile"}
@@ -379,7 +379,7 @@ export default function InternProfile() {
             <div className="max-w-[1300px] mx-auto px-8 pt-8">
                 <Link 
                     href="/intern/dashboard"
-                    className="inline-flex items-center gap-2 text-[#0073B1] hover:underline transition-all text-[14px] font-semibold"
+                    className="inline-flex items-center gap-2 text-[#003366] hover:underline transition-all text-[14px] font-semibold"
                 >
                     <ChevronLeft size={16} />
                     <span>Back to Dashboard</span>
@@ -392,7 +392,7 @@ export default function InternProfile() {
                 <div className="space-y-6">
                     
                     {/* Header Card */}
-                    <div className="bg-white border border-zinc-200 shadow-sm overflow-hidden relative rounded-sm">
+                    <div className="bg-white border border-zinc-200 shadow-sm overflow-hidden relative rounded-xl">
                         {/* Banner */}
                         <div className="h-[160px] relative">
                             <img 
@@ -406,11 +406,11 @@ export default function InternProfile() {
                         <div className="px-10 pb-8 relative flex items-start">
                             {/* Profile Image Overlap */}
                             <div className="flex-shrink-0 relative -mt-16 mr-8">
-                                <div className="h-36 w-36 bg-[#FFE7CC] border-[4px] border-white rounded-full flex items-center justify-center overflow-hidden shadow-md">
+                                <div className="h-36 w-36 bg-blue-50 border-[4px] border-white rounded-full flex items-center justify-center overflow-hidden shadow-md">
                                     {intern.profileImage ? (
                                         <img src={intern.profileImage} alt={intern.name} className="h-full w-full object-cover" />
                                     ) : (
-                                        <span className="text-4xl font-medium text-[#E67E22]">{initials}</span>
+                                        <span className="text-4xl font-medium text-[#003366]">{initials}</span>
                                     )}
                                 </div>
                             </div>
@@ -442,8 +442,8 @@ export default function InternProfile() {
                                                 ) : intern.college?.toLowerCase().includes('malla reddy university') ? (
                                                     <img src="https://media.collegedekho.com/media/img/institute/logo/Malla_reddy_University_logo.png" alt="MRUN" className="h-8 w-auto object-contain" />
                                                 ) : (
-                                                    <div className="bg-orange-100 p-1.5 rounded-full">
-                                                        <User size={14} className="text-orange-600" />
+                                                    <div className="bg-blue-50 p-1.5 rounded-full">
+                                                        <User size={14} className="text-[#003366]" />
                                                     </div>
                                                 )}
                                                 <p className="text-[14px] font-semibold text-zinc-700 leading-tight">
@@ -457,7 +457,7 @@ export default function InternProfile() {
                                 <div className="flex items-center gap-3 mt-4 md:mt-0">
                                     <button 
                                         onClick={() => setViewMode("edit")}
-                                        className="flex items-center gap-2 border-[1.5px] border-orange-500 text-orange-500 px-6 py-2.5 rounded-lg text-[13px] font-bold hover:bg-orange-50 transition-all"
+                                        className="flex items-center gap-2 border-[1.5px] border-[#003366] text-[#003366] px-6 py-2.5 rounded-lg text-[13px] font-bold hover:bg-blue-50/50 transition-all"
                                     >
                                         <Edit2 size={14} />
                                         Edit Profile
@@ -481,7 +481,7 @@ export default function InternProfile() {
                                     key={tab}
                                     onClick={() => setActiveTab(tab)}
                                     className={`py-4 text-[13px] font-bold transition-all relative ${
-                                        activeTab === tab ? "text-orange-500 border-b-2 border-orange-500" : "text-zinc-400 hover:text-zinc-600"
+                                        activeTab === tab ? "text-[#003366] border-b-2 border-[#003366]" : "text-zinc-400 hover:text-zinc-600"
                                     }`}
                                 >
                                     {tab}
@@ -523,7 +523,7 @@ export default function InternProfile() {
                                                                 strokeDashoffset: 2 * Math.PI * 42 * (1 - (intern.attendances?.filter((a: any) => a.status === 'PRESENT').length / Math.max(intern.attendances?.length || 1, 1))) 
                                                             }}
                                                             transition={{ duration: 1.5, ease: "easeOut" }}
-                                                            className="text-orange-500"
+                                                            className="text-[#003366]"
                                                         />
                                                     </svg>
                                                     <span className="absolute text-xl font-bold text-zinc-900">
@@ -538,7 +538,7 @@ export default function InternProfile() {
 
                                             <div className="md:col-span-3 grid grid-cols-2 md:grid-cols-4 gap-4">
                                                 <div className="bg-white border border-zinc-100 p-6 rounded-2xl space-y-2 relative overflow-hidden">
-                                                    <div className="absolute top-2 right-2 text-orange-500">
+                                                    <div className="absolute top-2 right-2 text-[#003366]">
                                                         <Flame size={16} />
                                                     </div>
                                                     <p className="text-[11px] font-bold text-zinc-400 uppercase tracking-wider">Current Streak</p>
@@ -552,7 +552,7 @@ export default function InternProfile() {
                                                 </div>
                                                 <div className="bg-white border border-zinc-100 p-6 rounded-2xl space-y-2">
                                                     <p className="text-[11px] font-bold text-zinc-400 uppercase tracking-wider">Days present</p>
-                                                    <p className="text-2xl font-bold text-orange-500">{intern.attendances?.filter((a: any) => a.status === 'PRESENT').length || 0}</p>
+                                                    <p className="text-2xl font-bold text-[#003366]">{intern.attendances?.filter((a: any) => a.status === 'PRESENT').length || 0}</p>
                                                     <p className="text-[10px] text-zinc-400 font-medium italic">Present days</p>
                                                 </div>
                                                 <div className="bg-white border border-zinc-100 p-6 rounded-2xl space-y-2">
@@ -575,7 +575,7 @@ export default function InternProfile() {
                                                     <p className="text-[12px] text-zinc-400 font-medium uppercase tracking-wider">Monthly tracking</p>
                                                 </div>
                                                 <div className="flex items-center gap-4 text-[11px] font-bold uppercase tracking-wider text-zinc-400">
-                                                    <div className="flex items-center gap-1.5"><div className="h-2.5 w-2.5 bg-orange-500 rounded-sm" /> Present</div>
+                                                    <div className="flex items-center gap-1.5"><div className="h-2.5 w-2.5 bg-[#003366] rounded-sm" /> Present</div>
                                                     <div className="flex items-center gap-1.5"><div className="h-2.5 w-2.5 bg-zinc-200 rounded-sm" /> Absent</div>
                                                 </div>
                                             </div>
@@ -605,10 +605,10 @@ export default function InternProfile() {
                                                                         initial={{ height: 0 }}
                                                                         animate={{ height: data.count > 0 ? `${Math.max((data.count / maxCount) * 100, 5)}%` : "0%" }}
                                                                         transition={{ delay: idx * 0.05, duration: 0.8, ease: "easeOut" }}
-                                                                        className="w-full bg-orange-500 rounded-t-sm transition-all relative"
+                                                                        className="w-full bg-[#003366] rounded-t-sm transition-all relative"
                                                                     >
                                                                         {data.count > 0 && (
-                                                                            <span className="absolute -top-6 left-1/2 -translate-x-1/2 text-[10px] font-bold text-orange-600 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                                            <span className="absolute -top-6 left-1/2 -translate-x-1/2 text-[10px] font-bold text-[#003366] opacity-0 group-hover:opacity-100 transition-opacity">
                                                                                 {data.count}d
                                                                             </span>
                                                                         )}
@@ -650,14 +650,14 @@ export default function InternProfile() {
                                             intern.scheduleSubmissions.slice(0, 5).map((sub: any) => (
                                                 <div key={sub.id} className="flex gap-8 items-start group relative pb-10 last:pb-0">
                                                     <div className="absolute left-[7px] top-6 bottom-0 w-px bg-zinc-100 group-last:hidden" />
-                                                    <div className="h-4 w-4 rounded-full border-4 border-white bg-zinc-200 group-hover:bg-orange-500 transition-colors z-10 shadow-sm" />
+                                                    <div className="h-4 w-4 rounded-full border-4 border-white bg-zinc-200 group-hover:bg-[#003366] transition-colors z-10 shadow-sm" />
                                                     <div className="space-y-2 flex-1">
                                                         <p className="text-[15px] font-bold text-zinc-900">{sub.schedule.typeOfWork}</p>
                                                         <p className="text-[12px] text-zinc-400 font-bold uppercase tracking-wider">
                                                             {new Date(sub.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                                                         </p>
                                                         <div className="pt-2">
-                                                            <Link href={sub.githubLink} className="inline-flex items-center gap-2 text-[11px] text-white bg-zinc-900 px-4 py-2 rounded-lg font-bold hover:bg-black transition-all">
+                                                            <Link href={sub.githubLink} className="inline-flex items-center gap-2 text-[11px] text-white bg-[#003366] px-4 py-2 rounded-lg font-bold hover:bg-[#002244] transition-all">
                                                                 <ExternalLink size={12} />
                                                                 View repo
                                                             </Link>

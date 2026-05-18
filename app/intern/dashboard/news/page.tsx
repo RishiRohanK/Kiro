@@ -93,25 +93,24 @@ const UPDATES = [
 
 export default function NewsUpdatesPage() {
     return (
-        <div className="max-w-6xl mx-auto p-4 md:p-8 pb-24">
-            <header className="mb-12">
-                <div className="flex items-center gap-2 text-zinc-400 font-medium text-[11px] uppercase tracking-widest mb-4">
-                    <Newspaper size={12} />
-                    <span>Portal updates & Announcements</span>
+        <div className="w-full pb-24">
+            <header className="mb-8 border-b border-zinc-100 pb-5 flex items-center gap-3">
+                <Newspaper size={22} strokeWidth={2.25} className="text-[#003366]" />
+                <div>
+                    <h1 className="text-xl font-bold tracking-tight text-zinc-900 leading-none">News & Announcements</h1>
+                    <p className="text-zinc-500 text-xs mt-1 leading-relaxed">Stay updated with official training timelines, career alerts, and portal announcements.</p>
                 </div>
-                <h1 className="text-3xl font-bold text-zinc-900 tracking-tight">News & Updates</h1>
-                <p className="text-zinc-500 text-sm mt-2">Stay informed about the latest opportunities and announcements from Student Forge.</p>
             </header>
 
-            <div className="space-y-24">
+            <div className="space-y-16">
                 {UPDATES.map((update, index) => (
                     <motion.div 
                         key={update.id}
-                        initial={{ opacity: 0, y: 20 }}
+                        initial={{ opacity: 0, y: 15 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ delay: index * 0.1 }}
-                        className="bg-white border border-zinc-200 overflow-hidden shadow-sm"
+                        className="bg-white border border-zinc-200/80 overflow-hidden rounded-2xl shadow-sm hover:border-zinc-300 transition-all hover:shadow-md"
                     >
                         <div className="flex flex-col lg:flex-row min-h-[500px]">
                             {/* Left Side: Poster */}
@@ -224,9 +223,9 @@ export default function NewsUpdatesPage() {
                                                 href={update.footer.applyLink}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="inline-flex items-center gap-2 px-8 py-3 bg-zinc-900 text-white text-xs font-bold uppercase tracking-widest hover:bg-blue-600 transition-all shadow-lg shadow-zinc-200"
+                                                className="inline-flex items-center gap-2 px-6 h-10 bg-[#003366] hover:bg-[#002244] text-white text-[11px] font-bold uppercase tracking-wider transition-all rounded-lg shadow-sm hover:shadow-md"
                                             >
-                                                Apply Now <ExternalLink size={14} />
+                                                Apply Now <ExternalLink size={13} />
                                             </a>
                                         )}
                                     </div>

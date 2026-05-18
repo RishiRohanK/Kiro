@@ -57,35 +57,33 @@ export default function InternReportsPage() {
   if (loading) {
     return (
       <div className="py-20 flex justify-center">
-        <div className="animate-spin h-7 w-7 border-2 border-[#FF8C42] border-t-transparent rounded-full" />
+        <div className="animate-spin h-7 w-7 border-2 border-[#003366] border-t-transparent rounded-full" />
       </div>
     );
   }
 
   return (
-    <div className="p-4 lg:p-10 w-full mx-auto font-sans pb-24 text-zinc-900 bg-[#FBFBFB] min-h-screen">
+    <div className="w-full pb-24 text-zinc-900 bg-[#FBFBFB] min-h-screen">
       
       {/* Page Header - Standardized */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8 border-b border-zinc-100 pb-5">
           <div className="flex items-center gap-3">
-              <div className="p-2 bg-white rounded-lg border border-zinc-100 shadow-sm">
-                 <BarChart3 size={32} className="text-[#003366]" />
-              </div>
+              <BarChart3 size={22} strokeWidth={2.25} className="text-[#003366]" />
               <div>
-                  <h1 className="text-3xl font-medium text-zinc-800 tracking-tight">My Reports</h1>
-                  <p className="text-[12px] text-zinc-400 font-medium mt-0.5">Detailed breakdown of your academic and attendance records.</p>
+                  <h1 className="text-xl font-bold tracking-tight text-zinc-900 leading-none">My Reports & Analytics</h1>
+                  <p className="text-zinc-500 text-xs mt-1 leading-relaxed">Detailed breakdown of your academic, submission, and attendance records.</p>
               </div>
           </div>
 
-          <div className="flex items-center gap-4 bg-white p-2.5 border border-zinc-100 rounded-lg shadow-sm">
+          <div className="flex items-center gap-4 bg-white p-2.5 border border-zinc-150 rounded-xl shadow-sm">
               {[
-                  { label: "Attendance", value: `${attendance}%`, color: "text-emerald-500" },
+                  { label: "Attendance", value: `${attendance}%`, color: "text-green-600" },
                   { label: "Exams", value: sessions.length, color: "text-[#003366]" },
-                  { label: "Violations", value: sessions.reduce((acc, s) => acc + (s.violations || 0), 0), color: "text-red-500" }
+                  { label: "Violations", value: sessions.reduce((acc, s) => acc + (s.violations || 0), 0), color: "text-rose-600" }
               ].map((stat, i) => (
-                  <div key={i} className={`flex flex-col items-center px-6 ${i < 2 ? "border-r border-zinc-100" : ""}`}>
-                      <span className={`text-2xl font-bold ${stat.color}`}>{stat.value}</span>
-                      <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">{stat.label}</span>
+                  <div key={i} className={`flex flex-col items-center px-5 ${i < 2 ? "border-r border-zinc-100" : ""}`}>
+                      <span className={`text-xl font-extrabold ${stat.color}`}>{stat.value}</span>
+                      <span className="text-[9px] font-bold uppercase tracking-wider text-zinc-400 mt-0.5">{stat.label}</span>
                   </div>
               ))}
           </div>
@@ -203,7 +201,7 @@ export default function InternReportsPage() {
                              href={userStatus.offerLetterUrl} 
                              target="_blank" 
                              rel="noopener noreferrer"
-                             className="w-full md:w-auto px-5 h-10 bg-emerald-600 hover:bg-black text-white text-[11px] font-bold uppercase tracking-widest flex items-center justify-center gap-2 transition-all rounded"
+                             className="w-full md:w-auto px-5 h-10 bg-[#003366] hover:bg-[#002244] text-white text-[11px] font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all rounded-lg"
                          >
                              Download Offer Letter
                          </a>
@@ -217,7 +215,7 @@ export default function InternReportsPage() {
                          className="bg-white border border-zinc-100 p-6 rounded-md flex flex-col md:flex-row items-center justify-between gap-4 hover:shadow-md transition-all"
                      >
                          <div className="flex items-center gap-4">
-                             <div className="h-10 w-10 bg-blue-50 text-[#0055FF] rounded-full flex items-center justify-center shrink-0">
+                             <div className="h-10 w-10 bg-blue-50 text-[#003366] rounded-full flex items-center justify-center shrink-0">
                                  <BarChart3 size={20} />
                              </div>
                              <div>
@@ -229,7 +227,7 @@ export default function InternReportsPage() {
                              href={userStatus.letterUrl} 
                              target="_blank" 
                              rel="noopener noreferrer"
-                             className="w-full md:w-auto px-5 h-10 bg-[#0055FF] hover:bg-black text-white text-[11px] font-bold uppercase tracking-widest flex items-center justify-center gap-2 transition-all rounded"
+                             className="w-full md:w-auto px-5 h-10 bg-[#003366] hover:bg-[#002244] text-white text-[11px] font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all rounded-lg"
                          >
                              Download Certificate
                          </a>

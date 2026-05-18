@@ -29,6 +29,7 @@ import {
     Target,
     Sparkles,
     Flame,
+    Pin,
     ChevronLeft as CollapseIcon
 } from "lucide-react";
 
@@ -51,14 +52,21 @@ function InternDashboardLayoutContent({
     const [isProfileComplete, setIsProfileComplete] = useState(true);
     const [checkingProfile, setCheckingProfile] = useState(true);
     const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
-    const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+    const [isSidebarPinned, setIsSidebarPinned] = useState(false);
+    const [isSidebarHovered, setIsSidebarHovered] = useState(false);
+    const isSidebarCollapsed = !(isSidebarPinned || isSidebarHovered);
     const [streakCount, setStreakCount] = useState(0);
 
     useEffect(() => {
         setMounted(true);
         const savedCollapse = localStorage.getItem('sidebar_manual_collapse');
-        if (savedCollapse === 'true') {
-            setIsSidebarCollapsed(true);
+        if (savedCollapse === 'false') {
+            setIsSidebarPinned(true);
+        } else if (savedCollapse === 'true') {
+            setIsSidebarPinned(false);
+        } else {
+            // Default to pinned if not set for best first time UX
+            setIsSidebarPinned(true);
         }
         const initSession = async () => {
             let userData = null;
@@ -261,7 +269,7 @@ function InternDashboardLayoutContent({
     return (
         <div className="min-h-screen bg-[#F8F9FA] text-zinc-900 font-sans">
             {/* ── Full-width Header ── */}
-            <header className="h-14 flex items-center justify-between px-6 lg:px-10 bg-white border-b border-zinc-100 sticky top-0 z-[60] text-zinc-900 shadow-sm w-full">
+            <header className="h-[72px] flex items-center justify-between px-6 lg:px-10 bg-white border-b border-zinc-100 sticky top-0 z-[60] text-zinc-900 shadow-sm w-full">
                 <div className="flex items-center gap-6">
                     <button
                         onClick={() => setIsMobileMenuOpen(true)}
@@ -272,10 +280,10 @@ function InternDashboardLayoutContent({
 
                     <div className="flex items-center gap-4">
                         {collegeLogo ? (
-                            <img src={collegeLogo} alt="College Logo" className="h-9 w-auto object-contain" />
+                            <img src={collegeLogo} alt="College Logo" className="h-[44px] w-auto object-contain" />
                         ) : (
-                            <div className="h-9 w-9 bg-zinc-50 flex items-center justify-center border border-zinc-100">
-                                <School size={20} className="text-[#003366]/60" />
+                            <div className="h-11 w-11 bg-zinc-50 flex items-center justify-center border border-zinc-100 rounded-xl">
+                                <School size={22} className="text-[#003366]/60" />
                             </div>
                         )}
                         <div className="flex flex-col">
@@ -295,7 +303,7 @@ function InternDashboardLayoutContent({
                     <img
                         src="https://ik.imagekit.io/dypkhqxip/platform?updatedAt=1776791557303"
                         alt="Student Forge"
-                        className="hidden lg:block h-5 w-auto object-contain"
+                        className="hidden lg:block h-[30px] w-auto object-contain"
                     />
                 </div>
 
@@ -380,101 +388,37 @@ function InternDashboardLayoutContent({
                 </div>
             </header>
 
-            {/* ── Training Sub-Navbar (Conditional) ── */}
-            <AnimatePresence>
-                {isTrainingActive && (
-                    <motion.div 
-                        initial={{ y: -50, opacity: 0 }}
-                        animate={{ y: 0, opacity: 1 }}
-                        exit={{ y: -50, opacity: 0 }}
-                        className="fixed top-14 left-0 right-0 h-12 bg-zinc-900 border-b border-zinc-800 z-40 flex items-center shadow-lg lg:left-[var(--sidebar-width)] transition-all duration-500"
-                        style={{ 
-                            '--sidebar-width': isSidebarCollapsed ? '68px' : '240px' 
-                        } as any}
-                    >
-                        <div className="flex-1 max-w-[1600px] mx-auto px-4 md:px-8 flex items-center justify-between h-full">
-                            <div className="flex items-center gap-1 md:gap-8 h-full overflow-x-auto scrollbar-hide">
-                                {trainingSubItems.map((sub) => {
-                                    const isSubActive = pathname === new URL(sub.slug, "http://localhost").pathname;
-                                    return (
-                                        <Link 
-                                            key={sub.name} 
-                                            href={sub.slug}
-                                            className={`flex items-center gap-2.5 px-4 h-full relative group transition-all shrink-0 ${
-                                                isSubActive ? "text-white" : "text-white/70 hover:text-white"
-                                            }`}
-                                        >
-                                            <sub.icon size={18} strokeWidth={isSubActive ? 2.25 : 1.75} className={isSubActive ? "text-white shadow-[0_0_10px_rgba(255,255,255,0.3)]" : "text-white/60 group-hover:text-white transition-colors"} />
-                                            <span className={`text-[13px] font-bold whitespace-nowrap transition-all ${isSubActive ? "opacity-100" : "opacity-70 group-hover:opacity-100"}`}>
-                                                {sub.name}
-                                            </span>
-                                            {isSubActive && (
-                                                <motion.div 
-                                                    layoutId="activeSubNav"
-                                                    className="absolute bottom-0 left-0 right-0 h-[3px] bg-blue-500 rounded-t-full shadow-[0_-4px_12px_rgba(59,130,246,0.5)]"
-                                                />
-                                            )}
-                                        </Link>
-                                    );
-                                })}
-                            </div>
-
-                            <button 
-                                onClick={handleLogout}
-                                className="flex items-center gap-2 px-4 h-9 bg-red-600 hover:bg-red-700 text-white text-[12px] font-bold rounded-lg transition-all shadow-lg shadow-red-900/20 shrink-0 ml-4"
-                            >
-                                <LogOut size={16} strokeWidth={2.25} />
-                                Logout
-                            </button>
-                        </div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
-
             {/* ── Body: Sidebar + Main ── */}
-            <div className={`flex h-[calc(100vh-56px)] overflow-hidden transition-all duration-500 ${isTrainingActive ? "pt-12" : ""}`}>
+            <div className="flex h-[calc(100vh-72px)] overflow-hidden transition-all duration-500">
 
                 {/* Sidebar Desktop */}
                 <aside 
+                    onMouseEnter={() => setIsSidebarHovered(true)}
+                    onMouseLeave={() => setIsSidebarHovered(false)}
                     className={`hidden lg:flex flex-col z-40 transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] border-r border-zinc-200/40 ${
                         isSidebarCollapsed ? "w-[68px]" : "w-[240px]"
-                    } bg-white shadow-[2px_0_12px_rgba(0,0,0,0.01)] h-full`}
+                    } bg-white shadow-[2px_0_12px_rgba(0,0,0,0.01)] h-full relative`}
                 >
+                    {/* Floating Pin Button */}
+                    {!isSidebarCollapsed && (
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setIsSidebarPinned(!isSidebarPinned);
+                            }}
+                            className={`absolute top-4 right-4 z-50 p-1.5 rounded-lg border transition-all ${
+                                isSidebarPinned 
+                                    ? "bg-[#E8EDFF] border-blue-200 text-[#003366] hover:bg-[#D3E0FF]" 
+                                    : "bg-white hover:bg-zinc-50 border-zinc-200 text-zinc-400 hover:text-zinc-600 shadow-sm"
+                            }`}
+                            title={isSidebarPinned ? "Unpin Sidebar" : "Pin Sidebar"}
+                        >
+                            <Pin size={13} strokeWidth={2.5} className={`transition-transform duration-300 ${isSidebarPinned ? "rotate-45" : ""}`} />
+                        </button>
+                    )}
                     <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
                         {/* Scrollable Area */}
                         <div className="flex-1 overflow-y-auto overflow-x-hidden scrollbar-hide py-5 px-3 space-y-1.5">
-                            {/* Sidebar Header/Streak Section */}
-                            <div className={`mb-5 transition-all duration-300 ${isSidebarCollapsed ? "px-0" : "px-1.5"}`}>
-                                <div className={`flex items-center bg-orange-50/40 p-2.5 rounded-2xl border border-orange-100 relative group/streak ${isSidebarCollapsed ? "justify-center w-11 h-11 p-0 mx-auto" : "w-full gap-3"}`}>
-                                    <div className="bg-gradient-to-br from-orange-400 to-orange-500 p-2 rounded-xl shadow-sm relative shrink-0">
-                                        <Flame size={18} className="text-white animate-pulse" />
-                                        {isSidebarCollapsed && (
-                                            <div className="absolute -top-1.5 -right-1.5 bg-orange-600 text-white text-[9px] font-black h-4.5 w-4.5 rounded-full flex items-center justify-center border border-white shadow-sm">
-                                                {streakCount}
-                                            </div>
-                                        )}
-                                    </div>
-                                    {!isSidebarCollapsed && (
-                                        <div className="flex flex-col min-w-0">
-                                            <span className="text-[9px] font-black text-orange-400 uppercase tracking-wider leading-none mb-1 truncate">Live Streak</span>
-                                            <div className="flex items-baseline gap-1">
-                                                <AnimatePresence mode="wait">
-                                                    <motion.span 
-                                                        key={streakCount}
-                                                        initial={{ y: 5, opacity: 0 }}
-                                                        animate={{ y: 0, opacity: 1 }}
-                                                        exit={{ y: -5, opacity: 0 }}
-                                                        className="text-base font-black text-orange-600 leading-none"
-                                                    >
-                                                        {streakCount}
-                                                    </motion.span>
-                                                </AnimatePresence>
-                                                <span className="text-[10px] font-bold text-orange-500 uppercase tracking-tighter">Days</span>
-                                            </div>
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
 
                             <nav className="space-y-1.5">
                                 {navItems.filter(i => !i.hideFromSidebar).map((item) => {
@@ -495,7 +439,7 @@ function InternDashboardLayoutContent({
                                         >
                                             <item.icon 
                                                 size={18} 
-                                                strokeWidth={isActive ? 2.25 : 1.75} 
+                                                strokeWidth={isActive ? 2.75 : 2.25} 
                                                 className={`shrink-0 transition-colors ${
                                                     isActive 
                                                         ? "text-white" 
@@ -535,25 +479,20 @@ function InternDashboardLayoutContent({
                                         : "bg-amber-50/50 text-amber-700 border border-amber-200/60 hover:bg-amber-100/70 hover:text-amber-800"
                                 } ${isSidebarCollapsed ? "h-11 w-11 justify-center px-0 mx-auto" : "h-11 px-3.5 gap-3 text-[13px]"}`}
                             >
-                                <Hand size={18} className={handRaised ? "animate-bounce" : "shrink-0"} />
+                                <Hand size={18} strokeWidth={2.25} className={handRaised ? "animate-bounce" : "shrink-0"} />
                                 {!isSidebarCollapsed && <span className="truncate">{handRaised ? "Active" : "Help"}</span>}
                             </button>
-                            
                             <button
-                                onClick={() => {
-                                    const newState = !isSidebarCollapsed;
-                                    setIsSidebarCollapsed(newState);
-                                    localStorage.setItem('sidebar_manual_collapse', newState.toString());
-                                }}
-                                className={`w-full flex items-center h-11 transition-all font-semibold rounded-xl bg-zinc-50/60 text-zinc-500 hover:bg-zinc-100/80 hover:text-zinc-700 border border-zinc-200/40 ${
+                                onClick={handleLogout}
+                                className={`w-full flex items-center h-11 transition-all font-semibold rounded-xl bg-rose-50/50 hover:bg-rose-100/70 text-rose-600 hover:text-rose-700 border border-rose-100/60 relative group ${
                                     isSidebarCollapsed ? "justify-center px-0 mx-auto w-11" : "px-3.5 gap-3 text-[13px]"
                                 }`}
                             >
-                                <CollapseIcon size={18} className={`transition-transform duration-500 shrink-0 ${isSidebarCollapsed ? "rotate-180" : ""}`} />
-                                {!isSidebarCollapsed && <span className="truncate">Collapse Menu</span>}
+                                <LogOut size={18} strokeWidth={2.25} className="shrink-0" />
+                                {!isSidebarCollapsed && <span className="truncate">Sign Out</span>}
                                 {isSidebarCollapsed && (
                                     <div className="absolute left-full ml-3 px-2.5 py-1.5 bg-zinc-900/95 backdrop-blur-sm text-white text-[11px] font-medium rounded-lg opacity-0 group-hover:opacity-100 transition-all duration-200 transform translate-x-2 group-hover:translate-x-0 whitespace-nowrap z-[100] pointer-events-none shadow-lg border border-zinc-800/50">
-                                        Expand Menu
+                                        Sign Out
                                     </div>
                                 )}
                             </button>
@@ -590,7 +529,7 @@ function InternDashboardLayoutContent({
                                     className={`flex flex-col items-center justify-center gap-1 transition-all ${isActive ? "text-white" : "text-zinc-500"
                                         }`}
                                 >
-                                    <item.icon size={20} strokeWidth={isActive ? 2.5 : 2} />
+                                    <item.icon size={20} strokeWidth={isActive ? 2.75 : 2.25} />
                                     <span className={`text-[9px] font-bold uppercase tracking-tight ${isActive ? "text-white" : "text-zinc-500"}`}>
                                         {item.name}
                                     </span>
