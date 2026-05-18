@@ -7,7 +7,7 @@ import {
     LayoutDashboard,
     LogOut,
     User,
-
+    Rss,
     ChevronRight,
     Briefcase,
     Calendar,
@@ -222,6 +222,7 @@ function InternDashboardLayoutContent({
 
     const navItems = [
         { name: "Overview", icon: LayoutDashboard, slug: "/intern/dashboard?view=overview", mobile: true },
+        { name: "Academic Feed", icon: Rss, slug: "/intern/dashboard/feed", mobile: true },
         { name: "Internships", icon: Briefcase, slug: "/intern/dashboard?view=internships", mobile: true },
         { name: "Roadmap", icon: Calendar, slug: "/intern/dashboard/schedule", mobile: true },
         { name: "Tasks", icon: Target, slug: "/intern/dashboard?view=tasks", mobile: false },

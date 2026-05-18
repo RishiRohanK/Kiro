@@ -582,3 +582,17 @@ model CleedSettings {
   settingValue String
   updatedAt    DateTime @default(now()) @updatedAt
 }
+
+model FeedPost {
+  id          String   @id @default(cuid())
+  title       String
+  content     String?  // Description or Markdown content
+  type        String   // NOTES, DOCUMENT, PPT, VIDEO, OTHER
+  fileUrl     String?  // Link to the notes/ppt/document file
+  fileName    String?  // Optional display name for the file
+  category    String   @default("General")
+  authorName  String   @default("Tutor")
+  batch       String   @default("All")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

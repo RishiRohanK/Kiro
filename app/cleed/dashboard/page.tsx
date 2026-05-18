@@ -48,7 +48,8 @@ import {
    MessageSquare,
    Zap,
    BookOpen,
-   Video
+   Video,
+   Rss
 } from "lucide-react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
@@ -1642,6 +1643,8 @@ export default function CleedDashboard() {
                         { id: "attendance", icon: CalendarCheck, label: "Attendance" },
                         { id: "vault", icon: Shield, label: "Vault" },
                         { id: "mailer", icon: Mail, label: "Mailer" },
+                        { id: "feed", icon: Rss, label: "Feed Manager" },
+                        { id: "feed_dashboard", icon: LayoutDashboard, label: "Feed Dashboard" },
                         { id: "schedule", icon: Calendar, label: "Daily Plan" },
                         { id: "manage_schedules", icon: Settings, label: "Schedules" },
                         { id: "assign", icon: Send, label: "Dispatch" },
@@ -1656,6 +1659,10 @@ export default function CleedDashboard() {
                                  router.push("/cleed/dashboard/submissions");
                               } else if (item.id === "mailer") {
                                  router.push("/cleed/dashboard/bootcamp-mailer");
+                              } else if (item.id === "feed") {
+                                 router.push("/cleed/dashboard/feed");
+                              } else if (item.id === "feed_dashboard") {
+                                 router.push("/cleed/dashboard/feed-dashboard");
                               } else {
                                  setActiveTab(item.id); 
                               }
@@ -1702,6 +1709,8 @@ export default function CleedDashboard() {
                         { id: "resources", icon: BookOpen, label: "Resources" },
                         { id: "bootcamp", icon: Zap, label: "Bootcamp" },
                         { id: "mailer", icon: Mail, label: "Mailer" },
+                        { id: "feed", icon: Rss, label: "Feed Manager" },
+                        { id: "feed_dashboard", icon: LayoutDashboard, label: "Feed Dashboard" },
                         { id: "attendance", icon: CalendarCheck, label: "Attendance" },
                         { id: "vault", icon: Shield, label: "Vault" },
                      ].map((item) => (
@@ -1712,6 +1721,10 @@ export default function CleedDashboard() {
                                  router.push("/cleed/dashboard/submissions");
                               } else if (item.id === "mailer") {
                                  router.push("/cleed/dashboard/bootcamp-mailer");
+                              } else if (item.id === "feed") {
+                                 router.push("/cleed/dashboard/feed");
+                              } else if (item.id === "feed_dashboard") {
+                                 router.push("/cleed/dashboard/feed-dashboard");
                               } else {
                                  setActiveTab(item.id);
                               }
@@ -1814,11 +1827,21 @@ export default function CleedDashboard() {
                      { id: "exams", label: "Exams" },
                      { id: "submissions", label: "Submissions" },
                      { id: "attendance", label: "Attendance" },
+                     { id: "feed", label: "Feed Manager" },
+                     { id: "feed_dashboard", label: "Feed Dashboard" },
                      { id: "history", label: "Logs" }
                   ].map((tab) => (
                      <button
                         key={tab.id}
-                        onClick={() => setActiveTab(tab.id)}
+                        onClick={() => {
+                           if (tab.id === "feed") {
+                              router.push("/cleed/dashboard/feed");
+                           } else if (tab.id === "feed_dashboard") {
+                              router.push("/cleed/dashboard/feed-dashboard");
+                           } else {
+                              setActiveTab(tab.id);
+                           }
+                        }}
                         className={`h-12 px-5 text-[11px] font-bold tracking-tight transition-all border-b-2 whitespace-nowrap ${activeTab === tab.id
                            ? "border-[#F5332C] text-[#F5332C]"
                            : "border-transparent text-zinc-500 hover:text-zinc-900 hover:border-zinc-300"
