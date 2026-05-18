@@ -261,6 +261,9 @@ function InternDashboardLayoutContent({
         if (college.includes("malla reddy university")) {
             return "https://media.collegedekho.com/media/img/institute/logo/Malla_reddy_University_logo.png";
         }
+        if (college.includes("siddhartha")) {
+            return "https://media.licdn.com/dms/image/v2/C560BAQGV5F0LXyUOTQ/company-logo_200_200/company-logo_200_200/0/1631333448241?e=2147483647&v=beta&t=k2u15Yhys2ZYnLgwW7o6z0zJlZ2bdM80l0vEr0HpfHk";
+        }
         return null;
     };
 

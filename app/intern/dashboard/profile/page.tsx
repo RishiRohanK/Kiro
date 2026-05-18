@@ -441,6 +441,8 @@ export default function InternProfile() {
                                                     <img src="https://vcethyd.ac.in/wp-content/uploads/2026/02/Visvesvaraya-College-emblem-fin-white.png" alt="VCET" className="h-8 w-auto object-contain" />
                                                 ) : intern.college?.toLowerCase().includes('malla reddy university') ? (
                                                     <img src="https://media.collegedekho.com/media/img/institute/logo/Malla_reddy_University_logo.png" alt="MRUN" className="h-8 w-auto object-contain" />
+                                                ) : intern.college?.toLowerCase().includes('siddhartha') ? (
+                                                    <img src="https://media.licdn.com/dms/image/v2/C560BAQGV5F0LXyUOTQ/company-logo_200_200/company-logo_200_200/0/1631333448241?e=2147483647&v=beta&t=k2u15Yhys2ZYnLgwW7o6z0zJlZ2bdM80l0vEr0HpfHk" alt="SIET" className="h-8 w-auto object-contain" />
                                                 ) : (
                                                     <div className="bg-blue-50 p-1.5 rounded-full">
                                                         <User size={14} className="text-[#003366]" />
