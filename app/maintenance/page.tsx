@@ -31,14 +31,6 @@ export default function MaintenancePage() {
       <footer className="w-full flex-none bg-white border-t border-slate-200 px-6 md:px-20 py-5 relative z-30">
         <div className="max-w-4xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex flex-col md:flex-row items-center gap-6 text-center md:text-left">
-            <Link href="https://kiro.redlix.co.in/lms">
-              <img 
-                src="https://ik.imagekit.io/dypkhqxip/Screenshot_2026-05-14_at_17.46.09-removebg-preview.png?updatedAt=1778760997901" 
-                alt="Official Logo" 
-                className="h-12 w-auto opacity-90 hover:opacity-100 transition-opacity cursor-pointer"
-              />
-            </Link>
-            <div className="h-8 w-px bg-slate-200 hidden md:block" />
             <div>
               <p className="text-[12px] text-slate-500 font-medium">
                 © {new Date().getFullYear()} Student Forge Technologies Pvt Ltd.
