@@ -16,7 +16,7 @@ export default function MaintenancePage() {
       <div className="flex-1 flex items-center justify-center p-4 w-full overflow-hidden">
         <div className="flex items-center justify-center w-full max-w-[1200px]">
           {/* Lottie Animation Centered and Large */}
-          <div className="w-[85vw] h-[85vw] max-w-[55vh] max-h-[55vh] md:max-w-[60vh] md:max-h-[60vh] flex-shrink-0 animate-in fade-in zoom-in-95 duration-1000 flex items-center justify-center">
+          <div className="w-[85vw] h-[85vw] max-w-[70vh] max-h-[70vh] md:max-w-[75vh] md:max-h-[75vh] flex-shrink-0 animate-in fade-in zoom-in-95 duration-1000 flex items-center justify-center">
             {React.createElement('dotlottie-wc', {
               src: "/maintenance.lottie",
               style: { width: '100%', height: '100%' },
