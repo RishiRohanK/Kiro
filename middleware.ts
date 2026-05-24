@@ -9,6 +9,20 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const method = request.method.toUpperCase();
 
+  // --- MAINTENANCE MODE ---
+  // Skip static assets, public files, API, and the maintenance page itself
+  if (
+    !pathname.startsWith('/_next') &&
+    !pathname.startsWith('/api') &&
+    !pathname.startsWith('/static') &&
+    pathname !== '/maintenance' &&
+    !pathname.includes('.')
+  ) {
+    const url = request.nextUrl.clone();
+    url.pathname = '/maintenance';
+    return NextResponse.rewrite(url);
+  }
+  // ------------------------
 
   // 1. SECURITY PATCH V3: Block access to sensitive files and dotfiles
   if (pathname.includes('/.git') || pathname.includes('/.env') || pathname.includes('/.aws') || pathname.includes('/.ssh')) {
