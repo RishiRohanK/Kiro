@@ -232,9 +232,10 @@ export default function CleedDashboard() {
    const [isLoading, setIsLoading] = useState(false);
 
 
-   const [selectedIntern, setSelectedIntern] = useState<Intern | null>(null);
-   const [isAuthorizing, setIsAuthorizing] = useState<string | null>(null);
-   const [internBatchFilter, setInternBatchFilter] = useState("All");
+    const [selectedIntern, setSelectedIntern] = useState<Intern | null>(null);
+    const [isAuthorizing, setIsAuthorizing] = useState<string | null>(null);
+    const [approvingSessionId, setApprovingSessionId] = useState<string | null>(null);
+    const [internBatchFilter, setInternBatchFilter] = useState("All");
 
    const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
    const [attendanceStats, setAttendanceStats] = useState<any[]>([]);
@@ -1159,23 +1160,41 @@ export default function CleedDashboard() {
       }
    };
 
-   const handleApprove = async (internId: string) => {
-      setIsAuthorizing(internId);
-      try {
-         const res = await fetch("/api/cleed/interns/approve", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ internId })
-         });
-         if (res.ok) {
-            fetchData();
-         }
-      } catch (err) {
-         console.error("Authorization protocol failure");
-      } finally {
-         setIsAuthorizing(null);
-      }
-   };
+    const handleApprove = async (internId: string) => {
+       setIsAuthorizing(internId);
+       try {
+          const res = await fetch("/api/cleed/interns/approve", {
+             method: "POST",
+             headers: { "Content-Type": "application/json" },
+             body: JSON.stringify({ internId })
+          });
+          if (res.ok) {
+             fetchData();
+          }
+       } catch (err) {
+          console.error("Authorization protocol failure");
+       } finally {
+          setIsAuthorizing(null);
+       }
+    };
+
+    const handleApproveSession = async (sessionId: string) => {
+       setApprovingSessionId(sessionId);
+       try {
+          const res = await fetch("/api/mentorship", {
+             method: "PATCH",
+             headers: { "Content-Type": "application/json" },
+             body: JSON.stringify({ id: sessionId, status: "approved" })
+          });
+          if (res.ok) {
+             fetchData();
+          }
+       } catch (err) {
+          console.error("Failed to approve mentorship session", err);
+       } finally {
+          setApprovingSessionId(null);
+       }
+    };
 
    const handleLowerAllSignals = async () => {
       try {
@@ -1649,7 +1668,7 @@ export default function CleedDashboard() {
                         { id: "manage_schedules", icon: Settings, label: "Schedules" },
                         { id: "assign", icon: Send, label: "Dispatch" },
                         { id: "submissions", icon: ExternalLink, label: "Audit" },
-                        { id: "mentorship", icon: Users, label: "Mentors" },
+                        { id: "mentorship", icon: Users, label: "Schedule Meet" },
                         { id: "history", icon: History, label: "Logbook" }
                      ].map((item) => (
                         <button
@@ -1752,7 +1771,7 @@ export default function CleedDashboard() {
                         { id: "manage_schedules", icon: Settings, label: "Manage" },
                         { id: "assign", icon: Send, label: "Assign" },
                         { id: "submissions", icon: ExternalLink, label: "Audit" },
-                        { id: "mentorship", icon: Users, label: "Mentors" },
+                        { id: "mentorship", icon: Users, label: "Schedule Meet" },
                         { id: "history", icon: History, label: "Log" }
                      ].map((item) => (
                         <button
@@ -2980,7 +2999,7 @@ export default function CleedDashboard() {
                {activeTab === "mentorship" && (
                   <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-8 text-left">
                      <div className="bg-white border border-zinc-100 p-8">
-                        <h2 className="text-2xl font-bold tracking-tight text-zinc-900 line-clamp-1 mb-8">Mentorship sessions</h2>
+                        <h2 className="text-2xl font-bold tracking-tight text-zinc-900 line-clamp-1 mb-8">Schedule Meet</h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                            {mentorshipSessions.length === 0 ? (
                               <p className="col-span-full text-zinc-400 text-sm italic py-10 text-center">No scheduled sessions synchronized.</p>
@@ -2993,9 +3012,23 @@ export default function CleedDashboard() {
                                     </div>
                                     <h4 className="text-sm font-bold text-zinc-900 mb-1">{session.topic}</h4>
                                     <p className="text-[12px] text-zinc-500 font-medium mb-4">{session.name}</p>
-                                    <div className="flex items-center justify-between pt-4 border-t border-zinc-100">
-                                       <span className="text-[11px] font-bold text-blue-600">{session.date} at {session.time}</span>
-                                       <span className="text-[10px] px-2 py-0.5 bg-white border border-zinc-100 text-zinc-400 font-bold uppercase">{session.status}</span>
+                                    <div className="flex items-center justify-between pt-4 border-t border-zinc-100 gap-2">
+                                       <span className="text-[11px] font-bold text-blue-600 shrink-0">{session.date} at {session.time}</span>
+                                       <div className="flex items-center gap-2">
+                                          {session.status === "pending" ? (
+                                             <button
+                                                onClick={() => handleApproveSession(session.id)}
+                                                disabled={approvingSessionId === session.id}
+                                                className="px-2.5 py-1 bg-zinc-900 text-white hover:bg-emerald-600 text-[10px] font-bold uppercase tracking-wider transition-colors disabled:opacity-50"
+                                             >
+                                                {approvingSessionId === session.id ? "..." : "Approve"}
+                                             </button>
+                                          ) : (
+                                             <span className="text-[10px] px-2 py-0.5 bg-emerald-50 border border-emerald-100 text-emerald-600 font-bold uppercase flex items-center gap-1">
+                                                <CheckCircle2 size={10} className="shrink-0" /> Approved
+                                             </span>
+                                          )}
+                                       </div>
                                     </div>
                                  </div>
                               ))

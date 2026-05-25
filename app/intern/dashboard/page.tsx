@@ -10,6 +10,7 @@ import {
    Download,
    CheckCircle2,
    Clock,
+   ClipboardList,
    ChevronRight,
    ChevronLeft,
    Search,
@@ -106,6 +107,32 @@ interface ScheduleItem {
    targetId?: string | null;
 }
 
+function formatExamDateRange(start: string, end?: string) {
+   const fmt = (d: string) => {
+      const dt = new Date(d);
+      return dt.toLocaleString("en-IN", {
+         day: "2-digit",
+         month: "short",
+         year: "numeric",
+         hour: "2-digit",
+         minute: "2-digit",
+         hour12: true,
+      });
+   };
+   return end ? `${fmt(start)} – ${fmt(end)}` : fmt(start);
+}
+
+function examTimeAgo(dateStr: string) {
+   const now = new Date();
+   const then = new Date(dateStr);
+   const diff = Math.floor((now.getTime() - then.getTime()) / 1000);
+   if (diff < 60) return "just now";
+   if (diff < 3600) return `${Math.floor(diff / 60)} mins ago`;
+   if (diff < 86400) return `${Math.floor(diff / 3600)} hrs ago`;
+   if (diff < 2592000) return `${Math.floor(diff / 86400)} days ago`;
+   return `${Math.floor(diff / 2592000)} months ago`;
+}
+
 function InternDashboardContent() {
    const router = useRouter();
    const searchParams = useSearchParams();
@@ -118,8 +145,6 @@ function InternDashboardContent() {
    const [isLoading, setIsLoading] = useState(true);
    const [isUpdating, setIsUpdating] = useState<string | null>(null);
    const [userStatus, setUserStatus] = useState<any>(null);
-   const [showLetterModal, setShowLetterModal] = useState(false);
-   const [showOfferLetterModal, setShowOfferLetterModal] = useState(false);
    const [showSupportModal, setShowSupportModal] = useState(false);
    const [showWeek2Modal, setShowWeek2Modal] = useState(false);
    const [week2FormData, setWeek2FormData] = useState({
@@ -146,6 +171,7 @@ function InternDashboardContent() {
    const [allInterns, setAllInterns] = useState<any[]>([]);
    const [reports, setReports] = useState<any[]>([]);
    const [examSessions, setExamSessions] = useState<any[]>([]);
+   const [scheduledExams, setScheduledExams] = useState<any[]>([]);
    const [loadingReports, setLoadingReports] = useState(false);
    const chatEndRef = useRef<HTMLDivElement>(null);
 
@@ -216,6 +242,7 @@ function InternDashboardContent() {
          fetchAttendance(userData.id);
          fetchReports(userData.id);
          fetchExams(userData.id);
+         fetchScheduledExams();
          fetchSchedules(userData.id, userData.batch);
          fetchAllInterns();
          fetchInternships();
@@ -225,6 +252,7 @@ function InternDashboardContent() {
             fetchStatus(userData.id);
             fetchSchedules(userData.id, userData.batch);
             fetchExams(userData.id);
+            fetchScheduledExams();
             fetchAllInterns();
             fetchInternships();
             fetchMyApplications(userData.id);
@@ -240,12 +268,22 @@ function InternDashboardContent() {
       const cleanupPromise = syncSession();
 
       return () => {
-         cleanupPromise.then(cb => cb && cb());
-      };
-   }, [router]);
+          cleanupPromise.then(cb => cb && cb());
+       };
+    }, [router]);
 
-   const [showAttendanceAlert, setShowAttendanceAlert] = useState(true);
+    useEffect(() => {
+       if (user && (user.batch === "Batch 1" || user.batch === "Batch 2")) {
+          if (activeTab === "tasks") {
+             router.push("/intern/dashboard?view=overview");
+          }
+       }
+    }, [user, activeTab, router]);
+
+    const [showAttendanceAlert, setShowAttendanceAlert] = useState(true);
    const [currentTime, setCurrentTime] = useState(new Date());
+   const [calendarDate, setCalendarDate] = useState(new Date());
+   const [selectedDayLog, setSelectedDayLog] = useState<any>(null);
 
    useEffect(() => {
       const timer = setInterval(() => setCurrentTime(new Date()), 60000);
@@ -451,16 +489,6 @@ function InternDashboardContent() {
          const res = await fetch(`/api/intern/status?id=${id}`);
          const data = await res.json();
          setUserStatus(data);
-
-         const lastAckLetter = localStorage.getItem(`letter_ack_${id}`);
-         if (data.letterUrl && data.letterUrl !== lastAckLetter) {
-            setShowLetterModal(true);
-         }
-
-         const lastAckOffer = localStorage.getItem(`offer_letter_ack_${id}`);
-         if (data.offerLetterUrl && data.offerLetterUrl !== lastAckOffer) {
-            setShowOfferLetterModal(true);
-         }
       } catch (e) {
          console.error("Status check offline");
       }
@@ -524,6 +552,18 @@ function InternDashboardContent() {
          setExamSessions(userSessions);
       } catch (e) {
          console.error("Failed to load exams");
+      }
+   };
+
+   const fetchScheduledExams = async () => {
+      try {
+         const res = await fetch("/api/intern/exams");
+         const data = await res.json();
+         if (data.success) {
+            setScheduledExams(data.exams);
+         }
+      } catch (error) {
+         console.error("Failed to load scheduled exams:", error);
       }
    };
 
@@ -822,171 +862,157 @@ function InternDashboardContent() {
                </div>
 
                {/* Center Section: Notification/Alerts Message */}
-               {(() => {
-                  const hasNotifications = !!userStatus?.offerLetterUrl || !!userStatus?.letterUrl || user.batch === "Batch 1";
-                  return (
-                     <div className="flex-1 flex flex-col justify-start py-8 w-full">
-                        {hasNotifications ? (
-                           <div className="flex flex-wrap gap-4 justify-start items-stretch w-full">
-                              {userStatus?.offerLetterUrl && (
-                                 <motion.div
-                                    initial={{ opacity: 0, y: 10 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    className="w-96 p-6 bg-white border border-zinc-200/80 rounded-2xl flex flex-col justify-between shadow-sm hover:shadow-md hover:border-zinc-300 transition-all text-left"
-                                 >
-                                    <div className="space-y-4">
-                                       <div className="flex items-center gap-3">
-                                          <div className="h-10 w-10 bg-emerald-50 border border-emerald-100 text-emerald-600 rounded-xl flex items-center justify-center shrink-0">
-                                             <ShieldCheck size={20} />
-                                          </div>
-                                          <div>
-                                             <h4 className="text-[14px] font-bold text-zinc-900 leading-none">Offer Letter Ready!</h4>
-                                             <span className="inline-block mt-1 text-[9px] font-black text-emerald-600 bg-emerald-50 border border-emerald-100 px-1.5 py-0.5 rounded uppercase tracking-wider">Signed & Issued</span>
-                                          </div>
-                                       </div>
-                                       
-                                       <p className="text-[12px] text-zinc-500 font-medium leading-relaxed">
-                                          Your official offer letter is signed and ready. You can download your copy below.
-                                       </p>
-
-                                       <div className="bg-zinc-50/75 p-3 rounded-xl border border-zinc-100 space-y-2 text-[11px]">
-                                          <div className="flex justify-between">
-                                             <span className="text-zinc-400 font-medium">Role:</span>
-                                             <span className="text-zinc-700 font-bold">Software Engineer Intern</span>
-                                          </div>
-                                          <div className="flex justify-between">
-                                             <span className="text-zinc-400 font-medium">Duration:</span>
-                                             <span className="text-zinc-700 font-bold">3 Months (Remote)</span>
-                                          </div>
-                                          <div className="flex justify-between">
-                                             <span className="text-zinc-400 font-medium">Status:</span>
-                                             <span className="text-zinc-700 font-bold">Completed</span>
-                                          </div>
-                                       </div>
-                                    </div>
-                                    <a
-                                       href={userStatus.offerLetterUrl}
-                                       target="_blank"
-                                       rel="noopener noreferrer"
-                                       className="w-full mt-5 h-10 bg-[#003366] text-white text-xs font-bold rounded-lg hover:bg-black transition-all flex items-center justify-center gap-1.5 shadow-sm"
-                                    >
-                                       Download Counter-Signed PDF <Download size={13} />
-                                    </a>
-                                 </motion.div>
-                              )}
-
-                              {userStatus?.letterUrl && (
-                                 <motion.div
-                                    initial={{ opacity: 0, y: 10 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    className="w-96 p-6 bg-white border border-zinc-200/80 rounded-2xl flex flex-col justify-between shadow-sm hover:shadow-md hover:border-zinc-300 transition-all text-left"
-                                 >
-                                    <div className="space-y-4">
-                                       <div className="flex items-center gap-3">
-                                          <div className="h-10 w-10 bg-blue-50 border border-blue-100 text-[#0055FF] rounded-xl flex items-center justify-center shrink-0">
-                                             <FileBadge size={20} />
-                                          </div>
-                                          <div>
-                                             <h4 className="text-[14px] font-bold text-zinc-900 leading-none">Certificate Issued!</h4>
-                                             <span className="inline-block mt-1 text-[9px] font-black text-[#0055FF] bg-blue-50 border border-blue-100 px-1.5 py-0.5 rounded uppercase tracking-wider">Verifiable</span>
-                                          </div>
-                                       </div>
-                                       
-                                       <p className="text-[12px] text-zinc-500 font-medium leading-relaxed">
-                                          Congratulations! Your project completion certificate is ready. You can download your certificate below.
-                                       </p>
-
-                                       <div className="bg-zinc-50/75 p-3 rounded-xl border border-zinc-100 space-y-2 text-[11px]">
-                                          <div className="flex justify-between">
-                                             <span className="text-zinc-400 font-medium">Grade:</span>
-                                             <span className="text-emerald-600 font-extrabold">Excellent (A+)</span>
-                                          </div>
-                                          <div className="flex justify-between">
-                                             <span className="text-zinc-400 font-medium">Certificate ID:</span>
-                                             <span className="text-zinc-700 font-mono font-bold">SF-CERT-2026-8941</span>
-                                          </div>
-                                          <div className="flex justify-between">
-                                             <span className="text-zinc-400 font-medium">Status:</span>
-                                             <span className="text-zinc-700 font-bold">Issued</span>
-                                          </div>
-                                       </div>
-                                    </div>
-                                    <a
-                                       href={userStatus.letterUrl}
-                                       target="_blank"
-                                       rel="noopener noreferrer"
-                                       className="w-full mt-5 h-10 bg-[#003366] text-white text-xs font-bold rounded-lg hover:bg-black transition-all flex items-center justify-center gap-1.5 shadow-sm"
-                                    >
-                                       Download PDF Credential <Download size={13} />
-                                    </a>
-                                 </motion.div>
-                              )}
-
-                              {user.batch === "Batch 1" && (
-                                 <motion.div
-                                    initial={{ opacity: 0, y: 10 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    className="w-96 p-6 bg-white border border-zinc-200/80 rounded-2xl flex flex-col justify-between shadow-sm hover:shadow-md hover:border-zinc-300 transition-all text-left"
-                                 >
-                                    <div className="space-y-4">
-                                       <div className="flex items-center gap-3">
-                                          <div className="h-10 w-10 bg-blue-50 border border-blue-100 text-blue-600 rounded-xl flex items-center justify-center shrink-0">
-                                             <Send size={18} />
-                                          </div>
-                                          <div>
-                                             <h4 className="text-[14px] font-bold text-zinc-900 leading-none">Week 2 Submission</h4>
-                                             <span className="inline-block mt-1 text-[9px] font-black text-blue-600 bg-blue-50 border border-blue-100 px-1.5 py-0.5 rounded uppercase tracking-wider">Open</span>
-                                          </div>
-                                       </div>
-                                       
-                                       <p className="text-[12px] text-zinc-500 font-medium leading-relaxed">
-                                          Please submit your project link and team details before the deadline below.
-                                       </p>
-
-                                       <div className="bg-zinc-50/75 p-3 rounded-xl border border-zinc-100 space-y-2 text-[11px]">
-                                          <div className="flex justify-between">
-                                             <span className="text-zinc-400 font-medium">Task:</span>
-                                             <span className="text-zinc-700 font-bold">MERN API Integration</span>
-                                          </div>
-                                          <div className="flex justify-between">
-                                             <span className="text-zinc-400 font-medium">Deadline:</span>
-                                             <span className="text-rose-600 font-bold">Friday, 11:59 PM</span>
-                                          </div>
-                                          <div className="flex justify-between">
-                                             <span className="text-zinc-400 font-medium">Reviewer:</span>
-                                             <span className="text-zinc-700 font-bold">Mentorship Panel</span>
-                                          </div>
-                                       </div>
-                                    </div>
-                                    <button
-                                       onClick={() => setShowWeek2Modal(true)}
-                                       className="w-full mt-5 h-10 bg-[#003366] text-white text-xs font-bold rounded-lg hover:bg-black transition-all flex items-center justify-center gap-1.5 shadow-sm"
-                                    >
-                                       Submit Deliverables Now <ArrowUpRight size={14} className="shrink-0" />
-                                    </button>
-                                 </motion.div>
-                              )}
-                           </div>
-                        ) : (
-                           <div className="flex-1 flex items-center justify-center py-20 w-full">
-                              <p className="text-zinc-400 font-medium text-lg md:text-xl text-center tracking-tight">
-                                 No notification prompts available!
+               <div className="flex-1 flex flex-col justify-start py-8 w-full">
+                  <div className="flex flex-wrap gap-4 justify-start items-stretch w-full animate-in fade-in duration-500">
+                     {/* Attendance Notice (Not visible for Batch 1 & 2) */}
+                     {!(user.batch === "Batch 1" || user.batch === "Batch 2" || user.batch === "Batch-01" || user.batch === "Batch-02" || user.batch?.includes("Batch 1") || user.batch?.includes("Batch 2")) && (
+                        <motion.div
+                           initial={{ opacity: 0, y: 10 }}
+                           animate={{ opacity: 1, y: 0 }}
+                           className="w-full max-w-[500px] p-6 bg-amber-50/50 border border-amber-200/80 rounded-2xl flex flex-col justify-between shadow-sm hover:shadow-md hover:border-amber-300 transition-all text-left"
+                        >
+                           <div className="space-y-4">
+                              <div className="flex items-center gap-3">
+                                 <div className="h-10 w-10 bg-amber-100 border border-amber-200 text-amber-700 rounded-xl flex items-center justify-center shrink-0">
+                                    <Hand size={20} className="animate-pulse" />
+                                 </div>
+                                 <div>
+                                    <h4 className="text-[14px] font-bold text-zinc-900 leading-none">Attendance Notice</h4>
+                                    <span className="inline-block mt-1 text-[9px] font-black text-amber-700 bg-amber-100/60 border border-amber-200/50 px-1.5 py-0.5 rounded uppercase tracking-wider">Action Required</span>
+                                 </div>
+                              </div>
+                              
+                              <p className="text-[12px] text-zinc-600 font-medium leading-relaxed">
+                                 To ensure your daily attendance is processed correctly, please follow these clear steps:
                               </p>
-                           </div>
-                        )}
-                     </div>
-                  );
-               })()}
 
-               {/* Bottom Section: Powered by Cheetal Servers */}
+                              <div className="bg-white/80 p-3.5 rounded-xl border border-amber-100 space-y-2 text-[11px] text-zinc-500">
+                                 <div className="flex items-start gap-1.5">
+                                    <span className="text-amber-500 font-bold">1.</span>
+                                    <span><strong>Daily Active Signal:</strong> Locate the <strong>Raise Help Hand (Help)</strong> button on the left corner sidebar and click it to toggle your status.</span>
+                                 </div>
+                                 <div className="flex items-start gap-1.5">
+                                    <span className="text-amber-500 font-bold">2.</span>
+                                    <span><strong>Timing:</strong> You must raise your hand during class hours or designated daily check-in times.</span>
+                                 </div>
+                                 <div className="flex items-start gap-1.5">
+                                    <span className="text-amber-500 font-bold">3.</span>
+                                    <span><strong>Class Verification:</strong> Live checks are performed during lectures. Ensure your hand remains raised to be marked <strong>PRESENT</strong>. If lowered or not active, you will be marked <strong>ABSENT</strong>.</span>
+                                 </div>
+                                 <div className="flex items-start gap-1.5">
+                                    <span className="text-amber-500 font-bold">4.</span>
+                                    <span><strong>Daily Reset:</strong> Hand-raise signals are reset daily by administrators, so you must repeat this action every class day.</span>
+                                 </div>
+                                 <div className="flex items-start gap-1.5">
+                                    <span className="text-amber-500 font-bold">5.</span>
+                                    <span><strong>Log Verification:</strong> Check your processed history and statistics in the <strong>Attendance</strong> tab in the sidebar.</span>
+                                 </div>
+                              </div>
+                           </div>
+                        </motion.div>
+                     )}
+
+                     {/* Certifications Released (Visible for all batches) */}
+                     <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="w-full max-w-[500px] p-6 bg-emerald-50/50 border border-emerald-200/80 rounded-2xl flex flex-col justify-between shadow-sm hover:shadow-md hover:border-emerald-300 transition-all text-left"
+                     >
+                        <div className="space-y-4">
+                           <div className="flex items-center gap-3">
+                              <div className="h-10 w-10 bg-emerald-100 border border-emerald-200 text-emerald-700 rounded-xl flex items-center justify-center shrink-0">
+                                 <span className="text-xl">🎉</span>
+                              </div>
+                              <div>
+                                 <h4 className="text-[14px] font-bold text-zinc-900 leading-none">Certifications Released</h4>
+                                 <span className="inline-block mt-1 text-[9px] font-black text-emerald-700 bg-emerald-100/60 border border-emerald-200/50 px-1.5 py-0.5 rounded uppercase tracking-wider">Batch 1 & 2 Only</span>
+                              </div>
+                           </div>
+                           
+                           <p className="text-[12px] text-zinc-600 font-medium leading-relaxed">
+                              Individual project completion certifications have been officially released for <strong>Batch 1 and Batch 2 only</strong>.
+                           </p>
+
+                           <div className="bg-white/80 p-3.5 rounded-xl border border-emerald-100 space-y-1.5 text-[11px] text-zinc-500">
+                              <div className="flex items-start gap-1.5">
+                                 <span className="text-emerald-500 font-bold">•</span>
+                                 <span>Download your verifiable completion credentials.</span>
+                              </div>
+                              <div className="flex items-start gap-1.5">
+                                 <span className="text-emerald-500 font-bold">•</span>
+                                 <span>Keep it in your records or share it on professional networks like LinkedIn.</span>
+                              </div>
+                              <div className="flex items-start gap-1.5">
+                                 <span className="text-emerald-500 font-bold">•</span>
+                                 <span>These certificates can be used in your college placement drives, off-campus drives, and for PPOs (Pre-Placement Offers).</span>
+                              </div>
+                           </div>
+                        </div>
+                        <Link
+                           href="/intern/dashboard/reports"
+                           className="w-full mt-5 h-10 bg-[#003366] text-white text-xs font-bold rounded-lg hover:bg-black transition-all flex items-center justify-center gap-1.5 shadow-sm"
+                        >
+                           Go to Reports & Certificates <ArrowUpRight size={13} />
+                        </Link>
+                     </motion.div>
+
+                     {/* Interview Scheduling Notice (Visible for Batch 1 & 2 only) */}
+                     {(user.batch === "Batch 1" || user.batch === "Batch 2" || user.batch === "Batch-01" || user.batch === "Batch-02" || user.batch?.includes("Batch 1") || user.batch?.includes("Batch 2")) && (
+                        <motion.div
+                           initial={{ opacity: 0, y: 10 }}
+                           animate={{ opacity: 1, y: 0 }}
+                           className="w-full max-w-[500px] p-6 bg-indigo-50/50 border border-indigo-200/80 rounded-2xl flex flex-col justify-between shadow-sm hover:shadow-md hover:border-indigo-300 transition-all text-left"
+                        >
+                           <div className="space-y-4">
+                              <div className="flex items-center gap-3">
+                                 <div className="h-10 w-10 bg-indigo-100 border border-indigo-200 text-indigo-700 rounded-xl flex items-center justify-center shrink-0">
+                                    <Calendar size={20} className="animate-pulse" />
+                                 </div>
+                                 <div>
+                                    <h4 className="text-[14px] font-bold text-zinc-900 leading-none">Schedule Your Interview</h4>
+                                    <span className="inline-block mt-1 text-[9px] font-black text-indigo-700 bg-indigo-100/60 border border-indigo-200/50 px-1.5 py-0.5 rounded uppercase tracking-wider">Week 3 Requirement</span>
+                                 </div>
+                              </div>
+                              
+                              <p className="text-[12px] text-zinc-600 font-medium leading-relaxed">
+                                 As part of the <strong>Week 3</strong> program milestones, all Batch 1 and Batch 2 students must schedule their evaluation interviews.
+                              </p>
+
+                              <div className="bg-white/80 p-3.5 rounded-xl border border-indigo-100 space-y-1.5 text-[11px] text-zinc-500">
+                                 <div className="flex items-start gap-1.5">
+                                    <span className="text-indigo-500 font-bold">•</span>
+                                    <span>Select an available time slot matching your convenience.</span>
+                                 </div>
+                                 <div className="flex items-start gap-1.5">
+                                    <span className="text-indigo-500 font-bold">•</span>
+                                    <span>Prepare your Week 1 & 2 project code repositories and deployment links.</span>
+                                 </div>
+                                 <div className="flex items-start gap-1.5">
+                                    <span className="text-indigo-500 font-bold">•</span>
+                                    <span>Ensure you check your dashboard schedule regularly for updates.</span>
+                                 </div>
+                              </div>
+                           </div>
+                           <Link
+                              href="/intern/dashboard/schedule-meet"
+                              className="w-full mt-5 h-10 bg-[#003366] text-white text-xs font-bold rounded-lg hover:bg-black transition-all flex items-center justify-center gap-1.5 shadow-sm"
+                           >
+                              Schedule Interview <ArrowUpRight size={13} />
+                           </Link>
+                        </motion.div>
+                     )}
+                  </div>
+               </div>
+
+               {/* Bottom Section: Powered by Redlix */}
                <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex items-center justify-center gap-2.5 whitespace-nowrap z-10">
                   <span className="text-[9px] font-bold text-zinc-400 uppercase tracking-widest leading-none">
                      Powered By
                   </span>
                   <img 
-                     src="https://ik.imagekit.io/dypkhqxip/Screenshot_2026-05-14_at_17.46.09-removebg-preview.png?updatedAt=1778760997901" 
-                     alt="Cheetal Servers" 
-                     className="h-8 w-auto opacity-75 hover:opacity-100 transition-opacity object-contain"
+                     src="https://ik.imagekit.io/dypkhqxip/redlixlogo" 
+                     alt="Redlix" 
+                     className="h-4 w-auto opacity-75 hover:opacity-100 transition-opacity object-contain"
                   />
                </div>
 
@@ -1498,122 +1524,248 @@ function InternDashboardContent() {
                      <div className="h-1 w-6 bg-[#0055FF]" />
                      <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">Attendance Log</span>
                   </div>
-                  <h2 className="text-2xl font-bold text-zinc-900">Weekly <span className="text-[#0055FF]">Tracking</span></h2>
-                  <p className="text-zinc-500 text-sm mt-1">Check your performance and attendance history.</p>
+                  <h2 className="text-2xl font-bold text-zinc-900">Attendance & <span className="text-[#0055FF]">Performance</span></h2>
+                  <p className="text-zinc-500 text-sm mt-1">Navigate the calendar to review your daily attendance and logged work summaries.</p>
                </header>
 
-               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <div className="p-6 bg-white border border-zinc-200 rounded-xl shadow-sm flex flex-col justify-between">
-                     <div>
-                        <h4 className="text-[10px] font-bold uppercase tracking-wider text-zinc-400 mb-1">Average Rate</h4>
-                        <p className="text-3xl font-bold text-zinc-900">{attendancePercentage}%</p>
-                     </div>
-                     <div className="mt-4">
-                        <div className="h-1.5 w-full bg-zinc-100 rounded-full overflow-hidden">
-                           <motion.div
-                              initial={{ width: 0 }}
-                              animate={{ width: `${attendancePercentage}%` }}
-                              className="h-full bg-[#0055FF]"
-                           />
+               {/* Main Grid: Expanded Calendar (Spans 3 cols) and Details (Spans 1 col) */}
+               <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
+                  {/* Left Column: Calendar (Spans 3/4 width) */}
+                  <div className="lg:col-span-3 bg-white border border-zinc-200 rounded-2xl p-6 shadow-sm">
+                     {/* Calendar Header */}
+                     <div className="flex items-center justify-between mb-6">
+                        <div>
+                           <h3 className="text-lg font-bold text-zinc-900">
+                              {calendarDate.toLocaleString("default", { month: "long" })}{" "}
+                              {calendarDate.getFullYear()}
+                           </h3>
+                           <p className="text-[11px] text-zinc-400 font-medium">Click any day to view session details</p>
                         </div>
-                        <p className="text-[10px] font-bold text-zinc-400 mt-2">{attendanceCount} Days Present</p>
-                     </div>
-                  </div>
-
-                  <div className="p-6 bg-white border border-zinc-200 rounded-xl shadow-sm flex flex-col justify-between">
-                     <div>
-                        <h4 className="text-[10px] font-bold uppercase tracking-wider text-zinc-400 mb-1">Status</h4>
                         <div className="flex items-center gap-2">
-                           <div className={`h-2 w-2 rounded-full ${attendancePercentage >= 75 ? "bg-green-500" : "bg-amber-500"}`} />
-                           <p className="text-lg font-bold text-zinc-900">{attendancePercentage >= 75 ? "Satisfactory" : "Low Attendance"}</p>
+                           <button
+                              onClick={() => {
+                                 setCalendarDate(new Date(calendarDate.getFullYear(), calendarDate.getMonth() - 1, 1));
+                                 setSelectedDayLog(null);
+                              }}
+                              className="h-8 w-8 rounded-lg border border-zinc-200 hover:bg-zinc-50 flex items-center justify-center text-zinc-600 transition-colors"
+                           >
+                              <ChevronLeft size={16} />
+                           </button>
+                           <button
+                              onClick={() => {
+                                 setCalendarDate(new Date());
+                                 setSelectedDayLog(null);
+                              }}
+                              className="px-3 h-8 rounded-lg border border-zinc-200 hover:bg-zinc-50 text-xs font-bold text-zinc-600 transition-colors"
+                           >
+                              Today
+                           </button>
+                           <button
+                              onClick={() => {
+                                 setCalendarDate(new Date(calendarDate.getFullYear(), calendarDate.getMonth() + 1, 1));
+                                 setSelectedDayLog(null);
+                              }}
+                              className="h-8 w-8 rounded-lg border border-zinc-200 hover:bg-zinc-50 flex items-center justify-center text-zinc-600 transition-colors"
+                           >
+                              <ChevronRight size={16} />
+                           </button>
                         </div>
                      </div>
-                     <p className="text-[10px] text-zinc-400 font-medium leading-tight mt-2">Required: 75% for certification.</p>
-                  </div>
 
-                  <div className="p-6 bg-gradient-to-br from-orange-500/10 via-red-500/5 to-amber-500/5 border border-orange-500/20 rounded-xl shadow-sm flex flex-col justify-between relative overflow-hidden group">
-                     <div className="absolute -right-4 -bottom-4 w-16 h-16 bg-orange-500/5 rounded-full blur-xl pointer-events-none group-hover:scale-125 transition-transform duration-500" />
-                     <div>
-                        <div className="flex items-center gap-1.5 mb-1">
-                           <Flame size={12} className="text-orange-500 fill-orange-500 animate-bounce" />
-                           <h4 className="text-[10px] font-bold uppercase tracking-wider text-orange-600">Active Streak</h4>
-                        </div>
-                        <p className="text-3xl font-black text-orange-700 flex items-center gap-2">
-                           {streakCount} <span className="text-sm font-bold text-orange-500">Days</span>
-                        </p>
+                     {/* Weekday Labels */}
+                     <div className="grid grid-cols-7 gap-2 text-center mb-2">
+                        {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
+                           <span key={day} className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider py-1">
+                              {day}
+                           </span>
+                        ))}
                      </div>
-                     <div className="mt-4">
-                        <div className="flex gap-1">
-                           {(() => {
-                              const history = attendanceData?.history || [];
-                              const sorted = [...history].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()).slice(-7);
-                              const slots = Array(7).fill(false);
-                              sorted.forEach((item, index) => {
-                                 if (index < 7) {
-                                    slots[index] = item.status === 'PRESENT' || item.status === 'LATE';
-                                 }
+
+                     {/* Day Grid */}
+                     <div className="grid grid-cols-7 gap-2">
+                        {(() => {
+                           const year = calendarDate.getFullYear();
+                           const month = calendarDate.getMonth();
+
+                           const firstDay = new Date(year, month, 1).getDay();
+                           const totalDays = new Date(year, month + 1, 0).getDate();
+
+                           const cells = [];
+
+                           // Prev month trailing days
+                           const prevMonthTotalDays = new Date(year, month, 0).getDate();
+                           for (let i = firstDay - 1; i >= 0; i--) {
+                              const d = new Date(year, month - 1, prevMonthTotalDays - i);
+                              cells.push({ day: prevMonthTotalDays - i, isCurrentMonth: false, date: d });
+                           }
+
+                           // Current month days
+                           for (let i = 1; i <= totalDays; i++) {
+                              const d = new Date(year, month, i);
+                              cells.push({ day: i, isCurrentMonth: true, date: d });
+                           }
+
+                           // Next month leading days to complete 42 cells
+                           const nextDaysNeeded = 42 - cells.length;
+                           for (let i = 1; i <= nextDaysNeeded; i++) {
+                              const d = new Date(year, month + 1, i);
+                              cells.push({ day: i, isCurrentMonth: false, date: d });
+                           }
+
+                           return cells.map((cell, idx) => {
+                              const log = attendanceData.history.find((l: any) => {
+                                 const logDate = new Date(l.date);
+                                 return (
+                                    logDate.getFullYear() === cell.date.getFullYear() &&
+                                    logDate.getMonth() === cell.date.getMonth() &&
+                                    logDate.getDate() === cell.date.getDate()
+                                 );
                               });
-                              return slots.map((isPresent, idx) => (
-                                 <div
+
+                              const isToday = (() => {
+                                 const today = new Date();
+                                 return (
+                                    today.getFullYear() === cell.date.getFullYear() &&
+                                    today.getMonth() === cell.date.getMonth() &&
+                                    today.getDate() === cell.date.getDate()
+                                 );
+                              })();
+
+                              const isSelected = selectedDayLog && (() => {
+                                 const selDate = new Date(selectedDayLog.date);
+                                 return (
+                                    selDate.getFullYear() === cell.date.getFullYear() &&
+                                    selDate.getMonth() === cell.date.getMonth() &&
+                                    selDate.getDate() === cell.date.getDate()
+                                 );
+                              })();
+
+                              let statusStyles = "bg-zinc-50/20 text-zinc-400 border border-zinc-100/50 hover:bg-zinc-50 hover:border-zinc-300";
+                              if (log) {
+                                 if (log.status === "PRESENT") {
+                                    statusStyles = "bg-emerald-50 text-emerald-700 border border-emerald-200/60 hover:bg-emerald-100/60 hover:border-emerald-300";
+                                 } else if (log.status === "LATE") {
+                                    statusStyles = "bg-amber-50 text-amber-700 border border-amber-200/60 hover:bg-amber-100/60 hover:border-amber-300";
+                                 } else if (log.status === "ABSENT") {
+                                    statusStyles = "bg-rose-50 text-rose-700 border border-rose-200/60 hover:bg-rose-100/60 hover:border-rose-300";
+                                 } else if (log.status === "VACATION") {
+                                    statusStyles = "bg-blue-50 text-blue-700 border border-blue-200/60 hover:bg-blue-100/60 hover:border-blue-300";
+                                 }
+                              }
+
+                              return (
+                                 <button
                                     key={idx}
-                                    className={`h-1.5 flex-1 rounded-full ${isPresent ? "bg-orange-500 shadow-sm shadow-orange-500/50" : "bg-zinc-100"}`}
-                                    title={isPresent ? "Present" : "No record/Absent"}
-                                 />
-                              ));
-                           })()}
+                                    onClick={() => {
+                                       if (log) {
+                                          setSelectedDayLog(log);
+                                       } else {
+                                          setSelectedDayLog({
+                                             date: cell.date.toISOString(),
+                                             status: "NO_RECORD",
+                                             workSummary: null
+                                          });
+                                       }
+                                    }}
+                                    className={`h-12 md:h-14 w-full flex flex-col justify-between p-1.5 rounded-xl transition-all text-left ${statusStyles} ${
+                                       !cell.isCurrentMonth ? "opacity-30" : "opacity-100"
+                                    } ${isToday ? "ring-2 ring-blue-500/80 ring-offset-1" : ""} ${
+                                       isSelected ? "shadow-md scale-95 border-zinc-800" : ""
+                                    }`}
+                                 >
+                                    <div className="flex items-center justify-between w-full">
+                                       <span className="text-xs md:text-sm font-bold">{cell.day}</span>
+                                       {log && (
+                                          <div className="h-1.5 w-1.5 rounded-full bg-current" />
+                                       )}
+                                    </div>
+                                    {log && (
+                                       <span className="text-[7px] md:text-[8px] font-black tracking-tighter uppercase truncate w-full">
+                                          {log.status}
+                                       </span>
+                                    )}
+                                 </button>
+                              );
+                           });
+                        })()}
+                     </div>
+
+                     {/* Calendar Legends */}
+                     <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mt-6 pt-4 border-t border-zinc-100 text-[10px] md:text-[11px] font-bold text-zinc-400">
+                        <div className="flex items-center gap-1.5">
+                           <div className="h-2 w-2 rounded-full bg-emerald-500" />
+                           <span>Present</span>
                         </div>
-                        <p className="text-[9px] text-orange-600 font-bold mt-2">
-                           {streakCount > 0 ? "🔥 Keep the fire burning!" : "Mark attendance to start your streak!"}
-                        </p>
+                        <div className="flex items-center gap-1.5">
+                           <div className="h-2 w-2 rounded-full bg-amber-500" />
+                           <span>Late</span>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                           <div className="h-2 w-2 rounded-full bg-rose-500" />
+                           <span>Absent</span>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                           <div className="h-2 w-2 rounded-full bg-blue-500" />
+                           <span>Vacation</span>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                           <div className="h-2 w-2 rounded-full bg-zinc-300" />
+                           <span>No Record</span>
+                        </div>
                      </div>
                   </div>
-               </div>
 
-               <div className="space-y-4">
-                  <div className="flex items-center justify-between border-b border-zinc-100 pb-2">
-                     <h3 className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest">Recent Activity</h3>
-                     <span className="text-[10px] text-zinc-400">Latest records</span>
-                  </div>
-
-                  <div className="bg-white border border-zinc-100 rounded-xl overflow-hidden shadow-sm">
-                     <div className="overflow-x-auto">
-                        <table className="w-full text-left">
-                           <thead className="bg-zinc-50/50 border-b border-zinc-100">
-                              <tr>
-                                 <th className="px-6 py-4 text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Session Date</th>
-                                 <th className="px-6 py-4 text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Type</th>
-                                 <th className="px-6 py-4 text-[10px] font-bold text-zinc-400 uppercase tracking-widest text-right">Status</th>
-                              </tr>
-                           </thead>
-                           <tbody className="divide-y divide-zinc-50">
-                              {attendanceData.history.map((log: any) => (
-                                 <tr key={log.id} className="hover:bg-zinc-50/50 transition-all group">
-                                    <td className="px-6 py-4">
-                                       <div className="flex items-center gap-3">
-                                          <div className="h-8 w-8 rounded-lg bg-zinc-50 flex flex-col items-center justify-center border border-zinc-100">
-                                             <span className="text-[10px] font-bold text-[#003366] leading-none">{new Date(log.date).getDate()}</span>
-                                             <span className="text-[7px] font-bold text-zinc-400 uppercase">{new Date(log.date).toLocaleString("default", { month: "short" })}</span>
-                                          </div>
-                                          <div>
-                                             <p className="text-[13px] font-bold text-zinc-800">{new Date(log.date).toLocaleDateString(undefined, { weekday: "long" })}</p>
-                                             <p className="text-[10px] text-zinc-400 font-medium">Regular Session</p>
-                                          </div>
-                                       </div>
-                                    </td>
-                                    <td className="px-6 py-4">
-                                       <span className="px-2 py-0.5 bg-blue-50 text-blue-600 text-[10px] font-bold rounded uppercase tracking-tighter">Classroom</span>
-                                    </td>
-                                    <td className="px-6 py-4 text-right">
-                                       <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-tight ${log.status === "PRESENT" ? "bg-emerald-50 text-emerald-600" :
-                                          log.status === "LATE" ? "bg-amber-50 text-amber-600" : "bg-red-50 text-red-600"
-                                          }`}>
-                                          {log.status === "PRESENT" ? "Present" : log.status === "LATE" ? "Late" : "Absent"}
-                                       </span>
-                                    </td>
-                                 </tr>
-                              ))}
-                           </tbody>
-                        </table>
+                  {/* Right Column: Selected Day Details Panel (Spans 1/4 width) */}
+                  <div className="lg:col-span-1 bg-white border border-zinc-200 rounded-2xl p-6 shadow-sm text-left h-full min-h-[300px] flex flex-col justify-start">
+                     <div>
+                        <h4 className="text-[10px] font-bold uppercase tracking-wider text-zinc-400 mb-3">Day Log Details</h4>
+                        {selectedDayLog ? (
+                           <div className="space-y-4 animate-in fade-in slide-in-from-top-1 duration-200">
+                              <div className="flex flex-col gap-2">
+                                 <div>
+                                    <h5 className="text-[13px] font-bold text-zinc-800 leading-snug">
+                                       {new Date(selectedDayLog.date).toLocaleDateString(undefined, {
+                                          weekday: "long",
+                                          year: "numeric",
+                                          month: "long",
+                                          day: "numeric"
+                                       })}
+                                    </h5>
+                                    <p className="text-[9px] text-zinc-400 font-bold uppercase tracking-wider mt-0.5">Session Log</p>
+                                 </div>
+                                 <div>
+                                    <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-wider ${
+                                       selectedDayLog.status === "PRESENT" ? "bg-emerald-50 text-emerald-700 border border-emerald-100" :
+                                       selectedDayLog.status === "LATE" ? "bg-amber-50 text-amber-700 border border-amber-100" :
+                                       selectedDayLog.status === "ABSENT" ? "bg-rose-50 text-rose-700 border border-rose-100" :
+                                       selectedDayLog.status === "VACATION" ? "bg-blue-50 text-blue-700 border border-blue-100" :
+                                       "bg-zinc-50 text-zinc-500 border border-zinc-200"
+                                    }`}>
+                                       {selectedDayLog.status === "PRESENT" ? "Present" :
+                                        selectedDayLog.status === "LATE" ? "Late" :
+                                        selectedDayLog.status === "ABSENT" ? "Absent" :
+                                        selectedDayLog.status === "VACATION" ? "Vacation" : "No Record"}
+                                    </span>
+                                 </div>
+                              </div>
+                              <div className="border-t border-zinc-100 pt-4">
+                                 <p className="text-[9px] font-bold uppercase tracking-wider text-zinc-400 mb-2">Submitted Work Summary</p>
+                                 {selectedDayLog.workSummary ? (
+                                    <div className="bg-zinc-50/50 p-4 rounded-xl border border-zinc-100 text-[11px] text-zinc-600 leading-relaxed italic">
+                                       "{selectedDayLog.workSummary}"
+                                    </div>
+                                 ) : (
+                                    <p className="text-[10px] text-zinc-400 italic">No work summary logged for this session.</p>
+                                 )}
+                              </div>
+                           </div>
+                        ) : (
+                           <div className="py-12 text-center flex flex-col items-center justify-center">
+                              <p className="text-[11px] text-zinc-400 font-medium leading-relaxed">
+                                 Click on any date in the calendar to view logged task notes, status updates, and session details.
+                              </p>
+                           </div>
+                        )}
                      </div>
                   </div>
                </div>
@@ -1886,61 +2038,6 @@ function InternDashboardContent() {
 
 
          <AnimatePresence>
-            {showLetterModal && userStatus?.letterUrl && (
-               <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/40 backdrop-blur-sm">
-                  <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} className="bg-white max-w-[300px] w-full p-6 border border-zinc-100 rounded-xl shadow-xl relative text-center">
-                     <button onClick={() => { setShowLetterModal(false); localStorage.setItem(`letter_ack_${user.id}`, userStatus.letterUrl); }} className="absolute top-3 right-3 text-zinc-300 hover:text-zinc-600 transition-colors"><X size={16} /></button>
-
-                     <div className="mx-auto h-10 w-10 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mb-4">
-                        <FileBadge size={20} />
-                     </div>
-
-                     <div className="space-y-1 mb-6">
-                        <h2 className="text-[15px] font-bold text-zinc-900">Letter Ready</h2>
-                        <p className="text-[12px] font-medium text-zinc-500 leading-snug">
-                           Your internship letter is ready. Download it now to verify your role.
-                        </p>
-                     </div>
-
-                     <div className="flex flex-col gap-2">
-                        <a href={userStatus.letterUrl} target="_blank" rel="noopener noreferrer" onClick={() => { setShowLetterModal(false); localStorage.setItem(`letter_ack_${user.id}`, userStatus.letterUrl); }} className="h-10 w-full bg-[#0055FF] text-white text-[12px] font-bold rounded-lg flex items-center justify-center gap-2 hover:bg-black transition-colors shadow-md shadow-blue-500/20">
-                           Download File <Download size={14} />
-                        </a>
-                        <button onClick={() => { setShowLetterModal(false); localStorage.setItem(`letter_ack_${user.id}`, userStatus.letterUrl); }} className="h-10 w-full text-[12px] font-bold text-zinc-400 hover:text-zinc-900 transition-colors">
-                           Close
-                        </button>
-                     </div>
-                  </motion.div>
-               </div>
-            )}
-
-            {showOfferLetterModal && userStatus?.offerLetterUrl && (
-               <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/40 backdrop-blur-sm">
-                  <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} className="bg-white max-w-[300px] w-full p-8 border border-zinc-100 rounded-2xl shadow-2xl relative text-center">
-                     <button onClick={() => { setShowOfferLetterModal(false); localStorage.setItem(`offer_letter_ack_${user.id}`, userStatus.offerLetterUrl); }} className="absolute top-4 right-4 text-zinc-300 hover:text-zinc-600 transition-colors"><X size={18} /></button>
-
-                     <div className="mx-auto h-12 w-12 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center mb-5">
-                        <ShieldCheck size={24} />
-                     </div>
-
-                     <div className="space-y-1.5 mb-7">
-                        <h2 className="text-lg font-bold text-zinc-900">Offer Issued</h2>
-                        <p className="text-xs font-medium text-zinc-500 leading-relaxed px-2">
-                           Congratulations! Your official internship offer documents have been synchronized.
-                        </p>
-                     </div>
-
-                     <div className="flex flex-col gap-3">
-                        <a href={userStatus.offerLetterUrl} target="_blank" rel="noopener noreferrer" onClick={() => { setShowOfferLetterModal(false); localStorage.setItem(`offer_letter_ack_${user.id}`, userStatus.offerLetterUrl); }} className="h-12 w-full bg-zinc-900 text-white text-xs font-bold flex items-center justify-center gap-2 hover:bg-blue-600 transition-all rounded-xl shadow-lg shadow-blue-600/10">
-                           View Offer <Download size={15} />
-                        </a>
-                        <button onClick={() => { setShowOfferLetterModal(false); localStorage.setItem(`offer_letter_ack_${user.id}`, userStatus.offerLetterUrl); }} className="text-[11px] font-bold text-zinc-400 hover:text-zinc-900 transition-colors uppercase tracking-widest">
-                           Dismiss
-                        </button>
-                     </div>
-                  </motion.div>
-               </div>
-            )}
          </AnimatePresence>
          <AnimatePresence>
             {showUIUXModal && (

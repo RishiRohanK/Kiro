@@ -2,6 +2,8 @@ import { createServer } from "http";
 import { parse } from "url";
 import next from "next";
 import { Server } from "socket.io";
+import { spawn } from "child_process";
+import path from "path";
 // Background workers decommissioned in favor of synchronous dispatch
 
 const dev = process.env.NODE_ENV !== "production";
@@ -14,6 +16,25 @@ const handle = app.getRequestHandler();
 const activeUsers = new Map<string, any>();
 
 app.prepare().then(() => {
+  // Start the chat server in development mode
+  if (dev) {
+    console.log("> Starting local chat server on port 5005...");
+    const chatServer = spawn("node", ["server.js"], {
+      cwd: path.join(process.cwd(), "chat-server"),
+      stdio: "inherit",
+      shell: true,
+      env: { ...process.env, PORT: "5005" }
+    });
+
+    chatServer.on("error", (err) => {
+      console.error("Failed to start chat server:", err);
+    });
+
+    process.on("exit", () => {
+      chatServer.kill();
+    });
+  }
+
   const httpServer = createServer((req, res) => {
     const parsedUrl = parse(req.url!, true);
     handle(req, res, parsedUrl);

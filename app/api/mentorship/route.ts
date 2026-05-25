@@ -32,3 +32,24 @@ export async function GET() {
     return NextResponse.json({ error: "Failed to fetch mentorship sessions" }, { status: 500 });
   }
 }
+
+export async function PATCH(req: Request) {
+  try {
+    const { id, status } = await req.json();
+
+    if (!id || !status) {
+      return NextResponse.json({ error: "Required fields missing" }, { status: 400 });
+    }
+
+    const mentorship = await prisma.mentorship.update({
+      where: { id },
+      data: { status },
+    });
+
+    return NextResponse.json(mentorship);
+  } catch (err) {
+    console.error("Mentorship update error:", err);
+    return NextResponse.json({ error: "Failed to update mentorship session" }, { status: 500 });
+  }
+}
+

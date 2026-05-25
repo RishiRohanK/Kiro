@@ -114,6 +114,14 @@ function InternDashboardLayoutContent({
     }, [router]);
 
     useEffect(() => {
+        if (user && (user.batch === "Batch 1" || user.batch === "Batch 2")) {
+            if (pathname === "/intern/dashboard/resume" || currentView === "tasks") {
+                router.push("/intern/dashboard?view=overview");
+            }
+        }
+    }, [user, pathname, currentView, router]);
+
+    useEffect(() => {
         if (!user) return;
         const sendPulse = async () => {
             try {
@@ -232,6 +240,13 @@ function InternDashboardLayoutContent({
         { name: "Profile", icon: User, slug: "/intern/dashboard/profile", mobile: false },
         { name: "News & Updates", icon: Bell, slug: "/intern/dashboard/news", mobile: false, hideFromSidebar: true },
     ];
+
+    const filteredNavItems = navItems.filter((item) => {
+        if (user?.batch === "Batch 1" || user?.batch === "Batch 2") {
+            return item.name !== "Tasks" && item.name !== "Resume Builder";
+        }
+        return true;
+    });
 
     const trainingSubItems = [
         { name: "Classes", icon: School, slug: "/intern/dashboard/training/classes" },
@@ -440,7 +455,7 @@ function InternDashboardLayoutContent({
                         <div className="flex-1 overflow-y-auto overflow-x-hidden scrollbar-hide py-5 px-3 space-y-1.5">
 
                             <nav className="space-y-1.5">
-                                {navItems.filter(i => !i.hideFromSidebar).map((item) => {
+                                {filteredNavItems.filter(i => !i.hideFromSidebar).map((item) => {
                                     const itemUrl = new URL(item.slug, "http://localhost");
                                     const itemPath = itemUrl.pathname;
                                     const itemView = itemUrl.searchParams.get("view");
@@ -535,7 +550,7 @@ function InternDashboardLayoutContent({
 
                     { }
                     <nav className="fixed bottom-0 left-0 right-0 h-16 bg-black border-t border-white/10 lg:hidden flex items-center justify-around px-2 z-50 pb-safe shadow-[0_-4px_16px_rgba(0,0,0,0.2)]">
-                        {navItems.filter(i => i.mobile).map((item) => {
+                        {filteredNavItems.filter(i => i.mobile).map((item) => {
                             const itemUrl = new URL(item.slug, "http://localhost");
                             const itemPath = itemUrl.pathname;
                             const itemView = itemUrl.searchParams.get("view");
@@ -591,7 +606,7 @@ function InternDashboardLayoutContent({
                                     </div>
 
                                     <div className="flex-1 overflow-y-auto p-4 space-y-1">
-                                        {navItems.filter(i => !i.hideFromSidebar).map((item) => {
+                                        {filteredNavItems.filter(i => !i.hideFromSidebar).map((item) => {
                                             const itemUrl = new URL(item.slug, "http://localhost");
                                             const itemPath = itemUrl.pathname;
                                             const itemView = itemUrl.searchParams.get("view");
