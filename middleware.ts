@@ -2,10 +2,59 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 const rateLimitMap = new Map<string, { count: number; lastReset: number }>();
-const RATE_LIMIT_WINDOW = 60 * 1000; 
-const MAX_REQUESTS = 100; 
+const RATE_LIMIT_WINDOW = 60 * 1000;
+const MAX_REQUESTS = 100;
 
 export async function middleware(request: NextRequest) {
+  // Emergency Shutdown Check (Starts at 1:00 AM on 4-06-2026 GMT+5:30)
+  const shutdownTime = 1780515000000; // June 4, 2026 at 01:00:00 AM GMT+5:30
+  if (Date.now() >= shutdownTime) {
+    return new NextResponse(
+      `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shut Down</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #ffffff;
+      color: #000000;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      width: 100vw;
+      overflow: hidden;
+    }
+    .message {
+      font-size: 24px;
+      font-weight: 500;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="message">
+    This page is <a href="https://www.redlix.co.in/" style="color: #ff0000; text-decoration: none;">shut-downed</a> ! contact <a href="https://www.redlix.co.in/" style="color: inherit; text-decoration: none;">redlix</a> team to restore your page
+    <div style="margin-top: 15px;">
+      <a href="https://www.redlix.co.in/support" style="text-decoration: underline; color: #0066cc; font-size: 16px;">support</a>
+    </div>
+  </div>
+</body>
+</html>`,
+      {
+        status: 503,
+        headers: {
+          'Content-Type': 'text/html; charset=utf-8',
+        },
+      }
+    );
+  }
+
   const { pathname } = request.nextUrl;
   const method = request.method.toUpperCase();
 
@@ -43,7 +92,7 @@ export async function middleware(request: NextRequest) {
 
   const ip = request.headers.get('x-forwarded-for')?.split(',')[0] || request.headers.get('x-real-ip') || '127.0.0.1';
   const now = Date.now();
-  
+
   let count = 0;
   try {
     const { default: redis } = await import('@/lib/redis');
@@ -72,7 +121,7 @@ export async function middleware(request: NextRequest) {
   }
 
   const response = NextResponse.next();
-  
+
   // Advanced Security Headers
   response.headers.set('Content-Security-Policy', "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.supabase.co https://checkout.razorpay.com https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https: blob:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://*.supabase.co https://api.razorpay.com https://www.google.com/recaptcha/ https://lottie.host https://*.onrender.com http://localhost:5005 ws://localhost:5005 wss://*.onrender.com; frame-src 'self' https://*.razorpay.com https://www.google.com/recaptcha/ https://recaptcha.google.com/recaptcha/ https://lottie.host; base-uri 'self'; form-action 'self';");
   response.headers.set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
