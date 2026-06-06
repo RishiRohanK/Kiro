@@ -554,17 +554,17 @@ function LoginPage({
           </div>
 
           {/* Right Login Section */}
-          <div className="w-full md:w-[55%] flex items-center justify-center p-6 bg-background rounded-none">
+          <div className="w-full md:w-[55%] flex items-center justify-center py-4 px-6 md:py-6 bg-background rounded-none">
             <div className="w-full max-w-[340px]">
               {/* Header (Aligned to left) */}
-              <div className="text-left mb-6">
-                <h1 className="text-2xl font-bold tracking-tight mb-1">Welcome back!</h1>
-                <p className="text-muted-foreground text-xs">Please enter your details</p>
+              <div className="text-left mb-3">
+                <h1 className="text-xl font-bold tracking-tight mb-0.5">Welcome back!</h1>
+                <p className="text-muted-foreground text-[11px]">Please enter your details</p>
               </div>
 
               {/* Login Form */}
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="space-y-1">
+              <form onSubmit={handleSubmit} className="space-y-2.5">
+                <div className="space-y-0.5">
                   <Label htmlFor="email" className="text-[10px] font-semibold text-slate-500">Email Address</Label>
                   <Input
                     id="email"
@@ -576,11 +576,11 @@ function LoginPage({
                     onFocus={() => setIsTyping(true)}
                     onBlur={() => setIsTyping(false)}
                     required
-                    className="h-10 bg-zinc-50/50 border border-zinc-200 focus-visible:ring-zinc-300 focus-visible:border-zinc-400 focus:border-zinc-400 placeholder:text-zinc-400 text-xs rounded-none"
+                    className="h-9 bg-zinc-50/50 border border-zinc-200 focus-visible:ring-zinc-300 focus-visible:border-zinc-400 focus:border-zinc-400 placeholder:text-zinc-400 text-xs rounded-none"
                   />
                 </div>
 
-                <div className="space-y-1">
+                <div className="space-y-0.5">
                   <div className="flex justify-between items-center">
                     <Label htmlFor="password" className="text-[10px] font-semibold text-slate-500">Password</Label>
                     <Link
@@ -598,7 +598,7 @@ function LoginPage({
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       required
-                      className="h-10 pr-10 bg-zinc-50/50 border border-zinc-200 focus-visible:ring-zinc-300 focus-visible:border-zinc-400 focus:border-zinc-400 placeholder:text-zinc-400 text-xs rounded-none"
+                      className="h-9 pr-10 bg-zinc-50/50 border border-zinc-200 focus-visible:ring-zinc-300 focus-visible:border-zinc-400 focus:border-zinc-400 placeholder:text-zinc-400 text-xs rounded-none"
                     />
                     <button
                       type="button"
@@ -614,7 +614,7 @@ function LoginPage({
                   </div>
                 </div>
 
-                <div className="flex items-center space-x-2 py-1">
+                <div className="flex items-center space-x-2 py-0.5">
                   <Checkbox id="remember" className="rounded-none border-zinc-300" />
                   <Label
                     htmlFor="remember"
@@ -625,8 +625,8 @@ function LoginPage({
                 </div>
 
                 {showReCAPTCHA && (
-                  <div className="py-1">
-                    <div className="transform scale-[0.8] origin-left">
+                  <div className="py-0.5">
+                    <div className="transform scale-[0.75] origin-left">
                       <ReCAPTCHA
                         ref={recaptchaRef}
                         sitekey="6LfA4LssAAAAAJjVmCALHZYPY4bwg_XzQ7ZNCMGI"
@@ -637,14 +637,14 @@ function LoginPage({
                 )}
 
                 {error && (
-                  <div className="p-2.5 text-xs text-red-600 bg-red-50 border border-red-100 rounded-none">
+                  <div className="p-2 text-xs text-red-600 bg-red-50 border border-red-100 rounded-none">
                     {error}
                   </div>
                 )}
 
                 <Button 
                   type="submit" 
-                  className="w-full h-10 text-xs font-medium bg-zinc-900 hover:bg-black text-white rounded-none" 
+                  className="w-full h-9 text-xs font-medium bg-zinc-900 hover:bg-black text-white rounded-none" 
                   size="lg" 
                   disabled={isLoading}
                 >
@@ -653,10 +653,10 @@ function LoginPage({
               </form>
 
               {/* Social Login with Official Google Color SVG */}
-              <div className="mt-3">
+              <div className="mt-2.5">
                 <Button 
                   variant="outline" 
-                  className="w-full h-10 bg-background border border-zinc-200 hover:bg-zinc-50 text-xs rounded-none text-slate-600"
+                  className="w-full h-9 bg-background border border-zinc-200 hover:bg-zinc-50 text-xs rounded-none text-slate-600"
                   type="button"
                   onClick={() => {
                     if (onGoogleLogin) {
@@ -678,7 +678,7 @@ function LoginPage({
               </div>
 
               {/* Sign Up Link */}
-              <div className="text-center text-xs text-slate-400 mt-6 pt-4 border-t border-zinc-100">
+              <div className="text-center text-xs text-slate-400 mt-4 pt-2.5 border-t border-zinc-100">
                 Don't have an account?{" "}
                 <Link href="/signup" className="text-zinc-900 font-semibold hover:underline">
                   Sign Up
