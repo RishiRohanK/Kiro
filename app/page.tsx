@@ -1,34 +1,116 @@
 "use client";
 
 import React from "react";
-import { Home, User, FileText, HelpCircle, ArrowRight } from "lucide-react";
-import { ExpandableTabs } from "@/components/ui/expandable-tabs";
+import { 
+  Home, User, FileText, HelpCircle, ArrowRight,
+  CodeIcon, UserPlusIcon,
+  Shield, Handshake, MenuIcon, XIcon,
+  ShieldCheck, Award, Map, Settings
+} from "lucide-react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuList,
+  NavigationMenuItem,
+  NavigationMenuTrigger,
+  NavigationMenuLink,
+  type NavItemType,
+  NavGridCard,
+  NavSmallItem,
+  NavLargeItem,
+  NavItemMobile,
+} from "@/components/ui/navigation-menu";
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+
+// --- NAVIGATION LINKS ---
+const workspaceLinks: NavItemType[] = [
+  {
+    title: "Intern Workspace",
+    href: "/intern/signin",
+    description: "Access daily curricula and manage assignments",
+    icon: ShieldCheck,
+  },
+  {
+    title: "Ambassador Portal",
+    href: "/ambassador",
+    description: "Join our campus leadership initiative",
+    icon: UserPlusIcon,
+  },
+  {
+    title: "Admin Dashboard",
+    href: "/admin",
+    description: "Access system metrics and user roles",
+    icon: Settings,
+  },
+  {
+    title: "Certifications",
+    href: "/certifications",
+    icon: Award,
+  },
+  {
+    title: "Hiring Portal",
+    href: "/hiring",
+    icon: Handshake,
+  },
+  {
+    title: "Bootcamp",
+    href: "/bootcamp",
+    icon: CodeIcon,
+  },
+];
+
+const learningLinks: NavItemType[] = [
+  {
+    title: "Course Catalog",
+    href: "/courses",
+    description: "Explore industry-vetted tech training",
+    icon: FileText,
+  },
+  {
+    title: "Technical Roadmaps",
+    href: "/roadmaps",
+    description: "Interactive tech stack learning paths",
+    icon: Map,
+  },
+  {
+    title: "DSA Curriculum",
+    href: "/dsa",
+    description: "Structured data structures & algorithms",
+    icon: CodeIcon,
+  },
+  {
+    title: "Help Center",
+    href: "https://www.redlix.co.in/intern-support",
+    icon: HelpCircle,
+  },
+  {
+    title: "Privacy Policy",
+    href: "/privacy",
+    icon: Shield,
+  },
+  {
+    title: "Terms of Service",
+    href: "/terms",
+    icon: FileText,
+  },
+];
 
 export default function LandingPage() {
   const router = useRouter();
-
-  const tabs = [
-    { title: "Home", icon: Home, href: "/" },
-    { title: "Intern Portal", icon: User, href: "/intern/signin" },
-    { type: "separator" as const },
-    { title: "Courses", icon: FileText, href: "/courses" },
-    { title: "Support", icon: HelpCircle, href: "https://www.redlix.co.in/intern-support" },
-  ];
-
-  const handleTabChange = (index: number | null) => {
-    if (index !== null) {
-      const tab = tabs[index];
-      if (tab && "href" in tab && tab.href) {
-        if (tab.href.startsWith("http")) {
-          window.location.href = tab.href;
-        } else {
-          router.push(tab.href);
-        }
-      }
-    }
-  };
 
   return (
     <div className="relative w-full h-screen bg-zinc-950 p-4 md:p-6 flex items-center justify-center font-sans">
@@ -43,18 +125,28 @@ export default function LandingPage() {
           }}
         />
 
-        {/* Floating Navbar */}
-        <div className="absolute top-6 left-1/2 -translate-x-1/2 z-20">
-          <ExpandableTabs
-            tabs={tabs as any}
-            onChange={handleTabChange}
-            activeColor="text-blue-400"
-            className="border-white/10 bg-zinc-900/80 backdrop-blur-md text-white shadow-lg"
-          />
+        {/* Floating Navbar Container inside Hero wrapper */}
+        <div className="absolute top-6 left-6 right-6 z-50 flex items-center justify-between border border-white/5 bg-zinc-900/40 backdrop-blur-md px-4 py-2 rounded-xl">
+          <div className="flex items-center gap-2">
+            <img src="https://ik.imagekit.io/dypkhqxip/sflogo" alt="Student Forge" className="h-6 w-auto" />
+            <p className="font-mono text-sm font-bold text-white tracking-tight hidden sm:block">Student Forge</p>
+          </div>
+          
+          <DesktopMenu />
+
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => router.push("/intern/signin")}
+              className="bg-white hover:bg-zinc-200 text-zinc-950 text-xs font-medium px-4 py-1.5 rounded-full transition-all active:scale-[0.98] cursor-pointer"
+            >
+              Get Started
+            </button>
+            <MobileNav />
+          </div>
         </div>
 
         {/* Left-Aligned Hero Content Block */}
-        <div className="relative z-10 max-w-2xl text-left space-y-6 flex flex-col items-start justify-center">
+        <div className="relative z-10 max-w-2xl text-left space-y-6 flex flex-col items-start justify-center pt-12">
           {/* Heading */}
           <motion.h1
             initial={{ opacity: 0, y: 15 }}
@@ -102,5 +194,140 @@ export default function LandingPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+function DesktopMenu() {
+  return (
+    <NavigationMenu className="hidden lg:block text-white">
+      <NavigationMenuList>
+        <NavigationMenuItem>
+          <NavigationMenuTrigger className="text-zinc-300 hover:text-white bg-transparent">
+            Workspace
+          </NavigationMenuTrigger>
+          <NavigationMenuContent>
+            <div className="grid w-full md:w-3xl md:grid-cols-[1fr_.40fr] bg-zinc-950 border border-white/10 text-white rounded-lg overflow-hidden shadow-2xl">
+              <ul className="grid grow gap-4 p-4 md:grid-cols-2 md:border-r border-white/5">
+                {workspaceLinks.slice(0, 3).map((link) => (
+                  <li key={link.title}>
+                    <NavGridCard link={link} className="bg-zinc-900 border-white/5 hover:bg-zinc-800 transition-colors" />
+                  </li>
+                ))}
+              </ul>
+              <ul className="space-y-1 p-4 bg-zinc-900/40">
+                {workspaceLinks.slice(3).map((link) => (
+                  <li key={link.title}>
+                    <NavSmallItem
+                      item={link}
+                      href={link.href}
+                      className="gap-x-1 text-zinc-300 hover:text-white hover:bg-zinc-800/60"
+                    />
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </NavigationMenuContent>
+        </NavigationMenuItem>
+
+        <NavigationMenuItem>
+          <NavigationMenuTrigger className="text-zinc-300 hover:text-white bg-transparent">
+            Learning
+          </NavigationMenuTrigger>
+          <NavigationMenuContent>
+            <div className="grid w-full md:w-3xl md:grid-cols-[1fr_.40fr] bg-zinc-950 border border-white/10 text-white rounded-lg overflow-hidden shadow-2xl">
+              <ul className="grid grow gap-4 p-4 md:grid-cols-2 md:border-r border-white/5">
+                {learningLinks.slice(0, 3).map((link) => (
+                  <li key={link.title}>
+                    <NavGridCard link={link} className="bg-zinc-900 border-white/5 hover:bg-zinc-800 transition-colors" />
+                  </li>
+                ))}
+              </ul>
+              <ul className="space-y-1 p-4 bg-zinc-900/40">
+                {learningLinks.slice(3).map((link) => (
+                  <li key={link.title}>
+                    <NavLargeItem
+                      link={link}
+                      href={link.href}
+                      className="text-zinc-300 hover:text-white border-white/5 bg-zinc-900/60 hover:bg-zinc-800/80"
+                    />
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </NavigationMenuContent>
+        </NavigationMenuItem>
+
+        <NavigationMenuItem>
+          <NavigationMenuLink href="https://www.redlix.co.in/intern-support" className="cursor-pointer text-zinc-300 hover:text-white text-sm font-medium px-4 py-2 hover:bg-white/5 rounded-md transition-colors">
+            Support
+          </NavigationMenuLink>
+        </NavigationMenuItem>
+      </NavigationMenuList>
+    </NavigationMenu>
+  );
+}
+
+function MobileNav() {
+  const sections = [
+    {
+      id: "workspace",
+      name: "Workspace",
+      list: workspaceLinks,
+    },
+    {
+      id: "learning",
+      name: "Learning",
+      list: learningLinks,
+    },
+  ];
+
+  return (
+    <Sheet>
+      <SheetTrigger asChild>
+        <Button size="icon" variant="ghost" className="rounded-full text-zinc-300 hover:text-white hover:bg-white/5 lg:hidden">
+          <MenuIcon className="size-5" />
+        </Button>
+      </SheetTrigger>
+      <SheetContent
+        side="right"
+        className="bg-zinc-950/95 border-l border-white/10 text-white w-full gap-0 backdrop-blur-lg"
+        showClose={false}
+      >
+        <div className="flex h-14 items-center justify-end border-b border-white/10 px-4">
+          <SheetClose asChild>
+            <Button size="icon" variant="ghost" className="rounded-full text-zinc-300 hover:text-white hover:bg-white/5">
+              <XIcon className="size-5" />
+              <span className="sr-only">Close</span>
+            </Button>
+          </SheetClose>
+        </div>
+        <div className="container grid gap-y-2 overflow-y-auto px-4 pt-5 pb-12">
+          <Accordion type="single" collapsible className="w-full">
+            {sections.map((section) => (
+              <AccordionItem key={section.id} value={section.id} className="border-white/5">
+                <AccordionTrigger className="capitalize text-zinc-200 hover:text-white hover:no-underline font-medium">
+                  {section.name}
+                </AccordionTrigger>
+                <AccordionContent className="space-y-1">
+                  <ul className="grid gap-1">
+                    {section.list.map((link) => (
+                      <li key={link.title}>
+                        <SheetClose asChild>
+                          <NavItemMobile 
+                            item={link} 
+                            href={link.href} 
+                            className="text-zinc-300 hover:text-white hover:bg-white/5 border-transparent"
+                          />
+                        </SheetClose>
+                      </li>
+                    ))}
+                  </ul>
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+        </div>
+      </SheetContent>
+    </Sheet>
   );
 }
