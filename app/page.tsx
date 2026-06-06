@@ -35,6 +35,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import BadgeTag from "@/components/ui/badge-tag";
 
 // --- NAVIGATION LINKS ---
 const workspaceLinks: NavItemType[] = [
@@ -126,18 +127,21 @@ export default function LandingPage() {
         />
 
         {/* Floating Navbar Container inside Hero wrapper */}
-        <div className="absolute top-6 left-6 right-6 z-50 flex items-center justify-between border border-white/5 bg-zinc-900/40 backdrop-blur-md px-4 py-2 rounded-xl">
-          <div className="flex items-center gap-2">
-            <img src="https://ik.imagekit.io/dypkhqxip/sflogo" alt="Student Forge" className="h-6 w-auto" />
-            <p className="font-mono text-sm font-bold text-white tracking-tight hidden sm:block">Student Forge</p>
+        <div className="absolute top-6 left-1/2 -translate-x-1/2 w-[calc(100%-3rem)] max-w-[320px] sm:max-w-[360px] md:max-w-[540px] lg:max-w-[850px] z-50 flex items-center justify-between border border-white/5 bg-zinc-900/40 backdrop-blur-md px-4 py-2 rounded-xl">
+          <div className="flex items-center gap-3">
+            <img 
+              src="https://ik.imagekit.io/dypkhqxip/platform?updatedAt=1776791557303" 
+              alt="Logo" 
+              className="h-6 sm:h-[26px] w-auto brightness-0 invert opacity-80 hover:opacity-100 transition-opacity" 
+            />
+            <div className="hidden lg:block h-4 w-[1px] bg-white/15 mx-1" />
+            <DesktopMenu />
           </div>
-          
-          <DesktopMenu />
 
           <div className="flex items-center gap-2">
             <button
               onClick={() => router.push("/intern/signin")}
-              className="bg-white hover:bg-zinc-200 text-zinc-950 text-xs font-medium px-4 py-1.5 rounded-full transition-all active:scale-[0.98] cursor-pointer"
+              className="bg-white hover:bg-zinc-200 text-zinc-950 text-xs font-medium px-4 py-1.5 rounded-lg transition-all active:scale-[0.98] cursor-pointer"
             >
               Get Started
             </button>
@@ -147,6 +151,15 @@ export default function LandingPage() {
 
         {/* Left-Aligned Hero Content Block */}
         <div className="relative z-10 max-w-2xl text-left space-y-6 flex flex-col items-start justify-center pt-12">
+          {/* Badge Tag */}
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.05 }}
+          >
+            <BadgeTag />
+          </motion.div>
+
           {/* Heading */}
           <motion.h1
             initial={{ opacity: 0, y: 15 }}
@@ -179,18 +192,31 @@ export default function LandingPage() {
           >
             <button
               onClick={() => router.push("/intern/signin")}
-              className="group inline-flex items-center justify-center gap-2 rounded-full bg-white px-7 py-3 text-xs font-medium text-zinc-950 transition-all hover:scale-[1.02] hover:bg-zinc-200 active:scale-[0.98] cursor-pointer"
+              className="group inline-flex items-center justify-center gap-2 rounded-lg bg-white px-7 py-3 text-xs font-medium text-zinc-950 transition-all hover:scale-[1.02] hover:bg-zinc-200 active:scale-[0.98] cursor-pointer"
             >
               Intern Portal
               <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" />
             </button>
             <button
               onClick={() => router.push("/courses")}
-              className="inline-flex items-center justify-center gap-2 rounded-full border border-white/15 bg-white/5 px-7 py-3 text-xs font-medium text-white backdrop-blur-sm transition-all hover:bg-white/10 hover:border-white/25 active:scale-[0.98] cursor-pointer"
+              className="inline-flex items-center justify-center gap-2 rounded-lg border border-white/15 bg-white/5 px-7 py-3 text-xs font-medium text-white backdrop-blur-sm transition-all hover:bg-white/10 hover:border-white/25 active:scale-[0.98] cursor-pointer"
             >
               Explore Courses
             </button>
           </motion.div>
+        </div>
+
+        {/* Developed and maintained by Studio Redlix */}
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 text-[11px] font-medium text-zinc-500 tracking-wider whitespace-nowrap">
+          Developed and maintained by{" "}
+          <a 
+            href="https://www.redlix.co.in" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className="underline hover:text-white transition-colors"
+          >
+            Studio Redlix
+          </a>
         </div>
       </div>
     </div>
@@ -202,7 +228,7 @@ function DesktopMenu() {
     <NavigationMenu className="hidden lg:block text-white">
       <NavigationMenuList>
         <NavigationMenuItem>
-          <NavigationMenuTrigger className="text-zinc-300 hover:text-white bg-transparent">
+          <NavigationMenuTrigger className="text-zinc-300 hover:text-white bg-transparent px-4 py-2 hover:bg-white/5 data-[state=open]:bg-white/5 rounded-md transition-colors">
             Workspace
           </NavigationMenuTrigger>
           <NavigationMenuContent>
@@ -230,7 +256,7 @@ function DesktopMenu() {
         </NavigationMenuItem>
 
         <NavigationMenuItem>
-          <NavigationMenuTrigger className="text-zinc-300 hover:text-white bg-transparent">
+          <NavigationMenuTrigger className="text-zinc-300 hover:text-white bg-transparent px-4 py-2 hover:bg-white/5 data-[state=open]:bg-white/5 rounded-md transition-colors">
             Learning
           </NavigationMenuTrigger>
           <NavigationMenuContent>
