@@ -695,7 +695,7 @@ function LoginPage({
           <div className="flex flex-col md:flex-row items-center gap-4 text-center md:text-left">
             <Link href="https://kiro.redlix.co.in/lms">
               <img 
-                src="https://ik.imagekit.io/dypkhqxip/Screenshot_2026-05-14_at_17.46.09-removebg-preview.png?updatedAt=1778760997901" 
+                src="https://ik.imagekit.io/dypkhqxip/securex" 
                 alt="Logo" 
                 className="h-8 w-auto opacity-75 hover:opacity-100 transition-all cursor-pointer"
               />
@@ -706,7 +706,7 @@ function LoginPage({
                 © {new Date().getFullYear()} Student Forge Technologies Pvt Ltd.
               </p>
               <p className="text-[9px] text-zinc-400 font-medium">
-                Powered by Cheetah Servers • Redlix Systems, Hyderabad
+                Powered by Redlix Secure • Redlix Systems, Hyderabad
               </p>
             </div>
           </div>
