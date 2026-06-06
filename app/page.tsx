@@ -1,7 +1,10 @@
 "use client";
 
 import React from "react";
-import { Home, User, FileText, HelpCircle } from "lucide-react";
+import { 
+  Home, User, FileText, HelpCircle, 
+  Map, Code2, Award, Calendar, Users 
+} from "lucide-react";
 import { ExpandableTabs } from "@/components/ui/expandable-tabs";
 import { useRouter } from "next/navigation";
 
@@ -13,6 +16,13 @@ export default function LandingPage() {
     { title: "Intern Portal", icon: User, href: "/intern/signin" },
     { type: "separator" as const },
     { title: "Courses", icon: FileText, href: "/courses" },
+    { title: "Roadmaps", icon: Map, href: "/roadmaps" },
+    { title: "Projects", icon: Code2, href: "/projects" },
+    { title: "Certifications", icon: Award, href: "/certifications" },
+    { type: "separator" as const },
+    { title: "Events", icon: Calendar, href: "/events" },
+    { title: "Community", icon: Users, href: "/community" },
+    { type: "separator" as const },
     { title: "Support", icon: HelpCircle, href: "https://www.redlix.co.in/intern-support" },
   ];
 
