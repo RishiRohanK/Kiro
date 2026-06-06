@@ -370,12 +370,12 @@ function LoginPage({
     <div className="min-h-screen bg-zinc-50 flex flex-col justify-between selection:bg-blue-100">
       {/* Centered Content Area */}
       <div className="flex-1 flex items-center justify-center p-4 md:p-8">
-        {/* Sign In Card Container (Reduced height to 480px) */}
-        <div className="w-full max-w-[960px] md:h-[480px] bg-background border border-zinc-200 flex flex-col md:flex-row overflow-hidden rounded-lg shadow-sm">
+        {/* Sign In Card Container (Reduced height to 495px) */}
+        <div className="w-full max-w-[960px] md:h-[495px] bg-background border border-zinc-200 flex flex-col md:flex-row overflow-hidden rounded-lg shadow-sm">
           {/* Left Content Section (Charcoal Grey Panel with p-6) */}
           <div className="relative hidden md:flex md:w-[45%] flex-col justify-end bg-gradient-to-br from-zinc-700 via-zinc-800 to-zinc-900 p-6 text-white rounded-none">
             <div className="relative z-20 flex items-end justify-center h-[340px] overflow-hidden">
-              {/* Cartoon Characters (Scaled down to fit within the reduced 480px container) */}
+              {/* Cartoon Characters (Scaled down to fit within the reduced 495px container) */}
               <div className="relative" style={{ width: '320px', height: '260px' }}>
                 {/* Purple tall rectangle character - Back layer */}
                 <div 
@@ -554,7 +554,7 @@ function LoginPage({
           </div>
 
           {/* Right Login Section */}
-          <div className="w-full md:w-[55%] flex items-center justify-center py-4 px-6 md:py-6 bg-background rounded-none">
+          <div className="w-full md:w-[55%] flex flex-col justify-center items-center py-5 px-6 md:pt-10 md:pb-5 bg-background rounded-none">
             <div className="w-full max-w-[340px]">
               {/* Header (Aligned to left) */}
               <div className="text-left mb-3">
