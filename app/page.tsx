@@ -33,7 +33,7 @@ export default function LandingPage() {
   return (
     <div className="relative w-full h-screen bg-zinc-950 p-4 md:p-6 flex items-center justify-center font-sans">
       {/* Floating Hero Background Container with Rounded Edges and Border */}
-      <div className="relative w-full h-full bg-zinc-900/50 border border-white/10 rounded-[24px] md:rounded-[32px] overflow-hidden shadow-2xl flex flex-col items-center justify-center">
+      <div className="relative w-full h-full bg-zinc-900/50 border border-white/10 rounded-[24px] md:rounded-[32px] overflow-hidden shadow-2xl flex flex-col justify-center items-start px-8 sm:px-16 md:px-24">
         {/* Background Image with Gradient Mask */}
         <div
           className="absolute inset-0 z-0 bg-[url(https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/a72ca2f3-9dd1-4fe4-84ba-fe86468a5237_3840w.webp?w=800&q=80)] bg-cover bg-center opacity-40"
@@ -53,8 +53,8 @@ export default function LandingPage() {
           />
         </div>
 
-        {/* Centered Hero Content Block */}
-        <div className="relative z-10 max-w-2xl px-6 text-center space-y-6 flex flex-col items-center justify-center">
+        {/* Left-Aligned Hero Content Block */}
+        <div className="relative z-10 max-w-2xl text-left space-y-6 flex flex-col items-start justify-center">
           {/* Subtle Tagline Badge */}
           <motion.div
             initial={{ opacity: 0, y: 10 }}
@@ -62,7 +62,7 @@ export default function LandingPage() {
             transition={{ duration: 0.6 }}
             className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 backdrop-blur-md"
           >
-            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-blue-400">
+            <span className="text-[10px] font-medium uppercase tracking-[0.2em] text-blue-400">
               Student Forge Technologies
             </span>
           </motion.div>
@@ -72,7 +72,7 @@ export default function LandingPage() {
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.15 }}
-            className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-white leading-tight"
+            className="text-4xl sm:text-5xl md:text-6xl font-normal tracking-tight text-white leading-tight"
           >
             A Workspace for <br />
             <span className="bg-gradient-to-r from-white via-white to-amber-300 bg-clip-text text-transparent">
@@ -85,7 +85,7 @@ export default function LandingPage() {
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
-            className="text-sm sm:text-base text-zinc-400 max-w-lg leading-relaxed font-medium"
+            className="text-sm sm:text-base text-zinc-400 max-w-lg leading-relaxed font-normal"
           >
             Access your daily internship tasks, track learning curricula, and discover industry-vetted engineering courses in one unified space.
           </motion.p>
@@ -99,14 +99,14 @@ export default function LandingPage() {
           >
             <button
               onClick={() => router.push("/intern/signin")}
-              className="group inline-flex items-center justify-center gap-2 rounded-full bg-white px-7 py-3 text-xs font-bold text-zinc-950 transition-all hover:scale-[1.02] hover:bg-zinc-200 active:scale-[0.98] cursor-pointer"
+              className="group inline-flex items-center justify-center gap-2 rounded-full bg-white px-7 py-3 text-xs font-medium text-zinc-950 transition-all hover:scale-[1.02] hover:bg-zinc-200 active:scale-[0.98] cursor-pointer"
             >
               Intern Portal
               <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" />
             </button>
             <button
               onClick={() => router.push("/courses")}
-              className="inline-flex items-center justify-center gap-2 rounded-full border border-white/15 bg-white/5 px-7 py-3 text-xs font-bold text-white backdrop-blur-sm transition-all hover:bg-white/10 hover:border-white/25 active:scale-[0.98] cursor-pointer"
+              className="inline-flex items-center justify-center gap-2 rounded-full border border-white/15 bg-white/5 px-7 py-3 text-xs font-medium text-white backdrop-blur-sm transition-all hover:bg-white/10 hover:border-white/25 active:scale-[0.98] cursor-pointer"
             >
               Explore Courses
             </button>
