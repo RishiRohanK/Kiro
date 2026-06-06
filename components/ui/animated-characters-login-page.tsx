@@ -583,7 +583,7 @@ function LoginPage({
                   <Label htmlFor="password" className="text-[10px] font-semibold text-slate-500">Password</Label>
                   <Link
                     href="/forgot-password"
-                    className="text-[10px] text-emerald-600 hover:underline font-semibold"
+                    className="text-[10px] text-zinc-900 hover:underline font-semibold"
                   >
                     Forgot password?
                   </Link>
@@ -678,7 +678,7 @@ function LoginPage({
             {/* Sign Up Link */}
             <div className="text-center text-xs text-slate-400 mt-6 pt-4 border-t border-zinc-100">
               Don't have an account?{" "}
-              <Link href="/signup" className="text-emerald-600 font-semibold hover:underline">
+              <Link href="/signup" className="text-zinc-900 font-semibold hover:underline">
                 Sign Up
               </Link>
             </div>
