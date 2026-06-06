@@ -55,18 +55,6 @@ export default function LandingPage() {
 
         {/* Left-Aligned Hero Content Block */}
         <div className="relative z-10 max-w-2xl text-left space-y-6 flex flex-col items-start justify-center">
-          {/* Subtle Tagline Badge */}
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 backdrop-blur-md"
-          >
-            <span className="text-[10px] font-medium uppercase tracking-[0.2em] text-blue-400">
-              Student Forge Technologies
-            </span>
-          </motion.div>
-
           {/* Heading */}
           <motion.h1
             initial={{ opacity: 0, y: 15 }}
