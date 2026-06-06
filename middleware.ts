@@ -6,55 +6,6 @@ const RATE_LIMIT_WINDOW = 60 * 1000;
 const MAX_REQUESTS = 100;
 
 export async function middleware(request: NextRequest) {
-  // Emergency Shutdown Check (Starts at 1:00 AM on 4-06-2026 GMT+5:30)
-  const shutdownTime = 1780515000000; // June 4, 2026 at 01:00:00 AM GMT+5:30
-  if (Date.now() >= shutdownTime) {
-    return new NextResponse(
-      `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Shut Down</title>
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      background-color: #ffffff;
-      color: #000000;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      width: 100vw;
-      overflow: hidden;
-    }
-    .message {
-      font-size: 24px;
-      font-weight: 500;
-      text-align: center;
-    }
-  </style>
-</head>
-<body>
-  <div class="message">
-    This page is <a href="https://www.redlix.co.in/" style="color: #ff0000; text-decoration: none;">shut-downed</a> ! contact <a href="https://www.redlix.co.in/" style="color: inherit; text-decoration: none;">redlix</a> team to restore your page
-    <div style="margin-top: 15px;">
-      <a href="https://www.redlix.co.in/support" style="text-decoration: underline; color: #0066cc; font-size: 16px;">support</a>
-    </div>
-  </div>
-</body>
-</html>`,
-      {
-        status: 503,
-        headers: {
-          'Content-Type': 'text/html; charset=utf-8',
-        },
-      }
-    );
-  }
-
   const { pathname } = request.nextUrl;
   const method = request.method.toUpperCase();
 
