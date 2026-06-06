@@ -710,9 +710,11 @@ function LoginPage({
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-5 text-[9px] text-zinc-400 font-semibold uppercase tracking-wider">
+          <div className="flex items-center gap-2.5 text-[10px] text-zinc-400 font-medium">
             <Link href="/privacy" className="hover:text-zinc-900 transition-colors">Privacy Policy</Link>
+            <span className="text-zinc-300">|</span>
             <Link href="/terms" className="hover:text-zinc-900 transition-colors">Terms of Service</Link>
+            <span className="text-zinc-300">|</span>
             <Link href="/security" className="hover:text-zinc-900 transition-colors">Security</Link>
           </div>
         </div>
